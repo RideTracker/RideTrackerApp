@@ -1,10 +1,10 @@
-const server = "http://172.20.10.2:8080/";
-
 export default class API {
+    static server = "http://172.20.10.2:8080/";
+
     static async fetch(path, method, body) {
         console.log("API: " + method + " " + path);
 
-        const response = await fetch(server + path, { method, body });
+        const response = await fetch(API.server + path, { method, body });
         
         const result = await response.json();
 

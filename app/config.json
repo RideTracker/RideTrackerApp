@@ -1,0 +1,10 @@
+{
+    "colorPalette": {
+        "background": "#1E1E1E",
+        "section": "#222222",
+        "border": "#222222",
+
+        "foreground": "#F1F1F1",
+        "highlight": "#FFF"
+    }
+}

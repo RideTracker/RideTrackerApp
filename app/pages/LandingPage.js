@@ -2,12 +2,38 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
 
+import Header from "../layout/Header";
+import Footer from "../layout/Footer";
 import Activity from "../components/Activity";
 import API from "../API";
 
+import Config from "../config.json";
+
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#1E1E1E"
+        flex: 1,
+        
+        position: "relative",
+
+        page: {
+            backgroundColor: Config.colorPalette.background,
+
+            position: "absolute",
+
+            width: "100%",
+            height: "100%",
+
+            left: 0,
+            top: 0
+        }
+    },
+
+    content: {
+        height: "100%",
+
+        activity: {
+			marginTop: 50
+		}
     }
 });
 
@@ -22,11 +48,41 @@ export default class LandingPage extends React.Component {
         });
     };
 
+    showActivity(id) {
+        this.setState({
+            activity: id
+        });
+    };
+
+    hideActivity() {
+        this.setState({
+            activity: null
+        });
+    };
+
     render() { 
         return (
-            <ScrollView style={styles.container}>
-                {this.activities.map(activity => <Activity id={activity}/>)}
-            </ScrollView>
+            <View style={styles.container}>
+                <View style={styles.content}>
+                    <Header title="Home"/>
+
+                    <ScrollView>
+                        {this.activities.map(activity => <Activity style={styles.container.activity} id={activity} onPress={(id) => this.showActivity(id)}/>)}
+                    </ScrollView>
+
+                    <Footer/>
+                </View>
+
+                {this.state != null && this.state.activity != null &&
+                    <View style={styles.container.page}>
+                        <Header title="Activity" navigation="true" onNavigationPress={() => this.hideActivity()}/>
+
+                        <ScrollView>
+                            <Activity id={this.state.activity}/>
+                        </ScrollView>
+                    </View>
+                }
+            </View>
         );
     }
 };

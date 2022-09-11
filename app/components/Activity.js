@@ -3,13 +3,27 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import Constants from 'expo-constants';
 
 import Button from "../components/Button";
+import WebView from 'react-native-webview';
 
 import TimestampHelper from "../helpers/TimestampHelper";
 
+import Map from "../components/Map.json";
+
 import API from "../API";
+import Config from "../config.json";
 
 const styles = StyleSheet.create({
     activity: {
+        marginTop: 12,
+
+        backgroundColor: Config.colorPalette.section,
+        
+        borderBottomWidth: 1,
+        borderBottomColor: Config.colorPalette.border,
+        
+        borderTopWidth: 1,
+        borderTopColor: Config.colorPalette.border,
+
         map: {
             height: 300,
 
@@ -20,7 +34,7 @@ const styles = StyleSheet.create({
                 height: "100%"
             },
 
-            content: {
+            user: {
                 position: "absolute",
 
                 flex: 1,
@@ -32,15 +46,13 @@ const styles = StyleSheet.create({
 
                 padding: 12,
 
-                backgroundColor: "rgba(0, 0, 0, .8)",
+                backgroundColor: "rgba(28, 28, 28, 1)",
     
                 image: {
                     width: 40,
                     height: 40,
     
                     borderRadius: 50,
-
-                    backgroundColor: "#000",
 
                     marginRight: 12
                 },
@@ -52,14 +64,14 @@ const styles = StyleSheet.create({
                     justifyContent: "center",
 
                     title: {
-                        color: "#FFF",
+                        color: Config.colorPalette.highlight,
     
                         fontWeight: "bold",
                         fontSize: 18
                     },
     
                     description: {
-                        color: "#F1F1F1",
+                        color: Config.colorPalette.foreground,
     
                         fontSize: 16
                     }
@@ -84,14 +96,14 @@ const styles = StyleSheet.create({
                 alignItems: "center",
 
                 title: {
-                    color: "#FFF",
+                    color: Config.colorPalette.highlight,
 
                     fontWeight: "bold",
                     fontSize: 26
                 },
 
                 description: {
-                    color: "#F1F1F1",
+                    color: Config.colorPalette.foreground,
 
                     fontSize: 16
                 }
@@ -139,26 +151,26 @@ export default class Activity extends React.Component {
         return (
             <View style={styles.activity}>
                 <View style={styles.activity.map}>
-                    <Image
+                    <WebView
                         style={styles.activity.map.image}
                         source={{
-                            uri: `https://ride-tracker.nora-soderlund.se/users/${this.user.slug}/route.png`
+                            uri: API.server + "/map.html"
                         }}
                     />
 
-                    <View style={styles.activity.map.content}>
+                    <View style={styles.activity.map.user}>
                         <View>
                             <Image
-                                style={styles.activity.map.content.image}
+                                style={styles.activity.map.user.image}
                                 source={{
                                     uri: `https://ride-tracker.nora-soderlund.se/users/${this.user.slug}/avatar.png`
                                 }}
                             />
                         </View>
 
-                        <View style={styles.activity.map.content.texts}>
-                            <Text style={styles.activity.map.content.texts.title}>{this.user.name}</Text>
-                            <Text style={styles.activity.map.content.texts.description}>{TimestampHelper.getTimeAgo(new Date(this.data.timestamp))} ago in Vänersborg</Text>
+                        <View style={styles.activity.map.user.texts}>
+                            <Text style={styles.activity.map.user.texts.title}>{this.user.name}</Text>
+                            <Text style={styles.activity.map.user.texts.description}>{TimestampHelper.getTimeAgo(new Date(this.data.timestamp))} ago in Vänersborg</Text>
                         </View>
                     </View>
                 </View>
@@ -172,7 +184,9 @@ export default class Activity extends React.Component {
                     ))}
                 </View>
                 
-                <Button title="Show more details"/>
+                { this.props.onPress != undefined &&
+                    <Button title="Show more details" onPress={() => this.props.onPress(this.data.id)}/>
+                }
             </View>
         );
     }
