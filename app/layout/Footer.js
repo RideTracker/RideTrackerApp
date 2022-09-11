@@ -55,19 +55,19 @@ export default class Footer extends React.Component {
         return (
             <View style={styles.footer}>
                 <View style={styles.footer.container}>
-                    <TouchableOpacity style={styles.footer.container.button}>
+                    <TouchableOpacity style={styles.footer.container.button} onPress={() => this.props.onPress("home")}>
                         <FontAwesome5 style={styles.footer.container.button.icon} name={"home"}/>
 
                         <Text style={styles.footer.container.button.text}>Home</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.footer.container.button}>
-                        <FontAwesome5 style={styles.footer.container.button.icon} name={"circle"} solid/>
+                    <TouchableOpacity style={styles.footer.container.button} onPress={() => this.props.onPress("record")}>
+                        <FontAwesome5 style={styles.footer.container.button.icon} name={"dot-circle"} solid/>
 
                         <Text style={styles.footer.container.button.text}>Record</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.footer.container.button}>
+                    <TouchableOpacity style={styles.footer.container.button} onPress={() => this.props.onPress("profile")}>
                         <FontAwesome5 style={styles.footer.container.button.icon} name={"user"} solid/>
 
                         <Text style={styles.footer.container.button.text}>Profile</Text>

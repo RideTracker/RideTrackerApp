@@ -10,12 +10,22 @@ import API from "../API";
 import Config from "../config.json";
 
 const styles = StyleSheet.create({
+    page: {
+        flex: 1,
+
+        height: "100%"
+    }
 });
 
 export default class ProfilePage extends React.Component {
     render() { 
         return (
-            <View>
+            <View style={styles.page}>
+                <Header title="Profile"/>
+
+                <ScrollView></ScrollView>
+                
+                <Footer onPress={(page) => this.props.onFooterPress(page)}/>
             </View>
         );
     }

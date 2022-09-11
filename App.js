@@ -9,6 +9,8 @@ import ProfilePage from "./app/pages/ProfilePage";
 import Header from "./app/layout/Header";
 import Footer from "./app/layout/Footer";
 
+import Pages from "./app/Pages";
+
 import Config from "./app/config.json";
 
 export default function App() {
@@ -22,7 +24,7 @@ export default function App() {
 
 	return (
         <View style={styles.document}>
-            <LandingPage/>
+            <Pages/>
         </View>
 	);
 }

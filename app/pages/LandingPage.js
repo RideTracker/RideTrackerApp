@@ -70,7 +70,7 @@ export default class LandingPage extends React.Component {
                         {this.activities.map(activity => <Activity style={styles.container.activity} id={activity} onPress={(id) => this.showActivity(id)}/>)}
                     </ScrollView>
 
-                    <Footer/>
+                    <Footer onPress={(page) => this.props.onFooterPress(page)}/>
                 </View>
 
                 {this.state != null && this.state.activity != null &&
