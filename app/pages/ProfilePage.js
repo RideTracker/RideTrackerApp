@@ -25,7 +25,7 @@ export default class ProfilePage extends React.Component {
 
                 <ScrollView></ScrollView>
                 
-                <Footer onPress={(page) => this.props.onFooterPress(page)}/>
+                <Footer onPress={(page) => this.props.onPageNavigation(page)}/>
             </View>
         );
     }

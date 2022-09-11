@@ -4,6 +4,7 @@ import Constants from 'expo-constants';
 
 import LandingPage from "./pages/LandingPage";
 import ProfilePage from "./pages/ProfilePage";
+import RecordPage from "./pages/RecordPage";
 
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
@@ -27,10 +28,13 @@ export default class Pages extends React.Component {
 
     getPage() {
         if(this.state == null || this.state.page == "home")
-            return (<LandingPage onFooterPress={(page) => this.setPage(page)}/>);
+            return (<LandingPage onPageNavigation={(page) => this.setPage(page)}/>);
         
         if(this.state.page == "profile")
-            return (<ProfilePage onFooterPress={(page) => this.setPage(page)}/>);
+            return (<ProfilePage onPageNavigation={(page) => this.setPage(page)}/>);
+        
+        if(this.state.page == "record")
+            return (<RecordPage onPageNavigation={(page) => this.setPage(page)}/>);
     }
 
     render() { 
