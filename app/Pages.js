@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
+import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
 
 import LandingPage from "./pages/LandingPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -20,6 +22,12 @@ const styles = StyleSheet.create({
 });
 
 export default class Pages extends React.Component {
+    componentDidMount() {
+        Location.requestForegroundPermissionsAsync().then(() => {
+            Location.requestBackgroundPermissionsAsync();
+        });
+    };
+
     setPage(page) {
         this.setState({
             page: page

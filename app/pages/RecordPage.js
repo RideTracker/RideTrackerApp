@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, Text, View, Image, ScrollView, TouchableOpacityBase } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity, Text, View, Image, ScrollView, TouchableOpacityBase } from 'react-native';
 import Constants from 'expo-constants';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { WebView } from 'react-native-webview';
+
+import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
 
 import Header from "../layout/Header";
@@ -12,6 +14,7 @@ import Button from "../components/Button";
 import API from "../API";
 
 import Config from "../config.json";
+import RideRecorder from "../data/RideRecorder";
 
 const styles = StyleSheet.create({
     page: {
@@ -33,22 +36,9 @@ const styles = StyleSheet.create({
                 flexDirection: "row",
                 justifyContent: "space-evenly"
             },
-            
-            small: {
-                title: {
-                    color: Config.colorPalette.highlight,
-                    
-                    fontSize: 36,
-                    fontWeight: "bold",
-                    textAlign: "center"
-                },
-    
-                description: {
-                    color: Config.colorPalette.foreground,
-                    
-                    fontSize: 16,
-                    textAlign: "center"
-                }
+
+            container: {
+                position: "relative"
             },
             
             item: {
@@ -68,20 +58,27 @@ const styles = StyleSheet.create({
                 }
             },
     
-            big: {
+            wide: {
                 title: {
-                    color: Config.colorPalette.highlight,
-                    
-                    fontSize: 66,
-                    fontWeight: "bold",
-                    textAlign: "center"
+                    fontSize: 80
                 },
-    
-                description: {
+
+                text: {
                     color: Config.colorPalette.foreground,
-                    
+
                     fontSize: 26,
-                    textAlign: "center"
+                    fontWeight: "normal",
+                    textAlign: "center",
+
+                    hidden: {
+                        color: "transparent"
+                    }
+                }
+            },
+    
+            high: {
+                title: {
+                    fontSize: 100
                 }
             }
         },
@@ -134,19 +131,10 @@ const styles = StyleSheet.create({
 });
 
 export default class RecordPage extends React.Component {
-    componentDidMount() {
-        Location.requestForegroundPermissionsAsync().then(result => {
-            this.setState({
-                paused: true,
-                seconds: 0
-            });
-    
-            this.interval = setInterval(() => this.onInterval(), 1000);
+    recorder = new RideRecorder(true);
 
-            this.watcher = Location.watchPositionAsync({
-                showsBackgroundLocationIndicator: true
-            }, (...args) => this.onPositionUpdate(...args));
-        });
+    componentDidMount() {
+        this.interval = setInterval(() => this.onInterval(), 1000);
     };
 
     componentWillUnmount() {
@@ -154,11 +142,12 @@ export default class RecordPage extends React.Component {
     }
 
     onInterval() {
-        if(this.state.paused)
+        if(!this.recorder.active)
             return;
 
         this.setState({
-            seconds: this.state.seconds + 1
+            duration: this.recorder.getDuration(),
+            speed: Math.round(this.recorder.getSpeed() * 10) / 10
         });
     };
 
@@ -167,44 +156,73 @@ export default class RecordPage extends React.Component {
     };
 
     togglePause() {
-        this.setState({
-            paused: !this.state?.paused
-        });
+        this.recorder.toggle();
+
+        this.setState({});
     };
 
-    onFinish() {
+    async onFinish() {
+        console.log("finish");
 
+        if(this.recorder.active)
+            this.recorder.stop();
+
+        const result = await this.recorder.save();
+
+        Alert.alert(this.recorder.id + ".json", result);
     };
 
     onDiscard() {
+        if(this.recorder.active)
+            this.recorder.stop();
+
         this.props.onPageNavigation("home");
     };
 
+    renderStateDuration() {
+        let duration = (this.state?.duration || 0) / 1000;
+
+        let result = [];
+
+        let hours = Math.floor(duration / 60 / 60);
+        duration -= hours * 60 * 60;
+        result.push((hours < 10 && "0") + hours);
+
+        let minutes = Math.floor(duration / 60);
+        duration -= minutes * 60;
+        result.push((minutes < 10 && "0") + minutes);
+
+        duration = Math.floor(duration);
+        result.push((duration < 10 && "0") + duration);
+
+        return result.join(':');
+    };
+
     renderStats() {
-        if(this.state?.paused == true) {
+        if(!this.recorder.active) {
             return (
-                <View style={[ styles.page.stats, styles.page.paused ]}>
+                <View style={styles.page.stats}>
                     <View style={styles.page.stats.row}>
-                        <View style={styles.page.stats.small}>
-                            <Text style={styles.page.stats.small.title}>{this.state.seconds}</Text>
-                            <Text style={styles.page.stats.small.description}>duration</Text>
+                        <View style={[styles.page.stats.item, styles.page.stats.wide]}>
+                            <Text style={[styles.page.stats.item.title, styles.page.stats.wide.title]}>{this.renderStateDuration()}</Text>
+                            <Text style={styles.page.stats.item.description}>duration</Text>
                         </View>
-                        
-                        <View style={styles.page.stats.small}>
-                            <Text style={styles.page.stats.small.title}>0.00 km/h</Text>
-                            <Text style={styles.page.stats.small.description}>average speed</Text>
+
+                        <View style={[styles.page.stats.item, styles.page.stats.wide]}>
+                            <Text style={[styles.page.stats.item.title, styles.page.stats.wide.title]}>{this.state?.speed ?? 0} km/h</Text>
+                            <Text style={styles.page.stats.item.description}>speed</Text>
                         </View>
                     </View>
 
                     <View style={styles.page.stats.row}>
-                        <View style={styles.page.stats.small}>
-                            <Text style={styles.page.stats.small.title}>0.00 km</Text>
-                            <Text style={styles.page.stats.small.description}>distance</Text>
+                        <View style={styles.page.stats.item}>
+                            <Text style={styles.page.stats.item.title}>0.00 km</Text>
+                            <Text style={styles.page.stats.item.description}>distance</Text>
                         </View>
 
-                        <View style={styles.page.stats.small}>
-                            <Text style={styles.page.stats.small.title}>0 m</Text>
-                            <Text style={styles.page.stats.small.description}>elevation</Text>
+                        <View style={styles.page.stats.item}>
+                            <Text style={styles.page.stats.item.title}>0 m</Text>
+                            <Text style={styles.page.stats.item.description}>elevation</Text>
                         </View>
                     </View>
                 </View>
@@ -213,15 +231,22 @@ export default class RecordPage extends React.Component {
         
         return (
             <View style={styles.page.stats}>
-                <View style={styles.page.stats.item}>
-                    <Text style={styles.page.stats.item.title}>{this.state?.seconds}</Text>
+                <View style={[styles.page.stats.item, styles.page.stats.wide]}>
+                    <Text style={[styles.page.stats.item.title, styles.page.stats.wide.title]}>{this.renderStateDuration()}</Text>
 
                     <Text style={styles.page.stats.item.description}>duration</Text>
                 </View>
-                
-                <View style={styles.page.stats.big}>
-                    <Text style={styles.page.stats.big.title}>0.00 km/h</Text>
-                    <Text style={styles.page.stats.big.description}>average speed</Text>
+
+                <View style={[styles.page.stats.item, styles.page.stats.wide]}>
+                    <View style={styles.page.stats.item.container}>
+                        <Text style={[styles.page.stats.item.title, styles.page.stats.high.title]}>
+                            <Text style={[styles.page.stats.wide.text, styles.page.stats.wide.text.hidden]}> km/h</Text>
+
+                            {this.state?.speed ?? 0}
+                            
+                            <Text style={styles.page.stats.wide.text}> km/h</Text>
+                        </Text>
+                    </View>
                 </View>
                         
                 <View style={styles.page.stats.row}>
@@ -242,11 +267,11 @@ export default class RecordPage extends React.Component {
     render() { 
         return (
             <View style={styles.page}>
-                {this.state?.paused == true &&
+                {!this.recorder.active &&
                     [
-                        (<Header title="Paused"/>),
+                        (<Header key="1" title="Paused"/>),
                         
-                        (<WebView source={{
+                        (<WebView key="2" source={{
                             uri: API.server + "/map.html"
                         }} scrollEnabled="false"/>)
                     ]
@@ -258,20 +283,11 @@ export default class RecordPage extends React.Component {
 
                 <View style={styles.page.controls}>
                     <TouchableOpacity style={styles.page.controls.button} onPress={() => this.togglePause()}>
-                        <FontAwesome5 style={styles.page.controls.button.icon} name={(this.state?.paused)?("play-circle"):("stop-circle")} solid/>
+                        <FontAwesome5 style={styles.page.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
                     </TouchableOpacity>
-
-                    {/* this.state?.paused == true &&
-                        <TouchableOpacity style={styles.page.controls.button}>
-                            <View style={styles.page.controls.button.container}>
-                                <Text style={styles.page.controls.button.text}>FINISH</Text>
-                            </View>
-                            <FontAwesome5 style={styles.page.controls.button.icon} name={"circle"}/>
-                        </TouchableOpacity>
-                    */}
                 </View>
 
-                { this.state?.paused == true &&
+                { !this.recorder.active &&
                     <View>
                         <Button title="Finish" onPress={() => this.onFinish()}/>
                         <Button title="Discard" confirm={{

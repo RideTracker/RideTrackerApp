@@ -177,7 +177,7 @@ export default class Activity extends React.Component {
 
                 <View style={styles.activity.stats}>
                     {this.summary.map((summary) => (
-                        <View style={styles.activity.stats.item}>
+                        <View key={summary.key} style={styles.activity.stats.item}>
                             <Text style={styles.activity.stats.item.title}>{summary.value}</Text>
                             <Text style={styles.activity.stats.item.description}>{summary.key}</Text>
                         </View>
