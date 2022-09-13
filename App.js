@@ -12,8 +12,14 @@ import Footer from "./app/layout/Footer";
 import Pages from "./app/Pages";
 
 import Config from "./app/config.json";
+import API from './app/API';
+import Files from './app/data/Offline';
 
 export default function App() {
+    //await API.ping(true);
+
+    Files.uploadFiles();
+
     const styles = StyleSheet.create({
         document: {
             backgroundColor: Config.colorPalette.background,

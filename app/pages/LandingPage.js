@@ -78,7 +78,7 @@ export default class LandingPage extends React.Component {
                         <Header title="Activity" navigation="true" onNavigationPress={() => this.hideActivity()}/>
 
                         <ScrollView>
-                            <Activity data={{ id: this.state.activity }}/>
+                            <Activity id={this.state.activity}/>
                         </ScrollView>
                     </View>
                 }
