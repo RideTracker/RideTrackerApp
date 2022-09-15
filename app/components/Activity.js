@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import { StyleSheet, Text, View, Image } from 'react-native';
 import Constants from 'expo-constants';
 
 import Button from "../components/Button";
 import WebView from 'react-native-webview';
+import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import TimestampHelper from "../helpers/TimestampHelper";
 
@@ -11,6 +12,7 @@ import Map from "../components/Map.json";
 
 import API from "../API";
 import Config from "../config.json";
+import RecordingData from "../data/RecordingData";
 
 const styles = StyleSheet.create({
     activity: {
@@ -116,6 +118,12 @@ export default class Activity extends React.Component {
     ready = false;
     data = {};
 
+    constructor(props) {
+        super(props);
+
+        this.mapView = React.createRef();
+    }
+
     componentDidMount() {
         // pls do a API.get([])
         API.get("activity", {
@@ -138,6 +146,24 @@ export default class Activity extends React.Component {
                 });
             });
         });
+
+        API.get("rides/" + this.props.id + ".json").then(data => {
+            this.setState({
+                recording: new RecordingData(data)
+            });
+        });
+    };
+
+    onLayout() {
+        this.mapView.current.fitToCoordinates(this.state.recording.getAllLatLngCoordinates(), {
+            edgePadding: {
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20
+            },
+            animated: false
+        });
     };
 
     render() {
@@ -151,12 +177,17 @@ export default class Activity extends React.Component {
         return (
             <View style={styles.activity}>
                 <View style={styles.activity.map}>
-                    <WebView
-                        style={styles.activity.map.image}
-                        source={{
-                            uri: API.server + "/map.html"
-                        }}
-                    />
+                    <MapView ref={this.mapView} style={styles.activity.map.image} customMapStyle={Config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                        {this.state.recording != null && 
+                            (this.state.recording.getLatLngCoordinates().map(section => (
+                                <Polyline key={section.index} coordinates={section.coordinates} 
+                                    strokeColor={"#FFF"}
+                                    strokeWidth={3}
+                                    lineJoin={"round"}
+                                ></Polyline>
+                            )))
+                        }
+                    </MapView>
 
                     <View style={styles.activity.map.user}>
                         <View>

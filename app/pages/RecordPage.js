@@ -24,9 +24,6 @@ const styles = StyleSheet.create({
 
         paddingBottom: 20,
 
-        paused: {
-        }, 
-
         stats: {
             flex: 1,
 

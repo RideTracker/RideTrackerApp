@@ -42,7 +42,7 @@ export default class LandingPage extends React.Component {
     
     componentDidMount() {
         API.get("feed/activities").then((result) => {
-            this.activities = result.content;
+            //this.activities = result.content;
 
             this.setState({});
         });
