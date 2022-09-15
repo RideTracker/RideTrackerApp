@@ -3,9 +3,9 @@ import * as TaskManager from 'expo-task-manager';
 import { TouchableHighlightBase } from 'react-native';
 import uuid from 'react-native-uuid';
 
-import Files from "../data/Offline";
+import Files from "../data/Files";
 
-export default class RideRecorder {
+export default class Recorder {
     id = uuid.v4();
     active = false;
 

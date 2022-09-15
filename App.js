@@ -1,24 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import Constants from 'expo-constants';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { StyleSheet, View } from "react-native";
+import * as Location from "expo-location";
 
-import LandingPage from "./app/pages/LandingPage";
-import ProfilePage from "./app/pages/ProfilePage";
-
-import Header from "./app/layout/Header";
-import Footer from "./app/layout/Footer";
-
-import Pages from "./app/Pages";
+import Pages from "./app/layout/Pages.component";
 
 import Config from "./app/config.json";
-import API from './app/API';
-import Files from './app/data/Offline';
+import API from "./app/API";
+import Files from "./app/data/Files";
 
 export default function App() {
     //await API.ping(true);
 
-    Files.uploadFiles();
+    //await Files.uploadFiles();
+    
+    Location.requestForegroundPermissionsAsync().then(() => {
+        Location.requestBackgroundPermissionsAsync();
+    });
 
     const styles = StyleSheet.create({
         document: {

@@ -1,0 +1,182 @@
+import React, { Component } from "react";
+import { Alert, TouchableOpacity, Text, View } from "react-native";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import { WebView } from "react-native-webview";
+
+import Header from "../layout/Header.component";
+import Button from "../components/Button.component";
+import API from "../API";
+
+import Recorder from "../data/Recorder";
+
+import style from "./RecordPage.component.style";
+
+export default class RecordPage extends React.Component {
+    recorder = new Recorder(true);
+
+    componentDidMount() {
+        this.interval = setInterval(() => this.onInterval(), 1000);
+    };
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    onInterval() {
+        if(!this.recorder.active)
+            return;
+
+        this.setState({
+            duration: this.recorder.getDuration(),
+            speed: Math.round(this.recorder.getSpeed() * 10) / 10
+        });
+    };
+
+    onPositionUpdate(position) {
+        console.log(position);
+    };
+
+    togglePause() {
+        this.recorder.toggle();
+
+        this.setState({});
+    };
+
+    async onFinish() {
+        console.log("finish");
+
+        if(this.recorder.active)
+            this.recorder.stop();
+
+        const result = await this.recorder.save();
+
+        Alert.alert(this.recorder.id + ".json", result);
+    };
+
+    onDiscard() {
+        if(this.recorder.active)
+            this.recorder.stop();
+
+        this.props.onPageNavigation("home");
+    };
+
+    renderStateDuration() {
+        let duration = (this.state?.duration || 0) / 1000;
+
+        let result = [];
+
+        let hours = Math.floor(duration / 60 / 60);
+        duration -= hours * 60 * 60;
+        result.push((hours < 10 && "0") + hours);
+
+        let minutes = Math.floor(duration / 60);
+        duration -= minutes * 60;
+        result.push((minutes < 10 && "0") + minutes);
+
+        duration = Math.floor(duration);
+        result.push((duration < 10 && "0") + duration);
+
+        return result.join(':');
+    };
+
+    renderStats() {
+        if(!this.recorder.active) {
+            return (
+                <View style={style.stats}>
+                    <View style={style.stats.row}>
+                        <View style={[style.stats.item, style.stats.wide]}>
+                            <Text style={[style.stats.item.title, style.stats.wide.title]}>{this.renderStateDuration()}</Text>
+                            <Text style={style.stats.item.description}>duration</Text>
+                        </View>
+
+                        <View style={[style.stats.item, style.stats.wide]}>
+                            <Text style={[style.stats.item.title, style.stats.wide.title]}>{this.state?.speed ?? 0} km/h</Text>
+                            <Text style={style.stats.item.description}>speed</Text>
+                        </View>
+                    </View>
+
+                    <View style={style.stats.row}>
+                        <View style={style.stats.item}>
+                            <Text style={style.stats.item.title}>0.00 km</Text>
+                            <Text style={style.stats.item.description}>distance</Text>
+                        </View>
+
+                        <View style={style.stats.item}>
+                            <Text style={style.stats.item.title}>0 m</Text>
+                            <Text style={style.stats.item.description}>elevation</Text>
+                        </View>
+                    </View>
+                </View>
+            );
+        }
+        
+        return (
+            <View style={style.stats}>
+                <View style={[style.stats.item, style.stats.wide]}>
+                    <Text style={[style.stats.item.title, style.stats.wide.title]}>{this.renderStateDuration()}</Text>
+
+                    <Text style={style.stats.item.description}>duration</Text>
+                </View>
+
+                <View style={[style.stats.item, style.stats.wide]}>
+                    <View style={style.stats.item.container}>
+                        <Text style={[style.stats.item.title, style.stats.high.title]}>
+                            <Text style={[style.stats.wide.text, style.stats.wide.text.hidden]}> km/h</Text>
+
+                            {this.state?.speed ?? 0}
+                            
+                            <Text style={style.stats.wide.text}> km/h</Text>
+                        </Text>
+                    </View>
+                </View>
+                        
+                <View style={style.stats.row}>
+                    <View style={style.stats.item}>
+                        <Text style={style.stats.item.title}>0.00 km</Text>
+                        <Text style={style.stats.item.description}>distance</Text>
+                    </View>
+                
+                    <View style={style.stats.item}>
+                        <Text style={style.stats.item.title}>0 m</Text>
+                        <Text style={style.stats.item.description}>elevation</Text>
+                    </View>
+                </View>
+            </View>
+        );
+    };
+
+    render() { 
+        return (
+            <View style={style}>
+                {!this.recorder.active &&
+                    [
+                        (<Header key="1" title="Paused"/>),
+                        
+                        (<WebView key="2" source={{
+                            uri: API.server + "/map.html"
+                        }} scrollEnabled="false"/>)
+                    ]
+                }
+
+                <View style={style.stats}>
+                    {this.renderStats()}
+                </View>
+
+                <View style={style.controls}>
+                    <TouchableOpacity style={style.controls.button} onPress={() => this.togglePause()}>
+                        <FontAwesome5 style={style.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
+                    </TouchableOpacity>
+                </View>
+
+                { !this.recorder.active &&
+                    <View>
+                        <Button title="Finish" onPress={() => this.onFinish()}/>
+                        <Button title="Discard" confirm={{
+                            message: "Do you really want to discard this ride?"
+                        }} onPress={() => this.onDiscard()}/>
+                    </View>
+                }
+            </View>
+        );
+    }
+};
