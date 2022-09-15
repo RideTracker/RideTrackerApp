@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { View, ScrollView } from "react-native";
 
-import Header from "../layout/Header.component";
-import Footer from "../layout/Footer.component";
-import Activity from "../components/Activity.component";
+import Header from "../Layouts/Header.component";
+import Footer from "../Layouts/Footer.component";
+import Activity from "../Components/Activity.component";
 import API from "../API";
 
 import style from "./LandingPage.component.style";

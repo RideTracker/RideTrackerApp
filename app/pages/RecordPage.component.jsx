@@ -3,11 +3,11 @@ import { Alert, TouchableOpacity, Text, View } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { WebView } from "react-native-webview";
 
-import Header from "../layout/Header.component";
-import Button from "../components/Button.component";
+import Header from "../Layouts/Header.component";
+import Button from "../Components/Button.component";
 import API from "../API";
 
-import Recorder from "../data/Recorder";
+import Recorder from "../Data/Recorder";
 
 import style from "./RecordPage.component.style";
 

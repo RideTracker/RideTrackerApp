@@ -5,7 +5,7 @@ import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import API from "../API";
 import Config from "../config.json";
-import RecordingData from "../data/RecordingData";
+import RecordingData from "../Data/RecordingData";
 
 import Button from "./Button.component";
 import style from "./Activity.component.style";

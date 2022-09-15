@@ -1,11 +1,11 @@
 import { StyleSheet, View } from "react-native";
 import * as Location from "expo-location";
 
-import Pages from "./app/layout/Pages.component";
+import Pages from "./app/Layouts/Pages.component";
 
 import Config from "./app/config.json";
 import API from "./app/API";
-import Files from "./app/data/Files";
+import Files from "./app/Data/Files";
 
 export default function App() {
     //await API.ping(true);
