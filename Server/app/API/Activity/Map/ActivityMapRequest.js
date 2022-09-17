@@ -1,15 +1,16 @@
-const global = require("../../global");
+const global = require("../../../../global");
 
-const ApiRequest = require("../ApiRequest");
-const ApiResponse = require("../ApiResponse");
+const ApiRequest = require("../../ApiRequest");
+const ApiResponse = require("../../ApiResponse");
 
-const ActivitySummaryResponse = require("../responses/ActivitySummaryResponse");
+const ActivitySummaryResponse = require("../Summary/ActivitySummaryResponse");
 
 // this only sends the ids of the activities to show to allow for the
 // client to cache the activities it has already requested, if any.
 module.exports = class ActivitySummaryRequest extends ApiRequest {
-    static path = "/activity/summary";
-    
+    static path = "/activity/map";
+    static type = "text/html";
+
     async respond() {
         return new Promise((resolve, reject) => {
             const parameters = this.getParameters();

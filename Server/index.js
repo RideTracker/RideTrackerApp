@@ -1,8 +1,8 @@
 const fs = require("fs");
 const http = require("http");
 const mysql = require("mysql");
-const ApiResponse = require("./app/ApiResponse");
-const ActivityRequest = require("./app/requests/ActivityRequest");
+const ApiResponse = require("./app/API/ApiResponse");
+const ActivityRequest = require("./app/API/Activity/ActivityRequest");
 
 const global = require("./global");
 
@@ -15,20 +15,20 @@ global.connection.connect((error) => {
         console.log(error);
 
     const requests = [
-        require("./app/requests/Ping"),
+        require("./app/API/Ping/Ping"),
         
-        require("./app/requests/UserRequest"),
+        require("./app/API/User/UserRequest"),
 
-        require("./app/requests/ActivityRequest"),
-        require("./app/requests/ActivityMapRequest"),
-        require("./app/requests/ActivitySummaryRequest"),
+        require("./app/API/Activity/ActivityRequest"),
+        require("./app/API/Activity/Map/ActivityMapRequest"),
+        require("./app/API/Activity/Summary/ActivitySummaryRequest"),
 
-        require("./app/requests/feed/ActivitiesRequest")
+        require("./app/API/Feed/ActivitiesRequest")
     ];
 
     const server = http.createServer(async (request, response) => {
         try {
-            console.log("request from " + request.socket.remoteAddress + " for " + request.url);
+            console.log(request.method + " " + request.socket.remoteAddress + " for " + request.url);
 
             if(request.method == "PUT") {
                 let body = "";

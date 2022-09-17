@@ -1,9 +1,9 @@
-const global = require("./../../../global");
+const global = require("../../../global");
 
-const ApiRequest = require("../../ApiRequest");
-const ApiResponse = require("../../ApiResponse");
+const ApiRequest = require("../ApiRequest");
+const ApiResponse = require("../ApiResponse");
 
-const ActivityResponse = require("../../responses/ActivityResponse");
+const ActivityResponse = require("../Activity/ActivityResponse");
 
 // this only sends the ids of the activities to show to allow for the
 // client to cache the activities it has already requested, if any.
