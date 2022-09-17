@@ -13,8 +13,8 @@ export default function App() {
     //await Files.uploadFiles();
     
     Location.requestForegroundPermissionsAsync().then(() => {
-        Location.requestBackgroundPermissionsAsync();
-    });
+        Location.requestBackgroundPermissionsAsync().catch((error) => console.info(error));
+    }).catch((error) => console.info(error));
 
     const styles = StyleSheet.create({
         document: {
