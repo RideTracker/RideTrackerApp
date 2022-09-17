@@ -14,56 +14,43 @@ export default StyleSheet.create({
     borderTopColor: Config.colorPalette.border,
 
     map: {
-        height: 300,
+        height: 200
+    },
 
-        position: "relative",
+    user: {
+        flex: 1,
+        flexDirection: "row",
+        
+        padding: 12,
+
+        backgroundColor: "rgba(28, 28, 28, 1)",
 
         image: {
-            width: "100%",
-            height: "100%"
+            width: 40,
+            height: 40,
+
+            borderRadius: 50,
+
+            marginRight: 12
         },
 
-        user: {
-            position: "absolute",
-
+        texts: {
             flex: 1,
-            flexDirection: "row",
-            
-            bottom: 0,
+            flexDirection: "column",
 
-            width: "100%",
+            justifyContent: "center",
 
-            padding: 12,
+            title: {
+                color: Config.colorPalette.highlight,
 
-            backgroundColor: "rgba(28, 28, 28, 1)",
-
-            image: {
-                width: 40,
-                height: 40,
-
-                borderRadius: 50,
-
-                marginRight: 12
+                fontWeight: "bold",
+                fontSize: 18
             },
 
-            texts: {
-                flex: 1,
-                flexDirection: "column",
+            description: {
+                color: Config.colorPalette.foreground,
 
-                justifyContent: "center",
-
-                title: {
-                    color: Config.colorPalette.highlight,
-
-                    fontWeight: "bold",
-                    fontSize: 18
-                },
-
-                description: {
-                    color: Config.colorPalette.foreground,
-
-                    fontSize: 16
-                }
+                fontSize: 16
             }
         }
     },

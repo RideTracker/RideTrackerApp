@@ -1,4 +1,4 @@
-export default class RecordingData {
+export default class Recording {
     constructor(data) {
         this.data = data;
     };

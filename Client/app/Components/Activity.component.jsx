@@ -5,7 +5,7 @@ import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import API from "../API";
 import Config from "../config.json";
-import RecordingData from "../Data/RecordingData";
+import Recording from "../Data/Recording";
 
 import Button from "./Button.component";
 import style from "./Activity.component.style";
@@ -45,7 +45,7 @@ export default class Activity extends Component {
 
         API.get("rides/" + this.props.id + ".json").then(data => {
             this.setState({
-                recording: new RecordingData(data)
+                recording: new Recording(data)
             });
         });
     };
@@ -72,33 +72,31 @@ export default class Activity extends Component {
 
         return (
             <View style={style}>
-                <View style={style.map}>
-                    <MapView ref={this.mapView} style={style.map.image} customMapStyle={Config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
-                        {this.state.recording != null && 
-                            (this.state.recording.getLatLngCoordinates().map(section => (
-                                <Polyline key={section.index} coordinates={section.coordinates} 
-                                    strokeColor={"#FFF"}
-                                    strokeWidth={3}
-                                    lineJoin={"round"}
-                                ></Polyline>
-                            )))
-                        }
-                    </MapView>
+                <MapView ref={this.mapView} style={style.map} customMapStyle={Config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                    {this.state.recording != null && 
+                        (this.state.recording.getLatLngCoordinates().map(section => (
+                            <Polyline key={section.index} coordinates={section.coordinates} 
+                                strokeColor={"#FFF"}
+                                strokeWidth={3}
+                                lineJoin={"round"}
+                            ></Polyline>
+                        )))
+                    }
+                </MapView>
 
-                    <View style={style.map.user}>
-                        <View>
-                            <Image
-                                style={style.map.user.image}
-                                source={{
-                                    uri: `https://ride-tracker.nora-soderlund.se/users/${this.user.slug}/avatar.png`
-                                }}
-                            />
-                        </View>
+                <View style={style.user}>
+                    <View>
+                        <Image
+                            style={style.user.image}
+                            source={{
+                                uri: `https://ride-tracker.nora-soderlund.se/users/${this.user.slug}/avatar.png`
+                            }}
+                        />
+                    </View>
 
-                        <View style={style.map.user.texts}>
-                            <Text style={style.map.user.texts.title}>{this.user.name}</Text>
-                            <Text style={style.map.user.texts.description}>ago in Vänersborg</Text>
-                        </View>
+                    <View style={style.user.texts}>
+                        <Text style={style.user.texts.title}>{this.user.name}</Text>
+                        <Text style={style.user.texts.description}>ago in Vänersborg</Text>
                     </View>
                 </View>
 
