@@ -28,7 +28,7 @@ global.connection.connect((error) => {
 
     const server = http.createServer(async (request, response) => {
         try {
-            console.log(request.method + " " + request.socket.remoteAddress + " for " + request.url);
+            console.log(request.socket.remoteAddress + " " + request.method + " " + request.url);
 
             if(request.method == "PUT") {
                 let body = "";
@@ -48,6 +48,8 @@ global.connection.connect((error) => {
                         succcess: true,
                         content: null
                     }));
+
+                    console.log(request.socket.remoteAddress + " 200 OK");
                 });
 
                 return;
@@ -60,28 +62,9 @@ global.connection.connect((error) => {
             if(indexOfGet != -1)
                 url = url.substring(0, indexOfGet);
 
-            const indexOfExtension = url.indexOf('.');
+            if(url.startsWith("/api/")) {
+                url = url.substring("/api".length);
 
-            if(indexOfExtension != -1) {
-                if(!fs.existsSync("./app/public/" + url))
-                    return;
-
-                const contentTypes = {
-                    ".html": "text/html",
-                    ".css": "text/css",
-                    ".js": "text/javascript",
-                    ".json": "text/json"
-                };
-
-                const extension = url.substring(indexOfExtension, url.length);
-
-                response.writeHead(200, {
-                    "Content-Type": contentTypes[extension]
-                });
-            
-                response.write(fs.readFileSync("./app/public/" + url));
-            }
-            else {
                 const ApiRequest = requests.find(x => x.path == url);
 
                 const apiRequest = new ApiRequest(request);
@@ -89,9 +72,42 @@ global.connection.connect((error) => {
                 response.writeHead(200, {
                     "Content-Type": "text/json"
                 });
+
+                const apiResponse = await apiRequest.respond();
             
-                response.write(JSON.stringify(await apiRequest.respond()));
+                response.write(JSON.stringify(apiResponse));
+
+                console.log(request.socket.remoteAddress + " 200 OK");
+
+                return;
             }
+
+            const indexOfExtension = url.indexOf('.');
+
+            if(!fs.existsSync("./app/public/" + url)) {
+                response.writeHead(404);
+                
+                console.log(request.socket.remoteAddress + " 404 File Not Found");
+
+                return;
+            }
+
+            const contentTypes = {
+                ".html": "text/html",
+                ".css": "text/css",
+                ".js": "text/javascript",
+                ".json": "text/json"
+            };
+
+            const extension = url.substring(indexOfExtension, url.length);
+
+            response.writeHead(200, {
+                "Content-Type": contentTypes[extension]
+            });
+        
+            response.write(fs.readFileSync("./app/public/" + url));
+
+            console.log(request.socket.remoteAddress + " 200 OK");
         }
         catch(error) {
             console.log(error);
