@@ -25,20 +25,17 @@ export default class Activity extends Component {
         API.get("/api/activity", {
             id: this.props.id
         }).then((data) => {
-            this.data = data.content;
+            this.setState({
+                data: data.content
+            });
 
-            API.get("/api/activity/summary", {
-                id: this.props.id
+            API.get("/api/user", {
+                id: this.state.data.user
             }).then((data) => {
-                this.summary = data.content;
-    
-                API.get("/api/user", {
-                    id: this.data.user
-                }).then((data) => {
-                    this.ready = true;
-                    this.user = data.content;
-        
-                    this.setState({});
+                this.setState({
+                    user: data.content,
+
+                    ready: true
                 });
             });
         });
@@ -63,7 +60,7 @@ export default class Activity extends Component {
     };
 
     render() {
-        if(!this.ready) {
+        if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
             return (
                 <Text>Loading...</Text>
@@ -89,28 +86,41 @@ export default class Activity extends Component {
                         <Image
                             style={style.user.image}
                             source={{
-                                uri: `https://ride-tracker.nora-soderlund.se/users/${this.user.slug}/avatar.png`
+                                uri: `https://ride-tracker.nora-soderlund.se/users/${this.state.user.slug}/avatar.png`
                             }}
                         />
                     </View>
 
                     <View style={style.user.texts}>
-                        <Text style={style.user.texts.title}>{this.user.name}</Text>
+                        <Text style={style.user.texts.title}>{this.state.user.name}</Text>
                         <Text style={style.user.texts.description}>Time ago in Vänersborg</Text>
                     </View>
                 </View>
 
                 <View style={style.stats}>
-                    {this.summary.map((summary) => (
-                        <View key={summary.key} style={style.stats.item}>
-                            <Text style={style.stats.item.title}>{summary.value}</Text>
-                            <Text style={style.stats.item.description}>{summary.key}</Text>
-                        </View>
-                    ))}
+                    <View style={style.stats.item}>
+                        <Text style={style.stats.item.title}>{this.state.recording.getDistance()} km</Text>
+                        <Text style={style.stats.item.description}>distance</Text>
+                    </View>
+
+                    <View style={style.stats.item}>
+                        <Text style={style.stats.item.title}>{this.state.recording.getAverageSpeed()} km/h</Text>
+                        <Text style={style.stats.item.description}>average speed</Text>
+                    </View>
+                    
+                    <View style={style.stats.item}>
+                        <Text style={style.stats.item.title}>{this.state.recording.getElevation()} m</Text>
+                        <Text style={style.stats.item.description}>elevation</Text>
+                    </View>
+                    
+                    <View style={style.stats.item}>
+                        <Text style={style.stats.item.title}>{this.state.recording.getMaxSpeed()} km/h</Text>
+                        <Text style={style.stats.item.description}>max speed</Text>
+                    </View>
                 </View>
                 
                 { this.props.onPress != undefined &&
-                    <Button title="Show more details" onPress={() => this.props.onPress(this.data.id)}/>
+                    <Button title="Show more details" onPress={() => this.props.onPress(this.state.data.id)}/>
                 }
             </View>
         );

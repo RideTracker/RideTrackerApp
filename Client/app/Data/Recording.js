@@ -39,11 +39,17 @@ export default class Recording {
         return coordinates;
     };
 
-    getAllCoordinates() {
+    getAllCoordinates(ignoreAccuracy = false) {
         let coordinates = [];
-        
-        for(let index = 0; index < this.data.sections.length; index++)
-            coordinates = coordinates.concat(this.data.sections[index].coordinates.map((coordinate) => coordinate.coords))
+
+        this.data.sections.forEach((section) => {
+            section.coordinates.forEach((coordinate) => {
+                if(!ignoreAccuracy && coordinate.coords.accuracy - coordinate.coords.speed > 0)
+                    return;
+
+                coordinates.push(coordinate.coords);
+            });
+        });
 
         return coordinates;
     };
@@ -62,7 +68,7 @@ export default class Recording {
     };
 
     getDistance() {
-        const coordinates = this.getAllCoordinates();
+        const coordinates = this.getAllCoordinates(true);
 
         let distance = 0;
         
@@ -90,17 +96,30 @@ export default class Recording {
         const kilometers = distance / 1000;
 
         return Math.round(kilometers * 10) / 10;
-    }
+    };
 
     getElevation() {
-        const coordinates = this.getAllCoordinates();
+        const coordinates = this.getAllCoordinates(true);
         
         let elevation = 0;
 
         for(let index = 0; index < coordinates.length - 1; index++) {
-            elevation += Math.abs(coordinates[index].altitude - coordinates[index + 1].altitude);
+            const altitude = coordinates[index + 1].altitude - coordinates[index].altitude;
+
+            if(altitude >= 0) // we only want the gained elevation
+                elevation += altitude;
         }
         
         return Math.round(elevation);
-    }
+    };
+
+    getMaxSpeed() {
+        const coordinates = this.getAllCoordinates();
+
+        return Math.max(...coordinates.map((coordinate) => {
+            const kilometersPerHour = coordinate.speed * 3.6;
+
+            return Math.round(kilometersPerHour * 10) / 10;
+        }));
+    };
 };
