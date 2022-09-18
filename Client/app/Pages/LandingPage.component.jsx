@@ -10,7 +10,7 @@ import style from "./LandingPage.component.style";
 
 export default class LandingPage extends Component {
     componentDidMount() {
-        API.get("feed/activities").then((result) => {
+        API.get("/api/feed/activities").then((result) => {
             this.setState({
                 activities: result.content
             });

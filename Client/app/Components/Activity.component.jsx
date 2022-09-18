@@ -22,17 +22,17 @@ export default class Activity extends Component {
 
     componentDidMount() {
         // pls do a API.get([])
-        API.get("activity", {
+        API.get("/api/activity", {
             id: this.props.id
         }).then((data) => {
             this.data = data.content;
 
-            API.get("activity/summary", {
+            API.get("/api/activity/summary", {
                 id: this.props.id
             }).then((data) => {
                 this.summary = data.content;
     
-                API.get("user", {
+                API.get("/api/user", {
                     id: this.data.user
                 }).then((data) => {
                     this.ready = true;
@@ -43,7 +43,7 @@ export default class Activity extends Component {
             });
         });
 
-        API.get("rides/" + this.props.id + ".json").then(data => {
+        API.get("/rides/" + this.props.id + ".json").then(data => {
             this.setState({
                 recording: new Recording(data)
             });

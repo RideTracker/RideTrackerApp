@@ -8,7 +8,7 @@ const ActivityResponse = require("../Activity/ActivityResponse");
 // this only sends the ids of the activities to show to allow for the
 // client to cache the activities it has already requested, if any.
 module.exports = class ActiviesRequest extends ApiRequest {
-    static path = "/feed/activities";
+    static path = "/api/feed/activities";
     
     async respond() {
         return new Promise((resolve, reject) => {

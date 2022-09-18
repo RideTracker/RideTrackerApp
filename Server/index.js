@@ -1,30 +1,18 @@
 const fs = require("fs");
 const http = require("http");
 const mysql = require("mysql");
-const ApiResponse = require("./app/API/ApiResponse");
-const ActivityRequest = require("./app/API/Activity/ActivityRequest");
 
 const global = require("./global");
 
 const config = JSON.parse(fs.readFileSync("./config.json"));
+
+const requests = config.requests.map((file) => require(file));
 
 global.connection = mysql.createConnection(config.mysql);
 
 global.connection.connect((error) => {
     if(error)
         console.log(error);
-
-    const requests = [
-        require("./app/API/Ping/Ping"),
-        
-        require("./app/API/User/UserRequest"),
-
-        require("./app/API/Activity/ActivityRequest"),
-        require("./app/API/Activity/Map/ActivityMapRequest"),
-        require("./app/API/Activity/Summary/ActivitySummaryRequest"),
-
-        require("./app/API/Feed/ActivitiesRequest")
-    ];
 
     const server = http.createServer(async (request, response) => {
         try {
@@ -58,56 +46,52 @@ global.connection.connect((error) => {
             let url = request.url.toLowerCase();
 
             const indexOfGet = url.indexOf('?');
+            const indexOfExtension = url.indexOf('.');
 
             if(indexOfGet != -1)
                 url = url.substring(0, indexOfGet);
 
-            if(url.startsWith("/api/")) {
-                url = url.substring("/api".length);
+        
+            if(indexOfExtension != -1 && fs.existsSync("./app/public/" + url)) {
+                const contentTypes = {
+                    ".html": "text/html",
+                    ".css": "text/css",
+                    ".js": "text/javascript",
+                    ".json": "text/json"
+                };
 
-                const ApiRequest = requests.find(x => x.path == url);
-
-                const apiRequest = new ApiRequest(request);
+                const extension = url.substring(indexOfExtension, url.length);
 
                 response.writeHead(200, {
-                    "Content-Type": "text/json"
+                    "Content-Type": contentTypes[extension]
                 });
-
-                const apiResponse = await apiRequest.respond();
             
-                response.write(JSON.stringify(apiResponse));
+                response.write(fs.readFileSync("./app/public/" + url));
 
                 console.log(request.socket.remoteAddress + " 200 OK");
-
-                return;
             }
+            else {
+                const ApiRequest = requests.find(x => x.path == url);
 
-            const indexOfExtension = url.indexOf('.');
+                if(ApiRequest != null) {
+                    const apiRequest = new ApiRequest(request);
 
-            if(!fs.existsSync("./app/public/" + url)) {
-                response.writeHead(404);
+                    response.writeHead(200, {
+                        "Content-Type": "text/json"
+                    });
+
+                    const apiResponse = await apiRequest.respond();
                 
-                console.log(request.socket.remoteAddress + " 404 File Not Found");
+                    response.write(JSON.stringify(apiResponse));
 
-                return;
+                    console.log(request.socket.remoteAddress + " 200 OK");
+                }
+                else {
+                    response.writeHead(404);
+                
+                    console.log(request.socket.remoteAddress + " 404 File Not Found");
+                }
             }
-
-            const contentTypes = {
-                ".html": "text/html",
-                ".css": "text/css",
-                ".js": "text/javascript",
-                ".json": "text/json"
-            };
-
-            const extension = url.substring(indexOfExtension, url.length);
-
-            response.writeHead(200, {
-                "Content-Type": contentTypes[extension]
-            });
-        
-            response.write(fs.readFileSync("./app/public/" + url));
-
-            console.log(request.socket.remoteAddress + " 200 OK");
         }
         catch(error) {
             console.log(error);

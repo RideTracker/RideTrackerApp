@@ -4,5 +4,17 @@
         "user": "root",
         "password": "password",
         "database": "ridetracker"
-    }
+    },
+
+    "requests": [
+        "./app/API/Ping/PingRequest",
+        
+        "./app/API/User/UserRequest",
+    
+        "./app/API/Activity/ActivityRequest",
+        "./app/API/Activity/Map/ActivityMapRequest",
+        "./app/API/Activity/Summary/ActivitySummaryRequest",
+    
+        "./app/API/Feed/ActivitiesRequest"
+    ]
 }

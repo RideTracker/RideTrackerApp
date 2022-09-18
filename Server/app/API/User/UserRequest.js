@@ -8,7 +8,7 @@ const UserResponse = require("./UserResponse");
 // this only sends the ids of the activities to show to allow for the
 // client to cache the activities it has already requested, if any.
 module.exports = class UserRequest extends ApiRequest {
-    static path = "/user";
+    static path = "/api/user";
     
     async respond() {
         return new Promise((resolve, reject) => {
