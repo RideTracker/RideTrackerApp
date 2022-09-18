@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Platform } from "react-native";
 import * as Location from "expo-location";
 
 import Pages from "./app/Layouts/Pages.component";
@@ -13,8 +13,8 @@ export default function App() {
     //await Files.uploadFiles();
     
     Location.requestForegroundPermissionsAsync().then(() => {
-        Location.requestBackgroundPermissionsAsync().catch((error) => console.info(error));
-    }).catch((error) => console.info(error));
+        Location.requestBackgroundPermissionsAsync();
+    });
 
     const styles = StyleSheet.create({
         document: {

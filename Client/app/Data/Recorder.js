@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import { TouchableHighlightBase } from 'react-native';
@@ -25,7 +26,7 @@ export default class Recorder extends Recording {
             sections: []
         });
 
-        TaskManager.defineTask("recorder-" + this.data.id, ({ data, error }) => {
+        TaskManager.defineTask("recorder-" + this.data.meta.id, ({ data, error }) => {
             if(error)
                 return;
             
@@ -103,7 +104,7 @@ export default class Recorder extends Recording {
         }) - 1;
 
         try {
-            Location.startLocationUpdatesAsync("recorder-" + this.data.id, {
+            Location.startLocationUpdatesAsync("recorder-" + this.data.meta.id, {
                 accuracy: Location.Accuracy.BestForNavigation,
                 timeInterval: 10000,
                 foregroundService: {
@@ -115,7 +116,8 @@ export default class Recorder extends Recording {
             });
         }
         catch(error) {
-            console.info(error);
+            if(Platform.OS != "ios")
+                console.error(error);
         }
     };
 
@@ -129,11 +131,11 @@ export default class Recorder extends Recording {
         
         this.section = -1;
 
-        Location.stopLocationUpdatesAsync("recorder-" + this.data.id);
+        Location.stopLocationUpdatesAsync("recorder-" + this.data.meta.id);
     };
 
     async save() {
-        await Files.createFile("rides", this.data.id + ".json", JSON.stringify(this.data));
+        await Files.createFile("rides", this.data.meta.id + ".json", JSON.stringify(this.data));
         
         return content;
     };
@@ -142,7 +144,10 @@ export default class Recorder extends Recording {
         if(!this.active)
             return;
 
-        for(let index = 0; index < locations.length; index++)
+        for(let index = 0; index < locations.length; index++) {
+            console.log(locations[index]);
+
             this.data.sections[this.section].coordinates.push(locations[index]);
+        }
     };
 };

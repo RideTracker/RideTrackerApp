@@ -143,7 +143,7 @@ export default class RecordPage extends React.Component {
                         <Text style={[style.stats.item.title, style.stats.high.title]}>
                             <Text style={[style.stats.wide.text, style.stats.wide.text.hidden]}> km/h</Text>
 
-                            {this.state?.speed ?? 0}
+                            {this.recorder.getAverageSpeed() ?? 0}
                             
                             <Text style={style.stats.wide.text}> km/h</Text>
                         </Text>
@@ -152,7 +152,7 @@ export default class RecordPage extends React.Component {
                         
                 <View style={style.stats.row}>
                     <View style={style.stats.item}>
-                        <Text style={style.stats.item.title}>0.00 km</Text>
+                        <Text style={style.stats.item.title}>{this.recorder.getAverageDistance() ?? 0} km</Text>
                         <Text style={style.stats.item.description}>distance</Text>
                     </View>
                 
@@ -168,23 +168,25 @@ export default class RecordPage extends React.Component {
     render() { 
         return (
             <View style={style}>
-                {!this.recorder.active &&
-                    [
-                        (<Header key="1" title="Paused"/>),
-                        
-                        (<MapView ref={this.mapView} style={style.map} customMapStyle={Config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
-                            {this.recorder != null && 
-                                (this.recorder.getLatLngCoordinates().map(section => (
-                                    <Polyline key={section.index} coordinates={section.coordinates} 
-                                        strokeColor={"#FFF"}
-                                        strokeWidth={3}
-                                        lineJoin={"round"}
-                                    ></Polyline>
-                                )))
-                            }
-                        </MapView>)
-                    ]
-                }
+                <View>
+                    {!this.recorder.active &&
+                        [
+                            (<Header key="header" title="Paused"/>),
+                            
+                            (<MapView ref={this.mapView} key="mapView" style={style.map} customMapStyle={Config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                                {this.recorder != null && 
+                                    (this.recorder.getLatLngCoordinates().map((section) => (
+                                        <Polyline key={"index" + section.index} coordinates={section.coordinates} 
+                                            strokeColor={"#FFF"}
+                                            strokeWidth={3}
+                                            lineJoin={"round"}
+                                        ></Polyline>
+                                    )))
+                                }
+                            </MapView>)
+                        ]
+                    }
+                </View>
 
                 <View style={style.stats}>
                     {this.renderStats()}
