@@ -57,7 +57,7 @@ export default class RecordPage extends React.Component {
 
         const result = await this.recorder.save();
 
-        Alert.alert(this.recorder.id + ".json", result);
+        Alert.alert(this.recorder.data.meta.id + ".json", result);
     };
 
     onDiscard() {

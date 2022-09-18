@@ -18,31 +18,6 @@ global.connection.connect((error) => {
         try {
             console.log(request.socket.remoteAddress + " " + request.method + " " + request.url);
 
-            if(request.method == "PUT") {
-                let body = "";
-
-                request.on("data", (chunck) => {
-                    body += chunck;
-                });
-
-                request.on("end", async () => {
-                    console.log(body);
-
-                    response.writeHead(200, {
-                        "Content-Type": "text/json"
-                    });
-                
-                    response.write(JSON.stringify({
-                        succcess: true,
-                        content: null
-                    }));
-
-                    console.log(request.socket.remoteAddress + " 200 OK");
-                });
-
-                return;
-            }
-
             let url = request.url.toLowerCase();
 
             const indexOfGet = url.indexOf('?');

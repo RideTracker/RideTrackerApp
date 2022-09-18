@@ -26,12 +26,16 @@ export default class Files {
 		
 		const directoryInfo = await FileSystem.getInfoAsync(this.directory + "/" + directory + "/");
 
-		if(!directoryInfo.exists)
+		if(!directoryInfo.exists) {
+			console.error("no directory");
 			return;
+		}
 
 		const files = await FileSystem.readDirectoryAsync(this.directory + "/" + directory + "/");
 
 		for(let index = 0; index < files.length; index++) {
+			console.log(files[index]);
+
 			await (new Promise((resolve) => {
 				Alert.alert("Do you want to upload this file?", files[index], [
 					{
@@ -49,7 +53,7 @@ export default class Files {
 						onPress: async () => {
 							const content = await FileSystem.readAsStringAsync(this.directory + "/" + directory + "/" + files[index]);
 
-							await API.put("/" + directory + "/" + files[index], content);
+							await API.put("/api/activity/upload", content);
 
 							resolve();
 						}

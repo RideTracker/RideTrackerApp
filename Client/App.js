@@ -11,8 +11,6 @@ const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default
 
 export default function App() {
     //await API.ping(true);
-
-    //await Files.uploadFiles();
     
     Location.requestForegroundPermissionsAsync().then(() => {
         Location.requestBackgroundPermissionsAsync();

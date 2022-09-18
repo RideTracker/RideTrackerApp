@@ -32,7 +32,12 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "test.apx",
-      "permissions":["ACCESS_COARSE_LOCATION","ACCESS_FINE_LOCATION","ACCESS_BACKGROUND_LOCATION"]
+      "permissions":["ACCESS_COARSE_LOCATION","ACCESS_FINE_LOCATION","ACCESS_BACKGROUND_LOCATION"],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyA4nsjk4nQtsOH-ccq3F1PTWZPazrKylyc"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

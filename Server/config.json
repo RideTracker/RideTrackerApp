@@ -14,6 +14,7 @@
         "./app/API/Activity/ActivityRequest",
         "./app/API/Activity/Map/ActivityMapRequest",
         "./app/API/Activity/Summary/ActivitySummaryRequest",
+        "./app/API/Activity/Upload/ActivityUploadRequest",
     
         "./app/API/Feed/ActivitiesRequest"
     ]

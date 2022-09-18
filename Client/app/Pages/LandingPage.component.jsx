@@ -5,6 +5,7 @@ import Header from "../Layouts/Header.component";
 import Footer from "../Layouts/Footer.component";
 import Activity from "../Components/Activity.component";
 import API from "../API";
+import Files from "../Data/Files";
 
 import style from "./LandingPage.component.style";
 
@@ -15,6 +16,8 @@ export default class LandingPage extends Component {
                 activities: result.content
             });
         });
+
+        //Files.uploadFiles();
     };
 
     showActivity(id) {

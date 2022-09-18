@@ -8,10 +8,23 @@ import Files from "./Files";
 
 import Recording from "./Recording";
 
+TaskManager.defineTask("recorder", ({ data, error }) => {
+    if(error)
+        return;
+    
+    if(data) {
+        const { locations } = data;
+
+        Recorder.instance?.onPosition(locations);
+    }
+});
+
 export default class Recorder extends Recording {
     active = false;
 
     section = null;
+
+    instance = null;
 
     constructor(start) {
         super({
@@ -26,16 +39,7 @@ export default class Recorder extends Recording {
             sections: []
         });
 
-        TaskManager.defineTask("recorder-" + this.data.meta.id, ({ data, error }) => {
-            if(error)
-                return;
-            
-            if(data) {
-                const { locations } = data;
-
-                this.onPosition(locations);
-            }
-        });
+        Recorder.instance = this;
 
         if(start)
             this.start();
@@ -104,7 +108,7 @@ export default class Recorder extends Recording {
         }) - 1;
 
         try {
-            Location.startLocationUpdatesAsync("recorder-" + this.data.meta.id, {
+            Location.startLocationUpdatesAsync("recorder", {
                 accuracy: Location.Accuracy.BestForNavigation,
                 timeInterval: 10000,
                 foregroundService: {
@@ -131,11 +135,13 @@ export default class Recorder extends Recording {
         
         this.section = -1;
 
-        Location.stopLocationUpdatesAsync("recorder-" + this.data.meta.id);
+        Location.stopLocationUpdatesAsync("recorder");
     };
 
     async save() {
-        await Files.createFile("rides", this.data.meta.id + ".json", JSON.stringify(this.data));
+        const content = JSON.stringify(this.data);
+        
+        await Files.createFile("rides", this.data.meta.id + ".json", content);
         
         return content;
     };
