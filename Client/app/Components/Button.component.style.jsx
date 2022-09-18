@@ -20,6 +20,10 @@ export default StyleSheet.create({
     },
 
     confirm: {
-        backgroundColor: "#850000"
+        backgroundColor: "transparent",
+        
+        text: {
+            color: "#850000"
+        }
     }
 });

@@ -23,8 +23,8 @@ export default class Button extends Component {
 
     render() { 
         return (
-            <TouchableOpacity style={[style, (this.props.confirm != undefined && style.confirm)]} onPress={() => this.onPress()}>
-                <Text style={style.text}>{this.props.title}</Text>
+            <TouchableOpacity style={[ style, (this.props.confirm != undefined && style.confirm) ]} onPress={() => this.onPress()}>
+                <Text style={[ style.text, (this.props.confirm != undefined && style.confirm.text) ]}>{this.props.title}</Text>
             </TouchableOpacity>
         );
     }
