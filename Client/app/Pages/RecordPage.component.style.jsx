@@ -26,6 +26,21 @@ export default StyleSheet.create({
         container: {
             position: "relative"
         },
+
+        column: {
+            title: {
+                color: Config.colorPalette.highlight,
+
+                fontWeight: "bold",
+                fontSize: 26
+            },
+
+            description: {
+                color: Config.colorPalette.foreground,
+
+                fontSize: 16
+            }
+        },
         
         item: {
             title: {

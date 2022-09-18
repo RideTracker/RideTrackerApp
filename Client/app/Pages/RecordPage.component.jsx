@@ -104,26 +104,26 @@ export default class RecordPage extends React.Component {
             return (
                 <View style={style.stats}>
                     <View style={style.stats.row}>
-                        <View style={[style.stats.item, style.stats.wide]}>
-                            <Text style={[style.stats.item.title, style.stats.wide.title]}>{this.renderStateDuration()}</Text>
-                            <Text style={style.stats.item.description}>duration</Text>
+                        <View style={style.stats.column}>
+                            <Text style={style.stats.column.title}>{this.renderStateDuration()}</Text>
+                            <Text style={style.stats.column.description}>duration</Text>
                         </View>
 
-                        <View style={[style.stats.item, style.stats.wide]}>
-                            <Text style={[style.stats.item.title, style.stats.wide.title]}>{this.state?.speed ?? 0} km/h</Text>
-                            <Text style={style.stats.item.description}>speed</Text>
+                        <View style={style.stats.column}>
+                            <Text style={style.stats.column.title}>{this.state?.speed ?? 0} km/h</Text>
+                            <Text style={style.stats.column.description}>speed</Text>
                         </View>
                     </View>
 
                     <View style={style.stats.row}>
-                        <View style={style.stats.item}>
-                            <Text style={style.stats.item.title}>0.00 km</Text>
-                            <Text style={style.stats.item.description}>distance</Text>
+                        <View style={style.stats.column}>
+                            <Text style={style.stats.column.title}>0.00 km</Text>
+                            <Text style={style.stats.column.description}>distance</Text>
                         </View>
 
-                        <View style={style.stats.item}>
-                            <Text style={style.stats.item.title}>0 m</Text>
-                            <Text style={style.stats.item.description}>elevation</Text>
+                        <View style={style.stats.column}>
+                            <Text style={style.stats.column.title}>0 m</Text>
+                            <Text style={style.stats.column.description}>elevation</Text>
                         </View>
                     </View>
                 </View>
