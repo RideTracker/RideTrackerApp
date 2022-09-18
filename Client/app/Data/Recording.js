@@ -104,7 +104,7 @@ export default class Recording {
         let elevation = 0;
 
         for(let index = 0; index < coordinates.length - 1; index++) {
-            const altitude = coordinates[index + 1].altitude - coordinates[index].altitude;
+            const altitude = (coordinates[index + 1].altitude - coordinates[index].altitude) / coordinates[index].altitudeAccuracy;
 
             if(altitude >= 0) // we only want the gained elevation
                 elevation += altitude;

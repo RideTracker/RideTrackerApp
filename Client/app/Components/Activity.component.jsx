@@ -52,10 +52,10 @@ export default class Activity extends Component {
     onLayout() {
         this.mapView.current.fitToCoordinates(this.state.recording.getAllLatLngCoordinates(), {
             edgePadding: {
-                top: 20,
-                right: 20,
-                bottom: 20,
-                left: 20
+                top: 10,
+                right: 10,
+                bottom: 10,
+                left: 10
             },
             animated: false
         });
