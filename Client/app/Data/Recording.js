@@ -120,6 +120,6 @@ export default class Recording {
             const kilometersPerHour = coordinate.speed * 3.6;
 
             return Math.round(kilometersPerHour * 10) / 10;
-        }));
+        }), 0);
     };
 };
