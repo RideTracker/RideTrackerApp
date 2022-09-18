@@ -152,12 +152,12 @@ export default class RecordPage extends React.Component {
                         
                 <View style={style.stats.row}>
                     <View style={style.stats.item}>
-                        <Text style={style.stats.item.title}>{this.recorder.getAverageDistance() ?? 0} km</Text>
+                        <Text style={style.stats.item.title}>{this.recorder.getDistance() ?? 0} km</Text>
                         <Text style={style.stats.item.description}>distance</Text>
                     </View>
                 
                     <View style={style.stats.item}>
-                        <Text style={style.stats.item.title}>0 m</Text>
+                        <Text style={style.stats.item.title}>{this.recorder.getElevation() ?? 0} m</Text>
                         <Text style={style.stats.item.description}>elevation</Text>
                     </View>
                 </View>

@@ -61,7 +61,7 @@ export default class Recording {
         return Math.round(averageKilometersPerHour * 10) / 10;
     };
 
-    getAverageDistance() {
+    getDistance() {
         const coordinates = this.getAllCoordinates();
 
         let distance = 0;
@@ -90,5 +90,17 @@ export default class Recording {
         const kilometers = distance / 1000;
 
         return Math.round(kilometers * 10) / 10;
+    }
+
+    getElevation() {
+        const coordinates = this.getAllCoordinates();
+        
+        let elevation = 0;
+
+        for(let index = 0; index < coordinates.length - 1; index++) {
+            elevation += Math.abs(coordinates[index].altitude - coordinates[index + 1].altitude);
+        }
+        
+        return Math.round(elevation);
     }
 };
