@@ -1,17 +1,19 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Appearance } from "react-native";
 
 import Config from "../config.json";
+
+const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
 
 export default StyleSheet.create({
     marginTop: 12,
 
-    backgroundColor: Config.colorPalette.section,
+    backgroundColor: config.colorPalette.section,
     
     borderBottomWidth: 1,
-    borderBottomColor: Config.colorPalette.border,
+    borderBottomColor: config.colorPalette.border,
     
     borderTopWidth: 1,
-    borderTopColor: Config.colorPalette.border,
+    borderTopColor: config.colorPalette.border,
 
     map: {
         height: 200
@@ -22,8 +24,6 @@ export default StyleSheet.create({
         flexDirection: "row",
         
         padding: 12,
-
-        backgroundColor: "rgba(28, 28, 28, 1)",
 
         image: {
             width: 40,
@@ -41,14 +41,14 @@ export default StyleSheet.create({
             justifyContent: "center",
 
             title: {
-                color: Config.colorPalette.highlight,
+                color: config.colorPalette.highlight,
 
                 fontWeight: "bold",
                 fontSize: 18
             },
 
             description: {
-                color: Config.colorPalette.foreground,
+                color: config.colorPalette.foreground,
 
                 fontSize: 16
             }
@@ -72,14 +72,14 @@ export default StyleSheet.create({
             alignItems: "center",
 
             title: {
-                color: Config.colorPalette.highlight,
+                color: config.colorPalette.highlight,
 
                 fontWeight: "bold",
                 fontSize: 26
             },
 
             description: {
-                color: Config.colorPalette.foreground,
+                color: config.colorPalette.foreground,
 
                 fontSize: 16
             }

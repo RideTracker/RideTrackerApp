@@ -1,22 +1,24 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Appearance } from "react-native";
 import Constants from "expo-constants";
 
 import Config from "../config.json";
+
+const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
 
 export default StyleSheet.create({
     width: "100%",
 
     position: "relative",
 
-    backgroundColor: Config.colorPalette.section,
+    backgroundColor: config.colorPalette.section,
 
     paddingTop: Constants.statusBarHeight,
     
     borderBottomWidth: 1,
-    borderBottomColor: Config.colorPalette.border,
+    borderBottomColor: config.colorPalette.border,
 
     feed: {
-        color: "#FFF",
+        color: config.colorPalette.highlight,
 
         fontWeight: "bold",
         fontSize: 26,
@@ -36,7 +38,7 @@ export default StyleSheet.create({
         justifyContent: "center",
 
         icon: {
-            color: Config.colorPalette.foreground,
+            color: config.colorPalette.foreground,
             
             fontSize: 26,
             

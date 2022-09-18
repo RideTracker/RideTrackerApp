@@ -1,15 +1,17 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Appearance } from "react-native";
 
 import Config from "../config.json";
+
+const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
 
 export default StyleSheet.create({
     height: 70,
     width: "100%",
 
-    backgroundColor: Config.colorPalette.section,
+    backgroundColor: config.colorPalette.section,
     
     borderTopWidth: 1,
-    borderTopColor: Config.colorPalette.border,
+    borderTopColor: config.colorPalette.border,
 
     container: {
         flex: 1,
@@ -23,13 +25,13 @@ export default StyleSheet.create({
             justifyContent: "center",
 
             icon: {
-                color: "#F1F1F1",
+                color: config.colorPalette.foreground,
     
                 fontSize: 20,            
             },
 
             text: {
-                color: "#FFF",
+                color: config.colorPalette.highlight,
 
                 marginTop: 4,
     

@@ -1,6 +1,8 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Appearance } from "react-native";
 
 import Config from "../config.json";
+
+const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
 
 export default StyleSheet.create({
     container: {
@@ -9,7 +11,7 @@ export default StyleSheet.create({
         position: "relative",
 
         page: {
-            backgroundColor: Config.colorPalette.background,
+            backgroundColor: config.colorPalette.background,
 
             position: "absolute",
 

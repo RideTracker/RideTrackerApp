@@ -1,9 +1,11 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Appearance } from "react-native";
 
 import Config from "../config.json";
 
+const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
+
 export default StyleSheet.create({
-    backgroundColor: Config.colorPalette.section,
+    backgroundColor: config.colorPalette.section,
 
     height: "100%",
 
@@ -29,14 +31,14 @@ export default StyleSheet.create({
 
         column: {
             title: {
-                color: Config.colorPalette.highlight,
+                color: config.colorPalette.highlight,
 
                 fontWeight: "bold",
                 fontSize: 26
             },
 
             description: {
-                color: Config.colorPalette.foreground,
+                color: config.colorPalette.foreground,
 
                 fontSize: 16
             }
@@ -44,7 +46,7 @@ export default StyleSheet.create({
         
         item: {
             title: {
-                color: Config.colorPalette.highlight,
+                color: config.colorPalette.highlight,
                 
                 fontSize: 46,
                 fontWeight: "bold",
@@ -52,7 +54,7 @@ export default StyleSheet.create({
             },
 
             description: {
-                color: Config.colorPalette.foreground,
+                color: config.colorPalette.foreground,
                 
                 fontSize: 26,
                 textAlign: "center"
@@ -65,7 +67,7 @@ export default StyleSheet.create({
             },
 
             text: {
-                color: Config.colorPalette.foreground,
+                color: config.colorPalette.foreground,
 
                 fontSize: 26,
                 fontWeight: "normal",
@@ -102,7 +104,7 @@ export default StyleSheet.create({
             marginRight: 12,
 
             icon: {
-                color: Config.colorPalette.foreground,
+                color: config.colorPalette.foreground,
                 
                 fontSize: 70,
             },
@@ -121,7 +123,7 @@ export default StyleSheet.create({
             },
             
             text: {
-                color: Config.colorPalette.foreground,
+                color: config.colorPalette.foreground,
                 
                 fontSize: 14,
                 fontWeight: "bold"

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, Appearance } from 'react-native';
 
 import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -9,6 +9,8 @@ import Recording from "../Data/Recording";
 
 import Button from "./Button.component";
 import style from "./Activity.component.style";
+
+const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
 
 export default class Activity extends Component {
     ready = false;
@@ -69,7 +71,7 @@ export default class Activity extends Component {
 
         return (
             <View style={style}>
-                <MapView ref={this.mapView} style={style.map} customMapStyle={Config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                <MapView ref={this.mapView} style={style.map} customMapStyle={config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
                     {this.state.recording != null && 
                         (this.state.recording.getLatLngCoordinates().map(section => (
                             <Polyline key={section.index} coordinates={section.coordinates} 

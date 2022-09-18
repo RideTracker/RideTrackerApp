@@ -1,4 +1,4 @@
-import { StyleSheet, View, Platform } from "react-native";
+import { StyleSheet, View, Platform, Appearance } from "react-native";
 import * as Location from "expo-location";
 
 import Pages from "./app/Layouts/Pages.component";
@@ -6,6 +6,8 @@ import Pages from "./app/Layouts/Pages.component";
 import Config from "./app/config.json";
 import API from "./app/API";
 import Files from "./app/Data/Files";
+
+const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
 
 export default function App() {
     //await API.ping(true);
@@ -18,7 +20,7 @@ export default function App() {
 
     const styles = StyleSheet.create({
         document: {
-            backgroundColor: Config.colorPalette.background,
+            backgroundColor: config.colorPalette.background,
 
             minHeight: "100%"
         }

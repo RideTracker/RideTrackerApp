@@ -1,7 +1,11 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Appearance } from "react-native";
+
+import Config from "../config.json";
+
+const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
 
 export default StyleSheet.create({
-    backgroundColor: "#303030",
+    backgroundColor: config.colorPalette.button,
 
     margin: 12,
     marginBottom: 6,
@@ -11,7 +15,7 @@ export default StyleSheet.create({
     borderRadius: 5,
 
     text: {
-        color: "#FFF",
+        color: config.colorPalette.foreground,
 
         fontWeight: "bold",
         fontSize: 18,
