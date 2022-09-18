@@ -10,21 +10,21 @@ import Recording from "./Recording";
 export default class Recorder extends Recording {
     active = false;
 
-    data = {
-        meta: {
-            id: uuid.v4(),
-            version: 1,
-
-            started: null,
-            ended: null
-        },
-
-        sections: []
-    };
-
     section = null;
 
     constructor(start) {
+        super({
+            meta: {
+                id: uuid.v4(),
+                version: 1,
+    
+                started: null,
+                ended: null
+            },
+    
+            sections: []
+        });
+
         TaskManager.defineTask("recorder-" + this.data.id, ({ data, error }) => {
             if(error)
                 return;
@@ -102,16 +102,21 @@ export default class Recorder extends Recording {
             coordinates: []
         }) - 1;
 
-        Location.startLocationUpdatesAsync("recorder-" + this.data.id, {
-            accuracy: Location.Accuracy.BestForNavigation,
-            timeInterval: 10000,
-            foregroundService: {
-                notificationTitle: "App Name",
-                notificationBody: "Location is used when App is in background",
-            },
-            activityType: Location.ActivityType.AutomotiveNavigation,
-            showsBackgroundLocationIndicator: true,
-        });
+        try {
+            Location.startLocationUpdatesAsync("recorder-" + this.data.id, {
+                accuracy: Location.Accuracy.BestForNavigation,
+                timeInterval: 10000,
+                foregroundService: {
+                    notificationTitle: "App Name",
+                    notificationBody: "Location is used when App is in background",
+                },
+                activityType: Location.ActivityType.Fitness,
+                showsBackgroundLocationIndicator: true,
+            });
+        }
+        catch(error) {
+            console.info(error);
+        }
     };
 
     stop() {
@@ -137,10 +142,7 @@ export default class Recorder extends Recording {
         if(!this.active)
             return;
 
-        for(let index = 0; index < locations.length; index++) {
-            console.log(locations[index]);
-
+        for(let index = 0; index < locations.length; index++)
             this.data.sections[this.section].coordinates.push(locations[index]);
-        }
     };
 };

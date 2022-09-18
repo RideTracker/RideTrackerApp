@@ -9,6 +9,10 @@ export default StyleSheet.create({
 
     paddingBottom: 20,
 
+    map: {
+        height: 200
+    },
+
     stats: {
         flex: 1,
 

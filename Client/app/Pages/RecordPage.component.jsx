@@ -1,18 +1,25 @@
 import React, { Component } from "react";
 import { Alert, TouchableOpacity, Text, View } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import { WebView } from "react-native-webview";
+import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 
 import Header from "../Layouts/Header.component";
 import Button from "../Components/Button.component";
 import API from "../API";
 
+import Config from "../config.json";
 import Recorder from "../Data/Recorder";
 
 import style from "./RecordPage.component.style";
 
 export default class RecordPage extends React.Component {
     recorder = new Recorder(true);
+
+    constructor(props) {
+        super(props);
+
+        this.mapView = React.createRef();
+    }
 
     componentDidMount() {
         this.interval = setInterval(() => this.onInterval(), 1000);
@@ -58,6 +65,19 @@ export default class RecordPage extends React.Component {
             this.recorder.stop();
 
         this.props.onPageNavigation("home");
+    };
+
+    onLayout() {
+        this.mapView.current.fitToCoordinates(this.recorder.getAllLatLngCoordinates(), {
+            edgePadding: {
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20
+            },
+            
+            animated: false
+        });
     };
 
     renderStateDuration() {
@@ -152,9 +172,17 @@ export default class RecordPage extends React.Component {
                     [
                         (<Header key="1" title="Paused"/>),
                         
-                        (<WebView key="2" source={{
-                            uri: API.server + "/map.html"
-                        }} scrollEnabled="false"/>)
+                        (<MapView ref={this.mapView} style={style.map} customMapStyle={Config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                            {this.recorder != null && 
+                                (this.recorder.getLatLngCoordinates().map(section => (
+                                    <Polyline key={section.index} coordinates={section.coordinates} 
+                                        strokeColor={"#FFF"}
+                                        strokeWidth={3}
+                                        lineJoin={"round"}
+                                    ></Polyline>
+                                )))
+                            }
+                        </MapView>)
                     ]
                 }
 

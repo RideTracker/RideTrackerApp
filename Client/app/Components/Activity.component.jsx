@@ -96,7 +96,7 @@ export default class Activity extends Component {
 
                     <View style={style.user.texts}>
                         <Text style={style.user.texts.title}>{this.user.name}</Text>
-                        <Text style={style.user.texts.description}>ago in Vänersborg</Text>
+                        <Text style={style.user.texts.description}>Time ago in Vänersborg</Text>
                     </View>
                 </View>
 
