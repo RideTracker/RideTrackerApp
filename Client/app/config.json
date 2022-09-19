@@ -236,12 +236,12 @@
 
 	"default": {
 		"colorPalette": {
-			"background": "#F0F2F4",
-			"section": "#fff",
-			"border": "#E2E4E9",
+			"background": "#F5F5F5",
+			"section": "#FFF",
+			"border": "#D7D7D7",
 
-			"foreground": "#262626",
-			"highlight": "#363C49",
+			"foreground": "#757575",
+			"highlight": "#000",
 			"button": "#F0F2F4"
 		},
 
