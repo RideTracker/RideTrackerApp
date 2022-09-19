@@ -36,13 +36,17 @@ export default class Files {
 		for(let index = 0; index < files.length; index++) {
 			console.log(files[index]);
 
-			await (new Promise((resolve) => {
-				Alert.alert("Do you want to upload this file?", files[index], [
+			await (new Promise(async (resolve) => {
+				const info = await FileSystem.getInfoAsync(this.directory + "/" + directory + "/" + files[index]);
+
+				Alert.alert("Do you want to upload this file (" + info.size + " kB)?", (new Date(info.modificationTime * 1000).toLocaleString()), [
 					{
-						text: "Cancel",
+						text: "Delete",
 						style: "cancel",
 						
-						onPress: () => {
+						onPress: async () => {
+							await FileSystem.deleteAsync(this.directory + "/" + directory + "/" + files[index]);
+
 							resolve();
 						}
 					},
@@ -55,6 +59,15 @@ export default class Files {
 
 							await API.put("/api/activity/upload", content);
 
+							resolve();
+						}
+					},
+					
+					{
+						text: "Cancel",
+						style: "cancel",
+						
+						onPress: () => {
 							resolve();
 						}
 					}

@@ -17,7 +17,7 @@ export default class LandingPage extends Component {
             });
         });
 
-        //Files.uploadFiles();
+        Files.uploadFiles();
     };
 
     showActivity(id) {
