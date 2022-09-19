@@ -75,7 +75,7 @@ export default class Activity extends Component {
                     {this.state.recording != null && 
                         (this.state.recording.getLatLngCoordinates().map(section => (
                             <Polyline key={section.index} coordinates={section.coordinates} 
-                                strokeColor={"#FFF"}
+                                strokeColor={config.colorPalette.foreground}
                                 strokeWidth={3}
                                 lineJoin={"round"}
                             ></Polyline>
