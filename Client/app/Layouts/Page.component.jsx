@@ -4,8 +4,7 @@ import { View } from 'react-native';
 import LandingPage from "../Pages/LandingPage.component";
 import RecordPage from "../Pages/RecordPage.component";
 import ProfilePage from "../Pages/ProfilePage.component";
-
-import Pages from "../Data/Pages";
+import SettingsPage from "../Pages/SettingsPage.component";
 
 import style from "./Page.component.style";
 
@@ -20,6 +19,9 @@ export default class Page extends Component {
                 
             case "profile":
                 return ProfilePage;
+                
+            case "settings":
+                return SettingsPage;
 
             default:
                 return LandingPage;
