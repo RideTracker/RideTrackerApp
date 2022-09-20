@@ -21,8 +21,8 @@ export default function App() {
 
     useEffect(() => {
         async function prepare() {
-            await Location.requestForegroundPermissionsAsync();
-            await Location.requestBackgroundPermissionsAsync();
+            try { await Location.requestForegroundPermissionsAsync(); } catch {}
+            try { await Location.requestBackgroundPermissionsAsync(); } catch {}
 
             await Config.readAsync();
             Appearance.readConfig();
