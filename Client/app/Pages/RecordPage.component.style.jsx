@@ -131,5 +131,7 @@ export default class RecordPageStyle {
                 }
             }
         });
+
+        return this;
     };
 };

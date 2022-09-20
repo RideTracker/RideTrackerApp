@@ -42,7 +42,7 @@ export default class LandingPage extends ThemedComponent {
                     <Header title="Home"/>
 
                     <ScrollView>
-                        {this.state?.activities.map(id => <Activity key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
+                        {this.state?.activities && this.state?.activities.map(id => <Activity key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
                     </ScrollView>
 
                     <Footer onPress={(page) => this.props.onPageNavigation(page)}/>

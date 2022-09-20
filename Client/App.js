@@ -15,6 +15,7 @@ SplashScreen.preventAutoHideAsync();
 let ready = false;
 
 export default function App() {
+    const [ theme, setTheme ] = useState(false);
     const [ appIsReady, setAppIsReady ] = useState(false);
 
     //await API.ping(true);
@@ -47,6 +48,10 @@ export default function App() {
         document: {
             minHeight: "100%"
         }
+    });
+
+    Appearance.addEventListener("change", (theme) => {
+        setTheme(theme);
     });
 
 	return (

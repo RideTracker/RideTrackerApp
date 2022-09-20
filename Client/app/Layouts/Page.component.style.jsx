@@ -8,5 +8,7 @@ export default class PageStyle {
             height: "100%",
             backgroundColor: Appearance.theme.colorPalette.background
         });
+
+        return this;
     };
 };

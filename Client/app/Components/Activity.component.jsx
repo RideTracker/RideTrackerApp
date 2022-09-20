@@ -20,8 +20,8 @@ export default class Activity extends ThemedComponent {
     ready = false;
     data = {};
 
-    constructor(props) {
-        super(props);
+    constructor(...args) {
+        super(...args);
 
         this.mapView = React.createRef();
     }

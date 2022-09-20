@@ -26,10 +26,8 @@ export default class Files {
 		
 		const directoryInfo = await FileSystem.getInfoAsync(this.directory + "/" + directory + "/");
 
-		if(!directoryInfo.exists) {
-			console.error("no directory");
+		if(!directoryInfo.exists)
 			return;
-		}
 
 		const files = await FileSystem.readDirectoryAsync(this.directory + "/" + directory + "/");
 

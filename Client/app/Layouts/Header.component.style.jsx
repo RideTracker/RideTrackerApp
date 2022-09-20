@@ -52,5 +52,7 @@ export default class HeaderStyle {
                 right: 0
             }
         });
+
+        return this;
     };
 };

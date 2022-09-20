@@ -14,6 +14,8 @@ export default class Appearance {
             theme = ReactAppearance.getColorScheme();
 
         this.theme = ThemeStyles[theme];
+
+        this.theme.id = theme;
     };
 
     static setTheme(theme) {

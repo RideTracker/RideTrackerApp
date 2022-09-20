@@ -31,5 +31,7 @@ export default class LandingPageStyle {
                 }
             }
         });
+
+        return this;
     };
 };
