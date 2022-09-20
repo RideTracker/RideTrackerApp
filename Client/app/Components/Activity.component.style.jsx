@@ -1,88 +1,90 @@
-import { StyleSheet, Appearance } from "react-native";
+import { StyleSheet } from "react-native";
 
-import Config from "../config.json";
+import Appearance from "../Data/Appearance";
 
-const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
+export default class RecordPageStyle {
+    static update() {
+        this.sheet = StyleSheet.create({
+            marginTop: 12,
 
-export default StyleSheet.create({
-    marginTop: 12,
+            backgroundColor: Appearance.theme.colorPalette.section,
+            
+            borderBottomWidth: 1,
+            borderBottomColor: Appearance.theme.colorPalette.border,
+            
+            borderTopWidth: 1,
+            borderTopColor: Appearance.theme.colorPalette.border,
 
-    backgroundColor: config.colorPalette.section,
-    
-    borderBottomWidth: 1,
-    borderBottomColor: config.colorPalette.border,
-    
-    borderTopWidth: 1,
-    borderTopColor: config.colorPalette.border,
-
-    map: {
-        height: 200
-    },
-
-    user: {
-        flex: 1,
-        flexDirection: "row",
-        
-        padding: 12,
-
-        image: {
-            width: 40,
-            height: 40,
-
-            borderRadius: 50,
-
-            marginRight: 12
-        },
-
-        texts: {
-            flex: 1,
-            flexDirection: "column",
-
-            justifyContent: "center",
-
-            title: {
-                color: config.colorPalette.highlight,
-
-                fontWeight: "bold",
-                fontSize: 18
+            map: {
+                height: 200
             },
 
-            description: {
-                color: config.colorPalette.foreground,
+            user: {
+                flex: 1,
+                flexDirection: "row",
+                
+                padding: 12,
 
-                fontSize: 16
-            }
-        }
-    },
-    
-    stats: {
-        position: "relative",
+                image: {
+                    width: 40,
+                    height: 40,
 
-        marginTop: 12,
+                    borderRadius: 50,
 
-        flex: 1,
-        flexDirection: "row",
-        flexWrap: "wrap",
+                    marginRight: 12
+                },
 
-        item: {
-            width: "50%",
-            height: 80,
+                texts: {
+                    flex: 1,
+                    flexDirection: "column",
 
-            justifyContent: "center",
-            alignItems: "center",
+                    justifyContent: "center",
 
-            title: {
-                color: config.colorPalette.highlight,
+                    title: {
+                        color: Appearance.theme.colorPalette.highlight,
 
-                fontWeight: "bold",
-                fontSize: 26
+                        fontWeight: "bold",
+                        fontSize: 18
+                    },
+
+                    description: {
+                        color: Appearance.theme.colorPalette.foreground,
+
+                        fontSize: 16
+                    }
+                }
             },
+            
+            stats: {
+                position: "relative",
 
-            description: {
-                color: config.colorPalette.foreground,
+                marginTop: 12,
 
-                fontSize: 16
+                flex: 1,
+                flexDirection: "row",
+                flexWrap: "wrap",
+
+                item: {
+                    width: "50%",
+                    height: 80,
+
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                    title: {
+                        color: Appearance.theme.colorPalette.highlight,
+
+                        fontWeight: "bold",
+                        fontSize: 26
+                    },
+
+                    description: {
+                        color: Appearance.theme.colorPalette.foreground,
+
+                        fontSize: 16
+                    }
+                }
             }
-        }
-    }
-});
+        });
+    };
+};

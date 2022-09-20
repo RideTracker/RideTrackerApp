@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import { TouchableOpacity, Text, Alert } from "react-native";
 
+import ThemedComponent from "./ThemedComponent";
+
 import style from "./Button.component.style";
 
-export default class Button extends Component {
+export default class Button extends ThemedComponent {
+    style = style.update();
+
     onPress() {
         if(this.props.confirm != undefined) {
             Alert.alert(
@@ -23,8 +27,8 @@ export default class Button extends Component {
 
     render() { 
         return (
-            <TouchableOpacity style={[ style, (this.props.confirm != undefined && style.confirm) ]} onPress={() => this.onPress()}>
-                <Text style={[ style.text, (this.props.confirm != undefined && style.confirm.text) ]}>{this.props.title}</Text>
+            <TouchableOpacity style={[ style.sheet, (this.props.confirm != undefined && style.sheet.confirm) ]} onPress={() => this.onPress()}>
+                <Text style={[ style.sheet.text, (this.props.confirm != undefined && style.sheet.confirm.text) ]}>{this.props.title}</Text>
             </TouchableOpacity>
         );
     }

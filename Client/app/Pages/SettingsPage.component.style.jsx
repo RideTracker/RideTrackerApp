@@ -1,48 +1,52 @@
-import { StyleSheet, Appearance } from "react-native";
+import { StyleSheet } from "react-native";
 
-import Config from "../config.json";
+import Appearance from "../Data/Appearance";
 
-const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
+export default class SettingsPageStyle {
+    static update() {
+        this.sheet = StyleSheet.create({
+            flex: 1,
 
-export default StyleSheet.create({
-    flex: 1,
+            height: "100%",
 
-    height: "100%",
-
-    section: {
-        marginTop: 12,
-        marginBottom: 12,
-
-        padding: 12,
-
-        backgroundColor: config.colorPalette.section,
-        borderTopColor: config.colorPalette.border,
-        borderBottomColor: config.colorPalette.border,
-
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-
-        title: {
-            color: config.colorPalette.highlight,
-            fontWeight: "bold",
-            fontSize: 24
-        },
-
-        select: {
-            option: {
+            section: {
                 marginTop: 12,
                 marginBottom: 12,
 
+                padding: 12,
+
+                backgroundColor: Appearance.theme.colorPalette.section,
+                borderTopColor: Appearance.theme.colorPalette.border,
+                borderBottomColor: Appearance.theme.colorPalette.border,
+
+                borderTopWidth: 1,
+                borderBottomWidth: 1,
+
                 title: {
-                    color: config.colorPalette.highlight,
+                    color: Appearance.theme.colorPalette.highlight,
                     fontWeight: "bold",
-                    fontSize: 16
+                    fontSize: 24
                 },
 
-                description: {
-                    color: config.colorPalette.foreground
+                select: {
+                    option: {
+                        marginTop: 12,
+                        marginBottom: 12,
+
+                        title: {
+                            color: Appearance.theme.colorPalette.highlight,
+                            fontWeight: "bold",
+                            fontSize: 16
+                        },
+
+                        description: {
+                            color: Appearance.theme.colorPalette.foreground
+                        }
+                    }
                 }
             }
-        }
-    }
-});
+        });
+
+        return this;
+    };
+};

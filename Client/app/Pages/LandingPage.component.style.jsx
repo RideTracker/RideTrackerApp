@@ -1,33 +1,35 @@
-import { StyleSheet, Appearance } from "react-native";
+import { StyleSheet } from "react-native";
 
-import Config from "../config.json";
+import Appearance from "../Data/Appearance";
 
-const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
+export default class LandingPageStyle {
+    static update() {
+        this.sheet = StyleSheet.create({
+            container: {
+                flex: 1,
+                
+                position: "relative",
 
-export default StyleSheet.create({
-    container: {
-        flex: 1,
-        
-        position: "relative",
+                page: {
+                    backgroundColor: Appearance.theme.colorPalette.background,
 
-        page: {
-            backgroundColor: config.colorPalette.background,
+                    position: "absolute",
 
-            position: "absolute",
+                    width: "100%",
+                    height: "100%",
 
-            width: "100%",
-            height: "100%",
+                    left: 0,
+                    top: 0
+                }
+            },
 
-            left: 0,
-            top: 0
-        }
-    },
+            content: {
+                height: "100%",
 
-    content: {
-        height: "100%",
-
-        activity: {
-			marginTop: 50
-		}
-    }
-});
+                activity: {
+                    marginTop: 50
+                }
+            }
+        });
+    };
+};

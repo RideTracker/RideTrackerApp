@@ -1,33 +1,35 @@
-import { StyleSheet, Appearance } from "react-native";
+import { StyleSheet } from "react-native";
 
-import Config from "../config.json";
+import Appearance from "../Data/Appearance";
 
-const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
+export default class ButtonStyle {
+    static update() {
+        this.sheet = StyleSheet.create({
+            backgroundColor: Appearance.theme.colorPalette.button,
 
-export default StyleSheet.create({
-    backgroundColor: config.colorPalette.button,
+            margin: 12,
+            marginBottom: 6,
+            marginTop: 6,
+            padding: 12,
 
-    margin: 12,
-    marginBottom: 6,
-    marginTop: 6,
-    padding: 12,
+            borderRadius: 5,
 
-    borderRadius: 5,
+            text: {
+                color: Appearance.theme.colorPalette.foreground,
 
-    text: {
-        color: config.colorPalette.foreground,
+                fontWeight: "bold",
+                fontSize: 18,
 
-        fontWeight: "bold",
-        fontSize: 18,
+                textAlign: "center"
+            },
 
-        textAlign: "center"
-    },
-
-    confirm: {
-        backgroundColor: "transparent",
-        
-        text: {
-            color: "#850000"
-        }
-    }
-});
+            confirm: {
+                backgroundColor: "transparent",
+                
+                text: {
+                    color: "#850000"
+                }
+            }
+        });
+    };
+};

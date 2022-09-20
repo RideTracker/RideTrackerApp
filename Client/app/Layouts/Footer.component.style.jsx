@@ -1,44 +1,46 @@
-import { StyleSheet, Appearance } from "react-native";
+import { StyleSheet } from "react-native";
 
-import Config from "../config.json";
+import Appearance from "../Data/Appearance";
 
-const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
+export default class FooterStyle {
+    static update() {
+        this.sheet = StyleSheet.create({
+            height: 70,
+            width: "100%",
 
-export default StyleSheet.create({
-    height: 70,
-    width: "100%",
+            backgroundColor: Appearance.theme.colorPalette.section,
+            
+            borderTopWidth: 1,
+            borderTopColor: Appearance.theme.colorPalette.border,
 
-    backgroundColor: config.colorPalette.section,
-    
-    borderTopWidth: 1,
-    borderTopColor: config.colorPalette.border,
+            container: {
+                flex: 1,
+                flexDirection: "row",
 
-    container: {
-        flex: 1,
-        flexDirection: "row",
+                button: {
+                    height: 60,
 
-        button: {
-            height: 60,
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
 
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
+                    icon: {
+                        color: Appearance.theme.colorPalette.foreground,
+            
+                        fontSize: 20,            
+                    },
 
-            icon: {
-                color: config.colorPalette.foreground,
-    
-                fontSize: 20,            
-            },
+                    text: {
+                        color: Appearance.theme.colorPalette.highlight,
 
-            text: {
-                color: config.colorPalette.highlight,
-
-                marginTop: 4,
-    
-                fontSize: 14,
-    
-                textAlign: "center"
+                        marginTop: 4,
+            
+                        fontSize: 14,
+            
+                        textAlign: "center"
+                    }
+                }
             }
-        }
-    }
-});
+        });
+    };
+};

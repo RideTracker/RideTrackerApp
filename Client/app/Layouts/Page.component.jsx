@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { View } from 'react-native';
 
+import ThemedComponent from "../Components/ThemedComponent";
+
 import LandingPage from "../Pages/LandingPage.component";
 import RecordPage from "../Pages/RecordPage.component";
 import ProfilePage from "../Pages/ProfilePage.component";
@@ -8,7 +10,9 @@ import SettingsPage from "../Pages/SettingsPage.component";
 
 import style from "./Page.component.style";
 
-export default class Page extends Component {
+export default class Page extends ThemedComponent {
+    style = style.update();
+
     getPage() {
         switch(this.state?.page) {
             case "home":
@@ -34,7 +38,7 @@ export default class Page extends Component {
         };
 
         return (
-            <View style={style}>
+            <View style={style.sheet}>
                 <component.page onPageNavigation={(page) => this.setState({page})}/>
             </View>
         );

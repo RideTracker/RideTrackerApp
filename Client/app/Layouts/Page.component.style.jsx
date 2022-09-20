@@ -1,5 +1,12 @@
 import { StyleSheet } from "react-native";
 
-export default StyleSheet.create({
-    height: "100%"
-});
+import Appearance from "../Data/Appearance";
+
+export default class PageStyle {
+    static update() {
+        this.sheet = StyleSheet.create({
+            height: "100%",
+            backgroundColor: Appearance.theme.colorPalette.background
+        });
+    };
+};

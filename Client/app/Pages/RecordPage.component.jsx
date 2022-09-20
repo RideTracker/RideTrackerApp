@@ -3,20 +3,24 @@ import { Alert, TouchableOpacity, Text, View } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 
+import ThemedComponent from "../Components/ThemedComponent";
 import Header from "../Layouts/Header.component";
 import Button from "../Components/Button.component";
 import API from "../API";
 
 import Config from "../config.json";
 import Recorder from "../Data/Recorder";
+import Appearance from "../Data/Appearance";
 
 import style from "./RecordPage.component.style";
 
-export default class RecordPage extends React.Component {
+export default class RecordPage extends ThemedComponent {
+    style = style.update();
+
     recorder = new Recorder(true);
 
-    constructor(props) {
-        super(props);
+    constructor(...args) {
+        super(...args);
 
         this.mapView = React.createRef();
     }
@@ -102,28 +106,28 @@ export default class RecordPage extends React.Component {
     renderStats() {
         if(!this.recorder.active) {
             return (
-                <View style={style.stats}>
-                    <View style={style.stats.row}>
-                        <View style={style.stats.column}>
-                            <Text style={style.stats.column.title}>{this.renderStateDuration()}</Text>
-                            <Text style={style.stats.column.description}>duration</Text>
+                <View style={style.sheet.stats}>
+                    <View style={style.sheet.stats.row}>
+                        <View style={style.sheet.stats.column}>
+                            <Text style={style.sheet.stats.column.title}>{this.renderStateDuration()}</Text>
+                            <Text style={style.sheet.stats.column.description}>duration</Text>
                         </View>
 
-                        <View style={style.stats.column}>
-                            <Text style={style.stats.column.title}>{this.state?.speed ?? 0} km/h</Text>
-                            <Text style={style.stats.column.description}>speed</Text>
+                        <View style={style.sheet.stats.column}>
+                            <Text style={style.sheet.stats.column.title}>{this.state?.speed ?? 0} km/h</Text>
+                            <Text style={style.sheet.stats.column.description}>speed</Text>
                         </View>
                     </View>
 
-                    <View style={style.stats.row}>
-                        <View style={style.stats.column}>
-                            <Text style={style.stats.column.title}>0.00 km</Text>
-                            <Text style={style.stats.column.description}>distance</Text>
+                    <View style={style.sheet.stats.row}>
+                        <View style={style.sheet.stats.column}>
+                            <Text style={style.sheet.stats.column.title}>0.00 km</Text>
+                            <Text style={style.sheet.stats.column.description}>distance</Text>
                         </View>
 
-                        <View style={style.stats.column}>
-                            <Text style={style.stats.column.title}>0 m</Text>
-                            <Text style={style.stats.column.description}>elevation</Text>
+                        <View style={style.sheet.stats.column}>
+                            <Text style={style.sheet.stats.column.title}>0 m</Text>
+                            <Text style={style.sheet.stats.column.description}>elevation</Text>
                         </View>
                     </View>
                 </View>
@@ -131,34 +135,34 @@ export default class RecordPage extends React.Component {
         }
         
         return (
-            <View style={style.stats}>
-                <View style={[style.stats.item, style.stats.wide]}>
-                    <Text style={[style.stats.item.title, style.stats.wide.title]}>{this.renderStateDuration()}</Text>
+            <View style={style.sheet.stats}>
+                <View style={[style.sheet.stats.item, style.sheet.stats.wide]}>
+                    <Text style={[style.sheet.stats.item.title, style.sheet.stats.wide.title]}>{this.renderStateDuration()}</Text>
 
-                    <Text style={style.stats.item.description}>duration</Text>
+                    <Text style={style.sheet.stats.item.description}>duration</Text>
                 </View>
 
-                <View style={[style.stats.item, style.stats.wide]}>
-                    <View style={style.stats.item.container}>
-                        <Text style={[style.stats.item.title, style.stats.high.title]}>
-                            <Text style={[style.stats.wide.text, style.stats.wide.text.hidden]}> km/h</Text>
+                <View style={[style.sheet.stats.item, style.sheet.stats.wide]}>
+                    <View style={style.sheet.stats.item.container}>
+                        <Text style={[style.sheet.stats.item.title, style.sheet.stats.high.title]}>
+                            <Text style={[style.sheet.stats.wide.text, style.sheet.stats.wide.text.hidden]}> km/h</Text>
 
                             {this.recorder.getAverageSpeed() ?? 0}
                             
-                            <Text style={style.stats.wide.text}> km/h</Text>
+                            <Text style={style.sheet.stats.wide.text}> km/h</Text>
                         </Text>
                     </View>
                 </View>
                         
-                <View style={style.stats.row}>
-                    <View style={style.stats.item}>
-                        <Text style={style.stats.item.title}>{this.recorder.getDistance() ?? 0} km</Text>
-                        <Text style={style.stats.item.description}>distance</Text>
+                <View style={style.sheet.stats.row}>
+                    <View style={style.sheet.stats.item}>
+                        <Text style={style.sheet.stats.item.title}>{this.recorder.getDistance() ?? 0} km</Text>
+                        <Text style={style.sheet.stats.item.description}>distance</Text>
                     </View>
                 
-                    <View style={style.stats.item}>
-                        <Text style={style.stats.item.title}>{this.recorder.getElevation() ?? 0} m</Text>
-                        <Text style={style.stats.item.description}>elevation</Text>
+                    <View style={style.sheet.stats.item}>
+                        <Text style={style.sheet.stats.item.title}>{this.recorder.getElevation() ?? 0} m</Text>
+                        <Text style={style.sheet.stats.item.description}>elevation</Text>
                     </View>
                 </View>
             </View>
@@ -167,13 +171,13 @@ export default class RecordPage extends React.Component {
 
     render() { 
         return (
-            <View style={style}>
+            <View style={style.sheet}>
                 <View>
                     {!this.recorder.active &&
                         [
                             (<Header key="header" title="Paused"/>),
                             
-                            (<MapView ref={this.mapView} key="mapView" style={style.map} customMapStyle={Config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                            (<MapView ref={this.mapView} key="mapView" style={style.sheet.map} customMapStyle={Appearance.theme.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
                                 {this.recorder != null && 
                                     (this.recorder.getLatLngCoordinates().map((section) => (
                                         <Polyline key={"index" + section.index} coordinates={section.coordinates} 
@@ -188,13 +192,13 @@ export default class RecordPage extends React.Component {
                     }
                 </View>
 
-                <View style={style.stats}>
+                <View style={style.sheet.stats}>
                     {this.renderStats()}
                 </View>
 
-                <View style={style.controls}>
-                    <TouchableOpacity style={style.controls.button} onPress={() => this.togglePause()}>
-                        <FontAwesome5 style={style.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
+                <View style={style.sheet.controls}>
+                    <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.togglePause()}>
+                        <FontAwesome5 style={style.sheet.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
                     </TouchableOpacity>
                 </View>
 

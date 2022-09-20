@@ -1,53 +1,56 @@
-import { StyleSheet, Appearance } from "react-native";
 import Constants from "expo-constants";
 
-import Config from "../config.json";
+import { StyleSheet } from "react-native";
 
-const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
+import Appearance from "../Data/Appearance";
 
-export default StyleSheet.create({
-    width: "100%",
+export default class HeaderStyle {
+    static update() {
+        this.sheet = StyleSheet.create({
+            width: "100%",
 
-    position: "relative",
+            position: "relative",
 
-    backgroundColor: config.colorPalette.section,
+            backgroundColor: Appearance.theme.colorPalette.section,
 
-    paddingTop: Constants.statusBarHeight,
-    
-    borderBottomWidth: 1,
-    borderBottomColor: config.colorPalette.border,
-
-    feed: {
-        color: config.colorPalette.highlight,
-
-        fontWeight: "bold",
-        fontSize: 26,
-
-        padding: 12,
-
-        textAlign: "center"
-    },
-
-    button: {
-        position: "absolute",
-
-        top: Constants.statusBarHeight,
-
-        bottom: 0,
-        
-        justifyContent: "center",
-
-        icon: {
-            color: config.colorPalette.foreground,
+            paddingTop: Constants.statusBarHeight,
             
-            fontSize: 26,
-            
-            marginLeft: 24,
-            marginRight: 24
-        }
-    },
+            borderBottomWidth: 1,
+            borderBottomColor: Appearance.theme.colorPalette.border,
 
-    navigation: {
-        right: 0
-    }
-});
+            feed: {
+                color: Appearance.theme.colorPalette.highlight,
+
+                fontWeight: "bold",
+                fontSize: 26,
+
+                padding: 12,
+
+                textAlign: "center"
+            },
+
+            button: {
+                position: "absolute",
+
+                top: Constants.statusBarHeight,
+
+                bottom: 0,
+                
+                justifyContent: "center",
+
+                icon: {
+                    color: Appearance.theme.colorPalette.foreground,
+                    
+                    fontSize: 26,
+                    
+                    marginLeft: 24,
+                    marginRight: 24
+                }
+            },
+
+            navigation: {
+                right: 0
+            }
+        });
+    };
+};

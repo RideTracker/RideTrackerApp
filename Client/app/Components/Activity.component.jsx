@@ -3,6 +3,8 @@ import { Text, View, Image, Appearance } from 'react-native';
 
 import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 
+import ThemedComponent from "./ThemedComponent";
+
 import API from "../API";
 import Config from "../config.json";
 import Recording from "../Data/Recording";
@@ -12,7 +14,9 @@ import style from "./Activity.component.style";
 
 const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
 
-export default class Activity extends Component {
+export default class Activity extends ThemedComponent {
+    style = style.update();
+
     ready = false;
     data = {};
 
@@ -70,8 +74,8 @@ export default class Activity extends Component {
         }
 
         return (
-            <View style={style}>
-                <MapView ref={this.mapView} style={style.map} customMapStyle={config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+            <View style={style.sheet}>
+                <MapView ref={this.mapView} style={style.sheet.map} customMapStyle={config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
                     {this.state.recording != null && 
                         (this.state.recording.getLatLngCoordinates().map(section => (
                             <Polyline key={section.index} coordinates={section.coordinates} 
@@ -83,41 +87,41 @@ export default class Activity extends Component {
                     }
                 </MapView>
 
-                <View style={style.user}>
+                <View style={style.sheet.user}>
                     <View>
                         <Image
-                            style={style.user.image}
+                            style={style.sheet.user.image}
                             source={{
                                 uri: `https://ride-tracker.nora-soderlund.se/users/${this.state.user.slug}/avatar.png`
                             }}
                         />
                     </View>
 
-                    <View style={style.user.texts}>
-                        <Text style={style.user.texts.title}>{this.state.user.name}</Text>
-                        <Text style={style.user.texts.description}>Time ago in Vänersborg</Text>
+                    <View style={style.sheet.user.texts}>
+                        <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
+                        <Text style={style.sheet.user.texts.description}>Time ago in Vänersborg</Text>
                     </View>
                 </View>
 
-                <View style={style.stats}>
-                    <View style={style.stats.item}>
-                        <Text style={style.stats.item.title}>{this.state.recording.getDistance()} km</Text>
-                        <Text style={style.stats.item.description}>distance</Text>
+                <View style={style.sheet.stats}>
+                    <View style={style.sheet.stats.item}>
+                        <Text style={style.sheet.stats.item.title}>{this.state.recording.getDistance()} km</Text>
+                        <Text style={style.sheet.stats.item.description}>distance</Text>
                     </View>
 
-                    <View style={style.stats.item}>
-                        <Text style={style.stats.item.title}>{this.state.recording.getAverageSpeed()} km/h</Text>
-                        <Text style={style.stats.item.description}>average speed</Text>
+                    <View style={style.sheet.stats.item}>
+                        <Text style={style.sheet.stats.item.title}>{this.state.recording.getAverageSpeed()} km/h</Text>
+                        <Text style={style.sheet.stats.item.description}>average speed</Text>
                     </View>
                     
-                    <View style={style.stats.item}>
-                        <Text style={style.stats.item.title}>{this.state.recording.getElevation()} m</Text>
-                        <Text style={style.stats.item.description}>elevation</Text>
+                    <View style={style.sheet.stats.item}>
+                        <Text style={style.sheet.stats.item.title}>{this.state.recording.getElevation()} m</Text>
+                        <Text style={style.sheet.stats.item.description}>elevation</Text>
                     </View>
                     
-                    <View style={style.stats.item}>
-                        <Text style={style.stats.item.title}>{this.state.recording.getMaxSpeed()} km/h</Text>
-                        <Text style={style.stats.item.description}>max speed</Text>
+                    <View style={style.sheet.stats.item}>
+                        <Text style={style.sheet.stats.item.title}>{this.state.recording.getMaxSpeed()} km/h</Text>
+                        <Text style={style.sheet.stats.item.description}>max speed</Text>
                     </View>
                 </View>
                 
