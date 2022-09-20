@@ -1,7 +1,7 @@
 import { StyleSheet, View, Platform, Appearance } from "react-native";
 import * as Location from "expo-location";
 
-import Pages from "./app/Layouts/Pages.component";
+import Page from "./app/Layouts/Page.component";
 
 import Config from "./app/config.json";
 import API from "./app/API";
@@ -26,7 +26,7 @@ export default function App() {
 
 	return (
         <View style={styles.document}>
-            <Pages/>
+            <Page/>
         </View>
 	);
 }
