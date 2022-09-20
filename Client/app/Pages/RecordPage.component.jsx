@@ -177,7 +177,7 @@ export default class RecordPage extends ThemedComponent {
                         [
                             (<Header key="header" title="Paused"/>),
                             
-                            (<MapView ref={this.mapView} key="mapView" style={style.sheet.map} customMapStyle={Appearance.theme.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                            (<MapView ref={this.mapView} key="mapView" style={style.sheet.map} customMapStyle={Appearance.theme.mapStyle || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
                                 {this.recorder != null && 
                                     (this.recorder.getLatLngCoordinates().map((section) => (
                                         <Polyline key={"index" + section.index} coordinates={section.coordinates} 

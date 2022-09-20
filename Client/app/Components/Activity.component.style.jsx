@@ -7,13 +7,13 @@ export default class RecordPageStyle {
         this.sheet = StyleSheet.create({
             marginTop: 12,
 
-            backgroundColor: Appearance.theme.colorPalette.section,
+            backgroundColor: Appearance.theme.colorPalette.primary,
             
             borderBottomWidth: 1,
-            borderBottomColor: Appearance.theme.colorPalette.border,
+            borderBottomColor: Appearance.theme.colorPalette.accent,
             
             borderTopWidth: 1,
-            borderTopColor: Appearance.theme.colorPalette.border,
+            borderTopColor: Appearance.theme.colorPalette.accent,
 
             map: {
                 height: 200
@@ -41,14 +41,14 @@ export default class RecordPageStyle {
                     justifyContent: "center",
 
                     title: {
-                        color: Appearance.theme.colorPalette.highlight,
+                        color: Appearance.theme.colorPalette.secondary,
 
                         fontWeight: "bold",
                         fontSize: 18
                     },
 
                     description: {
-                        color: Appearance.theme.colorPalette.foreground,
+                        color: Appearance.theme.colorPalette.secondary,
 
                         fontSize: 16
                     }
@@ -72,14 +72,14 @@ export default class RecordPageStyle {
                     alignItems: "center",
 
                     title: {
-                        color: Appearance.theme.colorPalette.highlight,
+                        color: Appearance.theme.colorPalette.secondary,
 
                         fontWeight: "bold",
                         fontSize: 26
                     },
 
                     description: {
-                        color: Appearance.theme.colorPalette.foreground,
+                        color: Appearance.theme.colorPalette.secondary,
 
                         fontSize: 16
                     }

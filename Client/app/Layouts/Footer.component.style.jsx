@@ -8,10 +8,10 @@ export default class FooterStyle {
             height: 70,
             width: "100%",
 
-            backgroundColor: Appearance.theme.colorPalette.section,
+            backgroundColor: Appearance.theme.colorPalette.primary,
             
             borderTopWidth: 1,
-            borderTopColor: Appearance.theme.colorPalette.border,
+            borderTopColor: Appearance.theme.colorPalette.accent,
 
             container: {
                 flex: 1,
@@ -25,13 +25,13 @@ export default class FooterStyle {
                     justifyContent: "center",
 
                     icon: {
-                        color: Appearance.theme.colorPalette.foreground,
+                        color: Appearance.theme.colorPalette.secondary,
             
                         fontSize: 20,            
                     },
 
                     text: {
-                        color: Appearance.theme.colorPalette.highlight,
+                        color: Appearance.theme.colorPalette.secondary,
 
                         marginTop: 4,
             

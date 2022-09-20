@@ -8,7 +8,10 @@ export default class Appearance {
     static theme = null;
     
     static readConfig() {
-        let theme = Config.user?.theme || "default";
+        let theme = Config.user?.theme || "light";
+
+        if(ThemeStyles[theme] == undefined)
+            theme = "light";
 
         if(theme == "system")
             theme = ReactAppearance.getColorScheme();

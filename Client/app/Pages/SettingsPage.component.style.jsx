@@ -15,15 +15,15 @@ export default class SettingsPageStyle {
 
                 padding: 12,
 
-                backgroundColor: Appearance.theme.colorPalette.section,
-                borderTopColor: Appearance.theme.colorPalette.border,
-                borderBottomColor: Appearance.theme.colorPalette.border,
+                backgroundColor: Appearance.theme.colorPalette.primary,
+                borderTopColor: Appearance.theme.colorPalette.accent,
+                borderBottomColor: Appearance.theme.colorPalette.accent,
 
                 borderTopWidth: 1,
                 borderBottomWidth: 1,
 
                 title: {
-                    color: Appearance.theme.colorPalette.highlight,
+                    color: Appearance.theme.colorPalette.secondary,
                     fontWeight: "bold",
                     fontSize: 24
                 },
@@ -34,13 +34,13 @@ export default class SettingsPageStyle {
                         marginBottom: 12,
 
                         title: {
-                            color: Appearance.theme.colorPalette.highlight,
+                            color: Appearance.theme.colorPalette.secondary,
                             fontWeight: "bold",
                             fontSize: 16
                         },
 
                         description: {
-                            color: Appearance.theme.colorPalette.foreground
+                            color: Appearance.theme.colorPalette.secondary
                         }
                     }
                 }

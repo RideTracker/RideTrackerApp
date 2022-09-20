@@ -2,12 +2,9 @@
 	"dark": {
 		"colorPalette": {
 			"background": "#1E1E1E",
-			"section": "#222222",
-			"border": "#222222",
-
-			"foreground": "#F1F1F1",
-			"highlight": "#FFF",
-			"button": "#303030"
+			"primary": "#222222",
+			"secondary": "#F1F1F1",
+			"accent": "#303030"
 		},
 
 		"mapStyle": [
@@ -236,29 +233,12 @@
 
 	"light": {
 		"colorPalette": {
-			"background": "#F5F5F5",
-			"section": "#FFF",
-			"border": "#D7D7D7",
-
-			"foreground": "#757575",
-			"highlight": "#000",
-			"button": "#F0F2F4"
+			"background": "#F1F1F1",
+			"primary": "#FFF",
+			"secondary": "#333",
+			"accent": "#F0F2F4"
 		},
 
-		"mapStyle": []
-	},
-
-	"default": {
-		"colorPalette": {
-			"background": "#F5F5F5",
-			"section": "#FFF",
-			"border": "#D7D7D7",
-
-			"foreground": "#757575",
-			"highlight": "#000",
-			"button": "#F0F2F4"
-		},
-
-		"mapStyle": []
+		"mapStyle": null
 	}
 }

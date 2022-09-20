@@ -11,15 +11,15 @@ export default class HeaderStyle {
 
             position: "relative",
 
-            backgroundColor: Appearance.theme.colorPalette.section,
+            backgroundColor: Appearance.theme.colorPalette.primary,
 
             paddingTop: Constants.statusBarHeight,
             
             borderBottomWidth: 1,
-            borderBottomColor: Appearance.theme.colorPalette.border,
+            borderBottomColor: Appearance.theme.colorPalette.accent,
 
             feed: {
-                color: Appearance.theme.colorPalette.highlight,
+                color: Appearance.theme.colorPalette.secondary,
 
                 fontWeight: "bold",
                 fontSize: 26,
@@ -39,7 +39,7 @@ export default class HeaderStyle {
                 justifyContent: "center",
 
                 icon: {
-                    color: Appearance.theme.colorPalette.foreground,
+                    color: Appearance.theme.colorPalette.secondary,
                     
                     fontSize: 26,
                     

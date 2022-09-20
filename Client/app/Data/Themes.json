@@ -1,11 +1,5 @@
 [
     {
-        "id": "default",
-        "title": "App default",
-        "description": "The app uses the branded default theme."
-    },
-
-    {
         "id": "system",
         "title": "System default",
         "description": "The app uses your device's default theme."

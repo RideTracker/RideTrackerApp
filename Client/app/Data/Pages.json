@@ -4,6 +4,12 @@
         "text": "Home",
         "icon": "home"
     },
+
+    {
+        "id": "routes",
+        "text": "Routes",
+        "icon": "map"
+    },
     
     {
         "id": "record",

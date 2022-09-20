@@ -5,7 +5,7 @@ import Appearance from "../Data/Appearance";
 export default class RecordPageStyle {
     static update() {
         this.sheet = StyleSheet.create({
-            backgroundColor: Appearance.theme.colorPalette.section,
+            backgroundColor: Appearance.theme.colorPalette.primary,
 
             height: "100%",
 
@@ -31,14 +31,14 @@ export default class RecordPageStyle {
 
                 column: {
                     title: {
-                        color: Appearance.theme.colorPalette.highlight,
+                        color: Appearance.theme.colorPalette.secondary,
 
                         fontWeight: "bold",
                         fontSize: 26
                     },
 
                     description: {
-                        color: Appearance.theme.colorPalette.foreground,
+                        color: Appearance.theme.colorPalette.secondary,
 
                         fontSize: 16
                     }
@@ -46,7 +46,7 @@ export default class RecordPageStyle {
                 
                 item: {
                     title: {
-                        color: Appearance.theme.colorPalette.highlight,
+                        color: Appearance.theme.colorPalette.secondary,
                         
                         fontSize: 46,
                         fontWeight: "bold",
@@ -54,7 +54,7 @@ export default class RecordPageStyle {
                     },
 
                     description: {
-                        color: Appearance.theme.colorPalette.foreground,
+                        color: Appearance.theme.colorPalette.secondary,
                         
                         fontSize: 26,
                         textAlign: "center"
@@ -67,7 +67,7 @@ export default class RecordPageStyle {
                     },
 
                     text: {
-                        color: Appearance.theme.colorPalette.foreground,
+                        color: Appearance.theme.colorPalette.secondary,
 
                         fontSize: 26,
                         fontWeight: "normal",
@@ -104,7 +104,7 @@ export default class RecordPageStyle {
                     marginRight: 12,
 
                     icon: {
-                        color: Appearance.theme.colorPalette.foreground,
+                        color: Appearance.theme.colorPalette.secondary,
                         
                         fontSize: 70,
                     },
@@ -123,7 +123,7 @@ export default class RecordPageStyle {
                     },
                     
                     text: {
-                        color: Appearance.theme.colorPalette.foreground,
+                        color: Appearance.theme.colorPalette.secondary,
                         
                         fontSize: 14,
                         fontWeight: "bold"

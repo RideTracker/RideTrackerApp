@@ -1,18 +1,17 @@
 import React, { Component } from "react";
-import { Text, View, Image, Appearance } from 'react-native';
+import { Text, View, Image } from 'react-native';
 
 import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import ThemedComponent from "./ThemedComponent";
 
 import API from "../API";
-import Config from "../config.json";
 import Recording from "../Data/Recording";
+
+import Appearance from "../Data/Appearance";
 
 import Button from "./Button.component";
 import style from "./Activity.component.style";
-
-const config = Config[(Appearance.getColorScheme() == "dark")?("dark"):("default")];
 
 export default class Activity extends ThemedComponent {
     style = style.update();
@@ -73,11 +72,11 @@ export default class Activity extends ThemedComponent {
 
         return (
             <View style={style.sheet}>
-                <MapView ref={this.mapView} style={style.sheet.map} customMapStyle={config.mapStyle} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                <MapView ref={this.mapView} style={style.sheet.map} customMapStyle={Appearance.theme.mapStyle || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
                     {this.state.recording != null && 
                         (this.state.recording.getLatLngCoordinates().map(section => (
                             <Polyline key={section.index} coordinates={section.coordinates} 
-                                strokeColor={config.colorPalette.foreground}
+                                strokeColor={Appearance.theme.colorPalette.secondary}
                                 strokeWidth={3}
                                 lineJoin={"round"}
                             ></Polyline>
