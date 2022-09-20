@@ -68,9 +68,7 @@ export default class Activity extends ThemedComponent {
     render() {
         if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
-            return (
-                <Text>Loading...</Text>
-            );
+            return null;
         }
 
         return (
