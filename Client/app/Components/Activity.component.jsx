@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, Image } from 'react-native';
+import moment from "moment";
 
 import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -96,7 +97,7 @@ export default class Activity extends ThemedComponent {
 
                     <View style={style.sheet.user.texts}>
                         <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
-                        <Text style={style.sheet.user.texts.description}>Time ago in Vänersborg</Text>
+                        <Text style={style.sheet.user.texts.description}>{moment(this.state.data.timestamp).fromNow()} in Vänersborg</Text>
                     </View>
                 </View>
 
