@@ -5,6 +5,7 @@ import ThemedComponent from "../Components/ThemedComponent";
 import Header from "../Layouts/Header.component";
 import Footer from "../Layouts/Footer.component";
 import Activity from "../Components/Activity.component";
+import ActivityCompact from "../Components/ActivityCompact.component";
 import API from "../API";
 import Files from "../Data/Files";
 
@@ -42,7 +43,7 @@ export default class LandingPage extends ThemedComponent {
                     <Header title="Home"/>
 
                     <ScrollView>
-                        {this.state?.activities && this.state?.activities.map(id => <Activity key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
+                        {this.state?.activities && this.state?.activities.map(id => <ActivityCompact key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
                     </ScrollView>
 
                     <Footer onPress={(page) => this.props.onPageNavigation(page)}/>

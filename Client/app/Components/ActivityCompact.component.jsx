@@ -12,9 +12,9 @@ import Recording from "../Data/Recording";
 import Appearance from "../Data/Appearance";
 
 import Button from "./Button.component";
-import style from "./Activity.component.style";
+import style from "./ActivityCompact.component.style";
 
-export default class Activity extends ThemedComponent {
+export default class ActivityCompact extends ThemedComponent {
     style = style.update();
 
     ready = false;
@@ -53,12 +53,12 @@ export default class Activity extends ThemedComponent {
         });
     };
 
-    onLayout() {
+    onLayout() {        
         this.mapView.current.fitToCoordinates(this.state.recording.getAllLatLngCoordinates(), {
             edgePadding: {
                 top: 0,
                 right: 0,
-                bottom: 0,
+                bottom: 60,
                 left: 0
             },
             animated: false
@@ -73,17 +73,42 @@ export default class Activity extends ThemedComponent {
 
         return (
             <View style={style.sheet}>
-                <MapView ref={this.mapView} style={style.sheet.map} customMapStyle={Appearance.theme.mapStyle || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
-                    {this.state.recording != null && 
-                        (this.state.recording.getLatLngCoordinates().map(section => (
-                            <Polyline key={section.index} coordinates={section.coordinates} 
-                                strokeColor={Appearance.theme.colorPalette.secondary}
-                                strokeWidth={3}
-                                lineJoin={"round"}
-                            ></Polyline>
-                        )))
-                    }
-                </MapView>
+                <View style={style.sheet.map}>
+                    <MapView ref={this.mapView} style={style.sheet.map.view} customMapStyle={Appearance.theme.mapStyleCompact || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                        {this.state.recording != null && 
+                            (this.state.recording.getLatLngCoordinates().map(section => (
+                                <Polyline key={section.index} coordinates={section.coordinates} 
+                                    strokeColor={Appearance.theme.colorPalette.secondary}
+                                    strokeWidth={3}
+                                    lineJoin={"round"}
+                                ></Polyline>
+                            )))
+                        }
+                    </MapView>
+
+                    <View style={style.sheet.stats}>
+                        <View style={style.sheet.stats.item}>
+                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getDistance()}
+                                <Text style={style.sheet.stats.item.unit}> km</Text>
+                            </Text>
+                            <Text style={style.sheet.stats.item.description}>distance</Text>
+                        </View>
+
+                        <View style={style.sheet.stats.item}>
+                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getAverageSpeed()}
+                                <Text style={style.sheet.stats.item.unit}> km/h</Text>
+                            </Text>
+                            <Text style={style.sheet.stats.item.description}>average speed</Text>
+                        </View>
+
+                        <View style={style.sheet.stats.item}>
+                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getElevation()}
+                                <Text style={style.sheet.stats.item.unit}> m</Text>
+                            </Text>
+                            <Text style={style.sheet.stats.item.description}>elevation</Text>
+                        </View>
+                    </View>
+                </View>
 
                 <View style={style.sheet.user}>
                     <View>
@@ -98,28 +123,6 @@ export default class Activity extends ThemedComponent {
                     <View style={style.sheet.user.texts}>
                         <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
                         <Text style={style.sheet.user.texts.description}>{moment(this.state.data.timestamp).fromNow()} in Vänersborg</Text>
-                    </View>
-                </View>
-
-                <View style={style.sheet.stats}>
-                    <View style={style.sheet.stats.item}>
-                        <Text style={style.sheet.stats.item.title}>{this.state.recording.getDistance()} km</Text>
-                        <Text style={style.sheet.stats.item.description}>distance</Text>
-                    </View>
-
-                    <View style={style.sheet.stats.item}>
-                        <Text style={style.sheet.stats.item.title}>{this.state.recording.getAverageSpeed()} km/h</Text>
-                        <Text style={style.sheet.stats.item.description}>average speed</Text>
-                    </View>
-                    
-                    <View style={style.sheet.stats.item}>
-                        <Text style={style.sheet.stats.item.title}>{this.state.recording.getElevation()} m</Text>
-                        <Text style={style.sheet.stats.item.description}>elevation</Text>
-                    </View>
-                    
-                    <View style={style.sheet.stats.item}>
-                        <Text style={style.sheet.stats.item.title}>{this.state.recording.getMaxSpeed()} km/h</Text>
-                        <Text style={style.sheet.stats.item.description}>max speed</Text>
                     </View>
                 </View>
                 
