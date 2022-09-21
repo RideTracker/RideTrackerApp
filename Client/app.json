@@ -24,7 +24,8 @@
         "UIBackgroundModes": [
           "location"
         ]
-      }
+      },
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
