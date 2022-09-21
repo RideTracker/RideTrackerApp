@@ -58,8 +58,6 @@ export default class RecordPageStyle {
             stats: {
                 position: "relative",
 
-                marginTop: 12,
-
                 flex: 1,
                 flexDirection: "row",
                 flexWrap: "wrap",

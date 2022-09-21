@@ -5,7 +5,8 @@ import Appearance from "../Data/Appearance";
 export default class ActivityCompactStyle {
     static update() {
         this.sheet = StyleSheet.create({
-            marginTop: 12,
+            marginTop: 6,
+            marginBottom: 6,
 
             backgroundColor: Appearance.theme.colorPalette.primary,
             

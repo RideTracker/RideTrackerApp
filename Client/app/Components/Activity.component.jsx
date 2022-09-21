@@ -8,6 +8,7 @@ import ThemedComponent from "./ThemedComponent";
 
 import API from "../API";
 import Recording from "../Data/Recording";
+import Cache from "../Data/Cache";
 
 import Appearance from "../Data/Appearance";
 
@@ -27,29 +28,16 @@ export default class Activity extends ThemedComponent {
     }
 
     componentDidMount() {
-        // pls do a API.get([])
-        API.get("/api/activity", {
-            id: this.props.id
-        }).then((data) => {
-            this.setState({
-                data: data.content
-            });
+        Cache.getActivity(this.props.id).then((activity) => {
+            this.setState({ activity });
 
-            API.get("/api/user", {
-                id: this.state.data.user
-            }).then((data) => {
-                this.setState({
-                    user: data.content,
-
-                    ready: true
-                });
+            Cache.getUser(activity.user).then((user) => {
+                this.setState({ user });
             });
         });
 
-        API.get("/rides/" + this.props.id + ".json").then(data => {
-            this.setState({
-                recording: new Recording(data)
-            });
+        Cache.getActivityRide(this.props.id).then((ride) => {
+            this.setState({ recording: new Recording(ride) });
         });
     };
 
@@ -97,7 +85,7 @@ export default class Activity extends ThemedComponent {
 
                     <View style={style.sheet.user.texts}>
                         <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
-                        <Text style={style.sheet.user.texts.description}>{moment(this.state.data.timestamp).fromNow()} in Vänersborg</Text>
+                        <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
                     </View>
                 </View>
 
@@ -124,7 +112,7 @@ export default class Activity extends ThemedComponent {
                 </View>
                 
                 { this.props.onPress != undefined &&
-                    <Button title="Show more details" onPress={() => this.props.onPress(this.state.data.id)}/>
+                    <Button title="Show more details" onPress={() => this.props.onPress(this.state.activity.id)}/>
                 }
             </View>
         );
