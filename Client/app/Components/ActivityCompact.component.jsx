@@ -66,7 +66,7 @@ export default class ActivityCompact extends ThemedComponent {
                         {this.state.recording != null && 
                             (this.state.recording.getLatLngCoordinates().map(section => (
                                 <Polyline key={section.index} coordinates={section.coordinates} 
-                                    strokeColor={Appearance.theme.colorPalette.secondary}
+                                    strokeColor={Appearance.theme.colorPalette.route}
                                     strokeWidth={3}
                                     lineJoin={"round"}
                                 ></Polyline>
