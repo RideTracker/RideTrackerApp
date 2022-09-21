@@ -2,7 +2,7 @@ import { Appearance as ReactAppearance } from "react-native";
 
 import Config from "./Config";
 
-import ThemeStyles from "./ThemeStyles.json";
+import ThemeStyles from "./Config/ThemeStyles.json";
 
 export default class Appearance {
     static theme = null;

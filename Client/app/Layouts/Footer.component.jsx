@@ -5,7 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ThemedComponent from "../Components/ThemedComponent";
 import Appearance from "../Data/Appearance";
 
-import Pages from "../Data/Pages.json";
+import Pages from "../Data/Config/Pages.json";
 
 import style from "./Footer.component.style";
 
