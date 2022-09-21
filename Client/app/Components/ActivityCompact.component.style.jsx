@@ -93,7 +93,7 @@ export default class ActivityCompactStyle {
                         fontWeight: "bold",
                         fontSize: 26,
                         
-                        textShadowColor: "#000",
+                        textShadowColor: Appearance.theme.colorPalette.background,
                         textShadowOffset: {
                             width: 0,
                             height: 0

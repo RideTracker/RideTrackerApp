@@ -44,10 +44,10 @@ export default class ActivityCompact extends ThemedComponent {
     onLayout() {        
         this.mapView.current.fitToCoordinates(this.state.recording.getAllLatLngCoordinates(), {
             edgePadding: {
-                top: 0,
-                right: 0,
+                top: 5,
+                right: 5,
                 bottom: 60,
-                left: 0
+                left: 5
             },
             animated: false
         });
