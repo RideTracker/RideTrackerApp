@@ -79,7 +79,7 @@ export default class ActivityCompactStyle {
                 flexWrap: "wrap",
                 justifyContent: "space-between",
 
-                padding: 12,
+                padding: 8,
                 paddingLeft: 80,
 
                 item: {
