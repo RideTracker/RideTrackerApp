@@ -22,6 +22,11 @@ export default class ButtonStyle {
 
                 textAlign: "center"
             },
+            
+
+            noMargin: {
+                margin: 0
+            },
 
             confirm: {
                 backgroundColor: "transparent",

@@ -13,7 +13,66 @@ export default class LoginPageStyle {
             width: "100%",
             height: "100%",
 
-            backgroundColor: Appearance.theme.colorPalette.background
+            backgroundColor: Appearance.theme.colorPalette.primary,
+
+            form: {
+                padding: 12,
+
+                input: {
+                    backgroundColor: Appearance.theme.colorPalette.primary,
+                    
+                    borderRadius: 6,
+
+                    padding: 12,
+
+                    fontSize: 18,
+
+                    marginBottom: 12,
+
+                    borderColor: Appearance.theme.colorPalette.accent,
+                    borderWidth: 1,
+
+                    color: Appearance.theme.colorPalette.secondary,
+
+                    width: "100%",
+                    height: 44
+                },
+
+                button: {
+                    width: "100%",
+                    height: 44
+                },
+
+                divider: {
+                    marginTop: 24 + -4,
+                    marginBottom: 24,
+                    
+                    marginLeft: 5,
+                    marginRight: 5,
+
+                    flexDirection: "row",
+
+                    alignItems: "center",
+
+                    line: {
+                        flex: 1,
+                        
+                        height: 1,
+
+                        backgroundColor: Appearance.theme.colorPalette.secondary
+                    },
+
+                    text: {
+                        width: 50,
+
+                        textAlign: "center",
+
+                        fontSize: 16,
+                        
+                        color: Appearance.theme.colorPalette.secondary
+                    }
+                }
+            }
         });
 
         return this;
