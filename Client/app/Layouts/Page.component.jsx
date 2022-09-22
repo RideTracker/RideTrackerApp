@@ -1,17 +1,29 @@
 import React, { Component } from "react";
 import { View } from 'react-native';
 
+import User from "../Data/User";
+
 import ThemedComponent from "../Components/ThemedComponent";
 
 import LandingPage from "../Pages/LandingPage.component";
 import RecordPage from "../Pages/RecordPage.component";
 import ProfilePage from "../Pages/ProfilePage.component";
 import SettingsPage from "../Pages/SettingsPage.component";
+import LoginPage from "../Pages/LoginPage.component";
 
 import style from "./Page.component.style";
 
 export default class Page extends ThemedComponent {
     style = style.update();
+
+    constructor(...args) {
+        super(...args);
+
+        User.authenticateAsync().then((success) => {
+            if(!success)
+                this.setState({ showLogin: true });
+        });
+    };
 
     getPage() {
         switch(this.state?.page) {

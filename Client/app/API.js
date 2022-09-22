@@ -63,4 +63,11 @@ export default class API {
 
         return await this.fetch(path, "PUT", body);
     };
+
+    static async post(path, body) {
+        if(body == undefined)
+            return await this.fetch(path, "POST");
+
+        return await this.fetch(path, "POST", body);
+    };
 };

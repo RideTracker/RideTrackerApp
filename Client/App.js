@@ -4,10 +4,12 @@ import * as Location from "expo-location";
 import * as SplashScreen from "expo-splash-screen";
 
 import Page from "./app/Layouts/Page.component";
+import LoginPage from "./app/Pages/LoginPage.component";
 
 import API from "./app/API";
 import Files from "./app/Data/Files";
 import Config from "./app/Data/Config";
+import User from "./app/Data/User";
 import Appearance from "./app/Data/Appearance";
 
 SplashScreen.preventAutoHideAsync();
@@ -15,7 +17,7 @@ SplashScreen.preventAutoHideAsync();
 let ready = false;
 
 export default function App() {
-    const [ theme, setTheme ] = useState(false);
+    const [ showLogin, setShowLogin ] = useState(false);
     const [ appIsReady, setAppIsReady ] = useState(false);
 
     //await API.ping(true);
@@ -27,6 +29,11 @@ export default function App() {
 
             await Config.readAsync();
             Appearance.readConfig();
+
+            User.authenticateAsync().then((success) => {
+                if(!success)
+                    setShowLogin(true);
+            });
     
             await SplashScreen.hideAsync();
     
@@ -45,18 +52,15 @@ export default function App() {
         return null;
 
     const styles = StyleSheet.create({
-        document: {
-            minHeight: "100%"
-        }
-    });
-
-    Appearance.addEventListener("change", (theme) => {
-        setTheme(theme);
+        height: "100%",
+        width: "100%"
     });
 
 	return (
-        <View style={styles.document} onLayout={onLayout}>
+        <View style={styles} onLayout={onLayout}>
             <Page/>
+
+            {showLogin == true && (<LoginPage/>)}
         </View>
 	);
 }
