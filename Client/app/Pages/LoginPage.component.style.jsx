@@ -19,9 +19,8 @@ export default class LoginPageStyle {
             flexDirection: "column",
             justifyContent: "flex-start",
 
-            header: {
+            footer: {
                 content: {
-                    paddingTop: Constants.statusBarHeight,
                     width: "100%",
 
                     backgroundColor: Appearance.theme.colorPalette.route,
@@ -55,7 +54,7 @@ export default class LoginPageStyle {
                 },
 
                 svg: {
-                    marginTop: -20,
+                    marginBottom: -60,
                     height: 80,
 
                     fill: Appearance.theme.colorPalette.route
@@ -63,7 +62,7 @@ export default class LoginPageStyle {
             },
 
             form: {
-                flex: 2,
+                flex: 1,
 
                 padding: 12,
 
