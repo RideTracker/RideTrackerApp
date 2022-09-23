@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import Constants from "expo-constants";
 
 import Appearance from "../Data/Appearance";
 
@@ -15,7 +16,55 @@ export default class LoginPageStyle {
 
             backgroundColor: Appearance.theme.colorPalette.primary,
 
+            flexDirection: "column",
+            justifyContent: "flex-start",
+
+            header: {
+                content: {
+                    paddingTop: Constants.statusBarHeight,
+                    width: "100%",
+
+                    backgroundColor: Appearance.theme.colorPalette.route,
+
+                    flexDirection: "row",
+                    
+                    icon: {
+                        width: 100,
+                        height: 100,
+
+                        marginTop: 24,
+                        marginBottom: 24,
+                    },
+
+                    text: {
+                        
+                        marginTop: 24,
+                        marginBottom: 24,
+                        paddingRight: 24,
+                    },
+
+                    title: {
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        color: Appearance.theme.colorPalette.solid,
+                    },
+
+                    description: {
+                        color: Appearance.theme.colorPalette.solid,
+                    }
+                },
+
+                svg: {
+                    marginTop: -20,
+                    height: 80,
+
+                    fill: Appearance.theme.colorPalette.route
+                }
+            },
+
             form: {
+                flex: 2,
+
                 padding: 12,
 
                 input: {
@@ -59,7 +108,7 @@ export default class LoginPageStyle {
                         
                         height: 1,
 
-                        backgroundColor: Appearance.theme.colorPalette.secondary
+                        backgroundColor: Appearance.theme.colorPalette.accent
                     },
 
                     text: {
@@ -67,7 +116,7 @@ export default class LoginPageStyle {
 
                         textAlign: "center",
 
-                        fontSize: 16,
+                        fontSize: 14,
                         
                         color: Appearance.theme.colorPalette.secondary
                     }

@@ -5,7 +5,8 @@
 			"primary": "#222222",
 			"secondary": "#F1F1F1",
 			"accent": "#303030",
-			"route": "#FF8A00"
+			"route": "#FF8A00",
+			"solid": "#FFF"
 		},
 
 		"mapStyle": [
@@ -640,7 +641,8 @@
 			"primary": "#FFF",
 			"secondary": "#333",
 			"accent": "#F0F2F4",
-			"route": "#FF8A00"
+			"route": "#FF8A00",
+			"solid": "#000"
 		},
 
 		"mapStyle": [
