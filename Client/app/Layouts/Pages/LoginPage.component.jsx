@@ -13,6 +13,7 @@ import Header from "../../Layouts/Header.component";
 import Footer from "../../Layouts/Footer.component";
 
 import Forgotten from "./Login/Forgotten.component";
+import Register from "./Login/Register.component";
 
 import style from "./LoginPage.component.style";
 import Button from "../../Components/Button.component";
@@ -51,17 +52,16 @@ export default class LoginPage extends ThemedComponent {
         this.setState({ closed: true });
     };
 
-    onForgottenPress() {
-        console.log("forgotten");
-        this.setState({ page: "forgotten" });
-    };
-
     render() { 
         if(this.state?.closed)
             return null;
 
-        if(this.state?.page == "forgotten")
-            return (<Forgotten style={style.sheet} onClose={() => this.setState({ page: null })}/>);
+        if(this.state?.page) {
+            if(this.state?.page == "register")
+                return (<Register style={style.sheet} onClose={() => this.setState({ page: null })}/>);
+            else if(this.state?.page == "forgotten")
+                return (<Forgotten style={style.sheet} onClose={() => this.setState({ page: null })}/>);
+        }
 
         return (
             <View style={style.sheet}>
@@ -73,8 +73,8 @@ export default class LoginPage extends ThemedComponent {
 
                     <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in"/>
 
-                    <TouchableOpacity onPress={() => this.onForgottenPress()}>
-                            <Text style={style.sheet.text}>Forgot your credentials? <Text style={style.sheet.text.link}>Click here to recover</Text></Text>
+                    <TouchableOpacity onPress={() => this.setState({ page: "forgotten" })}>
+                        <Text style={style.sheet.text}>Forgot your credentials? <Text style={style.sheet.text.link}>Click here to recover</Text></Text>
                     </TouchableOpacity>
 
                     <View style={style.sheet.form.divider}>
@@ -96,7 +96,9 @@ export default class LoginPage extends ThemedComponent {
                 </View>
 
                 <View style={style.sheet.footer}>
-                    <Text style={style.sheet.text}>Don't have an account? <Text style={style.sheet.text.link}>Click here to sign up</Text></Text>
+                    <TouchableOpacity onPress={() => this.setState({ page: "register" })}>
+                        <Text style={style.sheet.text}>Don't have an account? <Text style={style.sheet.text.link}>Click here to sign up</Text></Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
