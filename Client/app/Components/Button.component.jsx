@@ -27,7 +27,7 @@ export default class Button extends ThemedComponent {
 
     render() { 
         return (
-            <TouchableOpacity style={[ style.sheet, (this.props.branded != undefined && style.sheet.branded), (this.props.confirm != undefined && style.sheet.confirm), (this.props.margin != undefined && style.sheet.noMargin) ]} onPress={() => this.onPress()}>
+            <TouchableOpacity style={[ style.sheet, (this.props.branded != undefined && style.sheet.branded), (this.props.confirm != undefined && style.sheet.confirm), (this.props.margin != undefined && style.sheet.noMargin), (this.props.style != undefined && this.props.style) ]} onPress={() => this.onPress()}>
                 <Text style={[ style.sheet.text, (this.props.confirm != undefined && style.sheet.confirm.text) ]}>{this.props.title}</Text>
             </TouchableOpacity>
         );

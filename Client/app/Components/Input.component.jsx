@@ -19,7 +19,7 @@ export default class Input extends Component {
                     </View>
                 )}
 
-                <TextInput style={style.sheet.input} placeholder={this.props?.placeholder} placeholderTextColor={Appearance.theme.colorPalette.secondary} secureTextEntry={this.props?.secure}/>
+                <TextInput style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]} placeholder={this.props?.placeholder} placeholderTextColor={Appearance.theme.colorPalette.secondary} secureTextEntry={this.props?.secure}/>
             </View>
         );
     };
