@@ -30,6 +30,11 @@ export default class ActivityCompactStyle {
                 }
             },
 
+            button: {
+                marginLeft: 12,
+                marginRight: 12,
+            },
+
             user: {
                 flex: 1,
                 flexDirection: "row",

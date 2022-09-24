@@ -115,7 +115,7 @@ export default class ActivityCompact extends ThemedComponent {
                 </View>
                 
                 { this.props.onPress != undefined &&
-                    <Button title="Show more details" onPress={() => this.props.onPress(this.state.activity.id)}/>
+                    <Button style={style.sheet.button} title="Show more details" onPress={() => this.props.onPress(this.state.activity.id)}/>
                 }
             </View>
         );
