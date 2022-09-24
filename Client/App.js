@@ -27,7 +27,8 @@ export default function App() {
             try { await Location.requestForegroundPermissionsAsync(); } catch {}
             try { await Location.requestBackgroundPermissionsAsync(); } catch {}
 
-            await Config.resetAsync();
+            // uncomment to debug login dialog
+            // await Config.resetAsync();
 
             await Config.readAsync();
             Appearance.readConfig();
