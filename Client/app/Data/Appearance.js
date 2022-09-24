@@ -8,7 +8,7 @@ export default class Appearance {
     static theme = null;
     
     static readConfig() {
-        let theme = Config.user?.theme || "light";
+        let theme = Config.user?.theme || "dark";
 
         if(ThemeStyles[theme] == undefined)
             theme = "light";

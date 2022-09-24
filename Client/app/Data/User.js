@@ -5,7 +5,7 @@ export default class User {
     static guest = true;
 
     static async authenticateAsync() {
-        if(Config.user.token == undefined)
+        if(!Config.user?.token)
             return false;
 
         const result = await API.post("/api/user/authenticate", { token: Config.user.token });

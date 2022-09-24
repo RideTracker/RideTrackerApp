@@ -4,6 +4,8 @@ import Svg, { Path } from "react-native-svg";
 
 import * as AppleAuthentication from "expo-apple-authentication";
 
+import Config from "../Data/Config";
+
 import ThemedComponent from "../Components/ThemedComponent";
 import Input from "../Components/Input.component";
 import Appearance from "../Data/Appearance";
@@ -41,6 +43,13 @@ export default class LoginPage extends ThemedComponent {
         }
     };
 
+    onGuestPress() {
+        Config.user.guest = true;
+        Config.saveAsync();
+
+        this.setState({ closed: true });
+    };
+
     render() { 
         if(this.state?.closed == true)
             return null;
@@ -76,7 +85,7 @@ export default class LoginPage extends ThemedComponent {
                         />
                     )}
 
-                    <Button style={style.sheet.form.button} title="Continue as a guest"/>
+                    <Button style={style.sheet.form.button} onPress={() => this.onGuestPress()} title="Continue as a guest"/>
                 </View>
 
                 <View style={style.sheet.footer}>

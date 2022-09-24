@@ -27,13 +27,19 @@ export default function App() {
             try { await Location.requestForegroundPermissionsAsync(); } catch {}
             try { await Location.requestBackgroundPermissionsAsync(); } catch {}
 
+            await Config.resetAsync();
+
             await Config.readAsync();
             Appearance.readConfig();
 
-            User.authenticateAsync().then((success) => {
-                if(!success)
-                    setShowLogin(true);
-            });
+            if(Config.user?.token) {
+                User.authenticateAsync().then((success) => {
+                    if(!success)
+                        setShowLogin(true);
+                });
+            }
+            else if(Config.user.guest == null)
+                setShowLogin(true);
     
             await SplashScreen.hideAsync();
     

@@ -23,6 +23,12 @@ export default class Config {
         this.user = JSON.parse(await FileSystem.readAsStringAsync(FileSystem.documentDirectory + "/config/user.json"));
     };
 
+    static async resetAsync() {
+        this.user = {};
+
+        await this.saveAsync();
+    };
+
     static async saveAsync() {
         await FileSystem.writeAsStringAsync(FileSystem.documentDirectory + "/config/user.json", JSON.stringify(this.user));
     };
