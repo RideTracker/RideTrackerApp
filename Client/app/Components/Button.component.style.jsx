@@ -7,17 +7,17 @@ export default class ButtonStyle {
         this.sheet = StyleSheet.create({
             backgroundColor: Appearance.theme.colorPalette.accent,
 
-            margin: 12,
-            marginBottom: 6,
-            marginTop: 6,
             padding: 12,
 
             borderRadius: 5,
 
+            branded: {
+                backgroundColor: Appearance.theme.colorPalette.route
+            },
+
             text: {
                 color: Appearance.theme.colorPalette.secondary,
 
-                fontWeight: "bold",
                 fontSize: 18,
 
                 textAlign: "center"

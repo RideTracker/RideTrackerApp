@@ -19,45 +19,30 @@ export default class LoginPageStyle {
             flexDirection: "column",
             justifyContent: "flex-start",
 
+            header: {
+                color: Appearance.theme.colorPalette.secondary,
+
+                fontSize: 32,
+                fontWeight: "bold",
+                textAlign: "center",
+
+                margin: 32
+            },
+
             footer: {
-                content: {
-                    width: "100%",
+                margin: 24,
 
-                    backgroundColor: Appearance.theme.colorPalette.route,
+                marginBottom: Constants.statusBarHeight
+            },
 
-                    flexDirection: "row",
-                    
-                    icon: {
-                        width: 100,
-                        height: 100,
+            text: {
+                textAlign: "center",
+                marginTop: 12,
 
-                        marginTop: 24,
-                        marginBottom: 24,
-                    },
+                color: Appearance.theme.colorPalette.secondary,
 
-                    text: {
-                        
-                        marginTop: 24,
-                        marginBottom: 24,
-                        paddingRight: 24,
-                    },
-
-                    title: {
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        color: Appearance.theme.colorPalette.solid,
-                    },
-
-                    description: {
-                        color: Appearance.theme.colorPalette.solid,
-                    }
-                },
-
-                svg: {
-                    marginBottom: -60,
-                    height: 80,
-
-                    fill: Appearance.theme.colorPalette.route
+                link: {
+                    color: Appearance.theme.colorPalette.route
                 }
             },
 
@@ -66,29 +51,17 @@ export default class LoginPageStyle {
 
                 padding: 12,
 
+                justifyContent: "center",
+
                 input: {
-                    backgroundColor: Appearance.theme.colorPalette.primary,
-                    
-                    borderRadius: 6,
-
-                    padding: 12,
-
-                    fontSize: 18,
-
-                    marginBottom: 12,
-
-                    borderColor: Appearance.theme.colorPalette.accent,
-                    borderWidth: 1,
-
-                    color: Appearance.theme.colorPalette.secondary,
-
-                    width: "100%",
-                    height: 44
+                    marginBottom: 12
                 },
 
                 button: {
                     width: "100%",
-                    height: 44
+                    height: 44,
+
+                    marginBottom: 12,
                 },
 
                 divider: {
