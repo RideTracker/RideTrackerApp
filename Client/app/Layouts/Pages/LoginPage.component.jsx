@@ -1,19 +1,21 @@
 import React, { Component } from "react";
-import { View, Platform, TextInput, Text, Image, ScrollView } from "react-native";
+import { View, Platform, TextInput, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
 import * as AppleAuthentication from "expo-apple-authentication";
 
-import Config from "../Data/Config";
-import ThemedComponent from "../Components/ThemedComponent";
-import Input from "../Components/Input.component";
-import Appearance from "../Data/Appearance";
+import Config from "../../Data/Config";
+import ThemedComponent from "../../Components/ThemedComponent";
+import Input from "../../Components/Input.component";
+import Appearance from "../../Data/Appearance";
 
-import Header from "../Layouts/Header.component";
-import Footer from "../Layouts/Footer.component";
+import Header from "../../Layouts/Header.component";
+import Footer from "../../Layouts/Footer.component";
+
+import Forgotten from "./Login/Forgotten.component";
 
 import style from "./LoginPage.component.style";
-import Button from "../Components/Button.component";
+import Button from "../../Components/Button.component";
 
 export default class LoginPage extends ThemedComponent {
     style = style.update();
@@ -49,9 +51,17 @@ export default class LoginPage extends ThemedComponent {
         this.setState({ closed: true });
     };
 
+    onForgottenPress() {
+        console.log("forgotten");
+        this.setState({ page: "forgotten" });
+    };
+
     render() { 
-        if(this.state?.closed == true)
+        if(this.state?.closed)
             return null;
+
+        if(this.state?.page == "forgotten")
+            return (<Forgotten style={style.sheet} onClose={() => this.setState({ page: null })}/>);
 
         return (
             <View style={style.sheet}>
@@ -63,22 +73,20 @@ export default class LoginPage extends ThemedComponent {
 
                     <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in"/>
 
-                    <Text style={style.sheet.text}>Forgot your credentials? <Text style={style.sheet.text.link}>Click here to recover</Text></Text>
+                    <TouchableOpacity onPress={() => this.onForgottenPress()}>
+                            <Text style={style.sheet.text}>Forgot your credentials? <Text style={style.sheet.text.link}>Click here to recover</Text></Text>
+                    </TouchableOpacity>
 
                     <View style={style.sheet.form.divider}>
                         <View style={style.sheet.form.divider.line}/>
-
-                        <View>
-                            <Text style={style.sheet.form.divider.text}>OR</Text>
-                        </View>
-
+                        <Text style={style.sheet.form.divider.text}>OR</Text>
                         <View style={style.sheet.form.divider.line}/>
                     </View>
 
                     {Platform.OS == "ios" && (
                         <AppleAuthentication.AppleAuthenticationButton style={style.sheet.form.button}
                             buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-                            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+                            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
                             cornerRadius={5}
                             onPress={() => this.onAppleLoginPress()}
                         />

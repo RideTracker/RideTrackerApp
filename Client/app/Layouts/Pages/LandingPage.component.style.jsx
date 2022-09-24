@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import Appearance from "../Data/Appearance";
+import Appearance from "../../Data/Appearance";
 
 export default class LandingPageStyle {
     static update() {

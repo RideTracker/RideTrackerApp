@@ -4,7 +4,7 @@ import * as Location from "expo-location";
 import * as SplashScreen from "expo-splash-screen";
 
 import Page from "./app/Layouts/Page.component";
-import LoginPage from "./app/Pages/LoginPage.component";
+import LoginPage from "./app/Layouts/Pages/LoginPage.component";
 
 import API from "./app/API";
 import Files from "./app/Data/Files";
