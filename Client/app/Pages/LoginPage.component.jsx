@@ -5,7 +5,6 @@ import Svg, { Path } from "react-native-svg";
 import * as AppleAuthentication from "expo-apple-authentication";
 
 import Config from "../Data/Config";
-
 import ThemedComponent from "../Components/ThemedComponent";
 import Input from "../Components/Input.component";
 import Appearance from "../Data/Appearance";
@@ -60,7 +59,7 @@ export default class LoginPage extends ThemedComponent {
                     <Text style={style.sheet.header}>Ride Tracker</Text>
 
                     <Input style={style.sheet.form.input} placeholder="E-mail address" icon="envelope"/>
-                    <Input style={style.sheet.form.input} placeholder="Password" icon="lock"/>
+                    <Input style={style.sheet.form.input} placeholder="Password" icon="lock" secure/>
 
                     <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in"/>
 

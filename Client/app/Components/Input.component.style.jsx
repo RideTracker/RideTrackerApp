@@ -33,6 +33,7 @@ export default class InputStyle {
             },
 
             input: {
+                width: "100%",
                 fontSize: 18,
 
                 color: Appearance.theme.colorPalette.secondary,
