@@ -39,9 +39,6 @@ export default class API {
             
         const result = await response.json();
 
-        if(result.success == false)
-            throw new Error(result.content);
-
         return result;
     };
 

@@ -33,7 +33,7 @@ export default class Register extends Component {
             password: this.password.current.getValue()
         };
 
-        const response = await API.post("/api/user/register", credentials);
+        const response = await API.post("/api/user/register", JSON.stringify(credentials));
 
         if(!response.success) {
             Alert.alert("Something went wrong!", response.content, [{ text: "Close" }]);
@@ -42,7 +42,7 @@ export default class Register extends Component {
         }
 
         Config.user.guest = false;
-        Config.user.token = result.content;
+        Config.user.token = response.content;
         Config.saveAsync();
 
         await User.authenticateAsync();

@@ -4,11 +4,11 @@ const mysql = require("mysql");
 
 const global = require("./global");
 
-const config = JSON.parse(fs.readFileSync("./config.json"));
+global.config = JSON.parse(fs.readFileSync("./config.json"));
 
-const requests = config.requests.map((file) => require(file));
+const requests = global.config.requests.map((file) => require(file));
 
-global.connection = mysql.createConnection(config.mysql);
+global.connection = mysql.createConnection(global.config.mysql);
 
 global.connection.connect((error) => {
     if(error)

@@ -3,6 +3,20 @@ module.exports = class ApiRequest {
         this.request = request;
     };
 
+    async getBodyAsync() {
+        return new Promise((resolve) => {
+            let body = "";
+
+            this.request.on("data", (chunck) => {
+                body += chunck;
+            });
+
+            this.request.on("end", async () => {
+                resolve(body);
+            });
+        });
+    };
+
     getParameters() {
         const indexOfQuery = this.request.url.indexOf('?');
 

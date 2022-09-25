@@ -6,10 +6,15 @@
         "database": "ridetracker"
     },
 
+    "password": {
+        "salt": 10
+    },
+
     "requests": [
         "./app/API/Ping/PingRequest",
         
         "./app/API/User/UserRequest",
+        "./app/API/User/Register/UserRegisterRequest",
     
         "./app/API/Activity/ActivityRequest",
         "./app/API/Activity/Map/ActivityMapRequest",
