@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { View, Platform, TextInput, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
@@ -21,11 +21,18 @@ import Button from "../../Components/Button.component";
 export default class LoginPage extends ThemedComponent {
     style = style.update();
 
+    constructor(...args) {
+        super(...args);
+
+        this.email = React.createRef();
+        this.password = React.createRef();
+    };
+
     onClose() {
         this.setState({ closed: true });
     };
 
-    async onAppleLoginPress() {
+    async onAppleAuthenticationPress() {
         try {
             const credential = await AppleAuthentication.signInAsync({
                 requestedScopes: [
@@ -52,6 +59,15 @@ export default class LoginPage extends ThemedComponent {
         this.setState({ closed: true });
     };
 
+    onLoginPress() {
+        const credentials = {
+            email: this.email.current.getValue(),
+            password: this.password.current.getValue()
+        };
+
+        console.log(credentials);
+    };
+
     render() { 
         if(this.state?.closed)
             return null;
@@ -68,10 +84,10 @@ export default class LoginPage extends ThemedComponent {
                 <View style={style.sheet.form}>
                     <Text style={style.sheet.header}>Ride Tracker</Text>
 
-                    <Input style={style.sheet.form.input} placeholder="E-mail address" icon="envelope"/>
-                    <Input style={style.sheet.form.input} placeholder="Password" icon="lock" secure/>
+                    <Input ref={this.email} style={style.sheet.form.input} placeholder="E-mail address" icon="envelope"/>
+                    <Input ref={this.password} style={style.sheet.form.input} placeholder="Password" icon="lock" secure/>
 
-                    <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in"/>
+                    <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in" onPress={() => this.onLoginPress()}/>
 
                     <TouchableOpacity onPress={() => this.setState({ page: "forgotten" })}>
                         <Text style={style.sheet.text}>Forgot your credentials? <Text style={style.sheet.text.link}>Click here to recover</Text></Text>
@@ -88,7 +104,7 @@ export default class LoginPage extends ThemedComponent {
                             buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
                             buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
                             cornerRadius={5}
-                            onPress={() => this.onAppleLoginPress()}
+                            onPress={() => this.onAppleAuthenticationPress()}
                         />
                     )}
 

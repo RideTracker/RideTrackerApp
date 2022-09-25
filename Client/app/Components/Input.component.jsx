@@ -10,6 +10,10 @@ import style from "./Input.component.style";
 export default class Input extends Component {
     style = style.update();
 
+    getValue() {
+        return this.state?.value;
+    };
+
     render() {
         return (
             <View style={[ style.sheet, this.props?.style ]}>
@@ -19,7 +23,7 @@ export default class Input extends Component {
                     </View>
                 )}
 
-                <TextInput style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]} placeholder={this.props?.placeholder} placeholderTextColor={Appearance.theme.colorPalette.secondary} secureTextEntry={this.props?.secure}/>
+                <TextInput onChangeText={(text) => this.setState({ value: text })} style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]} placeholder={this.props?.placeholder} placeholderTextColor={Appearance.theme.colorPalette.secondary} secureTextEntry={this.props?.secure}/>
             </View>
         );
     };

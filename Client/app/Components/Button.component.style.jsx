@@ -7,7 +7,8 @@ export default class ButtonStyle {
         this.sheet = StyleSheet.create({
             backgroundColor: Appearance.theme.colorPalette.accent,
 
-            padding: 12,
+            justifyContent: "center",
+            height: 44,
 
             borderRadius: 5,
 
