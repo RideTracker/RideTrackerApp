@@ -21,7 +21,7 @@ export default class Cache {
 
     static async getActivityRide(id) {
         if(this.activityRide[id] == undefined)
-            this.activityRide[id] = (await API.get("/rides/" + id + ".json"));
+            this.activityRide[id] = (await API.get("/api/activity/map?id=" + id));
 
         return this.activityRide[id];
     };

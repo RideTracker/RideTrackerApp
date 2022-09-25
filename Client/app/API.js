@@ -32,7 +32,7 @@ export default class API {
     static async fetch(path, method, body) {
         console.log("API FETCH " + method + " " + path);
 
-        const response = await fetch(API.server + path, { method, body });
+        const response = await fetch(API.server + path, { method, body: JSON.stringify(body) });
         
         if(method == "PUT")
             return {};

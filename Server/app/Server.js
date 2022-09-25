@@ -14,8 +14,6 @@ export default class Server {
     static async onRequest(request, response) {
         try {
             console.log(request.socket.remoteAddress + " > " + request.method + " " + request.url);
-
-            response.writeProcessing();
         
             const url = request.url.toLowerCase();
             const queryIndex = url.indexOf('?');
@@ -41,12 +39,14 @@ export default class Server {
 
                 result = await listener.response(request, response, parameters);
             }
-            else if(request.method == "POST" && queryIndex != -1) {
+            else if(request.method == "POST") {
                 const body = JSON.parse(await this.downloadBodyAsync(request));
+
+                console.log(body);
                 
                 result = await listener.response(request, response, body);
             }
-            else if(request.method == "PUT" && queryIndex != -1) {
+            else if(request.method == "PUT") {
                 const body = await this.downloadBodyAsync(request);
                 
                 result = await listener.response(request, response, body);
@@ -54,14 +54,11 @@ export default class Server {
             else
                 result = await listener.response(request, response);
 
-            if(typeof result == "object")
-                result = JSON.stringify(result);
-
             response.writeHead(200, {
                 "Content-Type": "text/json"
             });
         
-            response.end(result);
+            response.end(JSON.stringify(result));
         }
         catch(error) {
             console.error(request.socket.remoteAddress + ": " + error);
@@ -75,11 +72,11 @@ export default class Server {
         return new Promise((resolve) => {
             let body = "";
 
-            this.request.on("data", (chunck) => {
+            request.on("data", (chunck) => {
                 body += chunck;
             });
 
-            this.request.on("end", async () => {
+            request.on("end", async () => {
                 resolve(body);
             });
         });

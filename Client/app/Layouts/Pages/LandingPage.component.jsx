@@ -15,7 +15,8 @@ export default class LandingPage extends ThemedComponent {
     style = style.update();
 
     componentDidMount() {
-        API.get("/api/feed/activities").then((result) => {
+        API.get("/api/feed").then((result) => {
+            console.log(result.content);
             this.setState({
                 activities: result.content
             });

@@ -8,7 +8,7 @@ export default class User {
         if(!Config.user?.token)
             return false;
 
-        const result = await API.post("/api/user/authenticate", Config.user.token);
+        const result = await API.post("/api/user/authenticate", { token: Config.user.token });
 
         if(!result.success)
             return false;

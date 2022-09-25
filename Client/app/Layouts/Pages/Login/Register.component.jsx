@@ -33,7 +33,7 @@ export default class Register extends Component {
             password: this.password.current.getValue()
         };
 
-        const response = await API.post("/api/user/register", JSON.stringify(credentials));
+        const response = await API.post("/api/user/register", credentials);
 
         if(!response.success) {
             Alert.alert("Something went wrong!", response.content, [{ text: "Close" }]);
