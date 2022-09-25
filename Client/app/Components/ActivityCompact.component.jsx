@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 import moment from "moment";
 
 import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -60,9 +60,9 @@ export default class ActivityCompact extends ThemedComponent {
         }
 
         return (
-            <View style={style.sheet}>
+            <TouchableOpacity style={[ style.sheet, (this.state?.pressing && style.sheet.pressing) ]} activeOpacity={1} onPressIn={() => this.setState({ pressing: true })} onPressOut={() => this.setState({ pressing: null })} onPress={() => this.props.onPress(this.state.activity.id)}>
                 <View style={style.sheet.map}>
-                    <MapView ref={this.mapView} style={style.sheet.map.view} customMapStyle={Appearance.theme.mapStyleCompact || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
+                    <MapView ref={this.mapView} style={style.sheet.map.view} customMapStyle={Appearance.theme.mapStyleCompact || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()} pitchEnabled={false} scrollEnabled={false} zoomEnabled={false} rotateEnabled={false}>
                         {this.state.recording != null && 
                             (this.state.recording.getLatLngCoordinates().map(section => (
                                 <Polyline key={section.index} coordinates={section.coordinates} 
@@ -113,11 +113,7 @@ export default class ActivityCompact extends ThemedComponent {
                         <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
                     </View>
                 </View>
-                
-                { this.props.onPress != undefined &&
-                    <Button style={style.sheet.button} title="Show more details" onPress={() => this.props.onPress(this.state.activity.id)}/>
-                }
-            </View>
+            </TouchableOpacity>
         );
     }
 };

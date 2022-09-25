@@ -16,8 +16,12 @@ export default class ActivityCompactStyle {
             borderTopWidth: 1,
             borderTopColor: Appearance.theme.colorPalette.accent,
 
+            pressing: {
+                backgroundColor: Appearance.theme.colorPalette.accent
+            },
+
             map: {
-                height: 200,
+                height: 180,
 
                 view: {
                     position: "absolute",
@@ -60,13 +64,13 @@ export default class ActivityCompactStyle {
                         color: Appearance.theme.colorPalette.secondary,
 
                         fontWeight: "bold",
-                        fontSize: 18
+                        fontSize: 16
                     },
 
                     description: {
                         color: Appearance.theme.colorPalette.secondary,
 
-                        fontSize: 16
+                        fontSize: 14
                     }
                 }
             },

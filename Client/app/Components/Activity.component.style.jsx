@@ -44,13 +44,13 @@ export default class RecordPageStyle {
                         color: Appearance.theme.colorPalette.secondary,
 
                         fontWeight: "bold",
-                        fontSize: 18
+                        fontSize: 16
                     },
 
                     description: {
                         color: Appearance.theme.colorPalette.secondary,
 
-                        fontSize: 16
+                        fontSize: 14
                     }
                 }
             },
