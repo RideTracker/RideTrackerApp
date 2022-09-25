@@ -13,6 +13,8 @@ export default class FooterStyle {
             borderTopWidth: 1,
             borderTopColor: Appearance.theme.colorPalette.accent,
 
+            position: "relative",
+
             container: {
                 flex: 1,
                 flexDirection: "row",
@@ -39,6 +41,21 @@ export default class FooterStyle {
             
                         textAlign: "center"
                     }
+                }
+            },
+
+            appearance: {
+                position: "absolute",
+                bottom: "100%",
+
+                width: "100%",
+                
+                backgroundColor: Appearance.theme.colorPalette.accent,
+
+                padding: 12,
+
+                text: {
+                    color: Appearance.theme.colorPalette.secondary
                 }
             }
         });

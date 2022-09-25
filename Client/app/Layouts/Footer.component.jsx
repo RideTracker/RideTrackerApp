@@ -12,7 +12,7 @@ import style from "./Footer.component.style";
 export default class Footer extends ThemedComponent {
     style = style.update();
 
-    render() { 
+    render() {
         return (
             <View style={style.sheet}>
                 <View style={style.sheet.container}>
@@ -24,6 +24,12 @@ export default class Footer extends ThemedComponent {
                         </TouchableOpacity>
                     ))}
                 </View>
+
+                {Appearance.systemThemeChanged && (
+                    <View style={style.sheet.appearance}>
+                        <Text style={style.sheet.appearance.text}>We've turned on {Appearance.theme.id} mode for you to match your device's appearance mode!</Text>
+                    </View>
+                )}
             </View>
         );
     }
