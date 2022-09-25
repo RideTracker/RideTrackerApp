@@ -15,6 +15,8 @@
         
         "./app/API/User/UserRequest",
         "./app/API/User/Register/UserRegisterRequest",
+        "./app/API/User/Login/UserLoginRequest",
+        "./app/API/User/Authenticate/UserAuthenticateRequest",
     
         "./app/API/Activity/ActivityRequest",
         "./app/API/Activity/Map/ActivityMapRequest",

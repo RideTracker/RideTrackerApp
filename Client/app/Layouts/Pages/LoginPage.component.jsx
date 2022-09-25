@@ -1,16 +1,14 @@
-import React, { Component, createRef } from "react";
-import { View, Platform, TextInput, Text, Image, ScrollView, TouchableOpacity } from "react-native";
-import Svg, { Path } from "react-native-svg";
+import React from "react";
+import { View, Platform, Text, TouchableOpacity } from "react-native";
 
 import * as AppleAuthentication from "expo-apple-authentication";
 
 import Config from "../../Data/Config";
+import User from "../../Data/User";
+import API from "../../API";
+
 import ThemedComponent from "../../Components/ThemedComponent";
 import Input from "../../Components/Input.component";
-import Appearance from "../../Data/Appearance";
-
-import Header from "../../Layouts/Header.component";
-import Footer from "../../Layouts/Footer.component";
 
 import Forgotten from "./Login/Forgotten.component";
 import Register from "./Login/Register.component";
@@ -59,13 +57,28 @@ export default class LoginPage extends ThemedComponent {
         this.setState({ closed: true });
     };
 
-    onLoginPress() {
+    async onLoginPress() {
         const credentials = {
             email: this.email.current.getValue(),
             password: this.password.current.getValue()
         };
 
-        console.log(credentials);
+        const response = await API.post("/api/user/login", JSON.stringify(credentials));
+
+        if(!response.success) {
+            Alert.alert("Something went wrong!", response.content, [{ text: "Close" }]);
+
+            return;
+        }
+
+        Config.user.guest = false;
+        Config.user.token = response.content;
+        Config.saveAsync();
+
+        await User.authenticateAsync();
+
+        if(!User.guest)
+            this.setState({ closed: true });
     };
 
     render() { 
