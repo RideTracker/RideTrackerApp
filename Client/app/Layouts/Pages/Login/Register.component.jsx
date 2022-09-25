@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import { View, ScrollView, Text } from "react-native";
+import { View, ScrollView, Text, Alert } from "react-native";
+
+import API from "../../../API";
+import Config from "../../../Data/Config";
+import User from "../../../Data/User";
 
 import Input from "../../../Components/Input.component";
 import Button from "../../../Components/Button.component";
@@ -11,6 +15,40 @@ import style from "./Register.component.style";
 
 export default class Register extends Component {
     style = style.update();
+
+    constructor(...args) {
+        super(...args);
+
+        this.firstname = React.createRef();
+        this.lastname = React.createRef();
+        this.email = React.createRef();
+        this.password = React.createRef();
+    };
+
+    async onRegistration() {
+        const credentials = {
+            firstname: this.firstname.current.getValue(),
+            lastname: this.lastname.current.getValue(),
+            email: this.email.current.getValue(),
+            password: this.password.current.getValue()
+        };
+
+        const response = await API.post("/api/user/register", credentials);
+
+        if(!response.success) {
+            Alert.alert("Something went wrong!", response.content, [{ text: "Close" }]);
+
+            return;
+        }
+
+        Config.user.guest = false;
+        Config.user.token = result.content;
+        Config.saveAsync();
+
+        await User.authenticateAsync();
+
+        this.props.onRegistration();      
+    };
 
     render() { 
         return (
@@ -24,11 +62,11 @@ export default class Register extends Component {
 
                         <View style={[ style.sheet.form.input, style.sheet.form.multiInput ]}>
                             <View style={[ style.sheet.form.multiInput.input, { paddingRight: 6 } ]}>
-                                <Input placeholder="Firstname"/>
+                                <Input ref={this.firstname} placeholder="Firstname"/>
                             </View>
 
                             <View style={[style.sheet.form.multiInput.input, { paddingLeft: 6 } ]}>
-                                <Input placeholder="Lastname"/>
+                                <Input ref={this.lastname} placeholder="Lastname"/>
                             </View>
                         </View>
                     </View>
@@ -39,7 +77,7 @@ export default class Register extends Component {
                         <Text style={[ style.sheet.form.input, style.sheet.form.text ]}>What's your e-mail address?</Text>
                         <Text style={[ style.sheet.form.input, style.sheet.form.description ]}>You will use this to login but we won't show it to other users!</Text>
 
-                        <Input style={style.sheet.form.input} placeholder="E-mail address"/>
+                        <Input ref={this.email} style={style.sheet.form.input} placeholder="E-mail address"/>
                     </View>
 
                     <View style={style.sheet.form.divider}/>
@@ -48,12 +86,12 @@ export default class Register extends Component {
                         <Text style={[ style.sheet.form.input, style.sheet.form.text ]}>Choose your password:</Text>
                         <Text style={[ style.sheet.form.input, style.sheet.form.description ]}>You can skip having a password by using one of our other login options, such as Apple or Google login!</Text>
 
-                        <Input style={style.sheet.form.input} placeholder="Password" secure/>
+                        <Input ref={this.password} style={style.sheet.form.input} placeholder="Password" secure/>
                     </View>
                 </ScrollView>
 
                 <View style={style.sheet.form}>
-                    <Button style={style.sheet.form.input} title="Finish registration" branded/>
+                    <Button style={style.sheet.form.input} title="Finish registration" branded onPress={() => this.onRegistration()}/>
                     <Button style={style.sheet.form.input} title="Cancel" onPress={() => this.props?.onClose()}/>
                 </View>
             </View>
