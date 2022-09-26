@@ -68,7 +68,7 @@ export default class RecordPage extends ThemedComponent {
         if(this.recorder.active)
             this.recorder.stop();
 
-        this.props.onPageNavigation("home");
+        this.props.onNavigate("/index");
     };
 
     onLayout() {

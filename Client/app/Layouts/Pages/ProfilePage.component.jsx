@@ -29,7 +29,7 @@ export default class ProfilePage extends Component {
                     <Text style={[ style.sheet.profile.item, style.sheet.profile.follow ]}>FOLLOW</Text>
                 </ScrollView>
                 
-                <Footer onPress={(page) => this.props.onPageNavigation(page)}/>
+                <Footer onNavigate={(path) => this.props.onNavigate(path)}/>
             </View>
         );
     }

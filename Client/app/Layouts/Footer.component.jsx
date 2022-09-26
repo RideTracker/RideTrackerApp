@@ -17,7 +17,7 @@ export default class Footer extends ThemedComponent {
             <View style={style.sheet}>
                 <View style={style.sheet.container}>
                     {Pages.map((page) => (
-                        <TouchableOpacity key={page.id} style={style.sheet.container.button} onPress={() => this.props.onPress(page.id)}>
+                        <TouchableOpacity key={page.path} style={style.sheet.container.button} onPress={() => this.props.onNavigate(page.path)}>
                             <FontAwesome5 style={style.sheet.container.button.icon} name={page.icon}/>
 
                             <Text style={style.sheet.container.button.text}>{page.text}</Text>

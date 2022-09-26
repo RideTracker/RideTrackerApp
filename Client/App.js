@@ -3,6 +3,7 @@ import { StyleSheet, View, Platform } from "react-native";
 import * as Location from "expo-location";
 import * as SplashScreen from "expo-splash-screen";
 
+import Navigation from "./app/Components/Navigation.component";
 import Page from "./app/Layouts/Page.component";
 import LoginPage from "./app/Layouts/Pages/LoginPage.component";
 
@@ -12,12 +13,17 @@ import Config from "./app/Data/Config";
 import User from "./app/Data/User";
 import Appearance from "./app/Data/Appearance";
 
+import LandingPage from "./app/Layouts/Pages/LandingPage.component";
+import RecordPage from "./app/Layouts/Pages/RecordPage.component";
+import SettingsPage from "./app/Layouts/Pages/SettingsPage.component";
+import ProfilePage from "./app/Layouts/Pages/ProfilePage.component";
+
 SplashScreen.preventAutoHideAsync();
 
 let ready = false;
 
 export default function App() {
-    const [ showLogin, setShowLogin ] = useState(false);
+    const [ path, setPath ] = useState("/index");
     const [ appIsReady, setAppIsReady ] = useState(false);
 
     //await API.ping(true);
@@ -36,11 +42,11 @@ export default function App() {
             if(Config.user?.token) {
                 User.authenticateAsync().then((success) => {
                     if(!success)
-                        setShowLogin(true);
+                        setPath("/login");
                 });
             }
             else if(Config.user.guest == null)
-                setShowLogin(true);
+                setPath("/login");
     
             await SplashScreen.hideAsync();
     
@@ -63,11 +69,37 @@ export default function App() {
         width: "100%"
     });
 
-	return (
+	/*return (
         <View style={styles} onLayout={onLayout}>
             <Page/>
 
             {showLogin == true && (<LoginPage/>)}
         </View>
-	);
+	);*/
+
+    return (
+        <Navigation path={path} style={{
+            backgroundColor: Appearance.theme.colorPalette.primary
+        }}>
+            <Navigation.Page link="/index">
+                <LandingPage onNavigate={(path) => setPath(path)}/>
+            </Navigation.Page>
+            
+            <Navigation.Page link="/record">
+                <RecordPage onNavigate={(path) => setPath(path)}/>
+            </Navigation.Page>
+            
+            <Navigation.Page link="/profile">
+                <ProfilePage onNavigate={(path) => setPath(path)}/>
+            </Navigation.Page>
+            
+            <Navigation.Page link="/settings">
+                <SettingsPage onNavigate={(path) => setPath(path)}/>
+            </Navigation.Page>
+            
+            <Navigation.Page link="/login">
+                <LoginPage onNavigate={(path) => setPath(path)}/>
+            </Navigation.Page>
+        </Navigation>
+    );
 }

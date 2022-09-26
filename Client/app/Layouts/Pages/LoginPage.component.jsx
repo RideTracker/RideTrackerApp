@@ -27,7 +27,7 @@ export default class LoginPage extends ThemedComponent {
     };
 
     onClose() {
-        this.setState({ closed: true });
+        this.props.onNavigate("/index");
     };
 
     async onAppleAuthenticationPress() {
@@ -54,7 +54,7 @@ export default class LoginPage extends ThemedComponent {
         Config.user.guest = true;
         Config.saveAsync();
 
-        this.setState({ closed: true });
+        this.props.onNavigate("/index");
     };
 
     async onLoginPress() {
@@ -78,16 +78,13 @@ export default class LoginPage extends ThemedComponent {
         await User.authenticateAsync();
 
         if(!User.guest)
-            this.setState({ closed: true });
+            this.props.onNavigate("/index");
     };
 
     render() { 
-        if(this.state?.closed)
-            return null;
-
         if(this.state?.page) {
             if(this.state?.page == "register")
-                return (<Register style={style.sheet} onRegistration={() => this.setState({ closed: true })} onClose={() => this.setState({ page: null })}/>);
+                return (<Register style={style.sheet} onRegistration={() => this.props.onNavigate("/index")} onClose={() => this.setState({ page: null })}/>);
             else if(this.state?.page == "forgotten")
                 return (<Forgotten style={style.sheet} onClose={() => this.setState({ page: null })}/>);
         }

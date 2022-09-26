@@ -34,7 +34,7 @@ export default class SettingsPage extends ThemedComponent {
                     </View>
                 </ScrollView>
                 
-                <Footer onPress={(page) => this.props.onPageNavigation(page)}/>
+                <Footer onNavigate={(path) => this.props.onNavigate(path)}/>
             </View>
         );
     }
