@@ -26,6 +26,7 @@ let ready = false;
 
 export default function App() {
     const [ path, setPath ] = useState("/index");
+    const [ theme, setTheme ] = useState(null);
     const [ appIsReady, setAppIsReady ] = useState(false);
 
     //await API.ping(true);
@@ -51,6 +52,8 @@ export default function App() {
                 setPath("/login");
     
             await SplashScreen.hideAsync();
+        
+            Appearance.addEventListener("change", (theme) => setTheme(theme));
     
             setAppIsReady(true);
         };
@@ -67,12 +70,13 @@ export default function App() {
         return null;
 
     NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.primary);
+    NavigationBar.setButtonStyleAsync(Appearance.theme.colorPalette.contrast);
 
     return (
         <>
             <StatusBar style={Appearance.theme.colorPalette.contrast}/>
 
-            <Navigation path={path} style={{ backgroundColor: Appearance.theme.colorPalette.primary }}>
+            <Navigation theme={theme} path={path} style={{ backgroundColor: Appearance.theme.colorPalette.primary }}>
                 <Navigation.Page link="/index">
                     <LandingPage onNavigate={(path) => setPath(path)}/>
                 </Navigation.Page>
