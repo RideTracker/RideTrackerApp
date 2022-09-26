@@ -78,9 +78,7 @@ export default function App() {
 	);*/
 
     return (
-        <Navigation path={path} style={{
-            backgroundColor: Appearance.theme.colorPalette.primary
-        }}>
+        <Navigation path={path} style={{ backgroundColor: Appearance.theme.colorPalette.primary }}>
             <Navigation.Page link="/index">
                 <LandingPage onNavigate={(path) => setPath(path)}/>
             </Navigation.Page>
