@@ -6,7 +6,9 @@
 			"secondary": "#F1F1F1",
 			"accent": "#303030",
 			"route": "#FF8A00",
-			"solid": "#FFF"
+			"solid": "#FFF",
+
+			"contrast": "light"
 		},
 
 		"mapStyle": [
@@ -642,7 +644,9 @@
 			"secondary": "#333",
 			"accent": "#F0F2F4",
 			"route": "#FF8A00",
-			"solid": "#000"
+			"solid": "#000",
+
+			"contrast": "dark"
 		},
 
 		"mapStyle": [

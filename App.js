@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Platform } from "react-native";
 import * as Location from "expo-location";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import * as NavigationBar from "expo-navigation-bar";
 
 import Navigation from "./app/Components/Navigation.component";
 import Page from "./app/Layouts/Page.component";
@@ -64,40 +66,33 @@ export default function App() {
     if(!appIsReady)
         return null;
 
-    const styles = StyleSheet.create({
-        height: "100%",
-        width: "100%"
-    });
-
-	/*return (
-        <View style={styles} onLayout={onLayout}>
-            <Page/>
-
-            {showLogin == true && (<LoginPage/>)}
-        </View>
-	);*/
+    NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.primary);
 
     return (
-        <Navigation path={path} style={{ backgroundColor: Appearance.theme.colorPalette.primary }}>
-            <Navigation.Page link="/index">
-                <LandingPage onNavigate={(path) => setPath(path)}/>
-            </Navigation.Page>
-            
-            <Navigation.Page link="/record">
-                <RecordPage onNavigate={(path) => setPath(path)}/>
-            </Navigation.Page>
-            
-            <Navigation.Page link="/profile">
-                <ProfilePage onNavigate={(path) => setPath(path)}/>
-            </Navigation.Page>
-            
-            <Navigation.Page link="/settings">
-                <SettingsPage onNavigate={(path) => setPath(path)}/>
-            </Navigation.Page>
-            
-            <Navigation.Page link="/login">
-                <LoginPage onNavigate={(path) => setPath(path)}/>
-            </Navigation.Page>
-        </Navigation>
+        <>
+            <StatusBar style={Appearance.theme.colorPalette.contrast}/>
+
+            <Navigation path={path} style={{ backgroundColor: Appearance.theme.colorPalette.primary }}>
+                <Navigation.Page link="/index">
+                    <LandingPage onNavigate={(path) => setPath(path)}/>
+                </Navigation.Page>
+                
+                <Navigation.Page link="/record">
+                    <RecordPage onNavigate={(path) => setPath(path)}/>
+                </Navigation.Page>
+                
+                <Navigation.Page link="/profile">
+                    <ProfilePage onNavigate={(path) => setPath(path)}/>
+                </Navigation.Page>
+                
+                <Navigation.Page link="/settings">
+                    <SettingsPage onNavigate={(path) => setPath(path)}/>
+                </Navigation.Page>
+                
+                <Navigation.Page link="/login">
+                    <LoginPage onNavigate={(path) => setPath(path)}/>
+                </Navigation.Page>
+            </Navigation>
+        </>
     );
 }
