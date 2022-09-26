@@ -5,6 +5,7 @@ import Server from "../../Server.js";
 import Database from "../../Database.js";
 
 Server.on("POST", "/api/user/login", async (request, response, parameters) => {
+    console.log(parameters.email);
     const rows = await Database.queryAsync(`SELECT * FROM users WHERE email = ${Database.connection.escape(parameters.email)} LIMIT 1`);
     
     if(rows.length == 0)

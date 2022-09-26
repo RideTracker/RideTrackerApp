@@ -10,8 +10,12 @@ export default class User {
 
         const result = await API.post("/api/user/authenticate", { token: Config.user.token });
 
-        if(!result.success)
+        if(!result.success) {
+            Config.user.token = null;
+            Config.saveAsync();
+
             return false;
+        }
 
         Config.user.token = result.content.token;
         Config.saveAsync();

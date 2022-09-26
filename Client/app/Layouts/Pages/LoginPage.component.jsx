@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Platform, Text, TouchableOpacity } from "react-native";
+import { View, Platform, Text, TouchableOpacity, Alert } from "react-native";
 
 import * as AppleAuthentication from "expo-apple-authentication";
 
@@ -63,7 +63,7 @@ export default class LoginPage extends ThemedComponent {
             password: this.password.current.getValue()
         };
 
-        const response = await API.post("/api/user/login", JSON.stringify(credentials));
+        const response = await API.post("/api/user/login", credentials);
 
         if(!response.success) {
             Alert.alert("Something went wrong!", response.content, [{ text: "Close" }]);
