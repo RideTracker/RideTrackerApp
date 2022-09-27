@@ -2,7 +2,7 @@ import { Alert } from "react-native";
 
 import * as FileSystem from "expo-file-system";
 
-import API from "../API";
+import API from "app/API";
 
 export default class Files {
 	static directory = FileSystem.documentDirectory + "/files/";

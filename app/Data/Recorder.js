@@ -4,9 +4,9 @@ import * as TaskManager from 'expo-task-manager';
 import { TouchableHighlightBase } from 'react-native';
 import uuid from 'react-native-uuid';
 
-import Files from "./Files";
+import Files from "app/Data/Files";
 
-import Recording from "./Recording";
+import Recording from "app/Data/Recording";
 
 TaskManager.defineTask("recorder", ({ data, error }) => {
     if(error)

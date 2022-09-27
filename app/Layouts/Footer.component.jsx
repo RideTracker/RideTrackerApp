@@ -3,9 +3,9 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import ThemedComponent from "../Components/ThemedComponent";
-import Appearance from "../Data/Appearance";
+import Appearance from "app/Data/Appearance";
 
-import Pages from "../Data/Config/Pages.json";
+import Pages from "app/Data/Config/Pages.json";
 
 import style from "./Footer.component.style";
 

@@ -1,18 +1,16 @@
 import React, { Component } from "react";
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image } from "react-native";
+import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+
 import moment from "moment";
 
-import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+import Appearance from "app/Data/Appearance";
+import Cache from "app/Data/Cache";
+import Recording from "app/Data/Recording";
 
-import ThemedComponent from "./ThemedComponent";
+import ThemedComponent from "app/Components/ThemedComponent";
+import Button from "app/Components/Button.component";
 
-import API from "../API";
-import Recording from "../Data/Recording";
-import Cache from "../Data/Cache";
-
-import Appearance from "../Data/Appearance";
-
-import Button from "./Button.component";
 import style from "./Activity.component.style";
 
 export default class Activity extends ThemedComponent {

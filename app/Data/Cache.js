@@ -1,4 +1,4 @@
-import API from "../API";
+import API from "app/API";
 
 export default class Cache {
     static activity = [];

@@ -1,5 +1,5 @@
-import Config from "./Config";
-import API from "./../API";
+import Config from "app/Data/Config";
+import API from "app/API";
 
 export default class User {
     static guest = true;

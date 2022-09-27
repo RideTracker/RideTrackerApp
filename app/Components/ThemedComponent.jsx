@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import Appearance from "../Data/Appearance";
+import Appearance from "app/Data/Appearance";
 
 export default class ThemedComponent extends Component {
     //style = null;

@@ -27,7 +27,7 @@ export default class API {
         });
     };
 
-    static server = "http://172.20.10.2:8080";
+    static server = "http://172.20.10.4:8080";
 
     static async fetch(path, method, body) {
         console.log("API FETCH " + method + " " + path);

@@ -1,8 +1,8 @@
 import { Appearance as ReactAppearance } from "react-native";
 
-import Config from "./Config";
+import Config from "app/Data/Config";
 
-import ThemeStyles from "./Config/ThemeStyles.json";
+import ThemeStyles from "app/Data/Config/ThemeStyles.json";
 
 ReactAppearance.addChangeListener((theme) => Appearance.onSystemThemeChange(theme));
 

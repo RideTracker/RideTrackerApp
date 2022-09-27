@@ -1,9 +1,8 @@
 import { Component } from "react";
 import { View, TextInput } from "react-native";
-
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
-import Appearance from "../Data/Appearance";
+import Appearance from "app/Data/Appearance";
 
 import style from "./Input.component.style";
 

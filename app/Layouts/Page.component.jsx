@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View } from 'react-native';
 
-import User from "../Data/User";
+import User from "app/Data/User";
 
 import ThemedComponent from "../Components/ThemedComponent";
 

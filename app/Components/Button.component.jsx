@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { TouchableOpacity, Text, Alert } from "react-native";
 
-import ThemedComponent from "./ThemedComponent";
+import ThemedComponent from "app/Components/ThemedComponent";
 
 import style from "./Button.component.style";
 
