@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { View, ScrollView, Image, Text } from "react-native";
 
-import Header from "../../Layouts/Header.component";
-import Footer from "../../Layouts/Footer.component";
+import Header from "app/Components/Layouts/Header.component";
+import Footer from "app/Components/Layouts/Footer.component";
 
 import style from "./ProfilePage.component.style";
 

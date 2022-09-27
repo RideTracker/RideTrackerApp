@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { View, ScrollView } from "react-native";
 
-import ThemedComponent from "../../Components/ThemedComponent";
-import Header from "../../Layouts/Header.component";
-import Footer from "../../Layouts/Footer.component";
-import Activity from "../../Components/Activity.component";
-import ActivityCompact from "../../Components/ActivityCompact.component";
-import API from "../../API";
-import Files from "../../Data/Files";
+import ThemedComponent from "app/Components/ThemedComponent";
+import Header from "app/Components/Layouts/Header.component";
+import Footer from "app/Components/Layouts/Footer.component";
+import Activity from "app/Components/Activity.component";
+import ActivityCompact from "app/Components/ActivityCompact.component";
+import API from "app/API";
+import Files from "app/Data/Files";
 
 import style from "./LandingPage.component.style";
 

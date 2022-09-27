@@ -7,16 +7,16 @@ import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 
 import Navigation from "app/Components/Navigation.component";
-import LoginPage from "app/Layouts/Pages/LoginPage.component";
+import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
 
 import Config from "app/Data/Config";
 import User from "app/Data/User";
 import Appearance from "app/Data/Appearance";
 
-import LandingPage from "app/Layouts/Pages/LandingPage.component";
-import RecordPage from "app/Layouts/Pages/RecordPage.component";
-import SettingsPage from "app/Layouts/Pages/SettingsPage.component";
-import ProfilePage from "app/Layouts/Pages/ProfilePage.component";
+import LandingPage from "app/Components/Layouts/Pages/LandingPage.component";
+import RecordPage from "app/Components/Layouts/Pages/RecordPage.component";
+import SettingsPage from "app/Components/Layouts/Pages/SettingsPage.component";
+import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
 
 SplashScreen.preventAutoHideAsync();
 

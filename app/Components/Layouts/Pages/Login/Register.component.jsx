@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { View, ScrollView, Text, Alert } from "react-native";
 
-import API from "../../../API";
-import Config from "../../../Data/Config";
-import User from "../../../Data/User";
+import API from "app/API";
+import Config from "app/Data/Config";
+import User from "app/Data/User";
 
-import Input from "../../../Components/Input.component";
-import Button from "../../../Components/Button.component";
+import Input from "app/Components/Input.component";
+import Button from "app/Components/Button.component";
 
 import Header from "../../Header.component";
 import Footer from "../../Footer.component";

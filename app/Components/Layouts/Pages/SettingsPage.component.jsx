@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import { View, ScrollView, Text, TouchableOpacity } from "react-native";
 
-import ThemedComponent from "../../Components/ThemedComponent";
+import Appearance from "app/Data/Appearance";
+import Themes from "app/Data/Config/Themes.json";
 
-import Header from "../../Layouts/Header.component";
-import Footer from "../../Layouts/Footer.component";
+import ThemedComponent from "app/Components/ThemedComponent";
 
-import Themes from "../../Data/Config/Themes.json";
+import Header from "app/Components/Layouts/Header.component";
+import Footer from "app/Components/Layouts/Footer.component";
 
 import style from "./SettingsPage.component.style";
-import Appearance from "../../Data/Appearance";
 
 export default class SettingsPage extends ThemedComponent {
     style = style.update();

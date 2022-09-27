@@ -3,18 +3,18 @@ import { View, Platform, Text, TouchableOpacity, Alert } from "react-native";
 
 import * as AppleAuthentication from "expo-apple-authentication";
 
-import Config from "../../Data/Config";
-import User from "../../Data/User";
-import API from "../../API";
+import Config from "app/Data/Config";
+import User from "app/Data/User";
+import API from "app/API";
 
-import ThemedComponent from "../../Components/ThemedComponent";
-import Input from "../../Components/Input.component";
+import ThemedComponent from "app/Components/ThemedComponent";
+import Input from "app/Components/Input.component";
 
-import Forgotten from "./Login/Forgotten.component";
-import Register from "./Login/Register.component";
+import Forgotten from "app/Components/Layouts/Pages/Login/Forgotten.component";
+import Register from "app/Components/Layouts/Pages/Login/Register.component";
 
 import style from "./LoginPage.component.style";
-import Button from "../../Components/Button.component";
+import Button from "app/Components/Button.component";
 
 export default class LoginPage extends ThemedComponent {
     style = style.update();

@@ -3,13 +3,12 @@ import { View } from 'react-native';
 
 import User from "app/Data/User";
 
-import ThemedComponent from "../Components/ThemedComponent";
+import ThemedComponent from "app/Components/ThemedComponent";
 
-import LandingPage from "./Pages/LandingPage.component";
-import RecordPage from "./Pages/RecordPage.component";
-import ProfilePage from "./Pages/ProfilePage.component";
-import SettingsPage from "./Pages/SettingsPage.component";
-import LoginPage from "./Pages/LoginPage.component";
+import LandingPage  from "app/Components/Layouts/Pages/LandingPage.component";
+import RecordPage   from "app/Components/Layouts/Pages/RecordPage.component";
+import ProfilePage  from "app/Components/Layouts/Pages/ProfilePage.component";
+import SettingsPage from "app/Components/Layouts/Pages/SettingsPage.component";
 
 import style from "./Page.component.style";
 

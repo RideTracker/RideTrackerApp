@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Svg, { Path } from "react-native-svg";
 
-import ThemedComponent from "../Components/ThemedComponent";
+import ThemedComponent from "app/Components/ThemedComponent";
 
 import style from "./Header.component.style";
 

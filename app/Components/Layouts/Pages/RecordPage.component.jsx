@@ -1,16 +1,14 @@
 import React, { Component } from "react";
 import { Alert, TouchableOpacity, Text, View } from "react-native";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
-import ThemedComponent from "../../Components/ThemedComponent";
-import Header from "../../Layouts/Header.component";
-import Button from "../../Components/Button.component";
-import API from "../../API";
+import ThemedComponent from "app/Components/ThemedComponent";
+import Header from "app/Components/Layouts/Header.component";
+import Button from "app/Components/Button.component";
 
-import Config from "../../config.json";
-import Recorder from "../../Data/Recorder";
-import Appearance from "../../Data/Appearance";
+import Recorder from "app/Data/Recorder";
+import Appearance from "app/Data/Appearance";
 
 import style from "./RecordPage.component.style";
 

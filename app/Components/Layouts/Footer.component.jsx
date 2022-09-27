@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, TouchableOpacity } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-import ThemedComponent from "../Components/ThemedComponent";
+import ThemedComponent from "app/Components/ThemedComponent";
 import Appearance from "app/Data/Appearance";
 
 import Pages from "app/Data/Config/Pages.json";

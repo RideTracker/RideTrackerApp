@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import Constants from "expo-constants";
 
-import Appearance from "../../Data/Appearance";
+import Appearance from "app/Data/Appearance";
 
 export default class LoginPageStyle {
     static update() {
