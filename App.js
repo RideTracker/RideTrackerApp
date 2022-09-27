@@ -67,9 +67,11 @@ export default function App() {
     if(!appIsReady)
         return null;
 
-    NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.primary);
-    NavigationBar.setButtonStyleAsync(Appearance.theme.colorPalette.contrast);
-
+    if(Platform.OS == "android") {
+        NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.primary);
+        NavigationBar.setButtonStyleAsync(Appearance.theme.colorPalette.contrast);
+    }
+    
     return (
         <>
             <StatusBar style={Appearance.theme.colorPalette.contrast}/>
