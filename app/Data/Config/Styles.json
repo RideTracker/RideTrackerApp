@@ -17,9 +17,12 @@
         
         "user": {
             "title": {
+                "fontWeight": "bold",
+                "fontSize": 18
             },
 
             "description": {
+                "fontSize": 16
             }
         }
     }

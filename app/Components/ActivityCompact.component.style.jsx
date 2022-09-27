@@ -75,14 +75,13 @@ export default class ActivityCompactStyle {
                     title: {
                         color: Appearance.theme.colorPalette.secondary,
 
-                        fontWeight: "bold",
-                        fontSize: 18
+                        ...Appearance.styles.activity.user.title
                     },
 
                     description: {
                         color: Appearance.theme.colorPalette.secondary,
 
-                        fontSize: 16
+                        ...Appearance.styles.activity.user.description
                     }
                 }
             },
