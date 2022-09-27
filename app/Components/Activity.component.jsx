@@ -77,9 +77,6 @@ export default class Activity extends ThemedComponent {
                     <View>
                         <Image
                             style={style.sheet.user.image}
-                            source={{
-                                uri: `https://ride-tracker.nora-soderlund.se/users/${this.state.user.slug}/avatar.png`
-                            }}
                         />
                     </View>
 
