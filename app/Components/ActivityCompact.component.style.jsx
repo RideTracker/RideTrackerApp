@@ -5,6 +5,8 @@ import Appearance from "app/Data/Appearance";
 export default class ActivityCompactStyle {
     static update() {
         this.sheet = StyleSheet.create({
+            position: "relative",
+            
             marginTop: 6,
             marginBottom: 6,
 
@@ -16,8 +18,18 @@ export default class ActivityCompactStyle {
             borderTopWidth: 1,
             borderTopColor: Appearance.theme.colorPalette.accent,
 
-            pressing: {
-                backgroundColor: Appearance.theme.colorPalette.accent
+            clickable: {
+                position: "absolute",
+
+                left: 0,
+                top: 0,
+
+                width: "100%",
+                height: "100%",
+
+                pressing: {
+                    backgroundColor: "rgba(0, 0, 0, .25)"
+                }
             },
 
             map: {

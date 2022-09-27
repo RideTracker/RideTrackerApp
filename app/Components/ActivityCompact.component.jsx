@@ -58,7 +58,7 @@ export default class ActivityCompact extends ThemedComponent {
         }
 
         return (
-            <TouchableOpacity style={[ style.sheet, (this.state?.pressing && style.sheet.pressing) ]} activeOpacity={1} onPressIn={() => this.setState({ pressing: true })} onPressOut={() => this.setState({ pressing: null })} onPress={() => this.props.onPress(this.state.activity.id)}>
+            <View style={style.sheet}>
                 <View style={style.sheet.map}>
                     <MapView ref={this.mapView} style={style.sheet.map.view} customMapStyle={Appearance.theme.mapStyleCompact || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()} pitchEnabled={false} scrollEnabled={false} zoomEnabled={false} rotateEnabled={false}>
                         {this.state.recording != null && 
@@ -109,7 +109,15 @@ export default class ActivityCompact extends ThemedComponent {
                         <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
                     </View>
                 </View>
-            </TouchableOpacity>
+
+                <TouchableOpacity
+                    useOpacity={0}
+                    style={[ style.sheet.clickable, (this.state?.pressing && style.sheet.clickable.pressing) ]}
+                    onPress={() => this.props.onPress(this.state.activity.id)}
+                    onPressIn={() => this.setState({ pressing: true })}
+                    onPressOut={() => this.setState({ pressing: false })}
+                    />
+            </View>
         );
     }
 };
