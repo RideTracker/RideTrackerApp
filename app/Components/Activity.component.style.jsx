@@ -72,14 +72,13 @@ export default class RecordPageStyle {
                     title: {
                         color: Appearance.theme.colorPalette.secondary,
 
-                        fontWeight: "bold",
-                        fontSize: 26
+                        ...Appearance.styles.activity.stats.value
                     },
 
                     description: {
                         color: Appearance.theme.colorPalette.secondary,
 
-                        fontSize: 16
+                        ...Appearance.styles.activity.stats.key
                     }
                 }
             }

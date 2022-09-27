@@ -2,12 +2,14 @@ import { Appearance as ReactAppearance } from "react-native";
 
 import Config from "app/Data/Config";
 
+import Styles from "app/Data/Config/Styles.json";
 import ThemeStyles from "app/Data/Config/ThemeStyles.json";
 
 ReactAppearance.addChangeListener((theme) => Appearance.onSystemThemeChange(theme));
 
 export default class Appearance {
     static theme = null;
+    static styles = Styles;
 
     static systemThemeChanged = false;
     

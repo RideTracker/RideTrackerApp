@@ -1,0 +1,26 @@
+{
+    "activity": {
+        "stats": {
+            "key": {
+                "fontSize": 16
+            },
+
+            "value": {
+                "fontWeight": "bold",
+                "fontSize": 26
+            },
+
+            "unit": {
+                "fontSize": 16
+            }
+        },
+        
+        "user": {
+            "title": {
+            },
+
+            "description": {
+            }
+        }
+    }
+}

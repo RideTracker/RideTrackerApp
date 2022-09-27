@@ -98,9 +98,6 @@ export default class ActivityCompactStyle {
 
                     title: {
                         color: Appearance.theme.colorPalette.secondary,
-
-                        fontWeight: "bold",
-                        fontSize: 26,
                         
                         textShadowColor: Appearance.theme.colorPalette.background,
                         textShadowOffset: {
@@ -108,19 +105,19 @@ export default class ActivityCompactStyle {
                             height: 0
                         },
 
-                        textShadowRadius: 4
+                        textShadowRadius: 4,
+
+                        ...Appearance.styles.activity.stats.value
                     },
 
                     unit: {
                         color: Appearance.theme.colorPalette.secondary,
 
-                        fontSize: 16,
+                        ...Appearance.styles.activity.stats.unit
                     },
 
                     description: {
                         color: Appearance.theme.colorPalette.secondary,
-
-                        fontSize: 16,
                         
                         textShadowColor: "rgba(0, 0, 0, .5)",
                         textShadowOffset: {
@@ -128,7 +125,9 @@ export default class ActivityCompactStyle {
                             height: 0
                         },
 
-                        textShadowRadius: 2
+                        textShadowRadius: 2,
+
+                        ...Appearance.styles.activity.stats.key
                     }
                 }
             }
