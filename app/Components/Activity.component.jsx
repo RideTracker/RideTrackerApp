@@ -77,6 +77,7 @@ export default class Activity extends ThemedComponent {
                     <View>
                         <Image
                             style={style.sheet.user.image}
+                            source={require("./../../assets/temp.jpg")}
                         />
                     </View>
 

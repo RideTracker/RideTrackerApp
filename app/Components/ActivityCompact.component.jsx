@@ -102,9 +102,7 @@ export default class ActivityCompact extends ThemedComponent {
                     <View>
                         <Image
                             style={style.sheet.user.image}
-                            source={{
-                                uri: `https://ride-tracker.nora-soderlund.se/users/${this.state.user.slug}/avatar.png`
-                            }}
+                            source={require("./../../assets/temp.jpg")}
                         />
                     </View>
 
