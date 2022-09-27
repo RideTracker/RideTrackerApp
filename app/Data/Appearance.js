@@ -15,18 +15,20 @@ export default class Appearance {
         this.systemThemeChanged = false;
         
         let theme = Config.user?.theme || "dark";
-        
-        if(theme == "system") {
-            theme = ReactAppearance.getColorScheme();
 
-            if(Config.user?.lastSystemTheme != theme) {
-                this.systemThemeChanged = true
+        const newSystemTheme = ReactAppearance.getColorScheme();
 
-                Config.user.lastSystemTheme = theme;
-                Config.saveAsync();
-            }
+        if(Config.user?.lastSystemTheme != newSystemTheme) {
+            Config.user.lastSystemTheme = newSystemTheme;
+            Config.saveAsync();
+
+            if(theme == "system")
+                this.systemThemeChanged = true;
         }
-
+        
+        if(theme == "system")
+            theme = newSystemTheme;
+        
         if(ThemeStyles[theme] == undefined)
             theme = "light";
 
@@ -61,4 +63,14 @@ export default class Appearance {
 
         this.setTheme("system");
     };
+
+    static hasSystemThemeChanged() {
+        if(this.systemThemeChanged) {
+            this.systemThemeChanged = false;
+
+            return true;
+        }
+
+        return false;
+    }
 };

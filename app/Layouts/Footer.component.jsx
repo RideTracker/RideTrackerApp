@@ -12,6 +12,11 @@ import style from "./Footer.component.style";
 export default class Footer extends ThemedComponent {
     style = style.update();
 
+    componentDidUpdate() {
+        if(!this.state?.systemeThemeChanged && Appearance.hasSystemThemeChanged())
+            this.setState({ systemeThemeChanged: true });
+    }
+
     render() {
         return (
             <View style={style.sheet}>
@@ -25,7 +30,7 @@ export default class Footer extends ThemedComponent {
                     ))}
                 </View>
 
-                {Appearance.systemThemeChanged && (
+                {this.state?.systemeThemeChanged && (
                     <View style={style.sheet.appearance}>
                         <Text style={style.sheet.appearance.text}>We've turned on {Appearance.theme.id} mode for you to match your device's appearance mode!</Text>
                     </View>
