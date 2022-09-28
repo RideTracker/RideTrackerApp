@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, Image } from "react-native";
-import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 
 import moment from "moment";
 
@@ -10,6 +10,7 @@ import Recording from "app/Data/Recording";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 import Button from "app/Components/Button.component";
+import Images from "app/Components/Images.component";
 
 import style from "./Activity.component.style";
 
@@ -23,6 +24,7 @@ export default class Activity extends ThemedComponent {
         super(...args);
 
         this.mapView = React.createRef();
+        this.mapViewSatellite = React.createRef();
     }
 
     componentDidMount() {
@@ -39,8 +41,8 @@ export default class Activity extends ThemedComponent {
         });
     };
 
-    onLayout() {
-        this.mapView.current.fitToCoordinates(this.state.recording.getAllLatLngCoordinates(), {
+    onLayout(reference) {
+        reference.current.fitToCoordinates(this.state.recording.getAllLatLngCoordinates(), {
             edgePadding: {
                 top: 5,
                 right: 5,
@@ -48,6 +50,11 @@ export default class Activity extends ThemedComponent {
                 left: 5
             },
             animated: false
+        });
+
+        reference.current.setCamera({
+            pitch: reference.current.props?.pitch || 0,
+            heading: reference.current.props?.heading || 0
         });
     };
 
@@ -59,17 +66,52 @@ export default class Activity extends ThemedComponent {
 
         return (
             <View style={style.sheet}>
-                <MapView ref={this.mapView} style={style.sheet.map} customMapStyle={Appearance.theme.mapStyle || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
-                    {this.state.recording != null && 
-                        (this.state.recording.getLatLngCoordinates().map(section => (
-                            <Polyline key={section.index} coordinates={section.coordinates} 
-                                strokeColor={Appearance.theme.colorPalette.route}
-                                strokeWidth={3}
-                                lineJoin={"round"}
-                            ></Polyline>
-                        )))
-                    }
-                </MapView>
+                <Images height={style.sheet.map.height}>
+                    <MapView
+                        ref={this.mapView}
+                        style={style.sheet.map}
+                        customMapStyle={Appearance.theme.mapStyle || []}
+                        provider={PROVIDER_GOOGLE}
+                        onLayout={() => this.onLayout(this.mapView)}
+                        pitchEnabled={false}
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                        rotateEnabled={false}
+                        >
+                        {this.state.recording != null && 
+                            (this.state.recording.getLatLngCoordinates().map(section => (
+                                <Polyline key={section.index} coordinates={section.coordinates} 
+                                    strokeColor={Appearance.theme.colorPalette.route}
+                                    strokeWidth={3}
+                                    lineJoin={"round"}
+                                ></Polyline>
+                            )))
+                        }
+                    </MapView>
+                    
+                    <MapView
+                        ref={this.mapViewSatellite}
+                        style={style.sheet.map}
+                        mapType={MAP_TYPES.HYBRID}
+                        provider={PROVIDER_GOOGLE}
+                        pitch={90}
+                        onLayout={() => this.onLayout(this.mapViewSatellite)}
+                        pitchEnabled={false}
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                        rotateEnabled={false}
+                        >
+                        {this.state.recording != null && 
+                            (this.state.recording.getLatLngCoordinates().map(section => (
+                                <Polyline key={section.index} coordinates={section.coordinates} 
+                                    strokeColor={Appearance.theme.colorPalette.route}
+                                    strokeWidth={3}
+                                    lineJoin={"round"}
+                                ></Polyline>
+                            )))
+                        }
+                    </MapView>
+                </Images>
 
                 <View style={style.sheet.user}>
                     <View>
