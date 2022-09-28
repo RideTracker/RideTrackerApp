@@ -62,11 +62,10 @@ export default class Images extends Component {
     };
 
     onPress(direction) {
-        console.log(direction);
         if(direction > 0 && this.state.index + direction < this.props.children.length)
             return this.setState({ index: this.state.index + direction });
 
-        if(direction < 0 && this.state.index - direction >= 0)
+        if(direction < 0 && this.state.index + direction >= 0)
             return this.setState({ index: this.state.index + direction });
     };
 
