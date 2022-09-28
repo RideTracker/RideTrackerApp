@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, RefreshControl } from "react-native";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 import Header from "app/Components/Layouts/Header.component";
@@ -37,13 +37,32 @@ export default class LandingPage extends ThemedComponent {
         });
     };
 
+    onRefresh() {
+        this.setState({ refreshing: true });
+
+        API.get("/api/feed").then((result) => {
+            this.setState({
+                activities: result.content,
+                refreshing: false
+            });
+        });
+    };
+
     render() { 
         return (
             <View style={style.sheet.container}>
                 <View style={style.sheet.content}>
                     <Header title="Home"/>
 
-                    <ScrollView>
+                    <ScrollView
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state?.refreshing}
+                                onRefresh={() => this.onRefresh()}
+                                />
+                            }
+                        >
+                        
                         {this.state?.activities && this.state?.activities.map(id => <ActivityCompact key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
                     </ScrollView>
 
