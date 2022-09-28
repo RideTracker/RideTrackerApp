@@ -26,30 +26,27 @@ export default class {
                 }
             },
 
-            buttons: {
+            button: {
                 position: "absolute",
+                top: 0,
 
                 height: "100%",
-                width: "100%",
+
+                justifyContent: "center",
 
                 padding: 12,
 
-                left: 0,
-                top: 0,
+                text: {
+                    color: Appearance.theme.colorPalette.secondary,
+                    fontSize: 24,
+                },
 
-                justifyContent: "space-between",
-                flexDirection: "row",
+                previous: {
+                    left: 0
+                },
 
-                button: {
-                    height: "100%",
-                    width: 24,
-
-                    justifyContent: "center",
-
-                    text: {
-                        color: Appearance.theme.colorPalette.secondary,
-                        fontSize: 24
-                    }
+                next: {
+                    right: 0
                 }
             },
 

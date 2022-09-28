@@ -22,7 +22,7 @@ export default class Images extends Component {
             onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
       
             onPanResponderGrant: (evt, gestureState) => {
-                console.log("onPanResponderGrant", gestureState);
+
             },
             onPanResponderMove: (evt, gestureState) => {
                 if(gestureState.dx < 0 && this.state.index == this.props.children.length - 1)
@@ -49,8 +49,6 @@ export default class Images extends Component {
                 });
             },
             onPanResponderTerminate: (evt, gestureState) => {
-                console.log("onPanResponderTerminate", gestureState);
-
                 this.setState({
                     left: 0
                 });
@@ -103,15 +101,13 @@ export default class Images extends Component {
                     </View>
                 </View>
 
-                <View style={style.sheet.buttons}>
-                    <TouchableOpacity onPress={() => this.onPress(-1)} style={[ style.sheet.buttons.button, style.sheet.buttons.left ]}>
-                        <FontAwesome5 style={style.sheet.buttons.button.text} name="chevron-left" solid/>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity onPress={() => this.onPress(+1)} style={[ style.sheet.buttons.button, style.sheet.buttons.right ]}>
-                        <FontAwesome5 style={style.sheet.buttons.button.text} name="chevron-right" solid/>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity onPress={() => this.onPress(-1)} style={[ style.sheet.button, style.sheet.button.previous ]}>
+                    <FontAwesome5 style={style.sheet.button.text} name="chevron-left" solid/>
+                </TouchableOpacity>
+                
+                <TouchableOpacity onPress={() => this.onPress(+1)} style={[ style.sheet.button, style.sheet.button.next ]}>
+                    <FontAwesome5 style={style.sheet.button.text} name="chevron-right" solid/>
+                </TouchableOpacity>
 
                 <View style={style.sheet.dots}>
                     {this.props.children.map((child, index) => (
