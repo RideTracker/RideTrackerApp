@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { PanResponder, TouchableHighlight, TouchableOpacity, View } from "react-native";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import style from "./Images.component.style";
 
@@ -60,11 +61,19 @@ export default class Images extends Component {
         });
     };
 
+    onPress(direction) {
+        console.log(direction);
+        if(direction > 0 && this.state.index + direction < this.props.children.length)
+            return this.setState({ index: this.state.index + direction });
+
+        if(direction < 0 && this.state.index - direction >= 0)
+            return this.setState({ index: this.state.index + direction });
+    };
+
     render() {
         return (
             <View
                 height={this.props?.height}
-                {...this.panResponder.panHandlers}
                 >
                 <View
                     style={{
@@ -72,6 +81,7 @@ export default class Images extends Component {
 
                         ...style.sheet
                     }}
+                    {...this.panResponder.panHandlers}
                 >
                     <View
                         style={{
@@ -94,9 +104,19 @@ export default class Images extends Component {
                     </View>
                 </View>
 
+                <View style={style.sheet.buttons}>
+                    <TouchableOpacity onPress={() => this.onPress(-1)} style={[ style.sheet.buttons.button, style.sheet.buttons.left ]}>
+                        <FontAwesome5 style={style.sheet.buttons.button.text} name="chevron-left" solid/>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity onPress={() => this.onPress(+1)} style={[ style.sheet.buttons.button, style.sheet.buttons.right ]}>
+                        <FontAwesome5 style={style.sheet.buttons.button.text} name="chevron-right" solid/>
+                    </TouchableOpacity>
+                </View>
+
                 <View style={style.sheet.dots}>
                     {this.props.children.map((child, index) => (
-                        <View key={index} style={[ style.sheet.dots.dot, this.state.index == index && style.sheet.dots.selected ]}/>
+                        <FontAwesome5 key={index} style={[ style.sheet.dots.dot, this.state.index == index && style.sheet.dots.selected ]} name="circle" solid={this.state.index == index}/>
                     ))}
                 </View>
             </View>

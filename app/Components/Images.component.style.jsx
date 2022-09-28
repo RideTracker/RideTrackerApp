@@ -26,6 +26,33 @@ export default class {
                 }
             },
 
+            buttons: {
+                position: "absolute",
+
+                height: "100%",
+                width: "100%",
+
+                padding: 12,
+
+                left: 0,
+                top: 0,
+
+                justifyContent: "space-between",
+                flexDirection: "row",
+
+                button: {
+                    height: "100%",
+                    width: 24,
+
+                    justifyContent: "center",
+
+                    text: {
+                        color: Appearance.theme.colorPalette.secondary,
+                        fontSize: 24
+                    }
+                }
+            },
+
             dots: {
                 position: "absolute",
 
@@ -40,21 +67,18 @@ export default class {
                 flexDirection: "row",
 
                 dot: {
-                    backgroundColor: Appearance.theme.colorPalette.secondary,
+                    color: Appearance.theme.colorPalette.secondary,
 
-                    opacity: .5,
+                    fontSize: 12,
+
+                    opacity: .75,
 
                     marginRight: 6,
-                    marginLeft: 6,
-
-                    width: 18,
-                    height: 18,
-
-                    borderRadius: 25
+                    marginLeft: 6
                 },
 
                 selected: {
-                    opacity: .75
+                    opacity: 1
                 }
             }
         });
