@@ -5,15 +5,86 @@ import Appearance from "app/Data/Appearance";
 export default class RecordPageStyle {
     static update() {
         this.sheet = StyleSheet.create({
-            marginTop: 12,
+            section: {
+                backgroundColor: Appearance.theme.colorPalette.primary,
+                
+                borderBottomWidth: 1,
+                borderBottomColor: Appearance.theme.colorPalette.accent,
+                
+                borderTopWidth: 1,
+                borderTopColor: Appearance.theme.colorPalette.accent,
 
-            backgroundColor: Appearance.theme.colorPalette.primary,
-            
-            borderBottomWidth: 1,
-            borderBottomColor: Appearance.theme.colorPalette.accent,
-            
-            borderTopWidth: 1,
-            borderTopColor: Appearance.theme.colorPalette.accent,
+                marginBottom: 12,
+
+                header: {
+                    color: Appearance.theme.colorPalette.secondary,
+
+                    fontSize: 18,
+                    fontWeight: "bold",
+
+                    count: {
+                        fontSize: 16,
+                        fontWeight: "normal"
+                    }
+                }
+            },
+
+            comments: {
+                padding: 12,
+                paddingTop: 6,
+                paddingBottom: 6,
+
+                snippet: {
+                    marginTop: 6,
+
+                    flexDirection: "row",
+
+                    image: {
+                        width: 35,
+                        height: 35,
+    
+                        borderRadius: 50,
+    
+                        marginRight: 12,
+
+                        justifyContent: "center"
+                    },
+
+                    content: {
+                        position: "relative",
+
+                        title: {
+                            flexDirection: "row",
+
+                            alignItems: "center"
+                        },
+
+                        description: {
+                            color: Appearance.theme.colorPalette.secondary,
+
+                            fontSize: 14,
+
+                            // this fix sucks but react native css also sucks
+                            paddingRight: 35 + 12
+                        },
+
+                        author: {
+                            color: Appearance.theme.colorPalette.secondary,
+
+                            fontSize: 16,
+                            fontWeight: "bold"
+                        },
+
+                        time: {
+                            paddingLeft: 12,
+
+                            color: Appearance.theme.colorPalette.secondary,
+                            fontSize: 14,
+                            fontWeight: "normal"
+                        }
+                    }
+                }
+            },  
 
             map: {
                 height: 200
