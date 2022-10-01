@@ -13,6 +13,12 @@ export default class Input extends Component {
         return this.state?.value;
     };
 
+    onChangeText(text) {
+        this.setState({ value: text });
+
+        this.props?.onChangeText(text);
+    };
+
     render() {
         return (
             <View style={[ style.sheet, ((this.props?.border ?? true) && style.sheet.border), this.props?.style ]}>
@@ -22,7 +28,7 @@ export default class Input extends Component {
                     </View>
                 )}
 
-                <TextInput onChangeText={(text) => this.setState({ value: text })} style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]} placeholder={this.props?.placeholder} placeholderTextColor={Appearance.theme.colorPalette.secondary} secureTextEntry={this.props?.secure}/>
+                <TextInput onChangeText={(text) => this.onChangeText(text)} style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]} placeholder={this.props?.placeholder} placeholderTextColor={Appearance.theme.colorPalette.secondary} secureTextEntry={this.props?.secure}/>
             </View>
         );
     };

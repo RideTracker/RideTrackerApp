@@ -71,11 +71,7 @@ export default class LandingPage extends ThemedComponent {
 
                 {this.state != null && this.state.activity != null &&
                     <View style={style.sheet.container.page}>
-                        <Header title="Activity" navigation="true" onNavigationPress={() => this.hideActivity()}/>
-
-                        <ScrollView>
-                            <Activity id={this.state.activity}/>
-                        </ScrollView>
+                        <Activity id={this.state.activity} onClose={() => this.hideActivity()}/>
                     </View>
                 }
             </View>

@@ -13,7 +13,10 @@ import Button from "app/Components/Button.component";
 import Images from "app/Components/Images.component";
 import Input from "app/Components/Input.component";
 
+import Header from "app/Components/Layouts/Header.component"
+
 import style from "./Activity.component.style";
+import ActivityComments from "./Layouts/Pages/Activity/Comments";
 
 export default class Activity extends ThemedComponent {
     style = style.update();
@@ -71,131 +74,139 @@ export default class Activity extends ThemedComponent {
 
         return (
             <>
-                <View style={[ style.sheet, style.sheet.section ]}>
-                    <Images height={style.sheet.map.height}>
-                        <MapView
-                            ref={this.mapView}
-                            style={style.sheet.map}
-                            customMapStyle={Appearance.theme.mapStyle || []}
-                            provider={PROVIDER_GOOGLE}
-                            onLayout={() => this.onLayout(this.mapView)}
-                            pitchEnabled={false}
-                            scrollEnabled={false}
-                            zoomEnabled={false}
-                            rotateEnabled={false}
-                            >
-                            {this.state.recording != null && 
-                                (this.state.recording.getLatLngCoordinates().map(section => (
-                                    <Polyline key={section.index} coordinates={section.coordinates} 
-                                        strokeColor={Appearance.theme.colorPalette.route}
-                                        strokeWidth={3}
-                                        lineJoin={"round"}
-                                    ></Polyline>
-                                )))
-                            }
-                        </MapView>
-                        
-                        <MapView
-                            ref={this.mapViewSatellite}
-                            style={style.sheet.map}
-                            mapType={MAP_TYPES.HYBRID}
-                            provider={PROVIDER_GOOGLE}
-                            pitch={90}
-                            onLayout={() => this.onLayout(this.mapViewSatellite)}
-                            pitchEnabled={false}
-                            scrollEnabled={false}
-                            zoomEnabled={false}
-                            rotateEnabled={false}
-                            >
-                            {this.state.recording != null && 
-                                (this.state.recording.getLatLngCoordinates().map(section => (
-                                    <Polyline key={section.index} coordinates={section.coordinates} 
-                                        strokeColor={Appearance.theme.colorPalette.route}
-                                        strokeWidth={3}
-                                        lineJoin={"round"}
-                                    ></Polyline>
-                                )))
-                            }
-                        </MapView>
-                    </Images>
+                <Header title="Activity" navigation="true" onNavigationPress={() => this.props.onClose()}/>
+                
+                <ScrollView style={style.sheet}>
+                    <View style={style.sheet.section}>
+                        <Images height={style.sheet.map.height}>
+                            <MapView
+                                ref={this.mapView}
+                                style={style.sheet.map}
+                                customMapStyle={Appearance.theme.mapStyle || []}
+                                provider={PROVIDER_GOOGLE}
+                                onLayout={() => this.onLayout(this.mapView)}
+                                pitchEnabled={false}
+                                scrollEnabled={false}
+                                zoomEnabled={false}
+                                rotateEnabled={false}
+                                >
+                                {this.state.recording != null && 
+                                    (this.state.recording.getLatLngCoordinates().map(section => (
+                                        <Polyline key={section.index} coordinates={section.coordinates} 
+                                            strokeColor={Appearance.theme.colorPalette.route}
+                                            strokeWidth={3}
+                                            lineJoin={"round"}
+                                        ></Polyline>
+                                    )))
+                                }
+                            </MapView>
+                            
+                            <MapView
+                                ref={this.mapViewSatellite}
+                                style={style.sheet.map}
+                                mapType={MAP_TYPES.HYBRID}
+                                provider={PROVIDER_GOOGLE}
+                                pitch={90}
+                                onLayout={() => this.onLayout(this.mapViewSatellite)}
+                                pitchEnabled={false}
+                                scrollEnabled={false}
+                                zoomEnabled={false}
+                                rotateEnabled={false}
+                                >
+                                {this.state.recording != null && 
+                                    (this.state.recording.getLatLngCoordinates().map(section => (
+                                        <Polyline key={section.index} coordinates={section.coordinates} 
+                                            strokeColor={Appearance.theme.colorPalette.route}
+                                            strokeWidth={3}
+                                            lineJoin={"round"}
+                                        ></Polyline>
+                                    )))
+                                }
+                            </MapView>
+                        </Images>
 
-                    <View style={style.sheet.user}>
-                        <View>
-                            <Image
-                                style={style.sheet.user.image}
-                                source={require("./../../assets/temp.jpg")}
-                            />
-                        </View>
-
-                        <View style={style.sheet.user.texts}>
-                            <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
-                            <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
-                        </View>
-                    </View>
-
-                    <View style={style.sheet.stats}>
-                        <View style={style.sheet.stats.item}>
-                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getDistance()} km</Text>
-                            <Text style={style.sheet.stats.item.description}>distance</Text>
-                        </View>
-
-                        <View style={style.sheet.stats.item}>
-                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getAverageSpeed()} km/h</Text>
-                            <Text style={style.sheet.stats.item.description}>average speed</Text>
-                        </View>
-                        
-                        <View style={style.sheet.stats.item}>
-                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getElevation()} m</Text>
-                            <Text style={style.sheet.stats.item.description}>elevation</Text>
-                        </View>
-                        
-                        <View style={style.sheet.stats.item}>
-                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getMaxSpeed()} km/h</Text>
-                            <Text style={style.sheet.stats.item.description}>max speed</Text>
-                        </View>
-                    </View>
-                    
-                    { this.props.onPress != undefined &&
-                        <Button title="Show more details" onPress={() => this.props.onPress(this.state.activity.id)}/>
-                    }
-                </View>
-
-                {this.state?.comments && (
-                    <TouchableOpacity style={[ style.sheet.comments, style.sheet.section]}>
-                        <Text style={style.sheet.section.header}>Comments <Text style={style.sheet.section.header.count}>({this.state?.comments.length})</Text></Text>
-                    
-                        {this.state?.comments.length?(
-                            <View style={style.sheet.comments.snippet}>
+                        <View style={style.sheet.user}>
+                            <View>
                                 <Image
-                                    style={style.sheet.comments.snippet.image}
+                                    style={style.sheet.user.image}
                                     source={require("./../../assets/temp.jpg")}
                                 />
-
-                                <View style={style.sheet.comments.snippet.content}>
-                                    <View style={style.sheet.comments.snippet.content.title}>
-                                        <Text style={style.sheet.comments.snippet.content.author}>{this.state.user.name}</Text>
-
-                                        <Text style={style.sheet.comments.snippet.content.time}>{moment(this.state.activity.timestamp).fromNow()}</Text>
-                                    </View>
-
-                                    <Text numberOfLines={1} style={style.sheet.comments.snippet.content.description}>That's amazing! I'm definitely going to add this path to my route...</Text>
-                                </View>
                             </View>
-                        ):(
-                            <View style={style.sheet.comments.write}>
-                                <View style={style.sheet.comments.write.avatar}>
+
+                            <View style={style.sheet.user.texts}>
+                                <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
+                                <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
+                            </View>
+                        </View>
+
+                        <View style={style.sheet.stats}>
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>{this.state.recording.getDistance()} km</Text>
+                                <Text style={style.sheet.stats.item.description}>distance</Text>
+                            </View>
+
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>{this.state.recording.getAverageSpeed()} km/h</Text>
+                                <Text style={style.sheet.stats.item.description}>average speed</Text>
+                            </View>
+                            
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>{this.state.recording.getElevation()} m</Text>
+                                <Text style={style.sheet.stats.item.description}>elevation</Text>
+                            </View>
+                            
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>{this.state.recording.getMaxSpeed()} km/h</Text>
+                                <Text style={style.sheet.stats.item.description}>max speed</Text>
+                            </View>
+                        </View>
+                        
+                        { this.props.onPress != undefined &&
+                            <Button title="Show more details" onPress={() => this.props.onPress(this.state.activity.id)}/>
+                        }
+                    </View>
+
+                    {this.state?.comments && (
+                        <TouchableOpacity style={[ style.sheet.comments, style.sheet.section]} onPress={() => this.setState({ showComments: true })}>
+                            <Text style={style.sheet.section.header}>Comments <Text style={style.sheet.section.header.count}>({this.state?.comments.length})</Text></Text>
+                        
+                            {this.state?.comments.length?(
+                                <View style={style.sheet.comments.snippet}>
                                     <Image
-                                        style={style.sheet.comments.write.avatar.image}
+                                        style={style.sheet.comments.snippet.image}
                                         source={require("./../../assets/temp.jpg")}
                                     />
-                                </View>
 
-                                <View style={style.sheet.comments.write.content}>
-                                    <Text style={style.sheet.comments.write.content.text}>Leave a comment...</Text>
+                                    <View style={style.sheet.comments.snippet.content}>
+                                        <View style={style.sheet.comments.snippet.content.title}>
+                                            <Text style={style.sheet.comments.snippet.content.author}>{this.state.user.name}</Text>
+
+                                            <Text style={style.sheet.comments.snippet.content.time}>{moment(this.state.activity.timestamp).fromNow()}</Text>
+                                        </View>
+
+                                        <Text numberOfLines={1} style={style.sheet.comments.snippet.content.description}>That's amazing! I'm definitely going to add this path to my route...</Text>
+                                    </View>
                                 </View>
-                            </View>
-                        )}
-                    </TouchableOpacity>
+                            ):(
+                                <View style={style.sheet.comments.write}>
+                                    <View style={style.sheet.comments.write.avatar}>
+                                        <Image
+                                            style={style.sheet.comments.write.avatar.image}
+                                            source={require("./../../assets/temp.jpg")}
+                                        />
+                                    </View>
+
+                                    <View style={style.sheet.comments.write.content}>
+                                        <Text style={style.sheet.comments.write.content.text}>Leave a comment...</Text>
+                                    </View>
+                                </View>
+                            )}
+                        </TouchableOpacity>
+                    )}
+                </ScrollView>
+
+                {this.state?.showComments && (
+                    <ActivityComments activity={this.props.id} onClose={() => this.setState({ showComments: false })}/>
                 )}
             </>
         );

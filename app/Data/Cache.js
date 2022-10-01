@@ -17,18 +17,21 @@ export default class Cache {
         return activity;
     };
 
-    static activityComments = [];
+    static activityComments = {};
 
     static async getActivityComments(activity) {
-        let activityComments = this.activityComments.find(x => x.activity == activity);
+        if(!this.activityComments.hasOwnProperty(activity)) {
+            this.activityComments[activity] = (await API.get("/api/activity/comments", { activity })).content;
 
-        if(activityComments == null) {
-            activityComments = (await API.get("/api/activity/comments", { activity })).content;
+            this.activityComments[activity].forEach(async (comment, index, array) => {
+                array[index].user = (await this.getUser(comment.user));
+            });
 
-            this.activityComments.push(activityComments);
+            console.log(this.activityComments[activity]);
+
         }
 
-        return activityComments;
+        return this.activityComments[activity];
     };
 
     static activityRide = {};

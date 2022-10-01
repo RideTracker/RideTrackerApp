@@ -5,6 +5,8 @@ import Appearance from "app/Data/Appearance";
 export default class RecordPageStyle {
     static update() {
         this.sheet = StyleSheet.create({
+            height: "100%",
+
             section: {
                 backgroundColor: Appearance.theme.colorPalette.primary,
                 
