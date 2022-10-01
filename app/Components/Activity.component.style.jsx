@@ -34,8 +34,40 @@ export default class RecordPageStyle {
                 paddingTop: 6,
                 paddingBottom: 6,
 
+                write: {
+                    marginTop: 12,
+                    marginBottom: 6,
+
+                    flexDirection: "row",
+                    
+                    position: "relative",
+
+                    avatar: {
+                        justifyContent: "center",
+
+                        image: {
+                            width: 35,
+                            height: 35,
+        
+                            borderRadius: 50,
+        
+                            marginRight: 12,
+                        }
+                    },
+
+                    content: {
+                        justifyContent: "center",
+
+                        text: {
+                            color: Appearance.theme.colorPalette.secondary,
+                            fontSize: 16,
+                        }
+                    }
+                },
+
                 snippet: {
-                    marginTop: 6,
+                    marginTop: 12,
+                    marginBottom: 6,
 
                     flexDirection: "row",
 

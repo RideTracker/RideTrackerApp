@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image, TouchableHighlight, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, Image, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 
 import moment from "moment";
@@ -11,6 +11,7 @@ import Recording from "app/Data/Recording";
 import ThemedComponent from "app/Components/ThemedComponent";
 import Button from "app/Components/Button.component";
 import Images from "app/Components/Images.component";
+import Input from "app/Components/Input.component";
 
 import style from "./Activity.component.style";
 
@@ -34,6 +35,10 @@ export default class Activity extends ThemedComponent {
             Cache.getUser(activity.user).then((user) => {
                 this.setState({ user });
             });
+        });
+        
+        Cache.getActivityComments(this.props.id).then((comments) => {
+            this.setState({ comments });
         });
 
         Cache.getActivityRide(this.props.id).then((ride) => {
@@ -155,26 +160,43 @@ export default class Activity extends ThemedComponent {
                     }
                 </View>
 
-                <TouchableOpacity style={[ style.sheet.comments, style.sheet.section]}>
-                    <Text style={style.sheet.section.header}>Comments <Text style={style.sheet.section.header.count}>(12)</Text></Text>
-                
-                    <View style={style.sheet.comments.snippet}>
-                        <Image
-                            style={style.sheet.comments.snippet.image}
-                            source={require("./../../assets/temp.jpg")}
-                        />
+                {this.state?.comments && (
+                    <TouchableOpacity style={[ style.sheet.comments, style.sheet.section]}>
+                        <Text style={style.sheet.section.header}>Comments <Text style={style.sheet.section.header.count}>({this.state?.comments.length})</Text></Text>
+                    
+                        {this.state?.comments.length?(
+                            <View style={style.sheet.comments.snippet}>
+                                <Image
+                                    style={style.sheet.comments.snippet.image}
+                                    source={require("./../../assets/temp.jpg")}
+                                />
 
-                        <View style={style.sheet.comments.snippet.content}>
-                            <View style={style.sheet.comments.snippet.content.title}>
-                                <Text style={style.sheet.comments.snippet.content.author}>{this.state.user.name}</Text>
+                                <View style={style.sheet.comments.snippet.content}>
+                                    <View style={style.sheet.comments.snippet.content.title}>
+                                        <Text style={style.sheet.comments.snippet.content.author}>{this.state.user.name}</Text>
 
-                                <Text style={style.sheet.comments.snippet.content.time}>{moment(this.state.activity.timestamp).fromNow()}</Text>
+                                        <Text style={style.sheet.comments.snippet.content.time}>{moment(this.state.activity.timestamp).fromNow()}</Text>
+                                    </View>
+
+                                    <Text numberOfLines={1} style={style.sheet.comments.snippet.content.description}>That's amazing! I'm definitely going to add this path to my route...</Text>
+                                </View>
                             </View>
+                        ):(
+                            <View style={style.sheet.comments.write}>
+                                <View style={style.sheet.comments.write.avatar}>
+                                    <Image
+                                        style={style.sheet.comments.write.avatar.image}
+                                        source={require("./../../assets/temp.jpg")}
+                                    />
+                                </View>
 
-                            <Text numberOfLines={1} style={style.sheet.comments.snippet.content.description}>That's amazing! I'm definitely going to add this path to my route...</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
+                                <View style={style.sheet.comments.write.content}>
+                                    <Text style={style.sheet.comments.write.content.text}>Leave a comment...</Text>
+                                </View>
+                            </View>
+                        )}
+                    </TouchableOpacity>
+                )}
             </>
         );
     }

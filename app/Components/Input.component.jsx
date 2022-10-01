@@ -15,10 +15,10 @@ export default class Input extends Component {
 
     render() {
         return (
-            <View style={[ style.sheet, this.props?.style ]}>
+            <View style={[ style.sheet, ((this.props?.border ?? true) && style.sheet.border), this.props?.style ]}>
                 {this.props?.icon && (
                     <View style={style.sheet.icon}>
-                        <FontAwesome5 style={style.sheet.icon.text} name={this.props?.icon} solid/>
+                        <FontAwesome5 style={style.sheet.icon.text} name={this.props?.icon} solid={this.props?.solid ?? true}/>
                     </View>
                 )}
 

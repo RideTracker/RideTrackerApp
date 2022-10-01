@@ -17,6 +17,20 @@ export default class Cache {
         return activity;
     };
 
+    static activityComments = [];
+
+    static async getActivityComments(activity) {
+        let activityComments = this.activityComments.find(x => x.activity == activity);
+
+        if(activityComments == null) {
+            activityComments = (await API.get("/api/activity/comments", { activity })).content;
+
+            this.activityComments.push(activityComments);
+        }
+
+        return activityComments;
+    };
+
     static activityRide = {};
 
     static async getActivityRide(id) {

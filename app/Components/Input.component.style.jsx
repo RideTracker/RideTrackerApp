@@ -11,11 +11,13 @@ export default class InputStyle {
 
             width: "100%",
             height: 44,
-                
-            borderRadius: 6,
 
-            borderColor: Appearance.theme.colorPalette.accent,
-            borderWidth: 1,
+            border: {  
+                borderRadius: 6,
+    
+                borderColor: Appearance.theme.colorPalette.accent,
+                borderWidth: 1,
+            },
 
             icon: {
 
