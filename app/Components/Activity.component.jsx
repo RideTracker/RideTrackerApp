@@ -40,8 +40,14 @@ export default class Activity extends ThemedComponent {
             });
         });
         
-        Cache.getActivityComments(this.props.id).then((comments) => {
-            this.setState({ comments });
+        Cache.getActivityComments(this.props.id).then(async (comments) => {
+            const collection = [];
+
+            for(let index = 0; index < comments.length; index++) {
+                collection[index] = await Cache.getActivityComment(comments[index]);
+            }
+            
+            this.setState({ comments: collection });
         });
 
         Cache.getActivityRide(this.props.id).then((ride) => {

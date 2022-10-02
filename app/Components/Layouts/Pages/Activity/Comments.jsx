@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Image } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Image, RefreshControl } from "react-native";
 
 import moment from "moment";
 
@@ -14,8 +14,31 @@ export default class ActivityComments extends Component {
     style = style.update();
 
     componentDidMount() {
-        Cache.getActivityComments(this.props.activity).then((comments) => {
-            this.setState({ comments });
+        Cache.getActivityComments(this.props.activity).then(async (comments) => {
+            const collection = [];
+
+            for(let index = 0; index < comments.length; index++) {
+                collection[index] = await Cache.getActivityComment(comments[index]);
+            }
+            
+            this.setState({ comments: collection });
+        });
+    };
+
+    onRefresh() {
+        this.setState({ refreshing: true });
+
+        Cache.getActivityComments(this.props.activity, true).then(async (comments) => {
+            const collection = [];
+
+            for(let index = 0; index < comments.length; index++) {
+                collection[index] = await Cache.getActivityComment(comments[index]);
+            }
+            
+            this.setState({
+                comments: collection,
+                refreshing: false 
+            });
         });
     };
 
@@ -28,7 +51,14 @@ export default class ActivityComments extends Component {
                     <View style={style.sheet.container}>
                         <Text style={style.sheet.header}>Comments {this.state?.comments && (<Text style={style.sheet.header.count}> ({this.state?.comments.length})</Text>)}</Text>
 
-                        <ScrollView>
+                        <ScrollView
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={this.state?.refreshing}
+                                    onRefresh={() => this.onRefresh()}
+                                />
+                            }
+                        >
                             <View style={style.sheet.borders}>
                                 <TouchableOpacity style={style.sheet.write} onPress={() => this.setState({ showReply: true })}>
                                     <View style={style.sheet.write.avatar}>

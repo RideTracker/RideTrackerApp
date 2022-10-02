@@ -17,21 +17,48 @@ export default class Cache {
         return activity;
     };
 
-    static activityComments = {};
+    static activityComment = [];
 
-    static async getActivityComments(activity) {
-        if(!this.activityComments.hasOwnProperty(activity)) {
-            this.activityComments[activity] = (await API.get("/api/activity/comments", { activity })).content;
+    static async getActivityComment(comment) {
+        let activityComment = this.activityComment.find(x => x.comment == comment);
 
-            this.activityComments[activity].forEach(async (comment, index, array) => {
-                array[index].user = (await this.getUser(comment.user));
-            });
+        if(!activityComment) {
+            const data = (await API.get("/api/activity/comment", { comment })).content;
+            data.user = (await this.getUser(data.user));
+            
+            activityComment = {
+                comment,
 
-            console.log(this.activityComments[activity]);
+                data
+            };
 
+            this.activityComment.push(activityComment);
         }
 
-        return this.activityComments[activity];
+        return activityComment.data;
+    };
+
+    static activityComments = [];
+
+    static async getActivityComments(activity, forceRefresh = false) {
+        if(forceRefresh)
+            this.activityComments = this.activityComments.filter(x => x.activity != activity);
+
+        let activityComments = this.activityComments.find(x => x.activity == activity);
+
+        if(!activityComments) {
+            const data = (await API.get("/api/activity/comments", { activity })).content;
+            
+            activityComments = {
+                activity,
+
+                data
+            };
+
+            this.activityComments.push(activityComments);
+        }
+
+        return activityComments.data;
     };
 
     static activityRide = {};
