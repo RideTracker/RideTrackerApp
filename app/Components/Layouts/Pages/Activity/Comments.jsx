@@ -59,7 +59,7 @@ export default class ActivityComments extends Component {
                                                 <Text style={style.sheet.comment.content.time}>{moment(comment.timestamp).fromNow()}</Text>
                                             </View>
 
-                                            <Text style={style.sheet.comment.content.description}>That's amazing! I'm definitely going to add this path to my route...</Text>
+                                            <Text style={style.sheet.comment.content.description}>{comment.text}</Text>
                                         </View>
                                     </View>
                                 ))}
