@@ -69,7 +69,7 @@ export default class ActivityComments extends Component {
                 </View>
 
                 {this.state?.showReply && (
-                    <ActivityCommentReply type="activity" activity={this.props.activity}/>
+                    <ActivityCommentReply type="activity" activity={this.props.activity} onClose={() => this.setState({ showReply: false })}/>
                 )}
             </>
         );

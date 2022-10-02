@@ -7,20 +7,17 @@ export default class {
         this.sheet = StyleSheet.create({
             position: "absolute",
 
-            backgroundColor: "rgba(0, 0, 0, .5)",
-
             width: "100%",
             height: "100%",
 
             close: {
-                height: "20%"
+                flex: 1,
+            
+                backgroundColor: "rgba(0, 0, 0, .5)"
             },
 
             container: {
                 backgroundColor: Appearance.theme.colorPalette.primary,
-
-                borderTopLeftRadius: 16,
-                borderTopRightRadius: 16,
 
                 height: "80%"
             },
@@ -84,7 +81,7 @@ export default class {
 
             comment: {
                 marginTop: 12,
-                
+
                 padding: 12,
                 paddingTop: 6,
                 paddingBottom: 6,

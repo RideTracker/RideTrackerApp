@@ -7,10 +7,16 @@ export default class {
         this.sheet = StyleSheet.create({
             position: "absolute",
 
-            backgroundColor: "rgba(0, 0, 0, .5)",
-
             width: "100%",
             height: "100%",
+
+            close: {
+                backgroundColor: "rgba(0, 0, 0, .5)",
+
+                width: "100%",
+
+                flex: 1
+            },
 
             container: {
                 backgroundColor: Appearance.theme.colorPalette.primary,
@@ -18,11 +24,7 @@ export default class {
                 borderTopLeftRadius: 16,
                 borderTopRightRadius: 16,
 
-                position: "absolute",
-
-                width: "100%",
-
-                bottom: 0
+                width: "100%"
             },
 
             header: {
