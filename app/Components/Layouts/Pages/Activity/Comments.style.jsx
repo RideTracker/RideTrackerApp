@@ -117,6 +117,14 @@ export default class {
                         paddingRight: 35 + 12
                     },
 
+                    reply: {
+                        color: Appearance.theme.colorPalette.route,
+
+                        marginTop: 6,
+
+                        fontSize: 14,
+                    },
+
                     author: {
                         color: Appearance.theme.colorPalette.secondary,
 

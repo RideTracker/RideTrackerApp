@@ -60,7 +60,7 @@ export default class ActivityComments extends Component {
                             }
                         >
                             <View style={style.sheet.borders}>
-                                <TouchableOpacity style={style.sheet.write} onPress={() => this.setState({ showReply: true })}>
+                                <TouchableOpacity style={style.sheet.write} onPress={() => this.setState({ showReply: true, replyParent: null })}>
                                     <View style={style.sheet.write.avatar}>
                                         <Image
                                             style={style.sheet.write.avatar.image}
@@ -75,7 +75,7 @@ export default class ActivityComments extends Component {
                             </View>
 
                             <View style={style.sheet.comments}>
-                                {this.state?.comments.map((comment) => (
+                                {this.state?.comments.filter(comment => comment.parent == null).map((comment) => (
                                     <View key={comment.id} style={style.sheet.comment}>
                                         <Image
                                             style={style.sheet.comment.image}
@@ -90,6 +90,31 @@ export default class ActivityComments extends Component {
                                             </View>
 
                                             <Text style={style.sheet.comment.content.description}>{comment.text}</Text>
+                                        
+                                            <TouchableOpacity onPress={() => this.setState({ showReply: true, replyParent: comment.id })}>
+                                                <Text style={style.sheet.comment.content.reply}>Reply</Text>
+                                            </TouchableOpacity>
+
+                                            <View>
+                                                {this.state?.comments.filter(childComment => childComment.parent == comment.id).map((childComment) => (
+                                                    <View key={childComment.id} style={style.sheet.comment}>
+                                                        <Image
+                                                            style={style.sheet.comment.image}
+                                                            source={require("assets/temp.jpg")}
+                                                        />
+
+                                                        <View style={style.sheet.comment.content}>
+                                                            <View style={style.sheet.comment.content.title}>
+                                                                <Text style={style.sheet.comment.content.author}>{childComment.user.name}</Text>
+
+                                                                <Text style={style.sheet.comment.content.time}>{moment(childComment.timestamp).fromNow()}</Text>
+                                                            </View>
+
+                                                            <Text style={style.sheet.comment.content.description}>{childComment.text}</Text>
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </View>
                                         </View>
                                     </View>
                                 ))}
@@ -99,7 +124,7 @@ export default class ActivityComments extends Component {
                 </View>
 
                 {this.state?.showReply && (
-                    <ActivityCommentReply type="activity" activity={this.props.activity} onClose={() => this.setState({ showReply: false })}/>
+                    <ActivityCommentReply activity={this.props.activity} parent={this.state?.replyParent || null} onClose={() => this.setState({ showReply: false })}/>
                 )}
             </>
         );

@@ -21,9 +21,18 @@ export default class ActivityCommentReply extends Component {
         this.input = React.createRef();
     };
 
+    componentDidMount() {
+        if(this.props?.parent) {
+            Cache.getActivityComment(this.props.parent).then((comment) => {
+                this.setState({ comment });
+            });
+        }
+    };
+
     async onPress() {
         const result = await API.post("/api/activity/comment", {
             activity: this.props.activity,
+            parent: this.props?.parent || null,
             text: this.input.current.getValue()
         });
 
@@ -36,7 +45,26 @@ export default class ActivityCommentReply extends Component {
                 <TouchableOpacity style={style.sheet.close} onPress={() => this.props?.onClose()}/>
 
                 <View style={style.sheet.container}>
-                    <Text style={style.sheet.header}>{(this.props.type == "activity")?("Add a comment"):("Reply to comment")}</Text>
+                    <Text style={style.sheet.header}>{(!this.props?.parent)?("Add a comment"):("Reply to comment")}</Text>
+
+                    {this.state?.comment && (
+                        <View style={style.sheet.comment}>
+                            <Image
+                                style={style.sheet.comment.image}
+                                source={require("assets/temp.jpg")}
+                            />
+
+                            <View style={style.sheet.comment.content}>
+                                <View style={style.sheet.comment.content.title}>
+                                    <Text style={style.sheet.comment.content.author}>{this.state.comment.user.name}</Text>
+
+                                    <Text style={style.sheet.comment.content.time}>{moment(this.state.comment.timestamp).fromNow()}</Text>
+                                </View>
+
+                                <Text style={style.sheet.comment.content.description}>{this.state.comment.text}</Text>
+                            </View>
+                        </View>
+                    )}
 
                     <Text style={style.sheet.advisory}>Your comment will be visible to everyone, remember to be kind to everyone!</Text>
 
