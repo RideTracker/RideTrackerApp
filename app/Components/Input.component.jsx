@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { View, TextInput } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
@@ -9,8 +9,18 @@ import style from "./Input.component.style";
 export default class Input extends Component {
     style = style.update();
 
+    constructor(...args) {
+        super(...args);
+
+        this.input = React.createRef();
+    }
+
     getValue() {
         return this.state?.value;
+    };
+
+    focus(...args) {
+        return this.input.current?.focus(...args);
     };
 
     onChangeText(text) {
@@ -28,7 +38,7 @@ export default class Input extends Component {
                     </View>
                 )}
 
-                <TextInput onChangeText={(text) => this.onChangeText(text)} style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]} placeholder={this.props?.placeholder} placeholderTextColor={Appearance.theme.colorPalette.secondary} secureTextEntry={this.props?.secure}/>
+                <TextInput ref={this.input} onChangeText={(text) => this.onChangeText(text)} style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]} placeholder={this.props?.placeholder} placeholderTextColor={Appearance.theme.colorPalette.secondary} secureTextEntry={this.props?.secure}/>
             </View>
         );
     };

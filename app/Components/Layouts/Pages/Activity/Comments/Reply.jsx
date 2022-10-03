@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Image } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Image, KeyboardAvoidingView } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import moment from "moment";
@@ -27,6 +27,8 @@ export default class ActivityCommentReply extends Component {
                 this.setState({ comment });
             });
         }
+
+        this.input.current?.focus();
     };
 
     async onPress() {
@@ -41,7 +43,7 @@ export default class ActivityCommentReply extends Component {
 
     render() {
         return (
-            <View style={style.sheet}>
+            <KeyboardAvoidingView style={style.sheet} behavior={(Platform.OS == "ios")?("padding"):("height")}>
                 <TouchableOpacity style={style.sheet.close} onPress={() => this.props?.onClose()}/>
 
                 <View style={style.sheet.container}>
@@ -78,7 +80,7 @@ export default class ActivityCommentReply extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         );
     };
 };

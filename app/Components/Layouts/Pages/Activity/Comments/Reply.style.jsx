@@ -10,6 +10,9 @@ export default class {
             width: "100%",
             height: "100%",
 
+            left: 0,
+            top: 0,
+
             close: {
                 backgroundColor: "rgba(0, 0, 0, .5)",
 
@@ -24,7 +27,7 @@ export default class {
                 borderTopLeftRadius: 16,
                 borderTopRightRadius: 16,
 
-                width: "100%"
+                width: "100%",
             },
 
             header: {
