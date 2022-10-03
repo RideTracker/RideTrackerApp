@@ -60,7 +60,17 @@ export default class ActivityCompact extends ThemedComponent {
         return (
             <View style={style.sheet}>
                 <View style={style.sheet.map}>
-                    <MapView ref={this.mapView} style={style.sheet.map.view} customMapStyle={Appearance.theme.mapStyleCompact || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()} pitchEnabled={false} scrollEnabled={false} zoomEnabled={false} rotateEnabled={false}>
+                    <MapView
+                        ref={this.mapView}
+                        style={style.sheet.map.view}
+                        customMapStyle={Appearance.theme.mapStyleCompact || []}
+                        provider={PROVIDER_GOOGLE}
+                        onLayout={() => this.onLayout()}
+                        pitchEnabled={false}
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                        rotateEnabled={false}
+                    >
                         {this.state.recording != null && 
                             (this.state.recording.getLatLngCoordinates().map(section => (
                                 <Polyline key={section.index} coordinates={section.coordinates} 
