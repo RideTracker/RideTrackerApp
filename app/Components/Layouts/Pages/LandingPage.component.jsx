@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { View, ScrollView, RefreshControl } from "react-native";
 
+import Appearance from "app/Data/Appearance";
+
 import ThemedComponent from "app/Components/ThemedComponent";
 import Header from "app/Components/Layouts/Header.component";
 import Footer from "app/Components/Layouts/Footer.component";
@@ -57,6 +59,7 @@ export default class LandingPage extends ThemedComponent {
                     <ScrollView
                         refreshControl={
                             <RefreshControl
+                                tintColor={Appearance.theme.colorPalette.solid}
                                 refreshing={this.state?.refreshing}
                                 onRefresh={() => this.onRefresh()}
                                 />

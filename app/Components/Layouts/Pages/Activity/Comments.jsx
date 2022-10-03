@@ -3,6 +3,7 @@ import { View, ScrollView, Text, TouchableOpacity, Image, RefreshControl } from 
 
 import moment from "moment";
 
+import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
 
 import Input from "app/Components/Input.component";
@@ -54,6 +55,7 @@ export default class ActivityComments extends Component {
                         <ScrollView
                             refreshControl={
                                 <RefreshControl
+                                    tintColor={Appearance.theme.colorPalette.solid}
                                     refreshing={this.state?.refreshing}
                                     onRefresh={() => this.onRefresh()}
                                 />
