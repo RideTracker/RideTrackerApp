@@ -22,7 +22,10 @@ export default class ActivityComments extends Component {
                 collection[index] = await Cache.getActivityComment(comments[index]);
             }
             
-            this.setState({ comments: collection });
+            this.setState({
+                comments: collection,
+                showReply: collection.length == 0
+            });
         });
     };
 
@@ -38,7 +41,7 @@ export default class ActivityComments extends Component {
             
             this.setState({
                 comments: collection,
-                refreshing: false 
+                refreshing: false
             });
         });
     };
