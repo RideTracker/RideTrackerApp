@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView, Image, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import { Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import Canvas from "react-native-canvas";
 
 import moment from "moment";
 
@@ -15,8 +16,10 @@ import Input from "app/Components/Input.component";
 
 import Header from "app/Components/Layouts/Header.component"
 
-import style from "./Activity.component.style";
 import ActivityComments from "./Layouts/Pages/Activity/Comments";
+import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
+
+import style from "./Activity.component.style";
 
 export default class Activity extends ThemedComponent {
     style = style.update();
@@ -173,7 +176,7 @@ export default class Activity extends ThemedComponent {
                     </View>
 
                     {this.state?.comments && (
-                        <TouchableOpacity style={[ style.sheet.comments, style.sheet.section]} onPress={() => this.setState({ showComments: true })}>
+                        <TouchableOpacity style={[ style.sheet.comments, style.sheet.section, style.sheet.section.padded ]} onPress={() => this.setState({ showComments: true })}>
                             <Text style={style.sheet.section.header}>Comments <Text style={style.sheet.section.header.count}>({this.state?.comments.length})</Text></Text>
                         
                             {this.state?.comments.length?(
@@ -209,6 +212,12 @@ export default class Activity extends ThemedComponent {
                             )}
                         </TouchableOpacity>
                     )}
+
+                    <View style={[ style.sheet.section, style.sheet.section.padded ]}>
+                        <Text style={style.sheet.section.header}>Elevation Gain</Text>
+                        
+                        <ActivityElevation activity={this.props.id} width={"100%"} height={140}/>
+                    </View>
                 </ScrollView>
 
                 {this.state?.showComments && (

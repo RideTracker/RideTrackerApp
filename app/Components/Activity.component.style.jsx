@@ -28,14 +28,16 @@ export default class RecordPageStyle {
                         fontSize: 16,
                         fontWeight: "normal"
                     }
+                },
+
+                padded: {                    
+                    padding: 12,
+                    paddingTop: 6,
+                    paddingBottom: 6,
                 }
             },
 
             comments: {
-                padding: 12,
-                paddingTop: 6,
-                paddingBottom: 6,
-
                 write: {
                     marginTop: 12,
                     marginBottom: 6,
