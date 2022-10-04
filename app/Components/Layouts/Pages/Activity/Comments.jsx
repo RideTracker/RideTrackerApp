@@ -53,7 +53,7 @@ export default class ActivityComments extends Component {
                     <TouchableOpacity style={style.sheet.close} onPress={() => this.props?.onClose()}/>
 
                     <View style={style.sheet.container}>
-                        <Text style={style.sheet.header}>Comments {this.state?.comments && (<Text style={style.sheet.header.count}> ({this.state?.comments.length})</Text>)}</Text>
+                        <Text style={style.sheet.header}>Comments {this.state?.comments && (<Text style={style.sheet.header.count}>({this.state?.comments.length})</Text>)}</Text>
 
                         <ScrollView
                             refreshControl={

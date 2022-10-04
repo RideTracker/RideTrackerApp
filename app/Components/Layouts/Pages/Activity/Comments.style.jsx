@@ -138,7 +138,7 @@ export default class {
                     },
 
                     time: {
-                        paddingLeft: 12,
+                        paddingLeft: 8,
 
                         color: Appearance.theme.colorPalette.secondary,
                         fontSize: 14,
