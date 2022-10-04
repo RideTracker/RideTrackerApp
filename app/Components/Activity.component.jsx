@@ -185,12 +185,12 @@ export default class Activity extends ThemedComponent {
 
                                     <View style={style.sheet.comments.snippet.content}>
                                         <View style={style.sheet.comments.snippet.content.title}>
-                                            <Text style={style.sheet.comments.snippet.content.author}>{this.state.user.name}</Text>
+                                            <Text style={style.sheet.comments.snippet.content.author}>{this.state.comments[0].user.name}</Text>
 
-                                            <Text style={style.sheet.comments.snippet.content.time}>{moment(this.state.activity.timestamp).fromNow()}</Text>
+                                            <Text style={style.sheet.comments.snippet.content.time}>{moment(this.state.comments[0].timestamp).fromNow()}</Text>
                                         </View>
 
-                                        <Text numberOfLines={1} style={style.sheet.comments.snippet.content.description}>That's amazing! I'm definitely going to add this path to my route...</Text>
+                                        <Text numberOfLines={1} style={style.sheet.comments.snippet.content.description}>{this.state.comments[0].text}</Text>
                                     </View>
                                 </View>
                             ):(
