@@ -99,7 +99,7 @@ export default class ActivityComments extends Component {
 
                                             <View>
                                                 {this.state?.comments.filter(childComment => childComment.parent == comment.id).map((childComment) => (
-                                                    <View key={childComment.id} style={style.sheet.comment}>
+                                                    <View key={childComment.id} style={[ style.sheet.comment, style.sheet.comment.child ]}>
                                                         <Image
                                                             style={style.sheet.comment.image}
                                                             source={require("assets/temp.jpg")}

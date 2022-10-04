@@ -88,6 +88,11 @@ export default class {
 
                 flexDirection: "row",
 
+                child: {
+                    paddingLeft: 0,
+                    paddingRight: 0
+                },
+
                 image: {
                     width: 35,
                     height: 35,
