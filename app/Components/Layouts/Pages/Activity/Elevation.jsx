@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { Dimensions, View } from "react-native";
 
-import Canvas, { Path2D } from "react-native-canvas";
+import CanvasWebView, { Path2D } from "react-native-webview-canvas";
 
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
@@ -13,43 +14,58 @@ export default class ActivityElevation extends Component {
         });
     };
 
-    canvas(canvas) {
-        if(!canvas || !this.state?.recording)
+    async onLoad(canvasWebView) {
+        if(!this.state?.recording) 
             return;
 
-        const context = canvas.getContext("2d");
+		const canvas = await canvasWebView.createCanvas();
 
+        canvas.width = Dimensions.get("window").width;
+        canvas.height = 120;
+
+        const width = Dimensions.get("window").width;
+        const height = 120;
+        
+        const context = await canvas.getContext("2d");
+        
         const coordinates = this.state.recording.getAllCoordinates();
 
         const points = coordinates.length;
-        const widthPerPoint = canvas.width / points;
+        const widthPerPoint = width / (points - 1);
 
         const minAltitude = Math.min(...coordinates.map(coordinate => coordinate.altitude));
         const maxAltitude = Math.max(...coordinates.map(coordinate => coordinate.altitude));
 
         const altitudeDifference = maxAltitude - minAltitude;
-        const heightPerAltitude = canvas.height / altitudeDifference;
+        const heightPerAltitude = height / altitudeDifference;
 
-        const path = new Path2D(canvas);
-
+        const path = await canvasWebView.createPath2D();
+        
+        path.startBundle();
         for(let point = 0; point < points; point++) {
             const altitude = coordinates[point].altitude - minAltitude;
 
-            path.lineTo(point * widthPerPoint, canvas.height - (altitude * heightPerAltitude));
+            path.lineTo(Math.floor(point * widthPerPoint), Math.floor(height - (altitude * heightPerAltitude)));
         }
-
+        await path.executeBundle();
+        
         context.strokeStyle = Appearance.theme.colorPalette.route;
         context.stroke(path);
-
-        path.lineTo(canvas.width, canvas.height);
-        path.lineTo(0, canvas.height);
-
+        
+        path.lineTo(width, height);
+        path.lineTo(0, height);
+        
         context.globalCompositeOperation = "destination-over";
         context.fillStyle = Appearance.theme.colorPalette.accent;
         context.fill(path);
     };
 
     render() {
-        return (<Canvas ref={(canvas) => this.canvas(canvas)} height={this.props?.height}/>);
+        return (
+            <CanvasWebView
+                height={120}
+                onLoad={(...args) => this.onLoad(...args)}
+                />
+        );
     };
 };

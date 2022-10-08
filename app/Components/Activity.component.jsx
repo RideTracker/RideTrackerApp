@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
-import Canvas from "react-native-canvas";
 
 import moment from "moment";
 
@@ -213,8 +212,8 @@ export default class Activity extends ThemedComponent {
                         </TouchableOpacity>
                     )}
 
-                    <View style={[ style.sheet.section, style.sheet.section.padded ]}>
-                        <Text style={style.sheet.section.header}>Elevation Gain</Text>
+                    <View style={style.sheet.section}>
+                        <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Elevation Gain</Text>
                         
                         <ActivityElevation activity={this.props.id} width={"100%"} height={140}/>
                     </View>
