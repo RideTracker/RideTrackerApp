@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions, PixelRatio, View } from "react-native";
 
 import CanvasWebView, { Path2D } from "react-native-webview-canvas";
 
@@ -20,8 +20,10 @@ export default class ActivityElevation extends Component {
 
 		const canvas = await canvasWebView.createCanvas();
 
-        canvas.width = Dimensions.get("window").width;
-        canvas.height = 120;
+        const pixelRatio = PixelRatio.get();
+
+        canvas.width = Dimensions.get("window").width * pixelRatio;
+        canvas.height = 120 * pixelRatio;
 
         const width = Dimensions.get("window").width;
         const height = 120;
@@ -45,15 +47,15 @@ export default class ActivityElevation extends Component {
         for(let point = 0; point < points; point++) {
             const altitude = coordinates[point].altitude - minAltitude;
 
-            path.lineTo(Math.floor(point * widthPerPoint), Math.floor(height - (altitude * heightPerAltitude)));
+            path.lineTo(Math.floor(point * widthPerPoint) * pixelRatio, Math.floor(height - (altitude * heightPerAltitude)) * pixelRatio);
         }
         await path.executeBundle();
         
         context.strokeStyle = Appearance.theme.colorPalette.route;
         context.stroke(path);
         
-        path.lineTo(width, height);
-        path.lineTo(0, height);
+        path.lineTo(width * pixelRatio, height * pixelRatio);
+        path.lineTo(0, height * pixelRatio);
         
         context.globalCompositeOperation = "destination-over";
         context.fillStyle = Appearance.theme.colorPalette.accent;
