@@ -23,49 +23,131 @@ export default class ActivityElevation extends Component {
         const pixelRatio = PixelRatio.get();
 
         canvas.width = Dimensions.get("window").width * pixelRatio;
-        canvas.height = 120 * pixelRatio;
+        canvas.height = 140 * pixelRatio;
 
         const width = Dimensions.get("window").width;
-        const height = 120;
+        const height = 140;
         
         const context = await canvas.getContext("2d");
         
-        const coordinates = this.state.recording.getAllCoordinates();
+        const distanceHeight = 40;
 
-        const points = coordinates.length;
-        const widthPerPoint = width / (points - 1);
+        const altitudeWidth = 40;
+        const altitudeHeight = height - distanceHeight;
 
-        const minAltitude = Math.min(...coordinates.map(coordinate => coordinate.altitude));
-        const maxAltitude = Math.max(...coordinates.map(coordinate => coordinate.altitude));
+        const graphWidth = width - altitudeWidth;
+        const graphHeight = height - distanceHeight;
 
-        const altitudeDifference = maxAltitude - minAltitude;
-        const heightPerAltitude = height / altitudeDifference;
+        this.coordinates = this.state.recording.getAllCoordinates();
+
+        this.points = this.coordinates.length;
+        this.widthPerPoint = graphWidth / (this.points - 1);
+
+        this.minAltitude = Math.min(...this.coordinates.map(coordinate => coordinate.altitude));
+        this.maxAltitude = Math.max(...this.coordinates.map(coordinate => coordinate.altitude));
+
+        this.altitudeDifference = this.maxAltitude - this.minAltitude;
+        this.heightPerAltitude = graphHeight / this.altitudeDifference;
+
+        await this.drawAltitude(canvasWebView, context, pixelRatio, 0, 0, altitudeWidth, altitudeHeight);
+
+        await this.drawDistance(canvasWebView, context, pixelRatio, altitudeWidth, graphHeight, graphWidth, distanceHeight);
+        
+        await this.drawGraph(canvasWebView, context, pixelRatio, altitudeWidth, 0, graphWidth, graphHeight);
+    };
+
+    async drawDistance(canvasWebView, context, pixelRatio, left, top, width, height) {
+        context.startBundle();
+
+        const indexes = width / 50;
+
+        const distance = this.state.recording.getDistance();
+
+        const widthPerIndex = width / indexes;
+        const distancePerIndex = distance / indexes;
+
+        for(let index = 0; index < indexes; index++) {
+            context.save();
+
+            context.font = `${12 * pixelRatio}px sans-serif`;
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+    
+            context.fillStyle = Appearance.theme.colorPalette.route;
+
+            context.translate((left + (index * widthPerIndex)) * pixelRatio, (top + (height / 2)) * pixelRatio);
+            context.rotate(-45 * Math.PI / 180);
+
+            context.fillText(`${Math.round(index * distancePerIndex)} km`, 0, 0);
+
+            context.restore();
+        }
+
+        await context.executeBundle();
+    };
+
+    async drawAltitude(canvasWebView, context, pixelRatio, left, top, width, height) {
+        context.startBundle();
+
+        const count = 5;
+
+        const rowHeight = height / count;
+        const altitudeHeight = this.altitudeDifference / count;
+
+
+        for(let index = 0; index < count; index++) {
+            context.save();
+
+            context.font = `${12 * pixelRatio}px sans-serif`;
+            context.textAlign = "center";
+            context.textBaseline = "end";
+    
+            context.fillStyle = Appearance.theme.colorPalette.route;
+
+            context.translate(((width / 2) + left) * pixelRatio, (top + height - (index * rowHeight) - 5) * pixelRatio);
+            context.rotate(-45 * Math.PI / 180);
+
+            context.fillText(`${Math.round(index * altitudeHeight)} m`, 0, 0);
+
+            context.restore();
+        }
+
+        await context.executeBundle();
+    };
+
+    async drawGraph(canvasWebView, context, pixelRatio, left, top, width, height) {
+        context.save();
 
         const path = await canvasWebView.createPath2D();
         
         path.startBundle();
-        for(let point = 0; point < points; point++) {
-            const altitude = coordinates[point].altitude - minAltitude;
+        path.moveTo(left * pixelRatio, (top + height) * pixelRatio);
+        for(let point = 0; point < this.points; point++) {
+            const altitude = this.coordinates[point].altitude - this.minAltitude;
 
-            path.lineTo(Math.floor(point * widthPerPoint) * pixelRatio, Math.floor(height - (altitude * heightPerAltitude)) * pixelRatio);
+            path.lineTo((left + Math.floor(point * this.widthPerPoint)) * pixelRatio, (top + Math.floor(height - (altitude * this.heightPerAltitude))) * pixelRatio);
         }
+        path.lineTo((left + width) * pixelRatio, (top + height) * pixelRatio);
         await path.executeBundle();
         
+        context.lineWidth = pixelRatio;
         context.strokeStyle = Appearance.theme.colorPalette.route;
         context.stroke(path);
         
-        path.lineTo(width * pixelRatio, height * pixelRatio);
-        path.lineTo(0, height * pixelRatio);
+        path.lineTo((left + width) * pixelRatio, (top + height) * pixelRatio);
+        path.lineTo((left * pixelRatio), (top + height) * pixelRatio);
         
         context.globalCompositeOperation = "destination-over";
         context.fillStyle = Appearance.theme.colorPalette.accent;
         context.fill(path);
+
+        context.restore();
     };
 
     render() {
         return (
             <CanvasWebView
-                height={120}
+                height={140}
                 onLoad={(...args) => this.onLoad(...args)}
                 />
         );
