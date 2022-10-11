@@ -17,6 +17,7 @@ import Header from "app/Components/Layouts/Header.component"
 
 import ActivityComments from "./Layouts/Pages/Activity/Comments";
 import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
+import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
 
 import style from "./Activity.component.style";
 
@@ -216,6 +217,12 @@ export default class Activity extends ThemedComponent {
                         <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Elevation Gain</Text>
                         
                         <ActivityElevation activity={this.props.id} width={"100%"} height={140}/>
+                    </View>
+
+                    <View style={style.sheet.section}>
+                        <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Speed</Text>
+                        
+                        <ActivitySpeed activity={this.props.id} width={"100%"} height={140}/>
                     </View>
                 </ScrollView>
 
