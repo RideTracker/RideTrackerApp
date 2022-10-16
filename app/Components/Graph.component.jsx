@@ -21,12 +21,12 @@ export default class Graph extends Component {
         
         this.context = await canvas.getContext("2d");
         
-        const bottomHeight = 40;
+        const bottomHeight = 20;
 
-        const leftWidth = 40;
+        const leftWidth = 30;
         const leftHeight = height - bottomHeight;
 
-        const graphWidth = width - leftWidth;
+        const graphWidth = width - leftWidth - 10;
         const graphHeight = height - bottomHeight;
 
         this.context.startBundle();
@@ -41,51 +41,45 @@ export default class Graph extends Component {
     };
 
     async drawDistance(left, top, width, height) {
+        this.context.save();
+
         const indexes = width / 50;
 
         const widthPerIndex = width / indexes;
         const distancePerIndex = this.props.maxBottomAmount / indexes;
 
-        for(let index = 0; index <= indexes; index++) {
-            this.context.save();
+        this.context.font = `${10 * this.pixelRatio}px sans-serif`;
+        this.context.textAlign = "left";
+        this.context.textBaseline = "middle";
 
-            this.context.font = `${12 * this.pixelRatio}px sans-serif`;
-            this.context.textAlign = "center";
-            this.context.textBaseline = "middle";
-    
-            this.context.fillStyle = Appearance.theme.colorPalette.route;
+        this.context.globalAlpha = 0.5;
+        this.context.fillStyle = Appearance.theme.colorPalette.secondary;
 
-            this.context.translate((left + (index * widthPerIndex)) * this.pixelRatio, (top + (height / 2)) * this.pixelRatio);
-            this.context.rotate(-45 * Math.PI / 180);
+        for(let index = 0; index <= indexes; index++)
+            this.context.fillText((index == 0)?(this.props.bottomUnit):(Math.round(index * distancePerIndex)), (left + (index * widthPerIndex)) * this.pixelRatio, (top + (height / 2)) * this.pixelRatio);
 
-            this.context.fillText(`${Math.round(index * distancePerIndex)} ${this.props.bottomUnit}`, 0, 0);
-
-            this.context.restore();
-        }
+        this.context.restore();
     };
 
     async drawAltitude(left, top, width, height) {
+        this.context.save();
+
         const count = 5;
 
         const rowHeight = height / count;
         const leftHeight = this.props.maxLeftAmount / count;
 
-        for(let index = 0; index < count; index++) {
-            this.context.save();
+        this.context.font = `${10 * this.pixelRatio}px sans-serif`;
+        this.context.textAlign = "center";
+        this.context.textBaseline = "middle";
 
-            this.context.font = `${12 * this.pixelRatio}px sans-serif`;
-            this.context.textAlign = "center";
-            this.context.textBaseline = "end";
-    
-            this.context.fillStyle = Appearance.theme.colorPalette.route;
+        this.context.globalAlpha = 0.5;
+        this.context.fillStyle = Appearance.theme.colorPalette.secondary;
 
-            this.context.translate(((width / 2) + left) * this.pixelRatio, (top + height - (index * rowHeight) - 5) * this.pixelRatio);
-            this.context.rotate(-45 * Math.PI / 180);
+        for(let index = 0; index < count; index++)
+            this.context.fillText((index == 0)?(this.props.leftUnit):(Math.round(index * leftHeight)), ((width / 2) + left) * this.pixelRatio, (top + height - (index * rowHeight) - 5) * this.pixelRatio);
 
-            this.context.fillText(`${Math.round(index * leftHeight)} ${this.props.leftUnit}`, 0, 0);
-
-            this.context.restore();
-        }
+        this.context.restore();
     };
 
     async drawGraph(left, top, width, height) {
