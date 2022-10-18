@@ -55,8 +55,15 @@ export default class Graph extends Component {
         this.context.globalAlpha = 0.5;
         this.context.fillStyle = Appearance.theme.colorPalette.secondary;
 
-        for(let index = 0; index <= indexes; index++)
-            this.context.fillText((index == 0)?(this.props.bottomUnit):(Math.round(index * distancePerIndex)), (left + (index * widthPerIndex)) * this.pixelRatio, (top + (height / 2)) * this.pixelRatio);
+        for(let index = 0; index <= indexes; index++) {
+            if(index == 0) {
+                this.context.textAlign = "left";
+                this.context.fillText(this.props.bottomUnit, (left + (index * widthPerIndex)) * this.pixelRatio, (top + (height / 2)) * this.pixelRatio);
+                this.context.textAlign = "center";
+            }
+            else
+                this.context.fillText(Math.round(index * distancePerIndex), (left + (index * widthPerIndex)) * this.pixelRatio, (top + (height / 2)) * this.pixelRatio);
+        }
 
         this.context.restore();
     };
