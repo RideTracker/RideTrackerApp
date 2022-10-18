@@ -4,6 +4,7 @@ import { View, ScrollView, RefreshControl } from "react-native";
 import Appearance from "app/Data/Appearance";
 
 import ThemedComponent from "app/Components/ThemedComponent";
+import Animation from "app/Components/Animation.component";
 import Header from "app/Components/Layouts/Header.component";
 import Footer from "app/Components/Layouts/Footer.component";
 import Activity from "app/Components/Activity.component";
@@ -73,9 +74,9 @@ export default class LandingPage extends ThemedComponent {
                 </View>
 
                 {this.state != null && this.state.activity != null &&
-                    <View style={style.sheet.container.page}>
+                    <Animation slide={200} style={style.sheet.container.page}>
                         <Activity id={this.state.activity} onClose={() => this.hideActivity()}/>
-                    </View>
+                    </Animation>
                 }
             </View>
         );
