@@ -158,6 +158,13 @@ export default class RecordPageStyle {
 
                         ...Appearance.styles.activity.user.description
                     }
+                },
+
+                buttons: {
+                    icon: {
+                        color: Appearance.theme.colorPalette.secondary,
+                        fontSize: 24
+                    }
                 }
             },
             
@@ -186,6 +193,18 @@ export default class RecordPageStyle {
 
                         ...Appearance.styles.activity.stats.key
                     }
+                }
+            },
+
+            export: {
+                text: {
+                    padding: 12,
+
+                    textAlign: "center",
+
+                    color: Appearance.theme.colorPalette.secondary,
+
+                    fontSize: 16
                 }
             }
         });

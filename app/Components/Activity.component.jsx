@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import moment from "moment";
 
@@ -75,6 +76,10 @@ export default class Activity extends ThemedComponent {
         });
     };
 
+    onExportPress() {
+
+    };
+
     render() {
         if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
@@ -83,7 +88,11 @@ export default class Activity extends ThemedComponent {
 
         return (
             <>
-                <Header title="Activity" navigation="true" onNavigationPress={() => this.props.onClose()}/>
+                <Header
+                    title="Activity"
+                    navigation="true"
+                    onNavigationPress={() => this.props.onClose()}
+                    />
                 
                 <ScrollView style={style.sheet}>
                     <View style={style.sheet.section}>
@@ -224,6 +233,10 @@ export default class Activity extends ThemedComponent {
                         
                         <ActivitySpeed activity={this.props.id} width={"100%"} height={140}/>
                     </View>
+
+                    <TouchableOpacity style={style.sheet.export} onPress={() => this.onExportPress()}>
+                        <Text style={style.sheet.export.text}>Export recording as GPX</Text>
+                    </TouchableOpacity>
                 </ScrollView>
 
                 {this.state?.showComments && (

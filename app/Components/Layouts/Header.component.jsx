@@ -21,11 +21,19 @@ export default class Header extends ThemedComponent {
                     </Svg>
                 )}
 
-                {this.props?.navigation && (
-                    <TouchableOpacity style={[ style.sheet.button, style.sheet.navigation ]} onPress={this.props.onNavigationPress}>
-                        <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
-                    </TouchableOpacity>
-                )}
+                <View style={style.sheet.buttons}>
+                    {this.props?.button && (
+                        <TouchableOpacity style={[ style.sheet.button, style.sheet.button ]} onPress={this.props.onButtonPress}>
+                            <FontAwesome5 style={style.sheet.button.icon} name={this.props.button}/>
+                        </TouchableOpacity>
+                    )}
+
+                    {this.props?.navigation && (
+                        <TouchableOpacity style={[ style.sheet.button, style.sheet.navigation ]} onPress={this.props.onNavigationPress}>
+                            <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
+                        </TouchableOpacity>
+                    )}
+                </View>
             </View>
         );
     }

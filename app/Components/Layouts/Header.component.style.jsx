@@ -43,23 +43,25 @@ export default class HeaderStyle {
             },
 
             button: {
-                position: "absolute",
-
-                top: Constants.statusBarHeight + 16,
-
                 justifyContent: "center",
+                
+                marginRight: 24,
 
                 icon: {
                     color: Appearance.theme.colorPalette.secondary,
                     
                     fontSize: 26,
-                    
-                    marginLeft: 24,
-                    marginRight: 24
                 }
             },
 
-            navigation: {
+            buttons: {
+                flexDirection: "row",
+                    
+                marginLeft: 24,
+
+                position: "absolute",
+
+                top: Constants.statusBarHeight + 16,
                 right: 0
             }
         });
