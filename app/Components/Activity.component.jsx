@@ -99,7 +99,12 @@ export default class Activity extends ThemedComponent {
         }
 
         return (
-            <Animation enabled={this.state?.ready} slide={200} style={this.props?.style}>
+            <Animation
+                enabled={this.state?.ready}
+                duration={200}
+                transitions={[ "slide-left" ]}
+                style={this.props?.style}
+                >
                 <Header
                     title="Activity"
                     navigation="true"

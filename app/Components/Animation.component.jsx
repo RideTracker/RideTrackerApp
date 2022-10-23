@@ -6,24 +6,17 @@ export default class Animation extends Component {
         if(!this.props?.enabled)
             return;
 
-        if(this.props?.slide && !this.state?.slide) {
+        if(this.props?.transitions && !this.state?.initialized) {
             this.interval = setInterval(() => {
-                if(!this?.state?.slide)
-                    return;
-
                 this.setState({
                     now: performance.now()
                 });
-            }, this.props.slide / 100);
-
-            const width = Dimensions.get("window").width;
+            }, this.props.duration / 100);
             
             this.setState({
-                slide: {
-                    width,
-                    duration: this.props.slide,
-                    start: performance.now()
-                }
+                initialized: true,
+
+                start: performance.now()
             });
         }
     };
@@ -33,7 +26,7 @@ export default class Animation extends Component {
     };
 
     render() {
-        if(!this.props?.enabled) {
+        if(!this.state?.initialized) {
             return (
                 <View style={[ this.props?.style, { opacity: 0.0 } ]}>
                     {this.props?.children}
@@ -41,31 +34,45 @@ export default class Animation extends Component {
             );
         }
 
-        if(this.state?.slide) {
-            const now = performance.now();
+        const style = {};
 
-            const currentDuration = now - this.state.slide.start;
+        const now = performance.now();
+        const currentDuration = now - this.state.start;
 
-            if(currentDuration < this.state.slide.duration) {
-                const multiplier = currentDuration / this.state.slide.duration;
+        if(currentDuration < this.props.duration) {
+            if(this.props?.transitions.includes("opacity")) {
+                if(currentDuration < this.props.duration) {
+                    const multiplier = currentDuration / this.props.duration;
 
-                const left = this.state.slide.width - (this.state.slide.width * multiplier);
+                    style.opacity = (1.0 * multiplier);
+                }
+            }
+
+            if(this.props?.transitions.includes("slide-left")) {
+                if(currentDuration < this.props.duration) {
+                    const multiplier = currentDuration / this.props.duration;
+
+                    const width = Dimensions.get("window").width;
+
+                    style.left = width - (width * multiplier);
+                }
+            }
     
-                return (
-                    <View style={[ this.props?.style, { left } ]}>
-                        {this.props?.children}
-                    </View>
-                );
-            }
+            return (
+                <View style={[ this.props?.style, style ]}>
+                    {this.props?.children}
+                </View>
+            );
+        }
+        
+        if(this.interval) {
+            clearInterval(this.interval);
 
-            if(this.interval) {
-                clearInterval(this.interval);
-                this.interval = undefined;
-            }
+            this.interval = undefined;
         }
         
         return (
-            <View style={this.props?.style}>
+            <View style={[ this.props?.style ]}>
                 {this.props?.children}
             </View>
         );
