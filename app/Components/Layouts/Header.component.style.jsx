@@ -11,7 +11,7 @@ export default class HeaderStyle {
 
             position: "relative",
 
-            backgroundColor: Appearance.theme.colorPalette.primary,
+            backgroundColor: Appearance.theme.colorPalette.background,
 
             paddingTop: Constants.statusBarHeight,
             

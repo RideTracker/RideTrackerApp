@@ -54,7 +54,7 @@ export default class App extends Component {
             return null;
         
         if(Platform.OS == "android") {
-            NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.primary);
+            NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.background);
             NavigationBar.setButtonStyleAsync(Appearance.theme.colorPalette.contrast);
         }
 
