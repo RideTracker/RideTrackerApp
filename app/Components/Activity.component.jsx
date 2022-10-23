@@ -82,10 +82,6 @@ export default class Activity extends ThemedComponent {
         this.onProgress();
     };
 
-    onExportPress() {
-
-    };
-
     onProgress() {
         this.progress++;
 
@@ -260,10 +256,6 @@ export default class Activity extends ThemedComponent {
                             height={140}
                             />
                     </View>
-
-                    <TouchableOpacity style={style.sheet.export} onPress={() => this.onExportPress()}>
-                        <Text style={style.sheet.export.text}>Export recording as GPX</Text>
-                    </TouchableOpacity>
                 </ScrollView>
 
                 {this.state?.showComments && (
