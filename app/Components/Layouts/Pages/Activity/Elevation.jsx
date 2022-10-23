@@ -27,6 +27,7 @@ export default class ActivityElevation extends Component {
 
         return (
             <Graph
+                onReady={() => this.props?.onReady()}
                 maxLeftAmount={altitudeDifference}
                 maxBottomAmount={this.state.recording.getDistance()}
                 leftUnit={"m"}

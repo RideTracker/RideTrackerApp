@@ -29,6 +29,7 @@ export default class ActivitySpeed extends Component {
 
         return (
             <Graph
+                onReady={() => this.props?.onReady()}
                 maxLeftAmount={speedDifference}
                 maxBottomAmount={this.state.recording.getDistance()}
                 leftUnit={"km/h"}

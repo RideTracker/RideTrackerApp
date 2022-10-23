@@ -13,6 +13,7 @@ import ThemedComponent from "app/Components/ThemedComponent";
 import Button from "app/Components/Button.component";
 import Images from "app/Components/Images.component";
 import Input from "app/Components/Input.component";
+import Animation from "app/Components/Animation.component";
 
 import Header from "app/Components/Layouts/Header.component"
 
@@ -21,12 +22,15 @@ import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
 import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
 
 import style from "./Activity.component.style";
+import { TouchableNativeFeedback } from "react-native-web";
 
 export default class Activity extends ThemedComponent {
     style = style.update();
 
     ready = false;
     data = {};
+    progress = 0;
+    requiredProgress = 4;
 
     constructor(...args) {
         super(...args);
@@ -74,10 +78,22 @@ export default class Activity extends ThemedComponent {
             pitch: reference.current.props?.pitch || 0,
             heading: reference.current.props?.heading || 0
         });
+
+        this.onProgress();
     };
 
     onExportPress() {
 
+    };
+
+    onProgress() {
+        this.progress++;
+
+        if(this.progress == this.requiredProgress) {
+            this.setState({
+                ready: true
+            });
+        }
     };
 
     render() {
@@ -87,7 +103,7 @@ export default class Activity extends ThemedComponent {
         }
 
         return (
-            <>
+            <Animation enabled={this.state?.ready} slide={200} style={this.props?.style}>
                 <Header
                     title="Activity"
                     navigation="true"
@@ -103,6 +119,7 @@ export default class Activity extends ThemedComponent {
                                 customMapStyle={Appearance.theme.mapStyle || []}
                                 provider={PROVIDER_GOOGLE}
                                 onLayout={() => this.onLayout(this.mapView)}
+                                animation={false}
                                 pitchEnabled={false}
                                 scrollEnabled={false}
                                 zoomEnabled={false}
@@ -225,13 +242,23 @@ export default class Activity extends ThemedComponent {
                     <View style={style.sheet.section}>
                         <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Elevation Gain</Text>
                         
-                        <ActivityElevation activity={this.props.id} width={"100%"} height={140}/>
+                        <ActivityElevation
+                            onReady={() => this.onProgress()}
+                            activity={this.props.id}
+                            width={"100%"}
+                            height={140}
+                            />
                     </View>
 
                     <View style={style.sheet.section}>
                         <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Speed</Text>
                         
-                        <ActivitySpeed activity={this.props.id} width={"100%"} height={140}/>
+                        <ActivitySpeed
+                            onReady={() => this.onProgress()}
+                            activity={this.props.id}
+                            width={"100%"}
+                            height={140}
+                            />
                     </View>
 
                     <TouchableOpacity style={style.sheet.export} onPress={() => this.onExportPress()}>
@@ -242,7 +269,7 @@ export default class Activity extends ThemedComponent {
                 {this.state?.showComments && (
                     <ActivityComments activity={this.props.id} onClose={() => this.setState({ showComments: false })}/>
                 )}
-            </>
+            </Animation>
         );
     }
 };

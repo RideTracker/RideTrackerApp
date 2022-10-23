@@ -76,9 +76,7 @@ export default class LandingPage extends ThemedComponent {
                 </View>
 
                 {this.state != null && this.state.activity != null &&
-                    <Animation slide={200} style={style.sheet.container.page}>
-                        <Activity id={this.state.activity} onClose={() => this.hideActivity()}/>
-                    </Animation>
+                    <Activity style={style.sheet.container.page} id={this.state.activity} onClose={() => this.hideActivity()}/>
                 }
             </View>
         );

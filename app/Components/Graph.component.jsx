@@ -38,6 +38,8 @@ export default class Graph extends Component {
         await this.drawGraph(leftWidth, 0, graphWidth, graphHeight);
         
         await this.context.executeBundle();
+
+        this.props?.onReady();
     };
 
     async drawDistance(left, top, width, height) {

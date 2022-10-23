@@ -2,10 +2,11 @@ import { Component } from "react";
 import { Dimensions, View } from "react-native";
 
 export default class Animation extends Component {
-    componentDidMount() {
-        if(this.props?.slide) {
-            const width = Dimensions.get("window").width;
-            
+    componentDidUpdate() {
+        if(!this.props?.enabled)
+            return;
+
+        if(this.props?.slide && !this.state?.slide) {
             this.interval = setInterval(() => {
                 if(!this?.state?.slide)
                     return;
@@ -15,11 +16,11 @@ export default class Animation extends Component {
                 });
             }, this.props.slide / 100);
 
+            const width = Dimensions.get("window").width;
+            
             this.setState({
                 slide: {
-                    enabled: true,
-                    increment: width / this.props.slide,
-                    left: width,
+                    width,
                     duration: this.props.slide,
                     start: performance.now()
                 }
@@ -32,6 +33,14 @@ export default class Animation extends Component {
     };
 
     render() {
+        if(!this.props?.enabled) {
+            return (
+                <View style={[ this.props?.style, { opacity: 0.0 } ]}>
+                    {this.props?.children}
+                </View>
+            );
+        }
+
         if(this.state?.slide) {
             const now = performance.now();
 
@@ -40,7 +49,7 @@ export default class Animation extends Component {
             if(currentDuration < this.state.slide.duration) {
                 const multiplier = currentDuration / this.state.slide.duration;
 
-                const left = this.state.slide.left - (this.state.slide.left * multiplier);
+                const left = this.state.slide.width - (this.state.slide.width * multiplier);
     
                 return (
                     <View style={[ this.props?.style, { left } ]}>
