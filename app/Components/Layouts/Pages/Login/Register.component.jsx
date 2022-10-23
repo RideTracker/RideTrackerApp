@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, ScrollView, Text, Alert } from "react-native";
 
-import API from "app/API";
+import API from "app/Services/API";
 import Config from "app/Data/Config";
 import User from "app/Data/User";
 

@@ -5,7 +5,7 @@ import * as AppleAuthentication from "expo-apple-authentication";
 
 import Config from "app/Data/Config";
 import User from "app/Data/User";
-import API from "app/API";
+import API from "app/Services/API";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 import Input from "app/Components/Input.component";

@@ -4,7 +4,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import moment from "moment";
 
-import API from "app/API";
+import API from "app/Services/API";
 
 import Cache from "app/Data/Cache";
 

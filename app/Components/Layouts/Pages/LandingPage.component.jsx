@@ -9,8 +9,10 @@ import Header from "app/Components/Layouts/Header.component";
 import Footer from "app/Components/Layouts/Footer.component";
 import Activity from "app/Components/Activity.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
-import API from "app/API";
+
 import Files from "app/Data/Files";
+
+import API from "app/Services/API";
 
 import style from "./LandingPage.component.style";
 
