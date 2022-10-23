@@ -64,23 +64,23 @@ export default class App extends Component {
 
                 <Navigation theme={this.state?.theme} path={this.state?.path || "/index"} style={{ backgroundColor: Appearance.theme.colorPalette.primary }}>
                     <Navigation.Page link="/index">
-                        <LandingPage onNavigate={(path) => setPath(path)}/>
+                        <LandingPage onNavigate={(path) => this.setState({ path })}/>
                     </Navigation.Page>
                     
                     <Navigation.Page link="/record">
-                        <RecordPage onNavigate={(path) => setPath(path)}/>
+                        <RecordPage onNavigate={(path) => this.setState({ path })}/>
                     </Navigation.Page>
                     
                     <Navigation.Page link="/profile">
-                        <ProfilePage onNavigate={(path) => setPath(path)}/>
+                        <ProfilePage onNavigate={(path) => this.setState({ path })}/>
                     </Navigation.Page>
                     
                     <Navigation.Page link="/settings">
-                        <SettingsPage onNavigate={(path) => setPath(path)}/>
+                        <SettingsPage onNavigate={(path) => this.setState({ path })}/>
                     </Navigation.Page>
                     
                     <Navigation.Page link="/login">
-                        <LoginPage onNavigate={(path) => setPath(path)}/>
+                        <LoginPage onNavigate={(path) => this.setState({ path })}/>
                     </Navigation.Page>
                 </Navigation>
             </>

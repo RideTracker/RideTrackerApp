@@ -10,6 +10,12 @@
         "title": "Dark mode",
         "description": "The app uses the default dark theme."
     },
+
+    {
+        "id": "dark-magenta",
+        "title": "Dark (magenta)",
+        "description": "The app uses the a magenta dark theme."
+    },
     
     {
         "id": "light",
