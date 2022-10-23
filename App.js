@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { Component, useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Platform } from "react-native";
 
 import * as Location from "expo-location";
@@ -22,81 +22,68 @@ SplashScreen.preventAutoHideAsync();
 
 let ready = false;
 
-export default function App() {
-    const [ path, setPath ] = useState("/index");
-    const [ theme, setTheme ] = useState(null);
-    const [ appIsReady, setAppIsReady ] = useState(false);
+export default class App extends Component {
+    async componentDidMount() {
+        try { await Location.requestForegroundPermissionsAsync(); } catch {}
+        try { await Location.requestBackgroundPermissionsAsync(); } catch {}
 
-    //await API.ping(true);
+        // uncomment to debug login dialog
+        // await Config.resetAsync();
 
-    useEffect(() => {
-        async function prepare() {
-            try { await Location.requestForegroundPermissionsAsync(); } catch {}
-            try { await Location.requestBackgroundPermissionsAsync(); } catch {}
+        await Config.readAsync();
+        Appearance.readConfig();
 
-            // uncomment to debug login dialog
-            // await Config.resetAsync();
+        if(Config.user?.token) {
+            User.authenticateAsync().then((success) => {
+                if(!success)
+                    this.setState({ path: "/login" });
+            });
+        }
+        else if(Config.user.guest == null)
+            this.setState({ path: "/login" });
 
-            await Config.readAsync();
-            Appearance.readConfig();
-
-            if(Config.user?.token) {
-                User.authenticateAsync().then((success) => {
-                    if(!success)
-                        setPath("/login");
-                });
-            }
-            else if(Config.user.guest == null)
-                setPath("/login");
-    
-            await SplashScreen.hideAsync();
-        
-            Appearance.addEventListener("change", (theme) => setTheme(theme));
-    
-            setAppIsReady(true);
-        };
-
-        prepare();
-    }, []);
-
-    const onLayout = useCallback(async () => {
-      if(appIsReady)
         await SplashScreen.hideAsync();
-    }, [ appIsReady ]);
-
-    if(!appIsReady)
-        return null;
-
-    if(Platform.OS == "android") {
-        NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.primary);
-        NavigationBar.setButtonStyleAsync(Appearance.theme.colorPalette.contrast);
-    }
     
-    return (
-        <>
-            <StatusBar style={Appearance.theme.colorPalette.contrast}/>
+        Appearance.addEventListener("change", (theme) => this.setState({ theme }));
 
-            <Navigation theme={theme} path={path} style={{ backgroundColor: Appearance.theme.colorPalette.primary }}>
-                <Navigation.Page link="/index">
-                    <LandingPage onNavigate={(path) => setPath(path)}/>
-                </Navigation.Page>
-                
-                <Navigation.Page link="/record">
-                    <RecordPage onNavigate={(path) => setPath(path)}/>
-                </Navigation.Page>
-                
-                <Navigation.Page link="/profile">
-                    <ProfilePage onNavigate={(path) => setPath(path)}/>
-                </Navigation.Page>
-                
-                <Navigation.Page link="/settings">
-                    <SettingsPage onNavigate={(path) => setPath(path)}/>
-                </Navigation.Page>
-                
-                <Navigation.Page link="/login">
-                    <LoginPage onNavigate={(path) => setPath(path)}/>
-                </Navigation.Page>
-            </Navigation>
-        </>
-    );
-}
+        this.setState({ ready: true });
+    };
+
+    render() {
+        if(!this.state?.ready)
+            return null;
+        
+        if(Platform.OS == "android") {
+            NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.primary);
+            NavigationBar.setButtonStyleAsync(Appearance.theme.colorPalette.contrast);
+        }
+
+        return (
+            <>
+                <StatusBar style={Appearance.theme.colorPalette.contrast}/>
+
+                <Navigation theme={this.state?.theme} path={this.state?.path || "/index"} style={{ backgroundColor: Appearance.theme.colorPalette.primary }}>
+                    <Navigation.Page link="/index">
+                        <LandingPage onNavigate={(path) => setPath(path)}/>
+                    </Navigation.Page>
+                    
+                    <Navigation.Page link="/record">
+                        <RecordPage onNavigate={(path) => setPath(path)}/>
+                    </Navigation.Page>
+                    
+                    <Navigation.Page link="/profile">
+                        <ProfilePage onNavigate={(path) => setPath(path)}/>
+                    </Navigation.Page>
+                    
+                    <Navigation.Page link="/settings">
+                        <SettingsPage onNavigate={(path) => setPath(path)}/>
+                    </Navigation.Page>
+                    
+                    <Navigation.Page link="/login">
+                        <LoginPage onNavigate={(path) => setPath(path)}/>
+                    </Navigation.Page>
+                </Navigation>
+            </>
+        );
+    };
+};
