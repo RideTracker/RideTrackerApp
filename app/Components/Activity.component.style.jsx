@@ -205,6 +205,8 @@ export default class RecordPageStyle {
 
                 button: {
                     padding: 12,
+
+                    width: "25%",
                     
                     icon: {
                         textAlign: "center",

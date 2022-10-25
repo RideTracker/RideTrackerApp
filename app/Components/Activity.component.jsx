@@ -207,7 +207,7 @@ export default class Activity extends ThemedComponent {
                             <TouchableOpacity style={style.sheet.buttons.button}>
                                 <FontAwesome5 style={style.sheet.buttons.button.icon} name={"heart"}/>
                                 
-                                <Text style={style.sheet.buttons.button.label}>Like (0)</Text>
+                                <Text style={style.sheet.buttons.button.label}>Like</Text>
                             </TouchableOpacity>
                             
                             <TouchableOpacity style={style.sheet.buttons.button}>
@@ -218,7 +218,7 @@ export default class Activity extends ThemedComponent {
 
                             { this.state.user.id == User.id && (
                                 <TouchableOpacity style={style.sheet.buttons.button}>
-                                    <Text style={style.sheet.buttons.button.label}>Export as</Text>
+                                    <Text style={[ style.sheet.buttons.button.label, { fontSize: 14, marginBottom: 2 } ]}>Export as</Text>
                                     <Text style={style.sheet.buttons.button.label}>GPX</Text>
                                 </TouchableOpacity>
                             )}
