@@ -30,9 +30,28 @@ export default class ActivityComments extends Component {
                 collection[index] = await Cache.getActivityComment(comments[index]);
             }
             
+            if(collection.length) {
+                this.background.current.setTransitions([
+                    {
+                        type: "opacity",
+                        duration: 200,
+                        ease: true
+                    }
+                ]);
+
+                this.container.current.setTransitions([
+                    {
+                        type: "bottom",
+                        duration: 200,
+                        ease: true
+                    }
+                ]);
+            }
+            
             this.setState({
                 comments: collection,
-                showReply: collection.length == 0
+                showReply: collection.length == 0,
+                ready: true
             });
         });
     };
@@ -41,20 +60,18 @@ export default class ActivityComments extends Component {
         this.container.current.setTransitions([
             {
                 type: "bottom-out",
-                duration: 200
+                duration: 200,
+                callback: () => this.props?.onClose()
             }
         ]);
         
         this.background.current.setTransitions([
             {
                 type: "opacity-out",
-                duration: 200
+                duration: 200,
+                callback: () => this.props?.onClose()
             }
         ]);
-
-        setTimeout(() => {
-            this.props?.onClose();
-        }, 1000);
     };
 
     onRefresh() {
@@ -79,26 +96,13 @@ export default class ActivityComments extends Component {
             <>
                 <Animation
                     ref={this.background}
-                    enabled={!!this.state?.comments}
-                    transitions={[
-                        {
-                            type: "opacity",
-                            duration: 200
-                        }
-                    ]}
+                    enabled={this.state?.ready}
                     style={style.sheet.background}
-                    >
-                </Animation>
+                    />
 
                 <Animation
                     ref={this.container}
-                    enabled={!!this.state?.comments}
-                    transitions={[
-                        {
-                            type: "bottom",
-                            duration: 200
-                        }
-                    ]}
+                    enabled={this.state?.ready}
                     style={style.sheet.container}
                     >
 

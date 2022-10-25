@@ -47,7 +47,24 @@ export default class Animation extends Component {
             this.direction = "in";
 
         if(!this.interval)
-            this.interval = setInterval(() => this.setState({ now: performance.now() }), 10);
+            this.interval = setInterval(() => {
+                const now = performance.now();
+        
+                this.transitions = this.transitions.filter((transition) => {
+                    const currentDuration = now - transition.start;
+            
+                    if(currentDuration >= transition.duration) {
+                        if(transition.callback)
+                            transition.callback();
+
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                this.setState({ now });
+            }, 10);
     };
 
     render() {
@@ -73,10 +90,10 @@ export default class Animation extends Component {
             );
         }
 
-        const style = {};
+        this.style = {};
         const now = performance.now();
 
-        this.transitions = this.transitions.filter((transition) => {
+        this.transitions.forEach((transition) => {
             const currentDuration = now - transition.start;
     
             if(currentDuration < transition.duration) {
@@ -87,13 +104,13 @@ export default class Animation extends Component {
 
                 switch(transition.type) {
                     case "opacity": {
-                        style.opacity = multiplier;
+                        this.style.opacity = multiplier;
 
                         break;
                     }
 
                     case "opacity-out": {
-                        style.opacity = 1.0 - multiplier;
+                        this.style.opacity = 1.0 - multiplier;
 
                         break;
                     }
@@ -101,7 +118,7 @@ export default class Animation extends Component {
                     case "bottom": {
                         const height = Dimensions.get("window").height;
 
-                        style.top = height - (height * multiplier);
+                        this.style.top = height - (height * multiplier);
 
                         break;
                     }
@@ -109,7 +126,7 @@ export default class Animation extends Component {
                     case "bottom-out": {
                         const height = Dimensions.get("window").height;
 
-                        style.top = height * multiplier;
+                        this.style.top = height * multiplier;
 
                         break;
                     }
@@ -117,20 +134,16 @@ export default class Animation extends Component {
                     case "left": {
                         const width = Dimensions.get("window").width;
 
-                        style.left = width - (width * multiplier);
+                        this.style.left = width - (width * multiplier);
 
                         break;
                     }
                 }
-
-                return true;
             }
-
-            return false;
         });
     
         return (
-            <View style={[ this.props?.style, style ]}>
+            <View style={[ this.props?.style, this.style ]}>
                 {this.props?.children}
             </View>
         );
