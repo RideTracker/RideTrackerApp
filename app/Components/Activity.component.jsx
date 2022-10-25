@@ -151,6 +151,17 @@ export default class Activity extends ThemedComponent {
         }
     };
 
+    onClose() {
+        this.animation.current.setTransitions([
+            {
+                type: "left",
+                direction: "out",
+                duration: 200,
+                callback: () => this.props.onClose()
+            }
+        ]);
+    };
+
     render() {
         if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
@@ -166,7 +177,7 @@ export default class Activity extends ThemedComponent {
                 <Header
                     title="Activity"
                     navigation="true"
-                    onNavigationPress={() => this.props.onClose()}
+                    onNavigationPress={() => this.onClose()}
                     />
                 
                 <ScrollView style={style.sheet}>

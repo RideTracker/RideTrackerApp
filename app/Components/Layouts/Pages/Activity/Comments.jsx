@@ -30,7 +30,6 @@ export default class ActivityComments extends Component {
                 collection[index] = await Cache.getActivityComment(comments[index]);
             }
             
-            if(collection.length) {
                 this.background.current.setTransitions([
                     {
                         type: "opacity",
@@ -46,7 +45,6 @@ export default class ActivityComments extends Component {
                         ease: true
                     }
                 ]);
-            }
             
             this.setState({
                 comments: collection,
@@ -59,7 +57,8 @@ export default class ActivityComments extends Component {
     onClose() {
         this.container.current.setTransitions([
             {
-                type: "bottom-out",
+                type: "bottom",
+                direction: "out",
                 duration: 200,
                 callback: () => this.props?.onClose()
             }
@@ -67,7 +66,8 @@ export default class ActivityComments extends Component {
         
         this.background.current.setTransitions([
             {
-                type: "opacity-out",
+                type: "opacity",
+                direction: "out",
                 duration: 200,
                 callback: () => this.props?.onClose()
             }
