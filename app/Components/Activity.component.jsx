@@ -7,6 +7,7 @@ import moment from "moment";
 
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
+import User from "app/Data/User";
 import Recording from "app/Data/Recording";
 
 import ThemedComponent from "app/Components/ThemedComponent";
@@ -202,9 +203,26 @@ export default class Activity extends ThemedComponent {
                             </View>
                         </View>
                         
-                        { this.props.onPress != undefined &&
-                            <Button title="Show more details" onPress={() => this.props.onPress(this.state.activity.id)}/>
-                        }
+                        <View style={style.sheet.buttons}>
+                            <TouchableOpacity style={style.sheet.buttons.button}>
+                                <FontAwesome5 style={style.sheet.buttons.button.icon} name={"heart"}/>
+                                
+                                <Text style={style.sheet.buttons.button.label}>Like (0)</Text>
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity style={style.sheet.buttons.button}>
+                                <FontAwesome5 style={[ style.sheet.buttons.button.icon, { marginLeft: 6 } ]} name={"share-square"}/>
+                                
+                                <Text style={style.sheet.buttons.button.label}>Share</Text>
+                            </TouchableOpacity>
+
+                            { this.state.user.id == User.id && (
+                                <TouchableOpacity style={style.sheet.buttons.button}>
+                                    <Text style={style.sheet.buttons.button.label}>Export as</Text>
+                                    <Text style={style.sheet.buttons.button.label}>GPX</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
                     </View>
 
                     {this.state?.comments && (

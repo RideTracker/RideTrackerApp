@@ -194,6 +194,36 @@ export default class RecordPageStyle {
                         ...Appearance.styles.activity.stats.key
                     }
                 }
+            },
+
+            buttons: {
+                position: "relative",
+
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+
+                button: {
+                    padding: 12,
+                    
+                    icon: {
+                        textAlign: "center",
+                        fontSize: 20,
+
+                        color: Appearance.theme.colorPalette.secondary,
+
+                        marginBottom: 2
+                    },
+
+                    label: {
+
+                        textAlign: "center",
+
+                        color: Appearance.theme.colorPalette.secondary,
+
+                        fontSize: 16
+                    }
+                }
             }
         });
 

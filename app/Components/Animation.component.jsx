@@ -66,8 +66,6 @@ export default class Animation extends Component {
                 this.interval = undefined;
             }
 
-            console.log((this.direction == "in")?(1.0):(0.0));
-
             return (
                 <View style={[ this.props?.style, { opacity: (this.direction == "in")?(1.0):(0.0) } ]}>
                     {this.props?.children}

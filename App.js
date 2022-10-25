@@ -20,8 +20,6 @@ import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
 
 SplashScreen.preventAutoHideAsync();
 
-let ready = false;
-
 export default class App extends Component {
     async componentDidMount() {
         try { await Location.requestForegroundPermissionsAsync(); } catch {}
