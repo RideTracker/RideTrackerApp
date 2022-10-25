@@ -102,7 +102,12 @@ export default class Activity extends ThemedComponent {
             <Animation
                 enabled={this.state?.ready}
                 duration={200}
-                transitions={[ "slide-left" ]}
+                transitions={[
+                    {
+                        type: "left",
+                        duration: 200
+                    }
+                ]}
                 style={this.props?.style}
                 >
                 <Header

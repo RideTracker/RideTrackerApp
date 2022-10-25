@@ -2,31 +2,56 @@ import { Component } from "react";
 import { Dimensions, View } from "react-native";
 
 export default class Animation extends Component {
-    componentDidUpdate() {
-        if(!this.props?.enabled)
-            return;
+    transitions = [];
+    direction = "in";
 
-        if(this.props?.transitions && !this.state?.initialized) {
-            this.interval = setInterval(() => {
-                this.setState({
-                    now: performance.now()
-                });
-            }, this.props.duration / 100);
-            
-            this.setState({
-                initialized: true,
-
-                start: performance.now()
-            });
-        }
+    componentDidMount() {
+        if(this.props?.transitions)
+            this.setTransitions(this.props.transitions);
     };
 
     componentWillUnmount() {
-        clearInterval(this.interval);
+        this.clearTransitions();
+        
+        if(this.interval)
+            clearInterval(this.interval);
+    };
+
+    clearTransitions() {
+        if(!this.state?.transitions)
+            return;
+
+        this.transitions = [];
+    };
+
+    setTransitions(transitions) {
+        this.clearTransitions();
+
+        const now = performance.now();
+
+        this.addTransitions(transitions.map((transition) => {
+            return {
+                start: now,
+
+                ...transition
+            };
+        }));
+    };
+
+    addTransitions(transitions) {
+        this.transitions.push(...transitions);
+
+        if(this.transitions[this.transitions.length - 1].type.endsWith("out"))
+            this.direction = "out";
+        else
+            this.direction = "in";
+
+        if(!this.interval)
+            this.interval = setInterval(() => this.setState({ now: performance.now() }), 10);
     };
 
     render() {
-        if(!this.state?.initialized) {
+        if(!this.props?.enabled) {
             return (
                 <View style={[ this.props?.style, { opacity: 0.0 } ]}>
                     {this.props?.children}
@@ -34,45 +59,77 @@ export default class Animation extends Component {
             );
         }
 
-        const style = {};
-
-        const now = performance.now();
-        const currentDuration = now - this.state.start;
-
-        if(currentDuration < this.props.duration) {
-            if(this.props?.transitions.includes("opacity")) {
-                if(currentDuration < this.props.duration) {
-                    const multiplier = currentDuration / this.props.duration;
-
-                    style.opacity = (1.0 * multiplier);
-                }
-            }
-
-            if(this.props?.transitions.includes("slide-left")) {
-                if(currentDuration < this.props.duration) {
-                    const multiplier = currentDuration / this.props.duration;
-
-                    const width = Dimensions.get("window").width;
-
-                    style.left = width - (width * multiplier);
-                }
-            }
+        if(!this.transitions.length) {
+            if(this.interval) {
+                clearInterval(this.interval);
     
+                this.interval = undefined;
+            }
+
+            console.log((this.direction == "in")?(1.0):(0.0));
+
             return (
-                <View style={[ this.props?.style, style ]}>
+                <View style={[ this.props?.style, { opacity: (this.direction == "in")?(1.0):(0.0) } ]}>
                     {this.props?.children}
                 </View>
             );
         }
-        
-        if(this.interval) {
-            clearInterval(this.interval);
 
-            this.interval = undefined;
-        }
-        
+        const style = {};
+        const now = performance.now();
+
+        this.transitions = this.transitions.filter((transition) => {
+            const currentDuration = now - transition.start;
+    
+            if(currentDuration < transition.duration) {
+                const multiplier = currentDuration / transition.duration;
+
+                switch(transition.type) {
+                    case "opacity": {
+                        style.opacity = multiplier;
+
+                        break;
+                    }
+
+                    case "opacity-out": {
+                        style.opacity = 1.0 - multiplier;
+
+                        break;
+                    }
+
+                    case "bottom": {
+                        const height = Dimensions.get("window").height;
+
+                        style.top = height - (height * multiplier);
+
+                        break;
+                    }
+
+                    case "bottom-out": {
+                        const height = Dimensions.get("window").height;
+
+                        style.top = height * multiplier;
+
+                        break;
+                    }
+
+                    case "left": {
+                        const width = Dimensions.get("window").width;
+
+                        style.left = width - (width * multiplier);
+
+                        break;
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        });
+    
         return (
-            <View style={[ this.props?.style ]}>
+            <View style={[ this.props?.style, style ]}>
                 {this.props?.children}
             </View>
         );

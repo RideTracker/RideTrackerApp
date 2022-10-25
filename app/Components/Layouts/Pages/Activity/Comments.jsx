@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { View, ScrollView, Text, TouchableOpacity, Image, RefreshControl } from "react-native";
 
 import moment from "moment";
@@ -6,13 +6,21 @@ import moment from "moment";
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
 
-import Input from "app/Components/Input.component";
+import Animation from "app/Components/Animation.component";
+
 import ActivityCommentReply from "./Comments/Reply";
 
 import style from "./Comments.style";
 
 export default class ActivityComments extends Component {
     style = style.update();
+
+    constructor(...args) {
+        super(...args);
+        
+        this.background = React.createRef();
+        this.container = React.createRef();
+    };
 
     componentDidMount() {
         Cache.getActivityComments(this.props.activity).then(async (comments) => {
@@ -27,6 +35,26 @@ export default class ActivityComments extends Component {
                 showReply: collection.length == 0
             });
         });
+    };
+
+    onClose() {
+        this.container.current.setTransitions([
+            {
+                type: "bottom-out",
+                duration: 200
+            }
+        ]);
+        
+        this.background.current.setTransitions([
+            {
+                type: "opacity-out",
+                duration: 200
+            }
+        ]);
+
+        setTimeout(() => {
+            this.props?.onClose();
+        }, 1000);
     };
 
     onRefresh() {
@@ -49,10 +77,37 @@ export default class ActivityComments extends Component {
     render() {
         return (
             <>
-                <View style={style.sheet}>
-                    <TouchableOpacity style={style.sheet.close} onPress={() => this.props?.onClose()}/>
+                <Animation
+                    ref={this.background}
+                    enabled={!!this.state?.comments}
+                    transitions={[
+                        {
+                            type: "opacity",
+                            duration: 200
+                        }
+                    ]}
+                    style={style.sheet.background}
+                    >
+                </Animation>
 
-                    <View style={style.sheet.container}>
+                <Animation
+                    ref={this.container}
+                    enabled={!!this.state?.comments}
+                    transitions={[
+                        {
+                            type: "bottom",
+                            duration: 200
+                        }
+                    ]}
+                    style={style.sheet.container}
+                    >
+
+                    <TouchableOpacity 
+                        style={style.sheet.close}
+                        onPress={() => this.onClose()}
+                        />
+
+                    <View style={style.sheet.content}>
                         <Text style={style.sheet.header}>Comments {this.state?.comments && (<Text style={style.sheet.header.count}>({this.state?.comments.length})</Text>)}</Text>
 
                         <ScrollView
@@ -126,7 +181,7 @@ export default class ActivityComments extends Component {
                             </View>
                         </ScrollView>
                     </View>
-                </View>
+                </Animation>
 
                 {this.state?.showReply && (
                     <ActivityCommentReply activity={this.props.activity} parent={this.state?.replyParent || null} onClose={() => this.setState({ showReply: false })}/>

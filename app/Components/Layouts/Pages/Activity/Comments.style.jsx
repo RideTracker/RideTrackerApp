@@ -11,15 +11,50 @@ export default class {
             height: "100%",
 
             close: {
-                flex: 1,
-            
+                position: "absolute",
+
+                left: 0,
+                top: 0,
+
+                width: "100%",
+                height: "20%"
+            },
+
+            background: {
+                position: "absolute",
+
+                left: 0,
+                top: 0,
+
+                width: "100%",
+                height: "100%",
+
                 backgroundColor: "rgba(0, 0, 0, .5)"
             },
 
             container: {
+                position: "absolute",
+
+                top: 0,
+                left: 0,
+
+                width: "100%",
+                height: "100%",
+            },
+
+            content: {
                 backgroundColor: Appearance.theme.colorPalette.primary,
 
-                height: "80%"
+                position: "absolute",
+
+                top: "20%",
+                left: 0,
+
+                width: "100%",
+                height: "100%",
+
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10
             },
 
             header: {
