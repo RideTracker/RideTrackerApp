@@ -1,3 +1,5 @@
+import Config from "app/Data/Config";
+
 export default class API {
     static alive = null;
     static timestamp = null;
@@ -32,7 +34,16 @@ export default class API {
     static async fetch(path, method, body) {
         console.log("API FETCH " + method + " " + path);
 
-        const response = await fetch(API.server + path, { method, body: JSON.stringify(body) });
+        const headers = new Headers();
+
+        if(Config.user?.token)
+            headers.set("Authorization", `Bearer ${Config.user.token}`);
+
+        const response = await fetch(API.server + path, {
+            method,
+            headers,
+            body: JSON.stringify(body)
+        });
         
         if(method == "PUT")
             return {};

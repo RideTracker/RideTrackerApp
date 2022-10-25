@@ -5,6 +5,8 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import moment from "moment";
 
+import API from "app/Services/API";
+
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
 import User from "app/Data/User";
@@ -59,6 +61,22 @@ export default class Activity extends ThemedComponent {
             this.setState({ comments: collection });
         });
 
+        API.get("/api/activity/likes", { activity: this.props.id }).then((data) => {
+            if(!data.success)
+                return;
+
+            this.setState({ likes: data.content });
+        });
+
+        if(!User.guest) {
+            API.get("/api/activity/like", { activity: this.props.id }).then((data) => {
+                if(!data.success)
+                    return;
+
+                this.setState({ like: data.content });
+            });
+        }
+
         Cache.getActivityRide(this.props.id).then((ride) => {
             this.setState({ recording: new Recording(ride) });
         });
@@ -89,6 +107,17 @@ export default class Activity extends ThemedComponent {
         if(this.progress == this.requiredProgress) {
             this.setState({
                 ready: true
+            });
+        }
+    };
+
+    onLikePress() {
+        if(!User.guest) {
+            API.post("/api/activity/like", { activity: this.props.id }).then((data) => {
+                if(!data.success)
+                    return;
+
+                this.setState({ like: data.content });
             });
         }
     };
@@ -204,10 +233,10 @@ export default class Activity extends ThemedComponent {
                         </View>
                         
                         <View style={style.sheet.buttons}>
-                            <TouchableOpacity style={style.sheet.buttons.button}>
-                                <FontAwesome5 style={style.sheet.buttons.button.icon} name={"heart"}/>
+                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onLikePress()}>
+                                <FontAwesome5 style={style.sheet.buttons.button.icon} name={"heart"} solid={this.state?.like}/>
                                 
-                                <Text style={style.sheet.buttons.button.label}>Like</Text>
+                                <Text style={style.sheet.buttons.button.label}>Like{this.state?.likes > 0 && (<Text> ({this.state.likes})</Text>)}</Text>
                             </TouchableOpacity>
                             
                             <TouchableOpacity style={style.sheet.buttons.button}>
