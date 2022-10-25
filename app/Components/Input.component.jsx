@@ -26,7 +26,8 @@ export default class Input extends Component {
     onChangeText(text) {
         this.setState({ value: text });
 
-        this.props?.onChangeText(text);
+        if(this.props?.onChangeText)
+            this.props.onChangeText(text);
     };
 
     render() {
