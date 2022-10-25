@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
+import { Share, Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
@@ -118,7 +118,35 @@ export default class Activity extends ThemedComponent {
                     return;
 
                 this.setState({ like: data.content });
+
+                API.get("/api/activity/likes", { activity: this.props.id }).then((data) => {
+                    if(!data.success)
+                        return;
+        
+                    this.setState({ likes: data.content });
+                });
             });
+        }
+    };
+
+    async onSharePress() {
+        try {
+            const result = await Share.share({
+                message: "View my activity on Ride Tracker!",
+            });
+
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        }
+        catch(error) {
+            alert(error.message);
         }
     };
 
@@ -236,10 +264,10 @@ export default class Activity extends ThemedComponent {
                             <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onLikePress()}>
                                 <FontAwesome5 style={style.sheet.buttons.button.icon} name={"heart"} solid={this.state?.like}/>
                                 
-                                <Text style={style.sheet.buttons.button.label}>Like{this.state?.likes > 0 && (<Text> ({this.state.likes})</Text>)}</Text>
+                                <Text style={style.sheet.buttons.button.label}>{(this.state?.likes > 0)?(this.state.likes + " likes"):("Like")}</Text>
                             </TouchableOpacity>
                             
-                            <TouchableOpacity style={style.sheet.buttons.button}>
+                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onSharePress()}>
                                 <FontAwesome5 style={[ style.sheet.buttons.button.icon, { marginLeft: 6 } ]} name={"share-square"}/>
                                 
                                 <Text style={style.sheet.buttons.button.label}>Share</Text>
