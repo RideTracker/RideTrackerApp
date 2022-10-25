@@ -107,17 +107,13 @@ export default class Animation extends Component {
                     }
 
                     case "bottom": {
-                        const height = Dimensions.get("window").height;
-
-                        this.style.top = height - (height * multiplier);
+                        this.style.top = `${100 - (100 * multiplier)}%`;
 
                         break;
                     }
 
                     case "left": {
-                        const width = Dimensions.get("window").width;
-
-                        this.style.left = width - (width * multiplier);
+                        this.style.left = `${100 - (100 * multiplier)}%`;
 
                         break;
                     }
