@@ -201,15 +201,16 @@ export default class RecordPageStyle {
 
                 flex: 1,
                 flexDirection: "row",
-                justifyContent: "space-evenly",
+
+                marginLeft: 6,
+                marginRight: 6,
 
                 button: {
                     padding: 12,
 
-                    width: "25%",
+                    flexDirection: "row",
                     
                     icon: {
-                        textAlign: "center",
                         fontSize: 20,
 
                         color: Appearance.theme.colorPalette.secondary,
@@ -218,8 +219,7 @@ export default class RecordPageStyle {
                     },
 
                     label: {
-
-                        textAlign: "center",
+                        paddingLeft: 12,
 
                         color: Appearance.theme.colorPalette.secondary,
 

@@ -236,6 +236,10 @@ export default class Activity extends ThemedComponent {
                                 <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
                                 <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
                             </View>
+                            
+                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onSharePress()}>
+                                <FontAwesome5 style={[ style.sheet.buttons.button.icon, { marginLeft: 6 } ]} name={"share-square"}/>
+                            </TouchableOpacity>
                         </View>
 
                         <View style={style.sheet.stats}>
@@ -258,27 +262,6 @@ export default class Activity extends ThemedComponent {
                                 <Text style={style.sheet.stats.item.title}>{this.state.recording.getMaxSpeed()} km/h</Text>
                                 <Text style={style.sheet.stats.item.description}>max speed</Text>
                             </View>
-                        </View>
-                        
-                        <View style={style.sheet.buttons}>
-                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onLikePress()}>
-                                <FontAwesome5 style={style.sheet.buttons.button.icon} name={"heart"} solid={this.state?.like}/>
-                                
-                                <Text style={style.sheet.buttons.button.label}>{(this.state?.likes > 0)?(this.state.likes + " likes"):("Like")}</Text>
-                            </TouchableOpacity>
-                            
-                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onSharePress()}>
-                                <FontAwesome5 style={[ style.sheet.buttons.button.icon, { marginLeft: 6 } ]} name={"share-square"}/>
-                                
-                                <Text style={style.sheet.buttons.button.label}>Share</Text>
-                            </TouchableOpacity>
-
-                            { this.state.user.id == User.id && (
-                                <TouchableOpacity style={style.sheet.buttons.button}>
-                                    <Text style={[ style.sheet.buttons.button.label, { fontSize: 14, marginBottom: 2 } ]}>Export as</Text>
-                                    <Text style={style.sheet.buttons.button.label}>GPX</Text>
-                                </TouchableOpacity>
-                            )}
                         </View>
                     </View>
 
@@ -319,6 +302,29 @@ export default class Activity extends ThemedComponent {
                             )}
                         </TouchableOpacity>
                     )}
+                        
+                    <View style={style.sheet.section}>
+                        <View style={style.sheet.buttons}>
+                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onLikePress()}>
+                                <FontAwesome5 style={style.sheet.buttons.button.icon} name={"heart"} solid={this.state?.like}/>
+                                
+                                {this.state?.likes > 0 && (
+                                    <Text style={style.sheet.buttons.button.label}>{this.state.likes}</Text>
+                                )}
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onLikePress()}>
+                                <Text style={style.sheet.buttons.button.label}>i'm still trying to place this</Text>
+                            </TouchableOpacity>
+
+
+                            { this.state.user.id == User.id && false == true && (
+                                <TouchableOpacity style={[ style.sheet.buttons.button, { justifyContent: "flex-end" } ]}>
+                                    <FontAwesome5 style={[ style.sheet.buttons.button.icon ]} name={"ellipsis-h"}/>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    </View>
 
                     <View style={style.sheet.section}>
                         <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Elevation Gain</Text>
