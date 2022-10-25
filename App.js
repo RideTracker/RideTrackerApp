@@ -52,7 +52,7 @@ export default class App extends Component {
             return null;
         
         if(Platform.OS == "android") {
-            NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.background);
+            NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.common);
             NavigationBar.setButtonStyleAsync(Appearance.theme.colorPalette.contrast);
         }
 
@@ -60,7 +60,7 @@ export default class App extends Component {
             <>
                 <StatusBar style={Appearance.theme.colorPalette.contrast}/>
 
-                <Navigation theme={this.state?.theme} path={this.state?.path || "/index"} style={{ backgroundColor: Appearance.theme.colorPalette.primary }}>
+                <Navigation theme={this.state?.theme} path={this.state?.path || "/index"} style={{ backgroundColor: Appearance.theme.colorPalette.common }}>
                     <Navigation.Page link="/index">
                         <LandingPage onNavigate={(path) => this.setState({ path })}/>
                     </Navigation.Page>

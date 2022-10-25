@@ -11,10 +11,10 @@ export default class RecordPageStyle {
                 backgroundColor: Appearance.theme.colorPalette.primary,
                 
                 borderBottomWidth: 1,
-                borderBottomColor: Appearance.theme.colorPalette.accent,
+                borderBottomColor: Appearance.theme.colorPalette.border,
                 
                 borderTopWidth: 1,
-                borderTopColor: Appearance.theme.colorPalette.accent,
+                borderTopColor: Appearance.theme.colorPalette.border,
 
                 marginBottom: 12,
 

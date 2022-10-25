@@ -74,10 +74,10 @@ export default class {
             },
 
             borders: {
-                borderTopColor: Appearance.theme.colorPalette.accent,
+                borderTopColor: Appearance.theme.colorPalette.border,
                 borderTopWidth: 1,
 
-                borderBottomColor: Appearance.theme.colorPalette.accent,
+                borderBottomColor: Appearance.theme.colorPalette.border,
                 borderBottomWidth: 1,
 
             },

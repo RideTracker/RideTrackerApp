@@ -11,12 +11,12 @@ export default class HeaderStyle {
 
             position: "relative",
 
-            backgroundColor: Appearance.theme.colorPalette.background,
+            backgroundColor: Appearance.theme.colorPalette.common,
 
             paddingTop: Constants.statusBarHeight,
             
             borderBottomWidth: 1,
-            borderBottomColor: Appearance.theme.colorPalette.accent,
+            borderBottomColor: Appearance.theme.colorPalette.border,
 
             branded: {
                 backgroundColor: Appearance.theme.colorPalette.route,

@@ -16,8 +16,8 @@ export default class SettingsPageStyle {
                 padding: 12,
 
                 backgroundColor: Appearance.theme.colorPalette.primary,
-                borderTopColor: Appearance.theme.colorPalette.accent,
-                borderBottomColor: Appearance.theme.colorPalette.accent,
+                borderTopColor: Appearance.theme.colorPalette.border,
+                borderBottomColor: Appearance.theme.colorPalette.border,
 
                 borderTopWidth: 1,
                 borderBottomWidth: 1,

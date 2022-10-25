@@ -22,7 +22,7 @@ export default class ProfilePageStyle {
         
                         borderRadius: 100,
                         borderWidth: 2,
-                        borderColor: Appearance.theme.colorPalette.accent,                
+                        borderColor: Appearance.theme.colorPalette.border,                
                     }
                 },
 

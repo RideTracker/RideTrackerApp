@@ -8,10 +8,10 @@ export default class FooterStyle {
             height: 70,
             width: "100%",
 
-            backgroundColor: Appearance.theme.colorPalette.background,
+            backgroundColor: Appearance.theme.colorPalette.common,
             
             borderTopWidth: 1,
-            borderTopColor: Appearance.theme.colorPalette.accent,
+            borderTopColor: Appearance.theme.colorPalette.border,
 
             position: "relative",
 
@@ -50,7 +50,7 @@ export default class FooterStyle {
 
                 width: "100%",
                 
-                backgroundColor: Appearance.theme.colorPalette.accent,
+                backgroundColor: Appearance.theme.colorPalette.border,
 
                 padding: 12,
 

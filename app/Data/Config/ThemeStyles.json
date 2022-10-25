@@ -639,7 +639,10 @@
 	
 	"dark-magenta": {
 		"colorPalette": {
-			"background": "#191A23",
+			"common": "#171821",
+			"border": "#1C1E28",
+			
+			"background": "#181821",
 			"primary": "#181922",
 			"secondary": "#ECEDFA",
 			"accent": "#1D1E2B",

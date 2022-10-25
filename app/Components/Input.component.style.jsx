@@ -15,7 +15,7 @@ export default class InputStyle {
             border: {  
                 borderRadius: 6,
     
-                borderColor: Appearance.theme.colorPalette.accent,
+                borderColor: Appearance.theme.colorPalette.border,
                 borderWidth: 1,
             },
 
