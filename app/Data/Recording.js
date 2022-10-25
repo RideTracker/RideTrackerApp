@@ -16,7 +16,7 @@ export default class Recording {
                     return {
                         latitude: x.coords.latitude,
                         longitude: x.coords.longitude
-                    }
+                    };
                 })
             });
         }
