@@ -40,6 +40,7 @@ export default class Activity extends ThemedComponent {
 
         this.mapView = React.createRef();
         this.mapViewSatellite = React.createRef();
+        this.animation = React.createRef();
     }
 
     componentDidMount() {
@@ -97,18 +98,18 @@ export default class Activity extends ThemedComponent {
             pitch: reference.current.props?.pitch || 0,
             heading: reference.current.props?.heading || 0
         });
-
-        this.onProgress();
     };
 
-    onProgress() {
-        this.progress++;
-
-        if(this.progress == this.requiredProgress) {
-            this.setState({
-                ready: true
-            });
-        }
+    onPrimaryLayout() {
+        this.setState({ ready: true });
+        
+        this.animation.current.setTransitions([
+            {
+                type: "left",
+                ease: true,
+                duration: 200
+            }
+        ]);
     };
 
     onLikePress() {
@@ -158,14 +159,8 @@ export default class Activity extends ThemedComponent {
 
         return (
             <Animation
+                ref={this.animation}
                 enabled={this.state?.ready}
-                duration={200}
-                transitions={[
-                    {
-                        type: "left",
-                        duration: 200
-                    }
-                ]}
                 style={this.props?.style}
                 >
                 <Header
@@ -183,6 +178,7 @@ export default class Activity extends ThemedComponent {
                                 customMapStyle={Appearance.theme.mapStyle || []}
                                 provider={PROVIDER_GOOGLE}
                                 onLayout={() => this.onLayout(this.mapView)}
+                                onRegionChangeComplete={() => this.onPrimaryLayout()}
                                 animation={false}
                                 pitchEnabled={false}
                                 scrollEnabled={false}
@@ -330,7 +326,6 @@ export default class Activity extends ThemedComponent {
                         <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Elevation Gain</Text>
                         
                         <ActivityElevation
-                            onReady={() => this.onProgress()}
                             activity={this.props.id}
                             width={"100%"}
                             height={140}
@@ -341,7 +336,6 @@ export default class Activity extends ThemedComponent {
                         <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Speed</Text>
                         
                         <ActivitySpeed
-                            onReady={() => this.onProgress()}
                             activity={this.props.id}
                             width={"100%"}
                             height={140}

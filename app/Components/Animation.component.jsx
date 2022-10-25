@@ -80,7 +80,10 @@ export default class Animation extends Component {
             const currentDuration = now - transition.start;
     
             if(currentDuration < transition.duration) {
-                const multiplier = currentDuration / transition.duration;
+                let multiplier = currentDuration / transition.duration;
+
+                if(transition.ease)
+                    multiplier = (multiplier < 0.5)?(2 * multiplier * multiplier):(-1 + (4 - (2 * multiplier)) * multiplier);
 
                 switch(transition.type) {
                     case "opacity": {
