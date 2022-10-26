@@ -109,14 +109,15 @@ export default class Recorder extends Recording {
 
         try {
             Location.startLocationUpdatesAsync("recorder", {
-                accuracy: Location.Accuracy.BestForNavigation,
-                timeInterval: 10000,
+                accuracy: Location.Accuracy.High,
+                timeInterval: 5000,
+                mayShowUserSettingsDialog: true,
                 foregroundService: {
-                    notificationTitle: "App Name",
-                    notificationBody: "Location is used when App is in background",
+                    notificationTitle: "RideTracker",
+                    notificationBody: "Location is used when Ride Tracker is in background",
                 },
                 activityType: Location.ActivityType.Fitness,
-                showsBackgroundLocationIndicator: true,
+                showsBackgroundLocationIndicator: true
             });
         }
         catch(error) {

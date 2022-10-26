@@ -26,7 +26,6 @@ export default class ActivityCompact extends ThemedComponent {
     }
 
     componentDidMount() {
-        console.log("load " + this.props.id);
         Cache.getActivity(this.props.id).then((activity) => {
             this.setState({ activity });
 
