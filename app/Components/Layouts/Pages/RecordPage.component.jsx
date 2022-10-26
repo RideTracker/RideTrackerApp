@@ -201,7 +201,7 @@ export default class RecordPage extends ThemedComponent {
                 </View>
 
                 { !this.recorder.active &&
-                    <View>
+                    <View style={style.sheet.buttons}>
                         <Button title="Finish" onPress={() => this.onFinish()}/>
                         <Button title="Discard" confirm={{
                             message: "Do you really want to discard this ride?"

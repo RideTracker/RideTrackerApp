@@ -35,7 +35,7 @@ export default class RecordPageStyle {
 
                 column: {
                     width: "50%",
-                    
+
                     justifyContent: "center",
                     alignItems: "center",
                     
@@ -138,6 +138,10 @@ export default class RecordPageStyle {
                         fontWeight: "bold"
                     }
                 }
+            },
+
+            buttons: {
+                margin: 12
             }
         });
 
