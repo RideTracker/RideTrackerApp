@@ -1,5 +1,7 @@
 import { getPreciseDistance } from "geolib";
 
+import Config from "app/Data/Config";
+
 export default class Recording {
     constructor(data) {
         this.data = data;
@@ -29,7 +31,7 @@ export default class Recording {
             return {
                 index,
 
-                coordinates: section.map
+                coordinates: (Config.user?.mapMatching)?(section.map):(section.coordinates.map((coordinate) => coordinate.coords))
             };
         });
     };

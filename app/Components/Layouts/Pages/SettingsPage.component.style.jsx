@@ -43,6 +43,31 @@ export default class SettingsPageStyle {
                             color: Appearance.theme.colorPalette.secondary
                         }
                     }
+                },
+
+                switch: {
+                    marginTop: 12,
+                    marginBottom: 12,
+
+                    flexDirection: "row",
+
+                    text: {
+                        width: "80%",
+
+                        title: {
+                            color: Appearance.theme.colorPalette.secondary,
+                            fontWeight: "bold",
+                            fontSize: 16
+                        },
+    
+                        description: {
+                            color: Appearance.theme.colorPalette.secondary
+                        },
+                    },
+
+                    button: {
+                        width: "20%"
+                    }
                 }
             }
         });
