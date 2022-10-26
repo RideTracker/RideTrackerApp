@@ -22,7 +22,11 @@ export default class RecordPageStyle {
 
                 row: {
                     flexDirection: "row",
-                    justifyContent: "space-evenly"
+                    justifyContent: "space-evenly",
+
+                    item: {
+                        width: "50%"
+                    }
                 },
 
                 container: {
@@ -30,6 +34,11 @@ export default class RecordPageStyle {
                 },
 
                 column: {
+                    width: "50%",
+                    
+                    justifyContent: "center",
+                    alignItems: "center",
+                    
                     title: {
                         color: Appearance.theme.colorPalette.secondary,
 

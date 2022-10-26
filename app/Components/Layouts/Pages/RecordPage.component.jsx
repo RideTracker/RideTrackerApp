@@ -153,12 +153,12 @@ export default class RecordPage extends ThemedComponent {
                 </View>
                         
                 <View style={style.sheet.stats.row}>
-                    <View style={style.sheet.stats.item}>
+                    <View style={style.sheet.stats.row.item}>
                         <Text style={style.sheet.stats.item.title}>{this.recorder.getDistance() ?? 0} km</Text>
                         <Text style={style.sheet.stats.item.description}>distance</Text>
                     </View>
                 
-                    <View style={style.sheet.stats.item}>
+                    <View style={style.sheet.stats.row.item}>
                         <Text style={style.sheet.stats.item.title}>{this.recorder.getElevation() ?? 0} m</Text>
                         <Text style={style.sheet.stats.item.description}>elevation</Text>
                     </View>
