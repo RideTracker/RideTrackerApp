@@ -6,7 +6,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 
-import Navigation from "app/Components/Navigation.component";
 import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
 
 import Config from "app/Data/Config";
@@ -21,6 +20,14 @@ import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
 SplashScreen.preventAutoHideAsync();
 
 export default class App extends Component {
+    pages = {
+        "/index": (<LandingPage onNavigate={(page) => this.setState({ page })}/>),
+        "/record": (<RecordPage onNavigate={(page) => this.setState({ page })}/>),
+        "/profile": (<ProfilePage onNavigate={(page) => this.setState({ page })}/>),
+        "/settings": (<SettingsPage onNavigate={(page) => this.setState({ page })}/>),
+        "/login": (<LoginPage onNavigate={(page) => this.setState({ page })}/>)
+    };
+
     async componentDidMount() {
         try { await Location.requestForegroundPermissionsAsync(); } catch {}
         try { await Location.requestBackgroundPermissionsAsync(); } catch {}
@@ -34,21 +41,21 @@ export default class App extends Component {
         if(Config.user?.token) {
             User.authenticateAsync().then((success) => {
                 if(!success)
-                    this.setState({ path: "/login" });
+                    this.setState({ page: "/login" });
             });
         }
         else if(Config.user.guest == null)
-            this.setState({ path: "/login" });
+            this.setState({ page: "/login" });
 
         await SplashScreen.hideAsync();
     
-        Appearance.addEventListener("change", (theme) => this.setState({ theme }));
+        //Appearance.addEventListener("change", (theme) => this.setState({ theme }));
 
-        this.setState({ ready: true });
+        this.setState({ page: "/index" });
     };
 
     render() {
-        if(!this.state?.ready)
+        if(!this.state?.page)
             return null;
         
         if(Platform.OS == "android") {
@@ -57,31 +64,16 @@ export default class App extends Component {
         }
 
         return (
-            <>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: Appearance.theme.colorPalette.common
+                }}
+                >
                 <StatusBar style={Appearance.theme.colorPalette.contrast}/>
 
-                <Navigation theme={this.state?.theme} path={this.state?.path || "/index"} style={{ backgroundColor: Appearance.theme.colorPalette.common }}>
-                    <Navigation.Page link="/index">
-                        <LandingPage onNavigate={(path) => this.setState({ path })}/>
-                    </Navigation.Page>
-                    
-                    <Navigation.Page link="/record">
-                        <RecordPage onNavigate={(path) => this.setState({ path })}/>
-                    </Navigation.Page>
-                    
-                    <Navigation.Page link="/profile">
-                        <ProfilePage onNavigate={(path) => this.setState({ path })}/>
-                    </Navigation.Page>
-                    
-                    <Navigation.Page link="/settings">
-                        <SettingsPage onNavigate={(path) => this.setState({ path })}/>
-                    </Navigation.Page>
-                    
-                    <Navigation.Page link="/login">
-                        <LoginPage onNavigate={(path) => this.setState({ path })}/>
-                    </Navigation.Page>
-                </Navigation>
-            </>
+                {this.pages[this.state.page]}
+            </View>
         );
     };
 };
