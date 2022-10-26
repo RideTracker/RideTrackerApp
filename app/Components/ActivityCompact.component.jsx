@@ -72,7 +72,7 @@ export default class ActivityCompact extends ThemedComponent {
                         rotateEnabled={false}
                     >
                         {this.state.recording != null && 
-                            (this.state.recording.getLatLngCoordinates().map(section => (
+                            (this.state.recording.getMapCoordinates().map(section => (
                                 <Polyline key={section.index} coordinates={section.coordinates} 
                                     strokeColor={Appearance.theme.colorPalette.route}
                                     strokeWidth={3}

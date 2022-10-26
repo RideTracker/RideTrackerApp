@@ -24,6 +24,16 @@ export default class Recording {
         return sections;
     };
 
+    getMapCoordinates() {
+        return this.data.sections.map((section, index) => {
+            return {
+                index,
+
+                coordinates: section.map
+            };
+        });
+    };
+
     getAllLatLngCoordinates() {
         let coordinates = [];
 
