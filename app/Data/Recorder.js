@@ -9,8 +9,10 @@ import Files from "app/Data/Files";
 import Recording from "app/Data/Recording";
 
 TaskManager.defineTask("recorder", ({ data, error }) => {
+    console.log("recorder");
+    
     if(error)
-        return;
+        return console.error(JSON.stringify(error));
     
     if(data) {
         const { locations } = data;
@@ -59,7 +61,7 @@ export default class Recorder extends Recording {
         //const latitude = this.data.sections[section].coordinates[coordinate].coords.latitude - this.data.sections[section].coordinates[coordinate - 1].coords.latitude;
         //const longitude = this.data.sections[section].coordinates[coordinate].coords.longitude - this.data.sections[section].coordinates[coordinate - 1].coords.longitude;
     
-        return (this.data.sections[section].coordinates[coordinate].coords.speed ?? 0) * 3.6;
+        return Math.round((this.data.sections[section].coordinates[coordinate].coords.speed ?? 0) * 3.6 * 10) / 10;
     };
 
     getDuration() {
@@ -109,15 +111,13 @@ export default class Recorder extends Recording {
 
         try {
             Location.startLocationUpdatesAsync("recorder", {
-                accuracy: Location.Accuracy.High,
-                timeInterval: 5000,
-                mayShowUserSettingsDialog: true,
+                accuracy: Location.Accuracy.BestForNavigation,
                 foregroundService: {
-                    notificationTitle: "RideTracker",
+                    notificationTitle: "Ride Tracker",
                     notificationBody: "Location is used when Ride Tracker is in background",
                 },
                 activityType: Location.ActivityType.Fitness,
-                showsBackgroundLocationIndicator: true
+                showsBackgroundLocationIndicator: true,
             });
         }
         catch(error) {
@@ -148,8 +148,12 @@ export default class Recorder extends Recording {
     };
     
     onPosition(locations) {
+        console.log("onPosition");
+
         if(!this.active)
             return;
+
+        console.log("active");
 
         for(let index = 0; index < locations.length; index++) {
             console.log(locations[index]);

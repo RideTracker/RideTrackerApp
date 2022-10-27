@@ -145,7 +145,7 @@ export default class RecordPage extends ThemedComponent {
                         <Text style={[style.sheet.stats.item.title, style.sheet.stats.high.title]}>
                             <Text style={[style.sheet.stats.wide.text, style.sheet.stats.wide.text.hidden]}> km/h</Text>
 
-                            {this.recorder.getAverageSpeed() ?? 0}
+                            {this.recorder.getSpeed() ?? 0}
                             
                             <Text style={style.sheet.stats.wide.text}> km/h</Text>
                         </Text>

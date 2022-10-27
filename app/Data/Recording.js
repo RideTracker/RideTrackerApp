@@ -67,7 +67,7 @@ export default class Recording {
     };
 
     getAverageSpeed() {
-        const speeds = this.getAllCoordinates().map((coordinate) => coordinate.speed);
+        const speeds = this.getAllCoordinates(true).map((coordinate) => coordinate.speed);
 
         if(speeds.length == 0)
             return 0;
