@@ -1,3 +1,5 @@
+import config from "root/config.json";
+
 import Config from "app/Data/Config";
 
 export default class API {
@@ -29,8 +31,6 @@ export default class API {
         });
     };
 
-    static server = "http://172.20.10.4:8080";
-
     static async fetch(path, method, body) {
         console.log("API FETCH " + method + " " + path);
 
@@ -39,7 +39,7 @@ export default class API {
         if(Config.user?.token)
             headers.set("Authorization", `Bearer ${Config.user.token}`);
 
-        const response = await fetch(API.server + path, {
+        const response = await fetch(config.api + path, {
             method,
             headers,
             body: JSON.stringify(body)

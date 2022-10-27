@@ -6,6 +6,8 @@ import * as NavigationBar from "expo-navigation-bar";
 
 import moment from "moment";
 
+import config from "root/config.json";
+
 import API from "app/Services/API";
 
 import Appearance from "app/Data/Appearance";
@@ -79,7 +81,7 @@ export default class ActivityPlayback extends Component {
                     style={style.sheet.map}
                     onLoad={() => this.onLoad()}
                     source={{
-                        uri: `${API.server}/playback/index.html?activity=${this.props.activity}`
+                        uri: `${config.api}/playback/index.html?activity=${this.props.activity}`
                     }}
                     />
 
