@@ -3,6 +3,8 @@ import { Alert, TouchableOpacity, Text, View } from "react-native";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
+import User from "app/Data/User";
+
 import ThemedComponent from "app/Components/ThemedComponent";
 import Header from "app/Components/Layouts/Header.component";
 import Button from "app/Components/Button.component";
@@ -15,7 +17,7 @@ import style from "./RecordPage.component.style";
 export default class RecordPage extends ThemedComponent {
     style = style.update();
 
-    recorder = new Recorder(true);
+    recorder = new Recorder(!User.guest);
 
     constructor(...args) {
         super(...args);
@@ -102,6 +104,9 @@ export default class RecordPage extends ThemedComponent {
     };
 
     renderStats() {
+        if(User.guest)
+            return (<LoginPage onNavigate={(page) => this.props.onNavigate({ page })}/>);
+
         if(!this.recorder.active) {
             return (
                 <View style={style.sheet.stats}>
