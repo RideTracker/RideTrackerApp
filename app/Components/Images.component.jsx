@@ -38,6 +38,13 @@ export default class Images extends Component {
             onPanResponderRelease: (evt, gestureState) => {
                 let index = this.state.index;
 
+                if(this.state.left == 0) {
+                    if(this.props.children[index].props?.onPress)
+                        this.props.children[index].props.onPress();
+
+                    return;
+                }
+
                 if(index != 0 && gestureState.dx > 30)
                     index--;
                 else if(index != this.props.children.length - 1 && gestureState.dx < -30)

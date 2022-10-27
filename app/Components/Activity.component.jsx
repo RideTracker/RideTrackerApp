@@ -20,6 +20,7 @@ import Animation from "app/Components/Animation.component";
 
 import Header from "app/Components/Layouts/Header.component"
 
+import ActivityPlayback from "./Layouts/Pages/Activity/Playback";
 import ActivityComments from "./Layouts/Pages/Activity/Comments";
 import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
 import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
@@ -162,6 +163,13 @@ export default class Activity extends ThemedComponent {
         ]);
     };
 
+    onPlaybackPress() {
+        console.log("playback");
+        this.setState({
+            playback: true
+        });
+    };
+
     render() {
         if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
@@ -195,6 +203,7 @@ export default class Activity extends ThemedComponent {
                                 scrollEnabled={false}
                                 zoomEnabled={false}
                                 rotateEnabled={false}
+                                onPress={() => this.onPlaybackPress()}
                                 >
                                 {this.state.recording != null && 
                                     (this.state.recording.getMapCoordinates().map(section => (
@@ -320,9 +329,11 @@ export default class Activity extends ThemedComponent {
                                 )}
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onLikePress()}>
-                                <Text style={style.sheet.buttons.button.label}>i'm still trying to place this</Text>
-                            </TouchableOpacity>
+                            {/*<TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onPlaybackPress()}>
+                                <FontAwesome5 style={style.sheet.buttons.button.icon} name={"play"}/>
+                                
+                                <Text style={style.sheet.buttons.button.label}>Playback</Text>
+                            </TouchableOpacity>*/}
 
 
                             { this.state.user.id == User.id && false == true && (
@@ -356,6 +367,10 @@ export default class Activity extends ThemedComponent {
 
                 {this.state?.showComments && (
                     <ActivityComments activity={this.props.id} onClose={() => this.setState({ showComments: false })}/>
+                )}
+
+                {this.state?.playback && (
+                    <ActivityPlayback activity={this.props.id} onClose={() => this.setState({ playback: false })}/>
                 )}
             </Animation>
         );
