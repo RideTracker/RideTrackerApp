@@ -90,33 +90,34 @@ export default class Animation extends Component {
         this.transitions.forEach((transition) => {
             const currentDuration = this.state.now - transition.start;
     
-            if(currentDuration < transition.duration) {
-                let multiplier = currentDuration / transition.duration;
+            let multiplier = currentDuration / transition.duration;
 
-                if(transition.ease)
-                    multiplier = (multiplier < 0.5)?(2 * multiplier * multiplier):(-1 + (4 - (2 * multiplier)) * multiplier);
+            if(multiplier >= 1.0)
+                multiplier = 1.0;
 
-                if(transition.direction == "out")
-                    multiplier = 1.0 - multiplier;
+            if(transition.ease)
+                multiplier = (multiplier < 0.5)?(2 * multiplier * multiplier):(-1 + (4 - (2 * multiplier)) * multiplier);
 
-                switch(transition.type) {
-                    case "opacity": {
-                        this.style.opacity = multiplier;
+            if(transition.direction == "out")
+                multiplier = 1.0 - multiplier;
 
-                        break;
-                    }
+            switch(transition.type) {
+                case "opacity": {
+                    this.style.opacity = multiplier;
 
-                    case "bottom": {
-                        this.style.top = `${100 - (100 * multiplier)}%`;
+                    break;
+                }
 
-                        break;
-                    }
+                case "bottom": {
+                    this.style.top = `${100 - (100 * multiplier)}%`;
 
-                    case "left": {
-                        this.style.left = `${100 - (100 * multiplier)}%`;
+                    break;
+                }
 
-                        break;
-                    }
+                case "left": {
+                    this.style.left = `${100 - (100 * multiplier)}%`;
+
+                    break;
                 }
             }
         });
