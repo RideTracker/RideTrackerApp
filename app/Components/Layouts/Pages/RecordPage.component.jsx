@@ -6,8 +6,11 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import User from "app/Data/User";
 
 import ThemedComponent from "app/Components/ThemedComponent";
-import Header from "app/Components/Layouts/Header.component";
 import Button from "app/Components/Button.component";
+
+import Header from "app/Components/Layouts/Header.component";
+
+import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
 
 import Recorder from "app/Data/Recorder";
 import Appearance from "app/Data/Appearance";
@@ -104,9 +107,6 @@ export default class RecordPage extends ThemedComponent {
     };
 
     renderStats() {
-        if(User.guest)
-            return (<LoginPage onNavigate={(page) => this.props.onNavigate({ page })}/>);
-
         if(!this.recorder.active) {
             return (
                 <View style={style.sheet.stats}>
@@ -172,7 +172,7 @@ export default class RecordPage extends ThemedComponent {
         );
     };
 
-    render() { 
+    render() {
         return (
             <View style={style.sheet}>
                 <View>
