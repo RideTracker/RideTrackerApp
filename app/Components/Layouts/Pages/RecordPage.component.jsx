@@ -64,7 +64,7 @@ export default class RecordPage extends ThemedComponent {
 
         const result = await this.recorder.save();
 
-        Alert.alert(this.recorder.data.meta.id + ".json", result);
+        Alert.alert(this.recorder.data.meta.id + ".json", "Saved");
     };
 
     onDiscard() {
