@@ -25,4 +25,14 @@ export default class User {
 
         return true;
     };
+
+    static async logout() {
+        Config.user.token = null;
+        Config.saveAsync();
+
+        this.guest = true;
+        this.id = null;
+
+        await API.post("/api/user/logout", { token: Config.user.token });
+    };
 };

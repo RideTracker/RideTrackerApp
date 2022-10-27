@@ -57,6 +57,13 @@ export default class App extends Component {
     render() {
         if(!this.state?.page)
             return null;
+
+        if(User.guest) {
+            switch(this.state.page) {
+                case "/record":
+                    return (<LoginPage onNavigate={(page) => this.setState({ page })}/>);
+            }
+        }
         
         if(Platform.OS == "android") {
             NavigationBar.setBackgroundColorAsync(Appearance.theme.colorPalette.common);

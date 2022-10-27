@@ -3,9 +3,14 @@ import { Alert, TouchableOpacity, Text, View } from "react-native";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
+import User from "app/Data/User";
+
 import ThemedComponent from "app/Components/ThemedComponent";
-import Header from "app/Components/Layouts/Header.component";
 import Button from "app/Components/Button.component";
+
+import Header from "app/Components/Layouts/Header.component";
+
+import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
 
 import Recorder from "app/Data/Recorder";
 import Appearance from "app/Data/Appearance";
@@ -15,7 +20,7 @@ import style from "./RecordPage.component.style";
 export default class RecordPage extends ThemedComponent {
     style = style.update();
 
-    recorder = new Recorder(true);
+    recorder = new Recorder(!User.guest);
 
     constructor(...args) {
         super(...args);
@@ -59,7 +64,7 @@ export default class RecordPage extends ThemedComponent {
 
         const result = await this.recorder.save();
 
-        Alert.alert(this.recorder.data.meta.id + ".json", result);
+        Alert.alert(this.recorder.data.meta.id + ".json", "Saved");
     };
 
     onDiscard() {
@@ -167,7 +172,7 @@ export default class RecordPage extends ThemedComponent {
         );
     };
 
-    render() { 
+    render() {
         return (
             <View style={style.sheet}>
                 <View>

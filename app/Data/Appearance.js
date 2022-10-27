@@ -16,7 +16,7 @@ export default class Appearance {
     static readConfig() {
         this.systemThemeChanged = false;
         
-        let theme = Config.user?.theme || "dark";
+        let theme = Config.user?.theme || "dark-magenta";
 
         const newSystemTheme = ReactAppearance.getColorScheme();
 
