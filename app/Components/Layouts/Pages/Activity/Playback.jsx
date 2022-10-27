@@ -6,7 +6,7 @@ import * as NavigationBar from "expo-navigation-bar";
 
 import moment from "moment";
 
-import config from "root/config.json";
+import config from "app/../config.json";
 
 import API from "app/Services/API";
 
