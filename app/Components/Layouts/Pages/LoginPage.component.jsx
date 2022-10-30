@@ -94,8 +94,34 @@ export default class LoginPage extends ThemedComponent {
                 <View style={style.sheet.form}>
                     <Text style={style.sheet.header}>Ride Tracker</Text>
 
-                    <Input ref={this.email} style={style.sheet.form.input} placeholder="E-mail address" icon="envelope"/>
-                    <Input ref={this.password} style={style.sheet.form.input} placeholder="Password" icon="lock" secure/>
+                    <Input
+                        ref={this.email}
+                        style={style.sheet.form.input}
+                        placeholder="E-mail address"
+                        icon="envelope"
+                        autoComplete={"email"}
+                        clearTextOnFocus={true}
+                        clearButtonMode={"while-editing"}
+                        enablesReturnKeyAutomatically={true}
+                        keyboardType={"email-address"}
+                        autoCapitalize={"none"}
+                        returnKeyType={"next"}
+                        onSubmitEditing={() => this.password.current.focus()}
+                        />
+                    <Input
+                        ref={this.password}
+                        style={style.sheet.form.input}
+                        placeholder="Password"
+                        icon="lock"
+                        autoComplete={"password"}
+                        autoCorrect={false}
+                        clearButtonMode={"while-editing"}
+                        enablesReturnKeyAutomatically={true}
+                        autoCapitalize={"none"}
+                        returnKeyType={"send"}
+                        onSubmitEditing={() => this.onLoginPress()}
+                        secure
+                        />
 
                     <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in" onPress={() => this.onLoginPress()}/>
 

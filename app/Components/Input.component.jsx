@@ -39,7 +39,23 @@ export default class Input extends Component {
                     </View>
                 )}
 
-                <TextInput ref={this.input} onChangeText={(text) => this.onChangeText(text)} style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]} placeholder={this.props?.placeholder} placeholderTextColor={Appearance.theme.colorPalette.secondary} secureTextEntry={this.props?.secure}/>
+                <TextInput
+                    ref={this.input}
+                    onChangeText={(text) => this.onChangeText(text)}
+                    style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]}
+                    placeholder={this.props?.placeholder}
+                    placeholderTextColor={Appearance.theme.colorPalette.secondary}
+                    secureTextEntry={this.props?.secure}
+                    autoComplete={this.props?.autoComplete}
+                    autoCorrect={this.props?.autoCorrect}
+                    clearTextOnFocus={this.props?.clearTextOnFocus}
+                    clearButtonMode={this.props?.clearButtonMode}
+                    enablesReturnKeyAutomatically={this.props?.enablesReturnKeyAutomatically}
+                    keyboardType={this.props?.keyboardType}
+                    autoCapitalize={this.props?.autoCapitalize}
+                    returnKeyType={this.props?.returnKeyType}
+                    onSubmitEditing={this.props?.onSubmitEditing}
+                    />
             </View>
         );
     };
