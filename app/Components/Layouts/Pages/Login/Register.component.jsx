@@ -62,11 +62,31 @@ export default class Register extends Component {
 
                         <View style={[ style.sheet.form.input, style.sheet.form.multiInput ]}>
                             <View style={[ style.sheet.form.multiInput.input, { paddingRight: 6 } ]}>
-                                <Input ref={this.firstname} placeholder="Firstname"/>
+                                <Input
+                                    ref={this.firstname}
+                                    placeholder="Firstname"
+                                    autoComplete={"name-given"}
+                                    clearButtonMode={"while-editing"}
+                                    enablesReturnKeyAutomatically={true}
+                                    keyboardType={"default"}
+                                    autoCapitalize={"words"}
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={() => this.lastname.current.focus()}
+                                    />
                             </View>
 
                             <View style={[style.sheet.form.multiInput.input, { paddingLeft: 6 } ]}>
-                                <Input ref={this.lastname} placeholder="Lastname"/>
+                                <Input
+                                    ref={this.lastname}
+                                    placeholder="Lastname"
+                                    autoComplete={"name-family"}
+                                    clearButtonMode={"while-editing"}
+                                    enablesReturnKeyAutomatically={true}
+                                    keyboardType={"default"}
+                                    autoCapitalize={"words"}
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={() => this.email.current.focus()}
+                                    />
                             </View>
                         </View>
                     </View>
@@ -77,7 +97,18 @@ export default class Register extends Component {
                         <Text style={[ style.sheet.form.input, style.sheet.form.text ]}>What's your e-mail address?</Text>
                         <Text style={[ style.sheet.form.input, style.sheet.form.description ]}>You will use this to login but we won't show it to other users!</Text>
 
-                        <Input ref={this.email} style={style.sheet.form.input} placeholder="E-mail address"/>
+                        <Input
+                            ref={this.email}
+                            style={style.sheet.form.input}
+                            placeholder="E-mail address"
+                            autoComplete={"email"}
+                            clearButtonMode={"while-editing"}
+                            enablesReturnKeyAutomatically={true}
+                            keyboardType={"email-address"}
+                            autoCapitalize={"none"}
+                            returnKeyType={"next"}
+                            onSubmitEditing={() => this.password.current.focus()}
+                            />
                     </View>
 
                     <View style={style.sheet.form.divider}/>
@@ -86,7 +117,20 @@ export default class Register extends Component {
                         <Text style={[ style.sheet.form.input, style.sheet.form.text ]}>Choose your password:</Text>
                         <Text style={[ style.sheet.form.input, style.sheet.form.description ]}>You can skip having a password by using one of our other login options, such as Apple or Google login!</Text>
 
-                        <Input ref={this.password} style={style.sheet.form.input} placeholder="Password" secure/>
+                        <Input
+                            ref={this.password}
+                            style={style.sheet.form.input}
+                            placeholder="Password"
+                            autoComplete={"password"}
+                            autoCorrect={false}
+                            clearTextOnFocus={true}
+                            clearButtonMode={"while-editing"}
+                            enablesReturnKeyAutomatically={true}
+                            autoCapitalize={"none"}
+                            returnKeyType={"send"}
+                            onSubmitEditing={() => this.onRegistration()}
+                            secure
+                            />
                     </View>
                 </ScrollView>
 

@@ -100,7 +100,6 @@ export default class LoginPage extends ThemedComponent {
                         placeholder="E-mail address"
                         icon="envelope"
                         autoComplete={"email"}
-                        clearTextOnFocus={true}
                         clearButtonMode={"while-editing"}
                         enablesReturnKeyAutomatically={true}
                         keyboardType={"email-address"}
@@ -115,6 +114,7 @@ export default class LoginPage extends ThemedComponent {
                         icon="lock"
                         autoComplete={"password"}
                         autoCorrect={false}
+                        clearTextOnFocus={true}
                         clearButtonMode={"while-editing"}
                         enablesReturnKeyAutomatically={true}
                         autoCapitalize={"none"}
