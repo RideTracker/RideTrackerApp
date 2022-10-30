@@ -103,7 +103,6 @@ export default class ActivityCompactStyle {
                 paddingLeft: 80,
 
                 item: {
-
                     justifyContent: "space-between",
                     alignItems: "center",
 
