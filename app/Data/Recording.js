@@ -79,6 +79,51 @@ export default class Recording {
         return Math.round(averageKilometersPerHour * 10) / 10;
     };
 
+    getSectionCoordinateSpeed(sectionIndex, coordinateIndex) {
+        const section = this.data.sections[sectionIndex];
+        const coordinate = section.coordinates[coordinateIndex];
+
+        const kilometersPerHour = coordinate.coords.speed * 3.6;
+
+        return Math.round(kilometersPerHour * 10) / 10;
+    };
+
+    getSectionCoordinateDistance(sectionIndex, coordinateIndex) {
+        let distance = 0;
+
+        for(let index = 0; index <= sectionIndex; index++) {
+            const section = this.data.sections[index];
+
+            for(let coordinate = 0; coordinate < section.coordinates.length - 1; coordinate++) {
+                if(sectionIndex == index && coordinateIndex == coordinate)
+                    break;
+                
+                const accuracy = [
+                    section.coordinates[coordinate].coords.accuracy,
+                    section.coordinates[coordinate + 1].coords.accuracy
+                ];
+
+                distance += getPreciseDistance(
+                    {
+                        latitude: section.coordinates[coordinate].coords.latitude,
+                        longitude: section.coordinates[coordinate].coords.longitude
+                    },
+
+                    {
+                        latitude: section.coordinates[coordinate + 1].coords.latitude,
+                        longitude: section.coordinates[coordinate + 1].coords.longitude
+                    },
+
+                    accuracy.reduce((a, b) => (a + b)) / accuracy.length
+                );
+            }
+        }
+
+        const kilometers = distance / 1000;
+
+        return Math.round(kilometers * 10) / 10;
+    };
+
     getDistance() {
         const coordinates = this.getAllCoordinates(true);
 

@@ -57,12 +57,14 @@ export default class ActivityPlayback extends Component {
             }
         ]);
 
-        NavigationBar.setBehaviorAsync("overlay-swipe");
-        NavigationBar.setBackgroundColorAsync("transparent");
-        NavigationBar.setPositionAsync("absolute");
     };
 
-    onReady() {
+    onMessage(event) {
+        const content = JSON.parse(event.nativeEvent.data);
+
+        this.setState({
+            frame: content
+        });
     };
 
     render() {
@@ -80,10 +82,31 @@ export default class ActivityPlayback extends Component {
                     ref={this.webView}
                     style={style.sheet.map}
                     onLoad={() => this.onLoad()}
+                    onMessage={(event) => this.onMessage(event)}
                     source={{
-                        uri: `${config.api}/playback/index.html?activity=${this.props.activity}`
+                        uri: `${config.api}/playback/index.html?activity=${this.props.activity}&color=${Appearance.theme.colorPalette.route.replace('#', '')}&background=${Appearance.theme.colorPalette.background.replace('#', '')}`
                     }}
                     />
+
+                {this.state?.frame && (
+                    <View style={style.sheet.overlay}>
+                        <View style={style.sheet.overlay.stats}>
+                            <View style={style.sheet.overlay.stats.item}>
+                                <Text style={style.sheet.overlay.stats.item.title}>{this.state.recording.getSectionCoordinateSpeed(this.state.frame.section, this.state.frame.coordinate)}
+                                    <Text style={style.sheet.overlay.stats.item.unit}> km/h</Text>
+                                </Text>
+                                <Text style={style.sheet.overlay.stats.item.description}>speed</Text>
+                            </View>
+                            
+                            <View style={style.sheet.overlay.stats.item}>
+                                <Text style={style.sheet.overlay.stats.item.title}>{this.state.recording.getSectionCoordinateDistance(this.state.frame.section, this.state.frame.coordinate)}
+                                    <Text style={style.sheet.overlay.stats.item.unit}> km</Text>
+                                </Text>
+                                <Text style={style.sheet.overlay.stats.item.description}>distance</Text>
+                            </View>
+                        </View>
+                    </View>
+                )}
 
             </Animation>
         );
