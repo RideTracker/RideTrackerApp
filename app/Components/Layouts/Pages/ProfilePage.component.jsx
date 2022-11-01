@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, Text } from "react-native";
+import { View, ScrollView, Image, Text, TouchableHighlightBase } from "react-native";
 
 import API from "app/Services/API";
 
@@ -12,6 +12,7 @@ import Header from "app/Components/Layouts/Header.component";
 import Footer from "app/Components/Layouts/Footer.component";
 
 import style from "./ProfilePage.component.style";
+import LoginPage from "./LoginPage.component";
 
 export default class ProfilePage extends Component {
     style = style.update();
@@ -19,9 +20,11 @@ export default class ProfilePage extends Component {
     componentDidMount() {
         this.user = (this.props.user)?(this.props.user):(User.id);
 
-        API.get("/api/profile/activity", { user: this.user }).then((data) => {
-            this.setState({ activity: data.content });
-        });
+        if(this.user) {
+            API.get("/api/profile/activity", { user: this.user }).then((data) => {
+                this.setState({ activity: data.content });
+            });
+        }
     };
 
     async onLogoutPress() {
@@ -31,6 +34,9 @@ export default class ProfilePage extends Component {
     };
 
     render() { 
+        if(!this.user)
+            return (<LoginPage onNavigate={(page) => this.props?.onNavigate({ page })}/>);
+
         return (
             <View style={style.sheet}>
                 <Header
