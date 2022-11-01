@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { View, ScrollView, Image, Text } from "react-native";
 
+import API from "app/Services/API";
+
 import User from "app/Data/User";
+
+import Activity from "app/Components/Activity.component";
+import ActivityCompact from "app/Components/ActivityCompact.component";
 
 import Header from "app/Components/Layouts/Header.component";
 import Footer from "app/Components/Layouts/Footer.component";
@@ -10,6 +15,14 @@ import style from "./ProfilePage.component.style";
 
 export default class ProfilePage extends Component {
     style = style.update();
+
+    componentDidMount() {
+        this.user = (this.props.user)?(this.props.user):(User.id);
+
+        API.get("/api/profile/activity", { user: this.user }).then((data) => {
+            this.setState({ activity: data.content });
+        });
+    };
 
     async onLogoutPress() {
         await User.logout();
@@ -39,9 +52,21 @@ export default class ProfilePage extends Component {
                     <Text style={[ style.sheet.profile.item, style.sheet.profile.title ]}>Nora Söderlund</Text>
 
                     <Text style={[ style.sheet.profile.item, style.sheet.profile.follow ]}>FOLLOW</Text>
+
+                    <View style={style.sheet.section}>
+                        <Text style={[ style.sheet.profile.item, style.sheet.section.title ]}>Latest Activity</Text>
+
+                        {this.state?.activity && (
+                            <ActivityCompact id={this.state.activity.latest} onPress={(id) => this.setState({ activity: id })}/>
+                        )}
+                    </View>
                 </ScrollView>
                 
                 <Footer onNavigate={(path) => this.props.onNavigate(path)}/>
+
+                {this.state?.showActivity && (
+                    <Activity id={this.state.showActivity} onClose={() => this.setState({ activity: null })}/>
+                )}
             </View>
         );
     }

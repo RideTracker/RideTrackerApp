@@ -46,6 +46,22 @@ export default class ProfilePageStyle {
                     paddingTop: 6,
                     paddingBottom: 6,
                 }
+            },
+
+            section: {
+                paddingVertical: 6,
+
+                item: {
+                    paddingVertical: 6,
+                    paddingHorizontal: 12,
+                },
+
+                title: {
+                    color: Appearance.theme.colorPalette.secondary,
+                    paddingHorizontal: 12,
+
+                    fontSize: 22
+                },
             }
         });
 
