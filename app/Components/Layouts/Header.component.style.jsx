@@ -11,12 +11,9 @@ export default class HeaderStyle {
 
             position: "relative",
 
-            backgroundColor: Appearance.theme.colorPalette.common,
-
             paddingTop: Constants.statusBarHeight,
             
             borderBottomWidth: 1,
-            borderBottomColor: Appearance.theme.colorPalette.border,
 
             branded: {
                 backgroundColor: Appearance.theme.colorPalette.route,
@@ -31,9 +28,14 @@ export default class HeaderStyle {
                 }
             },
 
+            normal: {
+                backgroundColor: Appearance.theme.colorPalette.common,
+                borderBottomColor: Appearance.theme.colorPalette.border
+            },
+
             transparent: {
                 backgroundColor: "transparent",
-                borderBottomWidth: 0
+                borderBottomColor: "transparent"
             },
 
             feed: {

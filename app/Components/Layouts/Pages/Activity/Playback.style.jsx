@@ -15,6 +15,16 @@ export default class {
             
             backgroundColor: Appearance.theme.colorPalette.primary,
 
+            header: {
+                position: "absolute",
+    
+                width: "100%",
+                height: "100%",
+    
+                left: 0,
+                top: 0
+            },
+
             map: {
                 backgroundColor: Appearance.theme.colorPalette.primary,
                 
@@ -36,6 +46,10 @@ export default class {
                 bottom: 0,
 
                 flexDirection: "column",
+
+                graph: {
+                    marginVertical: 12,
+                },
 
                 stats: {
                     width: "100%",

@@ -29,6 +29,7 @@ export default class ActivityPlayback extends Component {
         
         this.animation = React.createRef();
         this.webView = React.createRef();
+        this.canvasWebView = React.createRef();
     };
 
     componentDidMount() {
@@ -107,12 +108,11 @@ export default class ActivityPlayback extends Component {
         }
     };
 
-    async onCanvasLoad(canvasWebView) {
-        this.canvasWebView = canvasWebView;
+    async onCanvasLoad() {
         this.pixelRatio = PixelRatio.get();
 
-        this.canvas = await canvasWebView.createCanvas();
-        this.path = await canvasWebView.createPath2D();
+        this.canvas = await this.canvasWebView.current.createCanvas();
+        this.path = await this.canvasWebView.current.createPath2D();
 
         this.width = Dimensions.get("window").width;
         this.height = 120;
@@ -146,12 +146,15 @@ export default class ActivityPlayback extends Component {
 
         this.widthPerPoint = this.width / this.points;
 
-        this.canvasWebView.requestAnimationFrame(() => this.onCanvasRender());
+        this.canvasWebView.current.requestAnimationFrame(() => this.onCanvasRender());
     };
 
     async onCanvasRender() {
+        if(!this.canvasWebView.current)
+            return this.canvasWebView.current.requestAnimationFrame(() => this.onCanvasRender());
+
         if(!this.state.frame)
-            return this.canvasWebView.requestAnimationFrame(() => this.onCanvasRender());
+            return this.canvasWebView.current.requestAnimationFrame(() => this.onCanvasRender());
 
         const context = await this.canvas.getContext("2d");
 
@@ -183,7 +186,7 @@ export default class ActivityPlayback extends Component {
 
         context.executeBundle();
 
-        return this.canvasWebView.requestAnimationFrame(() => this.onCanvasRender());
+        return this.canvasWebView.current.requestAnimationFrame(() => this.onCanvasRender());
     };
 
     render() {
@@ -196,13 +199,6 @@ export default class ActivityPlayback extends Component {
                 enabled={this.state?.ready}
                 style={style.sheet}
                 >
-                <Header
-                    title="Playback"
-                    transparent={true}
-                    navigation="true"
-                    onNavigationPress={() => this.onClose()}
-                    />
-
                 <WebView
                     ref={this.webView}
                     style={style.sheet.map}
@@ -211,6 +207,14 @@ export default class ActivityPlayback extends Component {
                     source={{
                         uri: `${config.api}/playback/index.html?activity=${this.props.activity}&color=${Appearance.theme.colorPalette.route.replace('#', '')}&background=${Appearance.theme.colorPalette.background.replace('#', '')}`
                     }}
+                    />
+
+                <Header
+                    title="Playback"
+                    transparent={true}
+                    navigation="true"
+                    onNavigationPress={() => this.onClose()}
+                    style={style.sheet.header}
                     />
 
                 {this.state?.frame && (
@@ -239,8 +243,10 @@ export default class ActivityPlayback extends Component {
                         </View>
 
                         <CanvasWebView
+                            ref={this.canvasWebView}
                             height={120}
                             width={Dimensions.get("window").width}
+                            style={style.sheet.graph}
                             onLoad={(canvasWebView) => this.onCanvasLoad(canvasWebView)}
                             />
                     </View>
