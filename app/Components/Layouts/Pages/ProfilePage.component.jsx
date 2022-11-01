@@ -35,7 +35,7 @@ export default class ProfilePage extends Component {
 
     render() { 
         if(!this.user)
-            return (<LoginPage onNavigate={(page) => this.props?.onNavigate({ page })}/>);
+            return (<LoginPage onNavigate={(page) => this.props?.onNavigate(page)}/>);
 
         return (
             <View style={style.sheet}>
