@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Image, RefreshControl } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Image, RefreshControl, PixelRatio, Dimensions } from "react-native";
 import WebView from "react-native-webview";
+import CanvasWebView from "react-native-webview-canvas";
 
 import * as NavigationBar from "expo-navigation-bar";
 
@@ -15,6 +16,8 @@ import Cache from "app/Data/Cache";
 import Recording from "app/Data/Recording";
 
 import Animation from "app/Components/Animation.component";
+
+import Header from "app/Components/Layouts/Header.component";
 
 import style from "./Playback.style";
 
@@ -62,9 +65,88 @@ export default class ActivityPlayback extends Component {
     onMessage(event) {
         const content = JSON.parse(event.nativeEvent.data);
 
-        this.setState({
-            frame: content
+        this.setState({ frame: content });
+    };
+
+    async onCanvasLoad(canvasWebView) {
+        this.canvasWebView = canvasWebView;
+        this.pixelRatio = PixelRatio.get();
+
+        this.canvas = await canvasWebView.createCanvas();
+        this.path = await canvasWebView.createPath2D();
+
+        this.width = Dimensions.get("window").width;
+        this.height = 120;
+
+        this.canvas.height = 120 * this.pixelRatio;
+        this.canvas.width = this.width * this.pixelRatio;
+
+        const context = await this.canvas.getContext("2d");
+
+        this.points = 0;
+        this.sectionPoints = [];
+
+        this.maxAltitude = null;
+        this.minAltitude = null;
+
+        this.state.recording.data.sections.forEach((section) => {
+            this.points += section.coordinates.length;
+
+            this.sectionPoints.push(section.coordinates.length);
+
+            section.coordinates.forEach((coordinate) => {
+                if(coordinate.coords.altitude < this.minAltitude || this.minAltitude == null)
+                    this.minAltitude = coordinate.coords.altitude;
+
+                if(coordinate.coords.altitude > this.maxAltitude || this.maxAltitude == null)
+                    this.maxAltitude = coordinate.coords.altitude;
+            });
         });
+
+        this.altitudeRange = this.maxAltitude - this.minAltitude;
+
+        this.heightPerAltitude = this.height / this.altitudeRange;
+
+        this.widthPerPoint = this.width / this.points;
+
+        this.canvasWebView.requestAnimationFrame(() => this.onCanvasRender());
+    };
+
+    async onCanvasRender() {
+        if(!this.state.frame)
+            return this.canvasWebView.requestAnimationFrame(() => this.onCanvasRender());
+
+        const context = await this.canvas.getContext("2d");
+
+        let point = 0;
+
+        for(let index = 0; index <= this.state.frame.section; index++) {
+            if(index == this.state.frame.section) {
+                point += this.state.frame.coordinate;
+
+                break;
+            }
+
+            point += this.sectionPoints[index];
+        }
+        
+        context.startBundle();
+
+        const altitude = this.state.recording.data.sections[this.state.frame.section].coordinates[this.state.frame.coordinate].coords.altitude - this.minAltitude;
+
+        const left = point * this.widthPerPoint * this.pixelRatio;
+        const top = (this.height - (altitude * this.heightPerAltitude)) * this.pixelRatio;
+
+        this.path.lineTo(left, top);
+        
+        context.globalAlpha = 1;
+        context.lineWidth = this.pixelRatio;
+        context.strokeStyle = Appearance.theme.colorPalette.route;
+        context.stroke(this.path);
+
+        context.executeBundle();
+
+        return this.canvasWebView.requestAnimationFrame(() => this.onCanvasRender());
     };
 
     render() {
@@ -77,6 +159,12 @@ export default class ActivityPlayback extends Component {
                 enabled={this.state?.ready}
                 style={style.sheet}
                 >
+                <Header
+                    title="Playback"
+                    transparent={true}
+                    navigation="true"
+                    onNavigationPress={() => this.onClose()}
+                    />
 
                 <WebView
                     ref={this.webView}
@@ -104,7 +192,20 @@ export default class ActivityPlayback extends Component {
                                 </Text>
                                 <Text style={style.sheet.overlay.stats.item.description}>distance</Text>
                             </View>
+                            
+                            <View style={style.sheet.overlay.stats.item}>
+                                <Text style={style.sheet.overlay.stats.item.title}>{this.state.recording.getSectionCoordinateElevation(this.state.frame.section, this.state.frame.coordinate)}
+                                    <Text style={style.sheet.overlay.stats.item.unit}> m</Text>
+                                </Text>
+                                <Text style={style.sheet.overlay.stats.item.description}>elevation</Text>
+                            </View>
                         </View>
+
+                        <CanvasWebView
+                            height={120}
+                            width={Dimensions.get("window").width}
+                            onLoad={(canvasWebView) => this.onCanvasLoad(canvasWebView)}
+                            />
                     </View>
                 )}
 

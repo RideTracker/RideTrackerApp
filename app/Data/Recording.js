@@ -124,6 +124,32 @@ export default class Recording {
         return Math.round(kilometers * 10) / 10;
     };
 
+    getSectionCoordinateElevation(sectionIndex, coordinateIndex) {
+        const coordinates = [];
+        
+        for(let index = 0; index <= sectionIndex; index++) {
+            if(sectionIndex == index) {
+                for(let coordinate = 0; coordinate <= coordinateIndex; coordinate++)
+                    coordinates.push(this.data.sections[index].coordinates[coordinate].coords);
+            }
+            else {
+                for(let coordinate = 0; coordinate <= this.data.sections[index].coordinates.length; coordinate++)
+                    coordinates.push(this.data.sections[index].coordinates[coordinate].coords);
+            }
+        }
+        
+        let elevation = 0;
+
+        for(let index = 0; index < coordinates.length - 1; index++) {
+            const altitude = (coordinates[index + 1].altitude - coordinates[index].altitude) / coordinates[index].altitudeAccuracy;
+
+            if(altitude >= 0) // we only want the gained elevation
+                elevation += altitude;
+        }
+        
+        return Math.round(elevation);
+    };
+
     getDistance() {
         const coordinates = this.getAllCoordinates(true);
 

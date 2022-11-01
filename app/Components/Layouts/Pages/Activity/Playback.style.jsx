@@ -28,25 +28,24 @@ export default class {
             },
 
             overlay: {
-                
                 position: "absolute",
     
                 width: "100%",
-                height: "100%",
     
                 left: 0,
-                top: 0,
+                bottom: 0,
+
+                flexDirection: "column",
 
                 stats: {
-                    position: "absolute",
-                    bottom: 50,
-
                     width: "100%",
 
-                    flex: 2,
+                    flex: 1,
                     flexDirection: "row",
                     flexWrap: "wrap",
                     justifyContent: "space-evenly",
+
+                    marginVertical: 12,
 
                     item: {
                         width: "30%",

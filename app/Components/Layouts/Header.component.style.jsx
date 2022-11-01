@@ -31,6 +31,11 @@ export default class HeaderStyle {
                 }
             },
 
+            transparent: {
+                backgroundColor: "transparent",
+                borderBottomWidth: 0
+            },
+
             feed: {
                 color: Appearance.theme.colorPalette.secondary,
 

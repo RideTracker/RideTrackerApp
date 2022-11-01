@@ -12,7 +12,7 @@ export default class Header extends ThemedComponent {
 
     render() { 
         return (
-            <View style={[style.sheet, this.props?.branded && style.sheet.branded ]} theme={this.state?.theme}>
+            <View style={[style.sheet, this.props?.branded && style.sheet.branded, this.props?.transparent && style.sheet.transparent ]} theme={this.state?.theme}>
                 <Text style={style.sheet.feed}>{this.props.title}</Text>
 
                 {this.props?.wavy && (
