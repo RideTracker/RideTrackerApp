@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, Text, TouchableHighlightBase } from "react-native";
+import { View, ScrollView, Image, Text, TouchableOpacity } from "react-native";
 
 import API from "app/Services/API";
 
@@ -21,8 +21,8 @@ export default class ProfilePage extends Component {
         this.user = (this.props.user)?(this.props.user):(User.id);
 
         if(this.user) {
-            API.get("/api/profile/activity", { user: this.user }).then((data) => {
-                this.setState({ activity: data.content });
+            API.get("/api/profile/activities", { user: this.user }).then((data) => {
+                this.setState({ activities: data.content });
             });
         }
     };
@@ -39,11 +39,17 @@ export default class ProfilePage extends Component {
 
         return (
             <View style={style.sheet}>
-                <Header
-                    title="Profile"
-                    button="sign-out-alt"
-                    onButtonPress={() => this.onLogoutPress()}
-                    />
+                { (this.user == User.id) ?
+                    (<Header
+                        transparent
+                        button="sign-out-alt"
+                        onButtonPress={() => this.onLogoutPress()}
+                        />)
+                    :
+                    (<Header
+                        title="Profile"
+                        />)
+                }
 
                 <ScrollView>
                     <View style={[ style.sheet.profile.item, style.sheet.profile.avatar ]}>
@@ -59,13 +65,21 @@ export default class ProfilePage extends Component {
 
                     <Text style={[ style.sheet.profile.item, style.sheet.profile.follow ]}>FOLLOW</Text>
 
-                    <View style={style.sheet.section}>
-                        <Text style={[ style.sheet.profile.item, style.sheet.section.title ]}>Latest Activity</Text>
-
-                        {this.state?.activity && (
-                            <ActivityCompact id={this.state.activity.latest} onPress={(id) => this.setState({ activity: id })}/>
-                        )}
+                    <View style={style.sheet.tabs}>
+                        <TouchableOpacity style={[ style.sheet.tabs.tab, style.sheet.tabs.tab.active ]}>
+                            <Text style={style.sheet.tabs.tab.text}>Activities</Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity style={style.sheet.tabs.tab}>
+                            <Text style={style.sheet.tabs.tab.text}>Bikes</Text>
+                        </TouchableOpacity>
                     </View>
+
+                    <ScrollView>
+                        {this.state?.activities && this.state.activities.map((id) => 
+                            (<ActivityCompact id={id} key={id} showAuthor={false} onPress={(id) => this.setState({ activity: id })}/>)
+                        )}
+                    </ScrollView>
                 </ScrollView>
                 
                 <Footer onNavigate={(path) => this.props.onNavigate(path)}/>

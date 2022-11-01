@@ -48,6 +48,25 @@ export default class ProfilePageStyle {
                 }
             },
 
+            tabs: {
+                flexDirection: "row",
+
+                tab: {
+                    text: {
+                        color: Appearance.theme.colorPalette.secondary,
+                        paddingHorizontal: 12,
+                        paddingVertical: 6,
+    
+                        fontSize: 18
+                    },
+
+                    active: {
+                        borderBottomWidth: 2,
+                        borderBottomColor: Appearance.theme.colorPalette.route
+                    }
+                }
+            },
+
             section: {
                 paddingVertical: 6,
 

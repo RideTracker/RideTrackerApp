@@ -15,7 +15,7 @@ export default class Header extends ThemedComponent {
 
         return (
             <View style={[style.sheet, this.props?.branded && style.sheet.branded, colorStyle, this.props?.style ]} theme={this.state?.theme}>
-                <Text style={style.sheet.feed}>{this.props.title}</Text>
+                { this.props?.title && (<Text style={style.sheet.feed}>{this.props.title}</Text>)}
 
                 {this.props?.wavy && (
                     <Svg style={style.sheet.branded.wave} width="100%" viewBox="0 0 1440 320">

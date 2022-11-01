@@ -58,7 +58,7 @@ export default class ActivityCompact extends ThemedComponent {
         }
 
         return (
-            <View style={style.sheet}>
+            <View style={[ style.sheet, this.props?.style ]}>
                 <View style={style.sheet.map}>
                     <MapView
                         ref={this.mapView}
@@ -106,19 +106,21 @@ export default class ActivityCompact extends ThemedComponent {
                     </View>
                 </View>
 
-                <View style={style.sheet.user}>
-                    <View>
-                        <Image
-                            style={style.sheet.user.image}
-                            source={require("./../../assets/temp.jpg")}
-                        />
-                    </View>
+                {this.props?.showAuthor !== false && (
+                    <View style={style.sheet.user}>
+                        <View>
+                            <Image
+                                style={style.sheet.user.image}
+                                source={require("./../../assets/temp.jpg")}
+                            />
+                        </View>
 
-                    <View style={style.sheet.user.texts}>
-                        <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
-                        <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
+                        <View style={style.sheet.user.texts}>
+                            <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
+                            <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
+                        </View>
                     </View>
-                </View>
+                )}
 
                 <TouchableOpacity
                     useOpacity={0}
