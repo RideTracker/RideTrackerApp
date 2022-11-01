@@ -18,6 +18,30 @@ export default class ProfilePage extends Component {
     style = style.update();
 
     componentDidMount() {
+        this.tab = "activities";
+
+        this.tabs = [
+            {
+                key: "activities",
+                title: "Activities",
+                
+                render: () => {
+                    return this.state.activities.map((id) => 
+                        (<ActivityCompact id={id} key={id} showAuthor={false} onPress={(id) => this.setState({ activity: id })}/>)
+                    );
+                }
+            },
+            
+            {
+                key: "bikes",
+                title: "Bikes",
+                
+                render: () => {
+                    return (null);
+                }
+            }
+        ];
+
         this.user = (this.props.user)?(this.props.user):(User.id);
 
         if(this.user) {
@@ -66,19 +90,15 @@ export default class ProfilePage extends Component {
                     <Text style={[ style.sheet.profile.item, style.sheet.profile.follow ]}>FOLLOW</Text>
 
                     <View style={style.sheet.tabs}>
-                        <TouchableOpacity style={[ style.sheet.tabs.tab, style.sheet.tabs.tab.active ]}>
-                            <Text style={style.sheet.tabs.tab.text}>Activities</Text>
-                        </TouchableOpacity>
-                        
-                        <TouchableOpacity style={style.sheet.tabs.tab}>
-                            <Text style={style.sheet.tabs.tab.text}>Bikes</Text>
-                        </TouchableOpacity>
+                        {this.tabs.map((tab) => (
+                            <TouchableOpacity key={tab.key} style={[ style.sheet.tabs.tab, (this.tab == tab.key) && style.sheet.tabs.tab.active ]}>
+                                <Text style={style.sheet.tabs.tab.text}>{tab.title}</Text>
+                            </TouchableOpacity>
+                        ))}
                     </View>
 
                     <ScrollView>
-                        {this.state?.activities && this.state.activities.map((id) => 
-                            (<ActivityCompact id={id} key={id} showAuthor={false} onPress={(id) => this.setState({ activity: id })}/>)
-                        )}
+                        {this.tabs.find(tab => tab.key == this.tab)?.render()}
                     </ScrollView>
                 </ScrollView>
                 
