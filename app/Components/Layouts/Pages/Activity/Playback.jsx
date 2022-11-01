@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Image, RefreshControl, PixelRatio, Dimensions } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Image, RefreshControl, PixelRatio, Dimensions, TouchableOpacityBase, TouchableHighlightBase } from "react-native";
 import WebView from "react-native-webview";
 import CanvasWebView from "react-native-webview-canvas";
 
@@ -59,13 +59,52 @@ export default class ActivityPlayback extends Component {
                 ease: true
             }
         ]);
+    };
 
+    postEvent(event) {
+        this.webView.current.injectJavaScript(`map.${event}().then(() => window.ReactNativeWebView.postMessage(JSON.stringify({ event: "${event}" })))`);
     };
 
     onMessage(event) {
         const content = JSON.parse(event.nativeEvent.data);
 
-        this.setState({ frame: content });
+        switch(content.events) {
+            case "ready": {
+                this.postEvent("fitMapToBoundsAsync");
+
+                break;
+            }
+
+            case "fitMapToBoundsAsync": {
+                setTimeout(() => this.postEvent("focusMapToStartAsync"), 2000);
+
+                break;
+            }
+
+            case "focusMapToStartAsync": {
+                setTimeout(() => this.postEvent("zoomMapToStartAsync"), 1000);
+
+                break;
+            }
+
+            case "zoomMapToStartAsync": {
+                setTimeout(() => this.postEvent("playback"), 2000);
+
+                break;
+            }
+
+            case "playback": {
+                this.onClose();
+
+                break;
+            }
+
+            case "frame": {
+                this.setState({ frame: content });
+
+                break;
+            }
+        }
     };
 
     async onCanvasLoad(canvasWebView) {
@@ -80,8 +119,6 @@ export default class ActivityPlayback extends Component {
 
         this.canvas.height = 120 * this.pixelRatio;
         this.canvas.width = this.width * this.pixelRatio;
-
-        const context = await this.canvas.getContext("2d");
 
         this.points = 0;
         this.sectionPoints = [];
