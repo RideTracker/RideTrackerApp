@@ -62,13 +62,13 @@ export default class ActivityPlayback extends Component {
     };
 
     postEvent(event) {
-        this.webView.current.injectJavaScript(`map.${event}().then(() => window.ReactNativeWebView.postMessage(JSON.stringify({ event: "${event}" })))`);
+        this.webView.current.injectJavaScript(`window.playback.${event}().then(() => window.ReactNativeWebView.postMessage(JSON.stringify({ event: "${event}" })))`);
     };
 
     onMessage(event) {
         const content = JSON.parse(event.nativeEvent.data);
 
-        switch(content.events) {
+        switch(content.event) {
             case "ready": {
                 this.postEvent("fitMapToBoundsAsync");
 
