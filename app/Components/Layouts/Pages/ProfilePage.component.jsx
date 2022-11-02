@@ -32,7 +32,7 @@ export default class ProfilePage extends Component {
                 title: "Activities",
                 
                 render: () => {
-                    return this.state.activities.map((id) => 
+                    return this.state?.activities?.map((id) => 
                         (<ActivityCompact id={id} key={id} showAuthor={false} onPress={(id) => this.showActivity(id)}/>)
                     );
                 }
@@ -57,6 +57,9 @@ export default class ProfilePage extends Component {
                 this.setState({ activities: data.content });
             });
         }
+        else { 
+            const modal = this.props.showModal(<LoginPage onNavigate={(path) => this.props.onNavigate(path)} onClose={() => this.hideModal(modal)}/>);
+        }
     };
 
     async onLogoutPress() {
@@ -66,18 +69,19 @@ export default class ProfilePage extends Component {
     };
 
     showActivity(activity) {
-        this.props.showModal(<Activity id={activity} onClose={() => this.setState({ activity: null })}/>);
+        const modal = this.props.showModal(<Activity id={activity} onClose={() => this.hideModal(modal)}/>);
+    };
+
+    hideModal(modal) {
+        this.props.hideModal(modal);
     };
 
     render() { 
-        if(!this.user)
-            return (<LoginPage onNavigate={(page) => this.props?.onNavigate(page)}/>);
-
         return (
             <View style={style.sheet}>
                 { (this.user == User.id) ?
                     (<Header
-                        transparent
+                        title="Profile"
                         button="sign-out-alt"
                         onButtonPress={() => this.onLogoutPress()}
                         />)

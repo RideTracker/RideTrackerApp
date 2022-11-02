@@ -32,12 +32,18 @@ export default class App extends Component {
         return key;
     };
 
+    hideModal(key) {
+        const modals = this.state.modals.filter((modal) => modal.key != key);
+
+        this.setState({ modals });
+    };
+
     pages = {
-        "/index": (<LandingPage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/record": (<RecordPage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/profile": (<ProfilePage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/settings": (<SettingsPage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/login": (<LoginPage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>)
+        "/index": (<LandingPage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/record": (<RecordPage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/profile": (<ProfilePage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/settings": (<SettingsPage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/login": (<LoginPage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>)
     };
 
     async componentDidMount() {

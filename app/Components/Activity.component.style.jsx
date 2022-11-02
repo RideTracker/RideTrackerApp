@@ -13,6 +13,8 @@ export default class RecordPageStyle {
             left: 0,
             top: 0,
 
+            backgroundColor: Appearance.theme.colorPalette.background,
+
             section: {
                 backgroundColor: Appearance.theme.colorPalette.primary,
                 
