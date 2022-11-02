@@ -10,6 +10,9 @@ import User from "app/Data/User";
 import Activity from "app/Components/Activity.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
 
+import Bike from "app/Components/Bike.component";
+import BikeCompact from "app/Components/BikeCompact.component";
+
 import Header from "app/Components/Layouts/Header.component";
 import Footer from "app/Components/Layouts/Footer.component";
 
@@ -43,7 +46,9 @@ export default class ProfilePage extends Component {
                 title: "Bikes",
                 
                 render: () => {
-                    return (null);
+                    return this.state?.bikes?.map((id) => 
+                        (<BikeCompact id={id} key={id} onPress={(id) => this.showBike(id)}/>)
+                    );
                 }
             }
         ];
@@ -60,6 +65,10 @@ export default class ProfilePage extends Component {
             API.get("/api/profile/activities", { user: this.user }).then((data) => {
                 this.setState({ activities: data.content });
             });
+
+            API.get("/api/user/bikes", { user: this.user }).then((data) => {
+                this.setState({ bikes: data.content });
+            });
         }
         else { 
             const modal = this.props.showModal(<LoginPage onNavigate={(path) => this.props.onNavigate(path)} onClose={() => this.hideModal(modal)}/>);
@@ -74,6 +83,10 @@ export default class ProfilePage extends Component {
 
     showActivity(activity) {
         const modal = this.props.showModal(<Activity id={activity} onClose={() => this.hideModal(modal)}/>);
+    };
+
+    showBike(bike) {
+        const modal = this.props.showModal(<Bike id={bike} onClose={() => this.hideModal(modal)}/>);
     };
 
     hideModal(modal) {
