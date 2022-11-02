@@ -13,6 +13,8 @@ import Config from "app/Data/Config";
 import User from "app/Data/User";
 import Appearance from "app/Data/Appearance";
 
+import Footer from "app/Components/Layouts/Footer.component";
+
 import LandingPage from "app/Components/Layouts/Pages/LandingPage.component";
 import RecordPage from "app/Components/Layouts/Pages/RecordPage.component";
 import SettingsPage from "app/Components/Layouts/Pages/SettingsPage.component";
@@ -39,11 +41,10 @@ export default class App extends Component {
     };
 
     pages = {
-        "/index": (<LandingPage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/record": (<RecordPage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/profile": (<ProfilePage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/settings": (<SettingsPage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/login": (<LoginPage showModal={(...args) => this.showModal(...args)}  hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>)
+        "/index": (<LandingPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/record": (<RecordPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/profile": (<ProfilePage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/settings": (<SettingsPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>)
     };
 
     async componentDidMount() {
@@ -58,12 +59,14 @@ export default class App extends Component {
 
         if(Config.user?.token) {
             User.authenticateAsync().then((success) => {
-                if(!success)
-                    this.setState({ page: "/login" });
+                if(!success) {
+                    const modal = this.showModal(<LoginPage onClose={() => this.hideModal(modal)}/>);
+                }
             });
         }
-        else if(Config.user.guest == null)
-            this.setState({ page: "/login" });
+        else if(Config.user.guest == null) {
+            const modal = this.showModal(<LoginPage onClose={() => this.hideModal(modal)}/>);
+        }
 
         await SplashScreen.hideAsync();
     
@@ -98,6 +101,8 @@ export default class App extends Component {
                 <StatusBar style={Appearance.theme.colorPalette.contrast}/>
 
                 {this.pages[this.state.page]}
+
+                <Footer onNavigate={(page) => this.setState({ page })}/>
 
                 {this.state?.modals && this.state.modals.map((modal) => (
                     <View key={modal.key} style={{

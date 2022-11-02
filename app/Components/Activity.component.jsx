@@ -20,6 +20,8 @@ import Animation from "app/Components/Animation.component";
 
 import Header from "app/Components/Layouts/Header.component"
 
+import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component"
+
 import ActivityPlayback from "./Layouts/Pages/Activity/Playback";
 import ActivityComments from "./Layouts/Pages/Activity/Comments";
 import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
@@ -170,6 +172,14 @@ export default class Activity extends ThemedComponent {
         });
     };
 
+    showProfile() {
+        const modal = this.props.showModal(<ProfilePage user={this.state.user.id} onClose={() => this.hideModal(modal)}/>);
+    };
+
+    hideModal(modal) {
+        this.props.hideModal(modal);
+    };
+
     render() {
         if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
@@ -240,7 +250,7 @@ export default class Activity extends ThemedComponent {
                             </MapView>
                         </Images>
 
-                        <View style={style.sheet.user}>
+                        <TouchableOpacity style={style.sheet.user} onPress={() => this.showProfile()}>
                             <View>
                                 <Image
                                     style={style.sheet.user.image}
@@ -256,7 +266,7 @@ export default class Activity extends ThemedComponent {
                             <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onSharePress()}>
                                 <FontAwesome5 style={[ style.sheet.buttons.button.icon, { marginLeft: 6 } ]} name={"share-square"}/>
                             </TouchableOpacity>
-                        </View>
+                        </TouchableOpacity>
 
                         <View style={style.sheet.stats}>
                             <View style={style.sheet.stats.item}>

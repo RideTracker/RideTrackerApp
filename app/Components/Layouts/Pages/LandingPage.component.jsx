@@ -31,15 +31,11 @@ export default class LandingPage extends ThemedComponent {
     };
 
     showActivity(id) {
-        this.setState({
-            activity: id
-        });
+        const modal = this.props.showModal(<Activity style={style.sheet.container.page} id={id} showModal={(...args) => this.props.showModal(...args)} hideModal={(...args) => this.props.hideModal(...args)} onClose={() => this.hideModal(modal)}/>);
     };
 
-    hideActivity() {
-        this.setState({
-            activity: null
-        });
+    hideModal(modal) {
+        this.props.hideModal(modal);
     };
 
     onRefresh() {
@@ -71,13 +67,7 @@ export default class LandingPage extends ThemedComponent {
                         
                         {this.state?.activities && this.state?.activities.map(id => <ActivityCompact key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
                     </ScrollView>
-
-                    <Footer onNavigate={(path) => this.props.onNavigate(path)}/>
                 </View>
-
-                {this.state != null && this.state.activity != null &&
-                    <Activity style={style.sheet.container.page} id={this.state.activity} onClose={() => this.hideActivity()}/>
-                }
             </View>
         );
     }

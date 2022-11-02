@@ -54,7 +54,7 @@ export default class LoginPage extends ThemedComponent {
         Config.user.guest = true;
         Config.saveAsync();
 
-        this.props.onNavigate("/index");
+        this.props.onClose();
     };
 
     async onLoginPress() {
@@ -78,13 +78,13 @@ export default class LoginPage extends ThemedComponent {
         await User.authenticateAsync();
 
         if(!User.guest)
-            this.props.onNavigate("/index");
+            this.props.onClose();
     };
 
     render() { 
         if(this.state?.page) {
             if(this.state?.page == "register")
-                return (<Register style={style.sheet} onRegistration={() => this.props.onNavigate("/index")} onClose={() => this.setState({ page: null })}/>);
+                return (<Register style={style.sheet} onRegistration={() => this.props.onClose()} onClose={() => this.setState({ page: null })}/>);
             else if(this.state?.page == "forgotten")
                 return (<Forgotten style={style.sheet} onClose={() => this.setState({ page: null })}/>);
         }

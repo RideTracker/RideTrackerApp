@@ -33,7 +33,7 @@ export default class ProfilePage extends Component {
                 
                 render: () => {
                     return this.state?.activities?.map((id) => 
-                        (<ActivityCompact id={id} key={id} showAuthor={false} onPress={(id) => this.showActivity(id)}/>)
+                        (<ActivityCompact id={id} key={id} onPress={(id) => this.showActivity(id)}/>)
                     );
                 }
             },
@@ -53,6 +53,10 @@ export default class ProfilePage extends Component {
         this.user = (this.props.user)?(this.props.user):(User.id);
 
         if(this.user) {
+            API.get("/api/user", { id: this.user }).then((data) => {
+                this.setState({ user: data.content });
+            });
+
             API.get("/api/profile/activities", { user: this.user }).then((data) => {
                 this.setState({ activities: data.content });
             });
@@ -82,12 +86,19 @@ export default class ProfilePage extends Component {
                 { (this.user == User.id) ?
                     (<Header
                         title="Profile"
+
                         button="sign-out-alt"
                         onButtonPress={() => this.onLogoutPress()}
+
+                        navigation={(this.props?.onClose)}
+                        onNavigationPress={() => this.props?.onClose()}
                         />)
                     :
                     (<Header
                         title="Profile"
+
+                        navigation={(this.props?.onClose)}
+                        onNavigationPress={() => this.props?.onClose()}
                         />)
                 }
 
@@ -101,7 +112,7 @@ export default class ProfilePage extends Component {
                         />
                     </View>
 
-                    <Text style={[ style.sheet.profile.item, style.sheet.profile.title ]}>Nora Söderlund</Text>
+                    <Text style={[ style.sheet.profile.item, style.sheet.profile.title ]}>{this.state.user?.name}</Text>
 
                     <Text style={[ style.sheet.profile.item, style.sheet.profile.follow ]}>FOLLOW</Text>
 
@@ -117,8 +128,6 @@ export default class ProfilePage extends Component {
                         {this.tabs.find(tab => tab.key == this.state.tab)?.render()}
                     </View>
                 </ScrollView>
-                
-                <Footer onNavigate={(path) => this.props.onNavigate(path)}/>
             </View>
         );
     }

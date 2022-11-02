@@ -9,6 +9,8 @@ export default class ProfilePageStyle {
 
             height: "100%",
 
+            backgroundColor: Appearance.theme.colorPalette.background,
+
             profile: {
                 avatar: {
                     width: "100%",
