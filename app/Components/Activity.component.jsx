@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { Share, Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
+import { Share, Text, View, ScrollView, Image, TouchableOpacity, Linking } from "react-native";
 import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import moment from "moment";
+
+import config from "root/config.json";
 
 import API from "app/Services/API";
 
@@ -180,6 +182,10 @@ export default class Activity extends ThemedComponent {
         this.props.hideModal(modal);
     };
 
+    onExportPress() {
+        Linking.openURL(`${config.api}/api/activity/export?id=${this.state.activity.id}`);
+    };
+
     render() {
         if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
@@ -342,9 +348,24 @@ export default class Activity extends ThemedComponent {
                             {/*<TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onPlaybackPress()}>
                                 <FontAwesome5 style={style.sheet.buttons.button.icon} name={"play"}/>
                                 
-                                <Text style={style.sheet.buttons.button.label}>Playback</Text>
+                                <Text style={style.sheet.buttons.button.label}>3D</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onPlaybackPress()}>
+                                <FontAwesome5 style={style.sheet.buttons.button.icon} name={"play"}/>
+                                
+                                <Text style={style.sheet.buttons.button.label}>2D</Text>
                             </TouchableOpacity>*/}
 
+                            <View style={style.sheet.buttons.author}>
+                                {this.state.user.id == User.id && (
+                                    <TouchableOpacity style={style.sheet.buttons.export} onPress={() => this.onExportPress()}>
+                                        <Text style={style.sheet.buttons.export.icon}>Export</Text>
+                                        <Text style={style.sheet.buttons.export.label}>as GPX</Text>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                            
 
                             { this.state.user.id == User.id && false == true && (
                                 <TouchableOpacity style={[ style.sheet.buttons.button, { justifyContent: "flex-end" } ]}>

@@ -210,8 +210,35 @@ export default class RecordPageStyle {
                 flex: 1,
                 flexDirection: "row",
 
+                width: "100%",
+                
+                alignItems: "center",
+
                 marginLeft: 6,
                 marginRight: 6,
+
+                author: {
+                    marginLeft: "auto",
+                    marginRight: 12
+                },
+
+                export: {
+                    padding: 12,
+
+                    textAlign: "center",
+                    
+                    icon: {
+                        fontSize: 14,
+
+                        color: Appearance.theme.colorPalette.secondary,
+                    },
+
+                    label: {
+                        color: Appearance.theme.colorPalette.secondary,
+
+                        fontSize: 12
+                    }
+                },
 
                 button: {
                     padding: 12,
