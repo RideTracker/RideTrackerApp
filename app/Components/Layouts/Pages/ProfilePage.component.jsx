@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { View, ScrollView, Image, Text, TouchableOpacity } from "react-native";
 
+import App from "root/app";
+
 import API from "app/Services/API";
 
 import User from "app/Data/User";
@@ -31,7 +33,7 @@ export default class ProfilePage extends Component {
                 
                 render: () => {
                     return this.state.activities.map((id) => 
-                        (<ActivityCompact id={id} key={id} showAuthor={false} onPress={(id) => this.setState({ activity: id })}/>)
+                        (<ActivityCompact id={id} key={id} showAuthor={false} onPress={(id) => this.showActivity(id)}/>)
                     );
                 }
             },
@@ -61,6 +63,10 @@ export default class ProfilePage extends Component {
         await User.logout();
 
         this.props.onNavigate("/login");
+    };
+
+    showActivity(activity) {
+        this.props.showModal(<Activity id={activity} onClose={() => this.setState({ activity: null })}/>);
     };
 
     render() { 
@@ -109,10 +115,6 @@ export default class ProfilePage extends Component {
                 </ScrollView>
                 
                 <Footer onNavigate={(path) => this.props.onNavigate(path)}/>
-
-                {this.state?.showActivity && (
-                    <Activity id={this.state.showActivity} onClose={() => this.setState({ activity: null })}/>
-                )}
             </View>
         );
     }

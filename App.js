@@ -1,5 +1,6 @@
 import { Component, useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Platform } from "react-native";
+import uuid from "react-native-uuid";
 
 import * as Location from "expo-location";
 import * as SplashScreen from "expo-splash-screen";
@@ -20,12 +21,23 @@ import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
 SplashScreen.preventAutoHideAsync();
 
 export default class App extends Component {
+    showModal(component) {
+        const key = uuid.v4();
+
+        const modals = this.state?.modals ?? [];
+        modals.push({ key, component });
+
+        this.setState({ modals });
+
+        return key;
+    };
+
     pages = {
-        "/index": (<LandingPage onNavigate={(page) => this.setState({ page })}/>),
-        "/record": (<RecordPage onNavigate={(page) => this.setState({ page })}/>),
-        "/profile": (<ProfilePage onNavigate={(page) => this.setState({ page })}/>),
-        "/settings": (<SettingsPage onNavigate={(page) => this.setState({ page })}/>),
-        "/login": (<LoginPage onNavigate={(page) => this.setState({ page })}/>)
+        "/index": (<LandingPage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/record": (<RecordPage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/profile": (<ProfilePage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/settings": (<SettingsPage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/login": (<LoginPage showModal={(...args) => this.showModal(...args)} onNavigate={(page) => this.setState({ page })}/>)
     };
 
     async componentDidMount() {
@@ -80,6 +92,20 @@ export default class App extends Component {
                 <StatusBar style={Appearance.theme.colorPalette.contrast}/>
 
                 {this.pages[this.state.page]}
+
+                {this.state?.modals && this.state.modals.map((modal) => (
+                    <View key={modal.key} style={{
+                        position: "absolute",
+                        
+                        left: 0,
+                        top: 0,
+
+                        width: "100%",
+                        height: "100%"
+                    }}>
+                        {modal.component}
+                    </View>
+                ))}
             </View>
         );
     };

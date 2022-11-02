@@ -180,7 +180,7 @@ export default class Activity extends ThemedComponent {
             <Animation
                 ref={this.animation}
                 enabled={this.state?.ready}
-                style={this.props?.style}
+                style={[ this.props?.style, style.sheet ]}
                 >
                 <Header
                     title="Activity"
@@ -188,7 +188,7 @@ export default class Activity extends ThemedComponent {
                     onNavigationPress={() => this.onClose()}
                     />
                 
-                <ScrollView style={style.sheet}>
+                <ScrollView>
                     <View style={style.sheet.section}>
                         <Images height={style.sheet.map.height}>
                             <MapView
