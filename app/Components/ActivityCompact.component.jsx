@@ -106,7 +106,7 @@ export default class ActivityCompact extends ThemedComponent {
                     </View>
                 </View>
 
-                {this.props?.showAuthor !== false && (
+                { (this.props?.showAuthor !== false)?(
                     <View style={style.sheet.user}>
                         <View>
                             <Image
@@ -118,6 +118,12 @@ export default class ActivityCompact extends ThemedComponent {
                         <View style={style.sheet.user.texts}>
                             <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
                             <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
+                        </View>
+                    </View>
+                ):(
+                    <View style={style.sheet.user}>
+                        <View style={style.sheet.user.texts}>
+                            <Text style={[ style.sheet.user.texts.description, { textAlign: "right" }]}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
                         </View>
                     </View>
                 )}

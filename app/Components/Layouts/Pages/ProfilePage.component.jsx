@@ -17,8 +17,12 @@ import LoginPage from "./LoginPage.component";
 export default class ProfilePage extends Component {
     style = style.update();
 
-    componentDidMount() {
-        this.tab = "activities";
+    constructor(...args) {
+        super(...args);
+
+        this.state = {
+            tab: "activities"
+        };
 
         this.tabs = [
             {
@@ -41,7 +45,9 @@ export default class ProfilePage extends Component {
                 }
             }
         ];
+    };
 
+    componentDidMount() {
         this.user = (this.props.user)?(this.props.user):(User.id);
 
         if(this.user) {
@@ -91,15 +97,15 @@ export default class ProfilePage extends Component {
 
                     <View style={style.sheet.tabs}>
                         {this.tabs.map((tab) => (
-                            <TouchableOpacity key={tab.key} style={[ style.sheet.tabs.tab, (this.tab == tab.key) && style.sheet.tabs.tab.active ]}>
+                            <TouchableOpacity key={tab.key} onPress={() => this.setState({ tab: tab.key})} style={[ style.sheet.tabs.tab, (this.state.tab == tab.key) && style.sheet.tabs.tab.active ]}>
                                 <Text style={style.sheet.tabs.tab.text}>{tab.title}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
 
-                    <ScrollView>
-                        {this.tabs.find(tab => tab.key == this.tab)?.render()}
-                    </ScrollView>
+                    <View>
+                        {this.tabs.find(tab => tab.key == this.state.tab)?.render()}
+                    </View>
                 </ScrollView>
                 
                 <Footer onNavigate={(path) => this.props.onNavigate(path)}/>
