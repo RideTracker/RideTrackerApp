@@ -11,6 +11,7 @@ import Cache from "app/Data/Cache";
 import Input from "app/Components/Input.component";
 
 import style from "./Reply.style";
+import User from "../../../../../Data/User";
 
 export default class ActivityCommentReply extends Component {
     style = style.update();
@@ -53,7 +54,9 @@ export default class ActivityCommentReply extends Component {
                         <View style={style.sheet.comment}>
                             <Image
                                 style={style.sheet.comment.image}
-                                source={require("assets/temp.jpg")}
+                                source={{
+                                    uri: User.data?.avatar
+                                }}
                             />
 
                             <View style={style.sheet.comment.content}>

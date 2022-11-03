@@ -111,7 +111,9 @@ export default class ActivityCompact extends ThemedComponent {
                         <View>
                             <Image
                                 style={style.sheet.user.image}
-                                source={require("./../../assets/temp.jpg")}
+                                source={{
+                                    uri: this.state.user.avatar
+                                }}
                             />
                         </View>
 

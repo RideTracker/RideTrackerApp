@@ -12,8 +12,6 @@ export default class BikeCompact extends Component {
     componentDidMount() {
         API.get("/api/bike", { bike: this.props.id }).then((data) => {
             this.setState({ bike: data.content });
-
-            console.log(data.content.image);
         });
     };
 

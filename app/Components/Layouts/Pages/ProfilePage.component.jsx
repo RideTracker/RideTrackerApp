@@ -3,6 +3,8 @@ import { View, ScrollView, Image, Text, TouchableOpacity } from "react-native";
 
 import App from "root/app";
 
+import config from "root/config.json";
+
 import API from "app/Services/API";
 
 import User from "app/Data/User";
@@ -120,7 +122,7 @@ export default class ProfilePage extends Component {
                         <Image
                             style={style.sheet.profile.avatar.image}
                             source={{
-                                uri: `https://ride-tracker.nora-soderlund.se/users/nora-soderlund/avatar.png`
+                                uri: this.state?.user?.avatar
                             }}
                         />
                     </View>

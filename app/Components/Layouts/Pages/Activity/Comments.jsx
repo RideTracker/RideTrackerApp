@@ -11,6 +11,7 @@ import Animation from "app/Components/Animation.component";
 import ActivityCommentReply from "./Comments/Reply";
 
 import style from "./Comments.style";
+import User from "../../../../Data/User";
 
 export default class ActivityComments extends Component {
     style = style.update();
@@ -128,7 +129,9 @@ export default class ActivityComments extends Component {
                                     <View style={style.sheet.write.avatar}>
                                         <Image
                                             style={style.sheet.write.avatar.image}
-                                            source={require("assets/temp.jpg")}
+                                            source={{
+                                                uri: User.data?.avatar
+                                            }}
                                         />
                                     </View>
 
@@ -143,7 +146,9 @@ export default class ActivityComments extends Component {
                                     <View key={comment.id} style={style.sheet.comment}>
                                         <Image
                                             style={style.sheet.comment.image}
-                                            source={require("assets/temp.jpg")}
+                                            source={{
+                                                uri: comment.user.avatar
+                                            }}
                                         />
 
                                         <View style={style.sheet.comment.content}>
@@ -164,7 +169,9 @@ export default class ActivityComments extends Component {
                                                     <View key={childComment.id} style={[ style.sheet.comment, style.sheet.comment.child ]}>
                                                         <Image
                                                             style={style.sheet.comment.image}
-                                                            source={require("assets/temp.jpg")}
+                                                            source={{
+                                                                uri: childComment.user.avatar
+                                                            }}
                                                         />
 
                                                         <View style={style.sheet.comment.content}>
