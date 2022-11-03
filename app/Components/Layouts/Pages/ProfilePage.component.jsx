@@ -20,6 +20,8 @@ import BikeCompact from "app/Components/BikeCompact.component";
 import Header from "app/Components/Layouts/Header.component";
 import Footer from "app/Components/Layouts/Footer.component";
 
+import ProfileSetings from "app/Components/Layouts/Pages/Profile/Settings.component";
+
 import style from "./ProfilePage.component.style";
 import LoginPage from "./LoginPage.component";
 
@@ -79,10 +81,8 @@ export default class ProfilePage extends Component {
         }
     };
 
-    async onLogoutPress() {
-        await User.logout();
-
-        this.props.onNavigate("/login");
+    async onSettingsPress() {
+        const modal = this.props.showModal(<ProfileSetings onClose={() => this.hideModal(modal)}/>);
     };
 
     showActivity(activity) {
@@ -125,8 +125,8 @@ export default class ProfilePage extends Component {
                     (<Header
                         title="Profile"
 
-                        button="sign-out-alt"
-                        onButtonPress={() => this.onLogoutPress()}
+                        button="cog"
+                        onButtonPress={() => this.onSettingsPress()}
 
                         navigation={(this.props?.onClose)}
                         onNavigationPress={() => this.props?.onClose()}
