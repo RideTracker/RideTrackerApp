@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { View, ScrollView, Image, Text, TouchableOpacity } from "react-native";
 
+import * as ImagePicker from "expo-image-picker";
+
 import App from "root/app";
 
 import config from "root/config.json";
@@ -95,9 +97,30 @@ export default class ProfilePage extends Component {
         this.props.hideModal(modal);
     };
 
+    async onAvatarPress() {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+            base64: true
+        });
+
+        if(!result.cancelled) {
+            const base64 = result.base64;
+
+            await API.put("/api/user/avatar", base64);
+            await User.update();
+            
+            API.get("/api/user", { id: this.user }).then((data) => {
+                this.setState({ user: data.content });
+            });
+        }
+    };
+
     render() { 
         return (
-            <View style={style.sheet}>
+            <View style={style.sheet} timestamp={this.state?.timestamp}>
                 { (this.user == User.id) ?
                     (<Header
                         title="Profile"
@@ -119,12 +142,23 @@ export default class ProfilePage extends Component {
 
                 <ScrollView>
                     <View style={[ style.sheet.profile.item, style.sheet.profile.avatar ]}>
-                        <Image
-                            style={style.sheet.profile.avatar.image}
-                            source={{
-                                uri: this.state?.user?.avatar
-                            }}
-                        />
+                        {(this.user == User.id)?(
+                            <TouchableOpacity onPress={() => this.onAvatarPress()}>
+                                <Image
+                                    style={style.sheet.profile.avatar.image}
+                                    source={{
+                                        uri: this.state?.user?.avatar
+                                    }}
+                                />
+                            </TouchableOpacity>
+                        ):(
+                            <Image
+                                style={style.sheet.profile.avatar.image}
+                                source={{
+                                    uri: this.state?.user?.avatar
+                                }}
+                            />
+                        )}
                     </View>
 
                     <Text style={[ style.sheet.profile.item, style.sheet.profile.title ]}>{this.state.user?.name}</Text>

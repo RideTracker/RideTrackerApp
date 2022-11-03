@@ -72,7 +72,10 @@ export default class Cache {
     
     static user = [];
 
-    static async getUser(id) {
+    static async getUser(id, forceRefresh = false) {
+        if(forceRefresh)
+            this.user = this.user.filter(x => x.id != id);
+
         let user = this.user.find(x => x.id == id);
 
         if(user == null) {

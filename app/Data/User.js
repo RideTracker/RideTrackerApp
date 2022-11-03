@@ -24,9 +24,11 @@ export default class User {
         this.guest = false;
         this.id = result.content.id;
 
-        this.data = await Cache.getUser(this.id);
-
         return true;
+    };
+
+    static async update() {
+        this.data = await Cache.getUser(this.id, true);
     };
 
     static async logout() {
