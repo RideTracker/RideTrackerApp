@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Share, Text, View, ScrollView, Image, TouchableOpacity, Linking } from "react-native";
+import { Share, Text, View, ScrollView, Image, TouchableOpacity, Linking, TouchableOpacityBase } from "react-native";
 import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
@@ -190,6 +190,12 @@ export default class Activity extends ThemedComponent {
 
     showBike() {
         const modal = this.props.showModal(<Bike id={this.state.activity.bike} onClose={() => this.hideModal(modal)}/>);
+    };
+
+    async onDelete() {
+        await API.delete("/api/activity", { activity: this.state.activity.id });
+
+        this.props.onClose();
     };
 
     render() {
@@ -410,6 +416,12 @@ export default class Activity extends ThemedComponent {
                             height={140}
                             />
                     </View>
+
+                    {(this.state?.activity?.user == User.id) && (
+                        <Button title="Delete Activity" confirm={{
+                            message: "Do you really want to delete this activity? This cannot be undone! You can instead choose to hide it from everyone if you wish."
+                        }} onPress={() => this.onDelete()}/>
+                    )}
                 </ScrollView>
 
                 {this.state?.showComments && (

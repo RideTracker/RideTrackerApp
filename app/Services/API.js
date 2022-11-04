@@ -75,4 +75,16 @@ export default class API {
 
         return await this.fetch(path, "POST", body);
     };
+
+    static async delete(path, parameters) {
+        if(parameters == undefined)
+            return await this.fetch(path, "DELETE");
+
+        let sections = [];
+
+        for(let key in parameters)
+            sections.push(key + "=" + parameters[key]);
+
+        return await this.fetch(path + "?" + sections.join("&"), "DELETE");
+    };
 };
