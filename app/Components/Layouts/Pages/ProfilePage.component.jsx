@@ -38,6 +38,34 @@ export default class ProfilePage extends Component {
         };
 
         this.tabs = [
+            /*{
+                key: "activity",
+                title: "Activity",
+                
+                render: () => {
+                    return this.state?.activity?.map((activity) => {
+                        switch(activity.type) {
+                            case "comment": {
+                                return (
+                                    <Text key={activity.id}>Comment {activity.id}</Text>
+                                );
+                            }
+                            
+                            case "activity": {
+                                return (
+                                    <Text key={activity.id}>Activity {activity.id}</Text>  
+                                );
+                            }
+                            case "bike": {
+                                return (
+                                    <Text key={activity.id}>Bike {activity.id}</Text>  
+                                );
+                            }
+                        }
+                    });
+                }
+            },*/
+
             {
                 key: "activities",
                 title: "Activities",
@@ -82,6 +110,10 @@ export default class ProfilePage extends Component {
 
             API.get("/api/user/bikes", { user: this.user }).then((data) => {
                 this.setState({ bikes: data.content });
+            });
+
+            API.get("/api/user/activity", { user: this.user }).then((data) => {
+                this.setState({ activity: data.content });
             });
 
             /*API.get("/api/user/comments", { user: this.user }).then((data) => {
