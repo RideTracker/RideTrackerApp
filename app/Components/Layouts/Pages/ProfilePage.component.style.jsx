@@ -53,6 +53,9 @@ export default class ProfilePageStyle {
             tabs: {
                 flexDirection: "row",
 
+                borderBottomWidth: 1,
+                borderBottomColor: Appearance.theme.colorPalette.border,
+
                 tab: {
                     text: {
                         color: Appearance.theme.colorPalette.secondary,
@@ -83,6 +86,11 @@ export default class ProfilePageStyle {
 
                     fontSize: 22
                 },
+            },
+
+            button: {
+                marginHorizontal: 12,
+                marginVertical: 6
             }
         });
 

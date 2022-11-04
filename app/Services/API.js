@@ -44,9 +44,6 @@ export default class API {
             headers,
             body: JSON.stringify(body)
         });
-        
-        if(method == "PUT")
-            return {};
             
         const result = await response.json();
 

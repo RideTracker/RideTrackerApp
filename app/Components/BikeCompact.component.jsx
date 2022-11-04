@@ -28,7 +28,7 @@ export default class BikeCompact extends Component {
                             />
                     )}
 
-                    <View>
+                    <View style={style.sheet.grid.stretch}>
                         {this.state?.bike && this.state.bike?.name && (
                             <Text style={style.sheet.text}>{this.state.bike.name}</Text>
                         )}
@@ -36,6 +36,23 @@ export default class BikeCompact extends Component {
                         {this.state?.bike && (this.state.bike?.brand || this.state.bike?.model || this.state.bike?.year) && (
                             <Text style={style.sheet.text}>{([ this.state.bike?.brand, this.state.bike?.model, this.state.bike?.year ]).filter(x => x != null).join(' ')}</Text>
                         )}
+
+                        <View style={style.sheet.stats}>
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>4</Text>
+                                <Text style={style.sheet.stats.item.description}>rides</Text>
+                            </View>
+                            
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>72 km</Text>
+                                <Text style={style.sheet.stats.item.description}>distance</Text>
+                            </View>
+                            
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>262 m</Text>
+                                <Text style={style.sheet.stats.item.description}>elevation</Text>
+                            </View>
+                        </View>
                     </View>
                 </View>
             </TouchableOpacity>

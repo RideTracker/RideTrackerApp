@@ -19,22 +19,56 @@ export default class BikeCompactStyle {
             borderTopColor: Appearance.theme.colorPalette.border,
 
             image: {
-                width: 140,
-                height: 100,
+                width: "40%",
+                aspectRatio: 16 / 9,
 
                 marginRight: 12
             },
 
             grid: {
                 flex: 1,
-                flexDirection: "row"
+                flexDirection: "row",
+                width: "100%",
+
+                stretch: {
+                    flex: 1
+                }
             },
 
             text: {
                 color: Appearance.theme.colorPalette.secondary,
-                fontSize: 16,
+                fontSize: 18,
+
+                width: "100%",
+                alignSelf: "stretch",
 
                 marginVertical: 6,
+            },
+
+            stats: {
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-around",
+
+                marginTop: 12,
+
+                item: {
+                    flexDirection: "column",
+
+                    title: {
+                        color: Appearance.theme.colorPalette.secondary,
+                        fontSize: 16,
+
+                        textAlign: "center",
+                    },
+
+                    description: {
+                        color: Appearance.theme.colorPalette.secondary,
+                        fontSize: 14,
+
+                        textAlign: "center",
+                    }
+                }
             }
         });
 

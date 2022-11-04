@@ -11,11 +11,13 @@ import API from "app/Services/API";
 
 import User from "app/Data/User";
 
+import Button from "app/Components/Button.component";
 import Activity from "app/Components/Activity.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
 
 import Bike from "app/Components/Bike.component";
 import BikeCompact from "app/Components/BikeCompact.component";
+import BikeCreation from "app/Components/BikeCreation.component";
 
 import Header from "app/Components/Layouts/Header.component";
 import Footer from "app/Components/Layouts/Footer.component";
@@ -52,8 +54,14 @@ export default class ProfilePage extends Component {
                 title: "Bikes",
                 
                 render: () => {
-                    return this.state?.bikes?.map((id) => 
-                        (<BikeCompact id={id} key={id} onPress={(id) => this.showBike(id)}/>)
+                    return (
+                        <View>
+                            {this.state?.bikes?.map((id) => 
+                                (<BikeCompact id={id} key={id} onPress={(id) => this.showBike(id)}/>)
+                            )}
+
+                            <Button style={style.sheet.button} title={"Add a new bike"} onPress={() => this.showBikeCreation()}/>
+                        </View>
                     );
                 }
             }
@@ -91,6 +99,10 @@ export default class ProfilePage extends Component {
 
     showBike(bike) {
         const modal = this.props.showModal(<Bike id={bike} onClose={() => this.hideModal(modal)}/>);
+    };
+
+    showBikeCreation() {
+        const modal = this.props.showModal(<BikeCreation showModal={(modal) => this.props.showModal(modal)} hideModal={(modal) => this.props.hideModal(modal)} onClose={() => this.hideModal(modal)}/>);
     };
 
     hideModal(modal) {
