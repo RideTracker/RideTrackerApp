@@ -9,6 +9,7 @@ import ThemedComponent from "app/Components/ThemedComponent";
 
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
+import Config from "app/Data/Config";
 import Recording from "app/Data/Recording";
 
 import style from "./ActivityCompact.component.style";
@@ -73,7 +74,7 @@ export default class ActivityCompact extends ThemedComponent {
                     >
                         {this.state.recording != null && 
                             (this.state.recording.getMapCoordinates().map(section => (
-                                <Polyline key={section.index} coordinates={section.coordinates} 
+                                <Polyline key={section.index} coordinates={(Config.user?.mapMatching)?(section.coordinates.road ?? section.coordinates):(section.coordinates)} 
                                     strokeColor={Appearance.theme.colorPalette.route}
                                     strokeWidth={3}
                                     lineJoin={"round"}
