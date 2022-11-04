@@ -83,6 +83,10 @@ export default class ProfilePage extends Component {
             API.get("/api/user/bikes", { user: this.user }).then((data) => {
                 this.setState({ bikes: data.content });
             });
+
+            /*API.get("/api/user/comments", { user: this.user }).then((data) => {
+                this.setState({ comments: data.content });
+            });*/
         }
         else { 
             const modal = this.props.showModal(<LoginPage onNavigate={(path) => this.props.onNavigate(path)} onClose={() => this.hideModal(modal)}/>);
