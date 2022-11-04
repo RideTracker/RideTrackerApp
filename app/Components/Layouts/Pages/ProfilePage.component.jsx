@@ -76,7 +76,7 @@ export default class ProfilePage extends Component {
                 this.setState({ user: data.content });
             });
 
-            API.get("/api/profile/activities", { user: this.user }).then((data) => {
+            API.get("/api/user/activities", { user: this.user }).then((data) => {
                 this.setState({ activities: data.content });
             });
 
