@@ -3,6 +3,7 @@ import { Alert, TouchableOpacity, Text, View } from "react-native";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
+import API from "app/Services/API";
 import User from "app/Data/User";
 
 import ThemedComponent from "app/Components/ThemedComponent";
@@ -16,6 +17,7 @@ import Recorder from "app/Data/Recorder";
 import Appearance from "app/Data/Appearance";
 
 import style from "./RecordPage.component.style";
+import Files from "../../../Data/Files";
 
 export default class RecordPage extends ThemedComponent {
     style = style.update();
@@ -57,14 +59,18 @@ export default class RecordPage extends ThemedComponent {
     };
 
     async onFinish() {
-        console.log("finish");
-
         if(this.recorder.active)
             this.recorder.stop();
 
-        const result = await this.recorder.save();
+        const content = await this.recorder.save();
 
-        Alert.alert(this.recorder.data.meta.id + ".json", "Saved");
+        await API.put("/api/activity/upload", JSON.parse(content));
+
+        //await Files.uploadFile(id);
+
+        this.props.onNavigate("/index");
+
+        //Alert.alert(this.recorder.data.meta.id + ".json", "Saved");
     };
 
     onDiscard() {

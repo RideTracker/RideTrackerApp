@@ -21,13 +21,12 @@ export default class LandingPage extends ThemedComponent {
 
     componentDidMount() {
         API.get("/api/feed").then((result) => {
-            console.log(result.content);
             this.setState({
                 activities: result.content
             });
         });
 
-        Files.uploadFiles();
+        //Files.uploadFiles();
     };
 
     showActivity(id) {

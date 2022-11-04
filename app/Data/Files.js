@@ -76,5 +76,20 @@ export default class Files {
 
             await this.uploadFileAsync(directory, files[index]);
         }
-    }
+    };
+
+    static async uploadFile(id) {
+        const directory = "rides";
+
+        console.log(this.directory + "/" + directory + "/" + id + ".json");
+		
+        const directoryInfo = await FileSystem.getInfoAsync(this.directory + "/" + directory + "/" + id + ".json");
+
+        if(!directoryInfo.exists)
+            return;
+
+        const file = await FileSystem.readAsStringAsync(this.directory + "/" + directory + "/" + id + ".json");
+
+        await this.uploadFileAsync(directory, file);
+    };
 };
