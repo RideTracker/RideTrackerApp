@@ -23,6 +23,7 @@ export default class User {
 
         this.guest = false;
         this.id = result.content.id;
+        await this.update();
 
         return true;
     };

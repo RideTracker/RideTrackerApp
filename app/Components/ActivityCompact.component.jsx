@@ -7,6 +7,8 @@ import moment from "moment";
 import Button from "app/Components/Button.component";
 import ThemedComponent from "app/Components/ThemedComponent";
 
+import API from "app/Services/API";
+
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
 import Config from "app/Data/Config";
@@ -37,6 +39,10 @@ export default class ActivityCompact extends ThemedComponent {
 
         Cache.getActivityRide(this.props.id).then((ride) => {
             this.setState({ recording: new Recording(ride) });
+        });
+
+        API.get("/api/activity/stats", { id: this.props.id }).then((stats) => {
+            this.setState({ stats: stats.content });
         });
     };
 
@@ -83,28 +89,30 @@ export default class ActivityCompact extends ThemedComponent {
                         }
                     </MapView>
 
-                    <View style={style.sheet.stats}>
-                        <View style={style.sheet.stats.item}>
-                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getDistance()}
-                                <Text style={style.sheet.stats.item.unit}> km</Text>
-                            </Text>
-                            <Text style={style.sheet.stats.item.description}>distance</Text>
-                        </View>
+                    {this.state?.stats && (
+                        <View style={style.sheet.stats}>
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>{this.state.stats.distance}
+                                    <Text style={style.sheet.stats.item.unit}> km</Text>
+                                </Text>
+                                <Text style={style.sheet.stats.item.description}>distance</Text>
+                            </View>
 
-                        <View style={style.sheet.stats.item}>
-                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getAverageSpeed()}
-                                <Text style={style.sheet.stats.item.unit}> km/h</Text>
-                            </Text>
-                            <Text style={style.sheet.stats.item.description}>average speed</Text>
-                        </View>
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>{this.state.stats.speed}
+                                    <Text style={style.sheet.stats.item.unit}> km/h</Text>
+                                </Text>
+                                <Text style={style.sheet.stats.item.description}>average speed</Text>
+                            </View>
 
-                        <View style={style.sheet.stats.item}>
-                            <Text style={style.sheet.stats.item.title}>{this.state.recording.getElevation()}
-                                <Text style={style.sheet.stats.item.unit}> m</Text>
-                            </Text>
-                            <Text style={style.sheet.stats.item.description}>elevation</Text>
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>{this.state.stats.elevation}
+                                    <Text style={style.sheet.stats.item.unit}> m</Text>
+                                </Text>
+                                <Text style={style.sheet.stats.item.description}>elevation</Text>
+                            </View>
                         </View>
-                    </View>
+                    )}
                 </View>
 
                 { (this.props?.showAuthor !== false)?(

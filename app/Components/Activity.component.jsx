@@ -20,6 +20,8 @@ import Button from "app/Components/Button.component";
 import Images from "app/Components/Images.component";
 import Input from "app/Components/Input.component";
 import Animation from "app/Components/Animation.component";
+import Bike from "app/Components/Bike.component";
+import BikeCompact from "app/Components/BikeCompact.component";
 
 import Header from "app/Components/Layouts/Header.component"
 
@@ -186,6 +188,10 @@ export default class Activity extends ThemedComponent {
         Linking.openURL(`${config.api}/api/activity/export?id=${this.state.activity.id}`);
     };
 
+    showBike() {
+        const modal = this.props.showModal(<Bike id={this.state.activity.bike} onClose={() => this.hideModal(modal)}/>);
+    };
+
     render() {
         if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
@@ -298,6 +304,10 @@ export default class Activity extends ThemedComponent {
                             </View>
                         </View>
                     </View>
+
+                    {this.state.activity.bike && (
+                        <BikeCompact style={style.sheet.section} id={this.state.activity.bike} onPress={() => this.showBike()}/>
+                    )}
 
                     {this.state?.comments && (
                         <TouchableOpacity style={[ style.sheet.comments, style.sheet.section, style.sheet.section.padded ]} onPress={() => this.setState({ showComments: true })}>
