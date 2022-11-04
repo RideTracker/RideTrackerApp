@@ -50,8 +50,6 @@ export default class BikeCompactStyle {
                 flexWrap: "wrap",
                 justifyContent: "space-around",
 
-                marginTop: 12,
-
                 item: {
                     flexDirection: "column",
 
