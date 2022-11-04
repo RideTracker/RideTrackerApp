@@ -24,9 +24,9 @@ React Native WebView Canvas is a component and function mapper between your Reac
 This is a paused package (due to shortage of time) but it's designed to both parse and print XML documents. The implementation of this came from the need of being able to export ride recordings as GPX (a common GPS formatted XML document) and the XML packages I found had over 1,500 dependents... I will be continuing to develop on this package after the submission of my project!
 
 ## Challenges we ran into
-I come from no formal education but I have done web- and software development since I was in middle school but I now work professionally as a C# software developer. I have previously made some pretty large projects in JavaScript so I'm not new to that end, either way, my first challenge getting into this was learning the unique aspects and principles of React Native, some of which my mind really did not agree upon.
+I come from no formal education but I have done web- and software development since I was in middle school and I now work professionally as a C# software developer. I have previously made some pretty large projects in JavaScript so I'm not new to that end, either way, my first challenge getting into this was learning the unique aspects and principles of React Native, some of which my mind really did not agree upon.
 
-I came across a lot of challenges in the making of specific functions, some of which were rendering a 3d playback of bike rides. I came across a lot of technical restrictions that I had to bypass with a few tips and tricks I'm not a big fan of and I'll definitely look forward to refactoring these bits of codes.
+Otherwise, I came across a lot of challenges in the making of specific functions, some of which were rendering a 3d playback of bike rides. I came across a lot of technical restrictions that I had to bypass with a few tips and tricks I'm not a big fan of and I'll definitely look forward to refactoring these bits of codes.
 
 The biggest challenge that I had to solve was changing the heading in the Google Maps platform while building extrusions were enabled which in most cases would cause large delta delays and I spent quite some time thinking about the logistics and reality of this specific feature and I came down to an "algorithym" that in the end works well enough for the current state of this project.
 
