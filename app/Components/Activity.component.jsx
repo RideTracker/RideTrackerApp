@@ -418,9 +418,11 @@ export default class Activity extends ThemedComponent {
                     </View>
 
                     {(this.state?.activity?.user == User.id) && (
-                        <Button title="Delete Activity" confirm={{
-                            message: "Do you really want to delete this activity? This cannot be undone! You can instead choose to hide it from everyone if you wish."
-                        }} onPress={() => this.onDelete()}/>
+                        <View style={style.sheet.section}>
+                            <Button title="Delete Activity" confirm={{
+                                message: "Do you really want to delete this activity? This cannot be undone! You can instead choose to hide it from everyone if you wish."
+                            }} onPress={() => this.onDelete()}/>
+                        </View>
                     )}
                 </ScrollView>
 
