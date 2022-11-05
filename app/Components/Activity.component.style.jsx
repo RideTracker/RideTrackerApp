@@ -219,7 +219,10 @@ export default class RecordPageStyle {
 
                 author: {
                     marginLeft: "auto",
-                    marginRight: 12
+                    marginRight: 12,
+
+                    flexDirection: "row",
+                    alignItems: "center"
                 },
 
                 export: {

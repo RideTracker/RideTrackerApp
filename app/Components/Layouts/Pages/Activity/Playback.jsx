@@ -83,7 +83,7 @@ export default class ActivityPlayback extends Component {
             }
 
             case "focusMapToStartAsync": {
-                setTimeout(() => this.postEvent("zoomMapToStartAsync"), 1000);
+                setTimeout(() => this.postEvent((this.props.type == "3d")?("zoomMapToStartAsync"):("playback")), 1000);
 
                 break;
             }
@@ -205,7 +205,7 @@ export default class ActivityPlayback extends Component {
                     onLoad={() => this.onLoad()}
                     onMessage={(event) => this.onMessage(event)}
                     source={{
-                        uri: `${config.api}/playback/index.html?activity=${this.props.activity}&color=${Appearance.theme.colorPalette.route.replace('#', '')}&background=${Appearance.theme.colorPalette.background.replace('#', '')}`
+                        uri: `${config.api}/playback/index.html?activity=${this.props.activity}&color=${Appearance.theme.colorPalette.route.replace('#', '')}&type=${this.props.type}`
                     }}
                     />
 

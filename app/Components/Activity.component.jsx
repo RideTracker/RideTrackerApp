@@ -170,9 +170,9 @@ export default class Activity extends ThemedComponent {
         ]);
     };
 
-    onPlaybackPress() {
+    onPlaybackPress(type) {
         this.setState({
-            playback: true
+            playback: type
         });
     };
 
@@ -231,7 +231,7 @@ export default class Activity extends ThemedComponent {
                                 scrollEnabled={false}
                                 zoomEnabled={false}
                                 rotateEnabled={false}
-                                onPress={() => this.onPlaybackPress()}
+                                onPress={() => this.onPlaybackPress("3d")}
                                 >
                                 {this.state.recording != null && 
                                     (this.state.recording.getMapCoordinates().map(section => (
@@ -249,7 +249,6 @@ export default class Activity extends ThemedComponent {
                                 style={style.sheet.map}
                                 mapType={MAP_TYPES.HYBRID}
                                 provider={PROVIDER_GOOGLE}
-                                pitch={90}
                                 onLayout={() => this.onLayout(this.mapViewSatellite)}
                                 pitchEnabled={false}
                                 scrollEnabled={false}
@@ -371,15 +370,15 @@ export default class Activity extends ThemedComponent {
                                 <FontAwesome5 style={style.sheet.buttons.button.icon} name={"play"}/>
                                 
                                 <Text style={style.sheet.buttons.button.label}>3D</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onPlaybackPress()}>
-                                <FontAwesome5 style={style.sheet.buttons.button.icon} name={"play"}/>
-                                
-                                <Text style={style.sheet.buttons.button.label}>2D</Text>
                             </TouchableOpacity>*/}
 
                             <View style={style.sheet.buttons.author}>
+                                <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onPlaybackPress("2d")}>
+                                    <FontAwesome5 style={style.sheet.buttons.button.icon} name={"play"}/>
+                                    
+                                    <Text style={style.sheet.buttons.button.label}>2D</Text>
+                                </TouchableOpacity>
+
                                 {this.state.user.id == User.id && (
                                     <TouchableOpacity style={style.sheet.buttons.export} onPress={() => this.onExportPress()}>
                                         <Text style={style.sheet.buttons.export.icon}>Export</Text>
@@ -431,7 +430,7 @@ export default class Activity extends ThemedComponent {
                 )}
 
                 {this.state?.playback && (
-                    <ActivityPlayback activity={this.props.id} onClose={() => this.setState({ playback: false })}/>
+                    <ActivityPlayback type={this.state.playback} activity={this.props.id} onClose={() => this.setState({ playback: false })}/>
                 )}
             </Animation>
         );
