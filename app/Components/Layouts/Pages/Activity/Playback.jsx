@@ -145,7 +145,7 @@ export default class ActivityPlayback extends Component {
         this.heightPerAltitude = this.height / this.altitudeRange;
 
         this.widthPerPoint = this.width / this.points;
-
+        
         this.canvasWebView.current.requestAnimationFrame(() => this.onCanvasRender());
     };
 
@@ -157,6 +157,8 @@ export default class ActivityPlayback extends Component {
             return this.canvasWebView.current.requestAnimationFrame(() => this.onCanvasRender());
 
         const context = await this.canvas.getContext("2d");
+
+        context.clearRect(0, 0, this.width, this.height);
 
         let point = 0;
 
@@ -178,6 +180,24 @@ export default class ActivityPlayback extends Component {
         const top = (this.height - (altitude * this.heightPerAltitude)) * this.pixelRatio;
 
         this.path.lineTo(left, top);
+
+        /*context.beginPath();
+        context.moveTo(0, this.height);
+
+        let point = 0;
+
+        this.state.recording.data.sections.forEach((section) => {
+            section.coordinates.forEach((coordinate) => {
+                point++;
+
+                const altitude = coordinate.coords.altitude - this.minAltitude;
+
+                const left = point * this.widthPerPoint * this.pixelRatio;
+                const top = (this.height - (altitude * this.heightPerAltitude)) * this.pixelRatio;
+
+                context.lineTo(left, top);
+            });
+        });*/
         
         context.globalAlpha = 1;
         context.lineWidth = this.pixelRatio;
@@ -185,7 +205,7 @@ export default class ActivityPlayback extends Component {
         context.stroke(this.path);
 
         context.executeBundle();
-
+        
         return this.canvasWebView.current.requestAnimationFrame(() => this.onCanvasRender());
     };
 
