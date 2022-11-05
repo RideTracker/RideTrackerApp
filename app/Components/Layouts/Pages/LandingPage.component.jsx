@@ -30,7 +30,7 @@ export default class LandingPage extends ThemedComponent {
     };
 
     showActivity(id) {
-        const modal = this.props.showModal(<Activity style={style.sheet.container.page} id={id} showModal={(...args) => this.props.showModal(...args)} hideModal={(...args) => this.props.hideModal(...args)} onClose={() => this.hideModal(modal)}/>);
+        const modal = this.props.showModal("Activity", { id, style: style.sheet.container.page });
     };
 
     hideModal(modal) {

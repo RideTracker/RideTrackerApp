@@ -177,7 +177,7 @@ export default class Activity extends ThemedComponent {
     };
 
     showProfile() {
-        const modal = this.props.showModal(<ProfilePage user={this.state.user.id} onClose={() => this.hideModal(modal)}/>);
+        const modal = this.props.showModal("ProfilePage", { user: this.state.user.id });
     };
 
     hideModal(modal) {
@@ -189,7 +189,7 @@ export default class Activity extends ThemedComponent {
     };
 
     showBike() {
-        const modal = this.props.showModal(<Bike id={this.state.activity.bike} onClose={() => this.hideModal(modal)}/>);
+        const modal = this.props.showModal("Bike", { id: this.state.activity.bike });
     };
 
     async onDelete() {

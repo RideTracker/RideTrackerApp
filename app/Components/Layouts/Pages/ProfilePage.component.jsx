@@ -121,24 +121,24 @@ export default class ProfilePage extends Component {
             });*/
         }
         else { 
-            const modal = this.props.showModal(<LoginPage onNavigate={(path) => this.props.onNavigate(path)} onClose={() => this.hideModal(modal)}/>);
+            const modal = this.props.showModal("LoginPage");
         }
     };
 
     async onSettingsPress() {
-        const modal = this.props.showModal(<ProfileSetings onClose={() => this.hideModal(modal)}/>);
+        const modal = this.props.showModal("ProfileSetings");
     };
 
     showActivity(activity) {
-        const modal = this.props.showModal(<Activity id={activity} onClose={() => this.hideModal(modal)}/>);
+        const modal = this.props.showModal("Activity", { id: activity });
     };
 
     showBike(bike) {
-        const modal = this.props.showModal(<Bike id={bike} onClose={() => this.hideModal(modal)}/>);
+        const modal = this.props.showModal("Bike", { id: bike });
     };
 
     showBikeCreation() {
-        const modal = this.props.showModal(<BikeCreation showModal={(modal) => this.props.showModal(modal)} hideModal={(modal) => this.props.hideModal(modal)} onClose={() => this.hideModal(modal)}/>);
+        const modal = this.props.showModal("BikeCreation");
     };
 
     hideModal(modal) {

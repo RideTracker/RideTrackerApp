@@ -8,6 +8,9 @@ import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 
 import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
+import Bike from "app/Components/Bike.component";
+import BikeCreation from "app/Components/BikeCreation.component";
+import Activity from "app/Components/Activity.component";
 
 import Config from "app/Data/Config";
 import User from "app/Data/User";
@@ -19,15 +22,25 @@ import LandingPage from "app/Components/Layouts/Pages/LandingPage.component";
 import RecordPage from "app/Components/Layouts/Pages/RecordPage.component";
 import SettingsPage from "app/Components/Layouts/Pages/SettingsPage.component";
 import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
+import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.component";
 
 SplashScreen.preventAutoHideAsync();
 
 export default class App extends Component {
-    showModal(component) {
+    modals = {
+        "LoginPage": (key, props) => (<LoginPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
+        "ProfilePage": (key, props) => (<ProfilePage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
+        "Bike": (key, props) => (<Bike showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
+        "Activity": (key, props) => (<Activity showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
+        "ProifileSettings": (key, props) => (<ProfileSettings showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
+        "BikeCreation": (key, props) => (<BikeCreation showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
+    };
+
+    showModal(component, props = {}) {
         const key = uuid.v4();
 
         const modals = this.state?.modals ?? [];
-        modals.push({ key, component });
+        modals.push({ key, component, props });
 
         this.setState({ modals });
 
@@ -60,12 +73,12 @@ export default class App extends Component {
         if(Config.user?.token) {
             User.authenticateAsync().then((success) => {
                 if(!success) {
-                    const modal = this.showModal(<LoginPage onClose={() => this.hideModal(modal)}/>);
+                    const modal = this.showModal("LoginPage", { onClose: () => this.hideModal(modal) });
                 }
             });
         }
         else if(Config.user.guest == null) {
-            const modal = this.showModal(<LoginPage onClose={() => this.hideModal(modal)}/>);
+            const modal = this.showModal("LoginPage", { onClose: () => this.hideModal(modal) });
         }
 
         await SplashScreen.hideAsync();
@@ -114,7 +127,7 @@ export default class App extends Component {
                         width: "100%",
                         height: "100%"
                     }}>
-                        {modal.component}
+                        {this.modals[modal.component](modal.key, modal.props)}
                     </View>
                 ))}
             </View>
