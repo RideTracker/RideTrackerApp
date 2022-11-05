@@ -20,6 +20,7 @@ import Footer from "app/Components/Layouts/Footer.component";
 
 import LandingPage from "app/Components/Layouts/Pages/LandingPage.component";
 import RecordPage from "app/Components/Layouts/Pages/RecordPage.component";
+import Routes from "app/Components/Layouts/Pages/Routes.component";
 import SettingsPage from "app/Components/Layouts/Pages/SettingsPage.component";
 import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
 import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.component";
@@ -55,6 +56,7 @@ export default class App extends Component {
 
     pages = {
         "/index": (<LandingPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
+        "/routes": (<Routes showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
         "/record": (<RecordPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
         "/profile": (<ProfilePage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
         "/settings": (<SettingsPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>)
