@@ -418,7 +418,7 @@ export default class Activity extends ThemedComponent {
                     </View>
 
                     {(this.state?.activity?.user == User.id) && (
-                        <View style={style.sheet.section}>
+                        <View style={{ marginVertical: 12 }}>
                             <Button title="Delete Activity" confirm={{
                                 message: "Do you really want to delete this activity? This cannot be undone! You can instead choose to hide it from everyone if you wish."
                             }} onPress={() => this.onDelete()}/>
