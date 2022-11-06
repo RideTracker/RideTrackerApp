@@ -11,6 +11,7 @@ import User from "app/Data/User";
 
 import Appearance from "app/Data/Appearance";
 
+import Tabs from "app/Components/Tabs.component";
 import Input from "app/Components/Input.component";
 import ThemedComponent from "app/Components/ThemedComponent";
 import Button from "app/Components/Button.component";
@@ -31,15 +32,19 @@ export default class Routes extends ThemedComponent {
             render: () => {
                 return (
                     <View style={style.sheet.static.routes}>
-                        <View style={style.sheet.static.content}>
-                            <Text style={style.sheet.form.text}>Your routes</Text>
-                        </View>
+                        <Tabs default="routes">
+                            <View id="routes" title="Your Routes">
+                                <ScrollView>
+                                    {(this.state?.routes) && this.state.routes.map((route) => (
+                                        <RouteCompact key={route} route={route} onPress={() => this.setMode("route", route)}/>
+                                    ))}
+                                </ScrollView>
+                            </View>
+                            
+                            <View id="something" title="">
 
-                        <ScrollView>
-                            {(this.state?.routes) && this.state.routes.map((route) => (
-                                <RouteCompact key={route} route={route} onPress={() => this.setMode("route", route)}/>
-                            ))}
-                        </ScrollView>
+                            </View>
+                        </Tabs>
                     </View>
                 );
             },

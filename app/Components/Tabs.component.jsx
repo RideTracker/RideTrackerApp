@@ -6,12 +6,7 @@ import style from "./Tabs.component.style";
 export default class Tabs extends Component {
     style = style.update();
 
-    componentDidMount() {
-
-    };
-
     render() {
-        console.log(this.props.children);
         return (
             <View>
                 <View style={style.sheet.tabs}>
