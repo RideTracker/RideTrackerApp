@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Svg, { Path } from "react-native-svg";

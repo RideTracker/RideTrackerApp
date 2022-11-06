@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Image, PixelRatio, View, Text, TouchableOpacity } from "react-native";
-import CanvasWebView from "react-native-webview-canvas";
+import { Image, View, Text, TouchableOpacity } from "react-native";
 
 import API from "app/Services/API";
 

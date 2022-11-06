@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Alert, TouchableOpacity, Text, View } from "react-native";
+import React from "react";
+import { TouchableOpacity, Text, View } from "react-native";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
@@ -11,13 +11,10 @@ import Button from "app/Components/Button.component";
 
 import Header from "app/Components/Layouts/Header.component";
 
-import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
-
 import Recorder from "app/Data/Recorder";
 import Appearance from "app/Data/Appearance";
 
 import style from "./RecordPage.component.style";
-import Files from "../../../Data/Files";
 
 export default class RecordPage extends ThemedComponent {
     style = style.update();

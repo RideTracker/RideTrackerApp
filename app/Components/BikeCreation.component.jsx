@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { Image, PixelRatio, View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { Image, View, Text, TouchableOpacity, ScrollView } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import * as ImagePicker from "expo-image-picker";
 
 import API from "app/Services/API";
 
-import Bike from "app/Components/Bike.component";
 import Header from "app/Components/Layouts/Header.component";
 import Input from "app/Components/Input.component";
 import Button from "app/Components/Button.component";

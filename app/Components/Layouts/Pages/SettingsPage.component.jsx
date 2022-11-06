@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { View, ScrollView, Text, TouchableOpacity, Switch } from "react-native";
 
 import Config from "app/Data/Config";
@@ -8,7 +8,6 @@ import Themes from "app/Data/Config/Themes.json";
 import ThemedComponent from "app/Components/ThemedComponent";
 
 import Header from "app/Components/Layouts/Header.component";
-import Footer from "app/Components/Layouts/Footer.component";
 
 import style from "./SettingsPage.component.style";
 

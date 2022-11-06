@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Image, KeyboardAvoidingView } from "react-native";
+import { View, Text, TouchableOpacity, Image, KeyboardAvoidingView } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import moment from "moment";

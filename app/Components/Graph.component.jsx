@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { PixelRatio, Dimensions } from "react-native";
 
-import CanvasWebView, { Path2D } from "react-native-webview-canvas";
+import CanvasWebView from "react-native-webview-canvas";
 
 import Appearance from "app/Data/Appearance";
 

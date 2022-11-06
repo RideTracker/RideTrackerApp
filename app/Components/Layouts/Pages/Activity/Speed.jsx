@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, PixelRatio, View } from "react-native";
 
-import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
 import Recording from "app/Data/Recording";
 

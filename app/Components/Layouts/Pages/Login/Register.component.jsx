@@ -9,7 +9,6 @@ import Input from "app/Components/Input.component";
 import Button from "app/Components/Button.component";
 
 import Header from "../../Header.component";
-import Footer from "../../Footer.component";
 
 import style from "./Register.component.style";
 

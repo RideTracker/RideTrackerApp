@@ -1,16 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import { View, ScrollView, RefreshControl } from "react-native";
 
 import Appearance from "app/Data/Appearance";
 
 import ThemedComponent from "app/Components/ThemedComponent";
-import Animation from "app/Components/Animation.component";
 import Header from "app/Components/Layouts/Header.component";
-import Footer from "app/Components/Layouts/Footer.component";
-import Activity from "app/Components/Activity.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
-
-import Files from "app/Data/Files";
 
 import API from "app/Services/API";
 

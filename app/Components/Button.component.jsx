@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { TouchableOpacity, Text, Alert } from "react-native";
 
 import ThemedComponent from "app/Components/ThemedComponent";

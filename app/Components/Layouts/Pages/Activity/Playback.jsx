@@ -1,15 +1,9 @@
 import React, { Component } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Image, RefreshControl, PixelRatio, Dimensions, TouchableOpacityBase, TouchableHighlightBase } from "react-native";
+import { View, Text, PixelRatio, Dimensions } from "react-native";
 import WebView from "react-native-webview";
 import CanvasWebView from "react-native-webview-canvas";
 
-import * as NavigationBar from "expo-navigation-bar";
-
-import moment from "moment";
-
 import config from "app/../config.json";
-
-import API from "app/Services/API";
 
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";

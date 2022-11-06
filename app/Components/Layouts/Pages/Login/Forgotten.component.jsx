@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { View, ScrollView } from "react-native";
 
 import Header from "app/Components/Layouts/Header.component";
-import Footer from "app/Components/Layouts/Footer.component";
 
 import style from "./Forgotten.component.style";
 

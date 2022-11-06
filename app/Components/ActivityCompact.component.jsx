@@ -1,10 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 
 import moment from "moment";
 
-import Button from "app/Components/Button.component";
 import ThemedComponent from "app/Components/ThemedComponent";
 
 import API from "app/Services/API";

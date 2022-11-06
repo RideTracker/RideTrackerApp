@@ -3,29 +3,18 @@ import { View, ScrollView, Image, Text, TouchableOpacity } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
 
-import App from "root/app";
-
-import config from "root/config.json";
-
 import API from "app/Services/API";
 
 import User from "app/Data/User";
 
 import Button from "app/Components/Button.component";
-import Activity from "app/Components/Activity.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
 
-import Bike from "app/Components/Bike.component";
 import BikeCompact from "app/Components/BikeCompact.component";
-import BikeCreation from "app/Components/BikeCreation.component";
 
 import Header from "app/Components/Layouts/Header.component";
-import Footer from "app/Components/Layouts/Footer.component";
-
-import ProfileSetings from "app/Components/Layouts/Pages/Profile/Settings.component";
 
 import style from "./ProfilePage.component.style";
-import LoginPage from "./LoginPage.component";
 
 export default class ProfilePage extends Component {
     style = style.update();

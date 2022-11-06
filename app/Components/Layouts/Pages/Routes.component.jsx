@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Switch, TouchableWithoutFeedbackBase, TouchableOpacityBase, TouchableWithoutFeedback } from "react-native";
-import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import React from "react";
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 
 import * as Location from 'expo-location';
 
@@ -8,14 +8,11 @@ import { getBoundsOfDistance, getDistance, getRhumbLineBearing } from "geolib";
 
 import API from "app/Services/API";
 
-import Config from "app/Data/Config";
 import Appearance from "app/Data/Appearance";
-import Themes from "app/Data/Config/Themes.json";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 
 import Header from "app/Components/Layouts/Header.component";
-import Footer from "app/Components/Layouts/Footer.component";
 
 import style from "./Routes.component.style";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";

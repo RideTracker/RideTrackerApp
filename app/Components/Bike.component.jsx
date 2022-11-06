@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, PixelRatio, View, Text, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 
 import Header from "app/Components/Layouts/Header.component";
 

@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Share, Text, View, ScrollView, Image, TouchableOpacity, Linking, TouchableOpacityBase } from "react-native";
+import React from "react";
+import { Share, Text, View, ScrollView, Image, TouchableOpacity, Linking } from "react-native";
 import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
@@ -18,14 +18,10 @@ import Config from "app/Data/Config";
 import ThemedComponent from "app/Components/ThemedComponent";
 import Button from "app/Components/Button.component";
 import Images from "app/Components/Images.component";
-import Input from "app/Components/Input.component";
 import Animation from "app/Components/Animation.component";
-import Bike from "app/Components/Bike.component";
 import BikeCompact from "app/Components/BikeCompact.component";
 
 import Header from "app/Components/Layouts/Header.component"
-
-import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component"
 
 import ActivityPlayback from "./Layouts/Pages/Activity/Playback";
 import ActivityComments from "./Layouts/Pages/Activity/Comments";
@@ -33,7 +29,6 @@ import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
 import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
 
 import style from "./Activity.component.style";
-import { TouchableNativeFeedback } from "react-native-web";
 
 export default class Activity extends ThemedComponent {
     style = style.update();
