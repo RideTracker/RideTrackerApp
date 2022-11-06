@@ -11,6 +11,7 @@ import User from "app/Data/User";
 
 import Appearance from "app/Data/Appearance";
 
+import Input from "app/Components/Input.component";
 import ThemedComponent from "app/Components/ThemedComponent";
 import Button from "app/Components/Button.component";
 import RouteCompact from "app/Components/RouteCompact.component";
@@ -24,6 +25,80 @@ export default class Routes extends ThemedComponent {
     style = style.update();
 
     modes = [
+        {
+            key: "default",
+
+            render: () => {
+                return (
+                    <ScrollView style={style.sheet.static.routes}>
+                        {(this.state?.routes) && this.state.routes.map((route) => (
+                            <RouteCompact key={route} route={route} onPress={() => this.setMode("route", route)}/>
+                        ))}
+                    </ScrollView>
+                );
+            },
+            
+            renderOverlay: () => {
+                return (
+                    <View style={style.sheet.grid}>
+                        <View style={style.sheet.footer}>
+                            <View style={style.sheet.footer.disregard}>
+                                {this.modes.filter((mode) => mode.icon).map((mode) => (
+                                    <TouchableOpacity key={mode.key} style={style.sheet.button} onPress={() => this.setMode(mode.key)}>
+                                        <FontAwesome5 style={style.sheet.button.icon} name={mode.icon}/>
+
+                                        <Text style={style.sheet.button.text}>{mode.title}</Text>
+                                    </TouchableOpacity>
+                                ))}
+
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode("route", "a7daa639-eae2-48f0-af7a-f19aada3cfa9")}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"question"}/>
+
+                                    <Text style={style.sheet.button.text}>Debug</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                );
+            },
+
+            renderMapView: () => {
+                
+            },
+
+            events: {
+                onStart: async (directions) => {
+                    const position = await Location.getCurrentPositionAsync({
+                        accuracy: Location.Accuracy.BestForNavigation
+                    });
+            
+                    const bounds = getBoundsOfDistance(position.coords, 10000);
+            
+                    this.mapView.current.fitToCoordinates(bounds);
+
+                    API.get("/api/user/routes", { user: User.id }).then((response) => {
+                        this.setState({ routes: response.content });
+                    });
+                },
+
+                onPressIn: () => {
+                    
+                },
+
+                onPanDrag: (position) => {
+                    
+                },
+
+                onPressOut: async () => {
+                    
+                },
+
+                onFinish: () => {
+                    
+                }
+            }
+        },
+
         {
             key: "draw",
             title: "Draw a route",
@@ -57,7 +132,7 @@ export default class Routes extends ThemedComponent {
                             )}
 
                             <View style={style.sheet.footer.disregard}>
-                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode(null)}>
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode("default")}>
                                     <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
 
                                     <Text style={style.sheet.button.text}>Cancel</Text>
@@ -141,6 +216,128 @@ export default class Routes extends ThemedComponent {
             key: "directions",
 
             render: () => {
+                if(!this.state?.directions)
+                    return null;
+
+                return (
+                    <View style={style.sheet.static.content}>
+                        <Text style={style.sheet.form.text}>Route Details</Text>
+                        {(this.state.directions.summary) && (<Text style={style.sheet.form.description}>{this.state.directions.summary}</Text>)}
+
+                        <View style={style.sheet.footer}>
+                            <View style={style.sheet.stats}>
+                                <View style={style.sheet.stats.item}>
+                                    <Text style={style.sheet.stats.item.title}>{Math.round(this.state.directions.duration / 60)} <Text style={style.sheet.stats.item.unit}>min</Text></Text>
+                                    <Text style={style.sheet.stats.item.description}>duration</Text>
+                                </View>
+
+                                <View style={style.sheet.stats.item}>
+                                    <Text style={style.sheet.stats.item.title}>{Math.round((this.state.directions.distance / 1000) * 10) / 10} <Text style={style.sheet.stats.item.unit}>km</Text></Text>
+                                    <Text style={style.sheet.stats.item.description}>distance</Text>
+                                </View>
+
+                                <View style={style.sheet.stats.item}>
+                                    <Text style={style.sheet.stats.item.title}>? <Text style={style.sheet.stats.item.unit}>m</Text></Text>
+                                    <Text style={style.sheet.stats.item.description}>elevation</Text>
+                                </View>
+                            </View>
+                        </View>
+
+                        <View style={style.sheet.form}>
+                            <Text style={style.sheet.form.text}>Route Name</Text>
+                            <Text style={style.sheet.form.description}>This will be visible to everyone with access to this route.</Text>
+
+                            <Input
+                                ref={this.name}
+                                style={style.sheet.form.input}
+                                placeholder="Name (optional)"
+                                clearButtonMode={"while-editing"}
+                                enablesReturnKeyAutomatically={true}
+                                keyboardType={"default"}
+                                autoCapitalize={"sentences"}
+                                returnKeyType={"done"}
+                                onSubmitEditing={() => this.mode.events.onSubmit()}
+                                />
+                        </View>
+
+                        <Button branded title="Submit" onPress={() => this.mode.events.onSubmit()}/>
+                        <Button confirm title="Disregard" onPress={() => this.setMode("draw")}/>
+                    </View>
+                );
+            },
+            
+            renderOverlay: () => {
+                return null;
+            },
+
+            renderMapView: () => {
+                if(!this.state?.directions)
+                    return null;
+
+                return this.state.directions.sections.map((coordinates, index) => (
+                    <Polyline
+                        key={index}
+                        coordinates={coordinates}
+                        strokeWidth={3}
+                        strokeColor={Appearance.theme.colorPalette.route}
+                        onLayout={() => this.mode.events.onLayout(coordinates)}
+                        />
+                ));
+            },
+
+            events: {
+                onStart: async (directions) => {
+                    this.name = React.createRef();
+
+                    const response = await API.get("/api/directions", { directions });
+                    const result = response.content;
+
+                    this.setState({ directions: result });
+                },
+
+                onPressIn: () => {
+                    
+                },
+
+                onPanDrag: (position) => {
+                    
+                },
+
+                onPressOut: async () => {
+                    
+                },
+
+                onSubmit: async () => {
+                    const response = await API.post("/api/route/create", {
+                        directions: this.state.directions.id,
+                        name: this.name.current.getValue()
+                    });
+                    const result = response.content;
+
+                    this.setMode("route", result);
+                },
+
+                onFinish: () => {
+                    
+                },
+
+                onLayout: (coordinates) => {
+                    this.mapView.current.fitToCoordinates(coordinates, {
+                        edgePadding: {
+                            top: 100,
+                            right: 10,
+                            bottom: 10,
+                            left: 10
+                        }
+                    });
+                }
+            }
+        },
+        
+        {
+            key: "route",
+
+            render: () => {
 
             },
             
@@ -149,7 +346,7 @@ export default class Routes extends ThemedComponent {
                     <View style={style.sheet.grid}>
                         <View style={style.sheet.footer}>
                             <View style={style.sheet.footer.disregard}>
-                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode(null)}>
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode("default")}>
                                     <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
 
                                     <Text style={style.sheet.button.text}>Cancel</Text>
@@ -170,83 +367,19 @@ export default class Routes extends ThemedComponent {
                         coordinates={coordinates}
                         strokeWidth={3}
                         strokeColor={Appearance.theme.colorPalette.route}
-                        />
-                ));
-            },
-
-            events: {
-                onStart: async (directions) => {
-                    const response = await API.get("/api/directions", { directions });
-                    const result = response.content;
-
-                    this.setState({ directions: result });
-                },
-
-                onPressIn: () => {
-                    
-                },
-
-                onPanDrag: (position) => {
-                    
-                },
-
-                onPressOut: async () => {
-                    
-                },
-
-                onFinish: () => {
-                    
-                }
-            }
-        },
-        
-        {
-            key: "route",
-
-            render: () => {
-
-            },
-            
-            renderOverlay: () => {
-                return (
-                    <View style={style.sheet.grid}>
-                        <View style={style.sheet.footer}>
-                            <View style={style.sheet.footer.disregard}>
-                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode(null)}>
-                                    <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
-
-                                    <Text style={style.sheet.button.text}>Cancel</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                );
-            },
-
-            renderMapView: () => {
-                if(!this.state?.route)
-                    return null;
-
-                return this.state.route.sections.map((coordinates, index) => (
-                    <Polyline
-                        key={index}
-                        coordinates={coordinates}
-                        strokeWidth={3}
-                        strokeColor={Appearance.theme.colorPalette.route}
                         onLayout={() => this.mode.events.onLayout(coordinates)}
                         />
                 ));
             },
 
             events: {
-                onStart: (route) => {
-                    this.setState({ mapViewControl: true });
+                onStart: async (route) => {
+                    const response = await API.get("/api/route", { route });
+                    const result = response.content;
 
-                    API.get("/api/route", { route }).then((response) => {
-                        this.setState({
-                            route: response.content
-                        });
-                    });
+                    const directions = await API.get("/api/directions", { directions: result.directions });
+
+                    this.setState({ route: result, directions: directions.content });
                 },
 
                 onPressIn: () => {
@@ -279,22 +412,8 @@ export default class Routes extends ThemedComponent {
     };
 
     componentDidMount() {
-        API.get("/api/user/routes", { user: User.id }).then((response) => {
-            this.setState({ routes: response.content });
-        });
-    };
-
-    async onLayout() {
-        if(this.mode)
-            return;
-
-        const position = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.BestForNavigation
-        });
-
-        const bounds = getBoundsOfDistance(position.coords, 10000);
-
-        this.mapView.current.fitToCoordinates(bounds);
+        this.setMode("default");
+        //this.setMode("directions", "95b15cf0-ea40-4f6c-ada0-a3c960276761");
     };
 
     setMode(mode, ...args) {
@@ -325,7 +444,6 @@ export default class Routes extends ThemedComponent {
                             style={style.sheet.map}
                             customMapStyle={Appearance.theme.mapStyle || []}
                             provider={PROVIDER_GOOGLE}
-                            onLayout={() => this.onLayout()}
                             showsUserLocation={true}
                             showsMyLocationButton={false}
                             pitchEnabled={this.state?.mapViewControl}
@@ -340,43 +458,11 @@ export default class Routes extends ThemedComponent {
 
                     <Header title="Routes" transparent/>
 
-                    {(this.state?.mode)?(
-                        this.mode.renderOverlay()
-                    ):(
-                        <View style={style.sheet.grid}>
-                            <View style={style.sheet.footer}>
-                                <View style={style.sheet.footer.disregard}>
-                                    {this.modes.filter((mode) => mode.icon).map((mode) => (
-                                        <TouchableOpacity key={mode.key} style={style.sheet.button} onPress={() => this.setMode(mode.key)}>
-                                            <FontAwesome5 style={style.sheet.button.icon} name={mode.icon}/>
-
-                                            <Text style={style.sheet.button.text}>{mode.title}</Text>
-                                        </TouchableOpacity>
-                                    ))}
-
-                                    <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode("route", "a7daa639-eae2-48f0-af7a-f19aada3cfa9")}>
-                                        <FontAwesome5 style={style.sheet.button.icon} name={"question"}/>
-
-                                        <Text style={style.sheet.button.text}>Debug</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    )}
+                    {(this.state?.mode) && (this.mode.renderOverlay())}
                 </View>
                 
                 <View style={style.sheet.static}>
-                    {(this.state?.mode)?(this.mode.render()):(
-                        <ScrollView style={style.sheet.static.routes}>
-                            {(this.state?.routes) && this.state.routes.map((route) => (
-                                <RouteCompact key={route} route={route} onPress={() => this.setMode("route", route)}/>
-                            ))}
-
-                            <View style={style.sheet.static.content}>
-                                <Button branded title="Create a new route"/>
-                            </View>
-                        </ScrollView>
-                    )}
+                    {(this.state?.mode) && (this.mode.render())}
                 </View>
             </View>
         );

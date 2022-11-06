@@ -21,8 +21,11 @@ export default class RouteCompact extends Component {
 
     componentDidMount() {
         API.get("/api/route", { route: this.props.route }).then((data) => {
-
             this.setState({ route: data.content });
+
+            API.get("/api/directions", { directions: data.content.directions }).then((data) => {
+                this.setState({ directions: data.content });
+            });
         });
     };
 
@@ -42,51 +45,73 @@ export default class RouteCompact extends Component {
     };
 
     render() {
+        if(!this.state?.directions || !this.state?.route)
+            return null;
+
         return (
             <TouchableWithoutFeedback style={[ style.sheet, this.props?.style ]} onPress={() => this.props.onPress(this.props.route)}>
-                <View>
-                    {(this.state?.route) && (
-                        <MapView
-                            ref={this.mapView}
-                            customMapStyle={Appearance.theme.mapStyleCompact || []}
-                            userInterfaceStyle={"light"}
-                            provider={PROVIDER_GOOGLE}
-                            pitchEnabled={false}
-                            rotateEnabled={false}
-                            scrollEnabled={false}
-                            zoomEnabled={false}
-                            style={[ style.sheet.map, { opacity: ((this.state?.ready)?(1):(0)) }]}
-                            >
-                                <Polygon
-                                    coordinates={[
-                                        { latitude: 180, longitude: 85 },
-                                        { latitude: 90, longitude: 85 },
-                                        { latitude: 0, longitude: 85 },
-                                        { latitude: -90, longitude: 85 },
-                                        { latitude: -180, longitude: 85 },
-                                        { latitude: -180, longitude: 0 },
-                                        { latitude: -180, longitude: -85 },
-                                        { latitude: -90, longitude: -85 },
-                                        { latitude: 0, longitude: -85 },
-                                        { latitude: 90, longitude: -85 },
-                                        { latitude: 180, longitude: -85 },
-                                        { latitude: 180, longitude: 0 },
-                                        { latitude: 180, longitude: 85 }
-                                    ]}
-                                    fillColor={Appearance.theme.colorPalette.common}
-                                    />
+                <View style={style.sheet.grid}>
+                    <MapView
+                        ref={this.mapView}
+                        customMapStyle={Appearance.theme.mapStyleCompact || []}
+                        userInterfaceStyle={"light"}
+                        provider={PROVIDER_GOOGLE}
+                        pitchEnabled={false}
+                        rotateEnabled={false}
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                        style={[ style.sheet.map, { opacity: ((this.state?.ready)?(1):(0)) }]}
+                        >
+                            <Polygon
+                                coordinates={[
+                                    { latitude: 180, longitude: 85 },
+                                    { latitude: 90, longitude: 85 },
+                                    { latitude: 0, longitude: 85 },
+                                    { latitude: -90, longitude: 85 },
+                                    { latitude: -180, longitude: 85 },
+                                    { latitude: -180, longitude: 0 },
+                                    { latitude: -180, longitude: -85 },
+                                    { latitude: -90, longitude: -85 },
+                                    { latitude: 0, longitude: -85 },
+                                    { latitude: 90, longitude: -85 },
+                                    { latitude: 180, longitude: -85 },
+                                    { latitude: 180, longitude: 0 },
+                                    { latitude: 180, longitude: 85 }
+                                ]}
+                                fillColor={Appearance.theme.colorPalette.common}
+                                />
 
-                            {this.state.route.sections.map((coordinates, index) => (
-                                <Polyline
-                                    key={index}
-                                    coordinates={coordinates}
-                                    strokeWidth={3}
-                                    strokeColor={Appearance.theme.colorPalette.route}
-                                    onLayout={() => this.onLayout(coordinates)}
-                                    />
-                            ))}
-                        </MapView>
-                    )}
+                        {this.state.directions.sections.map((coordinates, index) => (
+                            <Polyline
+                                key={index}
+                                coordinates={coordinates}
+                                strokeWidth={3}
+                                strokeColor={Appearance.theme.colorPalette.route}
+                                onLayout={() => this.onLayout(coordinates)}
+                                />
+                        ))}
+                    </MapView>
+
+                    <View style={style.sheet.grid.stretch}>
+                        <Text style={style.sheet.text}>{(this.state.route.name)?(this.state.route.name):(this.state.directions.summary)}</Text>
+
+                        <View style={style.sheet.stats}>
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>{Math.round(this.state.directions.duration / 60)} min</Text>
+                                <Text style={style.sheet.stats.item.description}>duration</Text>
+                            </View>
+                            
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>{Math.round(this.state.directions.distance / 1000)} km</Text>
+                                <Text style={style.sheet.stats.item.description}>distance</Text>
+                            </View>
+                            
+                            <View style={style.sheet.stats.item}>
+                                <Text style={style.sheet.stats.item.title}>? m</Text>
+                                <Text style={style.sheet.stats.item.description}>elevation</Text>
+                            </View>
+                        </View>
+                    </View>
                 </View>
             </TouchableWithoutFeedback>
         );

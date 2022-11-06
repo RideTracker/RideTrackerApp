@@ -108,13 +108,59 @@ export default class RoutesStyle {
                 }
             },
 
+            stats: {
+                flex: 1,
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+
+                padding: 8,
+
+                item: {
+                    justifyContent: "space-between",
+                    alignItems: "center",
+
+                    title: {
+                        color: Appearance.theme.colorPalette.secondary,
+                        
+                        textShadowColor: Appearance.theme.colorPalette.background,
+                        textShadowOffset: {
+                            width: 0,
+                            height: 0
+                        },
+                        textShadowRadius: 4,
+
+                        ...Appearance.styles.activity.stats.value
+                    },
+
+                    unit: {
+                        color: Appearance.theme.colorPalette.secondary,
+
+                        ...Appearance.styles.activity.stats.unit
+                    },
+
+                    description: {
+                        color: Appearance.theme.colorPalette.secondary,
+                        
+                        textShadowColor: "rgba(0, 0, 0, .5)",
+                        textShadowOffset: {
+                            width: 0,
+                            height: 0
+                        },
+
+                        textShadowRadius: 2,
+
+                        ...Appearance.styles.activity.stats.key
+                    }
+                }
+            },
+
             dynamic: {
                 flex: 1,
                 height: "auto"
             },
 
             static: {
-
                 borderTopWidth: 1,
                 borderTopColor: Appearance.theme.colorPalette.border,
                 borderTopLeftRadius: 12,
@@ -126,6 +172,40 @@ export default class RoutesStyle {
 
                 content: {
                     padding: 12
+                }
+            },
+
+            form: {
+                marginVertical: 6,
+
+                text: {
+                    color: Appearance.theme.colorPalette.secondary,
+                    fontSize: 18
+                },
+
+                description: {
+                    color: Appearance.theme.colorPalette.secondary,
+                    fontSize: 12
+                },
+
+                input: {
+                    marginVertical: 6,
+                },
+
+                grid: {
+                    flexDirection: "row",
+
+                    input: {
+                        position: "relative",
+                        width: "50%",
+
+                        marginVertical: 6,
+                        marginRight: 6
+                    }
+                },
+
+                buttom: {
+                    justifyContent: "flex-end"
                 }
             }
         });
