@@ -11,6 +11,7 @@ import Button from "app/Components/Button.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
 
 import BikeCompact from "app/Components/BikeCompact.component";
+import RouteCompact from "app/Components/RouteCompact.component";
 
 import Header from "app/Components/Layouts/Header.component";
 
@@ -81,6 +82,21 @@ export default class ProfilePage extends Component {
                         </View>
                     );
                 }
+            },
+            
+            {
+                key: "routes",
+                title: "Routes",
+                
+                render: () => {
+                    return (
+                        <View>
+                            {this.state?.routes?.map((id) => 
+                                (<RouteCompact key={id} route={id} onPress={(id) => this.props.showModal("Routes", { route: id })}/>)
+                            )}
+                        </View>
+                    );
+                }
             }
         ];
     };
@@ -99,6 +115,10 @@ export default class ProfilePage extends Component {
 
             API.get("/api/user/bikes", { user: this.user }).then((data) => {
                 this.setState({ bikes: data.content });
+            });
+
+            API.get("/api/user/routes", { user: this.user }).then((data) => {
+                this.setState({ routes: data.content });
             });
 
             API.get("/api/user/activity", { user: this.user }).then((data) => {

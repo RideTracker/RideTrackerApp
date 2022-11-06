@@ -344,6 +344,9 @@ export default class Routes extends ThemedComponent {
             },
             
             renderOverlay: () => {
+                if(this.props.onClose)
+                    return null;
+                    
                 return (
                     <View style={style.sheet.grid}>
                         <View style={style.sheet.footer}>
@@ -414,7 +417,10 @@ export default class Routes extends ThemedComponent {
     };
 
     componentDidMount() {
-        this.setMode("default");
+        if(this.props?.route)
+            this.setMode("route", this.props.route);
+        else
+            this.setMode("default");
         //this.setMode("directions", "95b15cf0-ea40-4f6c-ada0-a3c960276761");
     };
 
@@ -458,7 +464,13 @@ export default class Routes extends ThemedComponent {
                         </MapView>
                     </TouchableWithoutFeedback>
 
-                    <Header title="Routes" transparent/>
+                    <Header
+                        title="Routes"
+                        transparent
+                        
+                        navigation={this.props?.onClose}
+                        onNavigationPress={() => this.props.onClose()}
+                        />
 
                     {(this.state?.mode) && (this.mode.renderOverlay())}
                 </View>

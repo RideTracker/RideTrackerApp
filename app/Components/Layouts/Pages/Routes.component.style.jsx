@@ -8,6 +8,9 @@ export default class RoutesStyle {
             flex: 1,
 
             height: "100%",
+            width: "100%",
+
+            backgroundColor: Appearance.theme.colorPalette.background,
 
             flexDirection: "column",
             

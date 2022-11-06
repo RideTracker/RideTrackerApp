@@ -20,9 +20,9 @@ import Footer from "app/Components/Layouts/Footer.component";
 
 import LandingPage from "app/Components/Layouts/Pages/LandingPage.component";
 import RecordPage from "app/Components/Layouts/Pages/RecordPage.component";
-import Routes from "app/Components/Layouts/Pages/Routes.component";
 import SettingsPage from "app/Components/Layouts/Pages/SettingsPage.component";
 import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
+import Routes from "app/Components/Layouts/Pages/Routes.component";
 import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.component";
 
 SplashScreen.preventAutoHideAsync();
@@ -32,6 +32,7 @@ export default class App extends Component {
         "LoginPage": (key, props) => (<LoginPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
         "ProfilePage": (key, props) => (<ProfilePage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
         "Bike": (key, props) => (<Bike showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
+        "Routes": (key, props) => (<Routes showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
         "Activity": (key, props) => (<Activity showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
         "ProifileSettings": (key, props) => (<ProfileSettings showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
         "BikeCreation": (key, props) => (<BikeCreation showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
