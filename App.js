@@ -28,14 +28,26 @@ import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.compo
 SplashScreen.preventAutoHideAsync();
 
 export default class App extends Component {
+    pageProps = {
+        showModal: (...args) => this.showModal(...args),
+        hideModal: (...args) => this.hideModal(...args),
+        onNavigate: (page) => this.setState({ page })
+    };
+
+    modalProps = {
+        ...this.pageProps,
+
+        onClose: () => this.hideModal(key)
+    };
+    
     modals = {
-        "LoginPage": (key, props) => (<LoginPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
-        "ProfilePage": (key, props) => (<ProfilePage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
-        "Bike": (key, props) => (<Bike showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
-        "Routes": (key, props) => (<Routes showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
-        "Activity": (key, props) => (<Activity showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
-        "ProifileSettings": (key, props) => (<ProfileSettings showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
-        "BikeCreation": (key, props) => (<BikeCreation showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onClose={() => this.hideModal(key)} {...props}/>),
+        "LoginPage": (key, props) => (<LoginPage {...this.modalProps} {...props}/>),
+        "ProfilePage": (key, props) => (<ProfilePage {...this.modalProps} {...props}/>),
+        "Bike": (key, props) => (<Bike {...this.modalProps} {...props}/>),
+        "Routes": (key, props) => (<Routes {...this.modalProps} {...props}/>),
+        "Activity": (key, props) => (<Activity {...this.modalProps} {...props}/>),
+        "ProifileSettings": (key, props) => (<ProfileSettings {...this.modalProps} {...props}/>),
+        "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} {...props}/>),
     };
 
     showModal(component, props = {}) {
@@ -56,11 +68,11 @@ export default class App extends Component {
     };
 
     pages = {
-        "/index": (<LandingPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/routes": (<Routes showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/record": (<RecordPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/profile": (<ProfilePage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>),
-        "/settings": (<SettingsPage showModal={(...args) => this.showModal(...args)} hideModal={(...args) => this.hideModal(...args)} onNavigate={(page) => this.setState({ page })}/>)
+        "/index": (<LandingPage  {...this.pageProps}/>),
+        "/routes": (<Routes  {...this.pageProps}/>),
+        "/record": (<RecordPage  {...this.pageProps}/>),
+        "/profile": (<ProfilePage  {...this.pageProps}/>),
+        "/settings": (<SettingsPage  {...this.pageProps}/>)
     };
 
     async componentDidMount() {
