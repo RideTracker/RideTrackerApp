@@ -50,7 +50,7 @@ export default class App extends Component {
         "Bike": (key, props) => (<Bike {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Routes": (key, props) => (<Routes {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Activity": (key, props) => (<Activity {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "ProifileSettings": (key, props) => (<ProfileSettings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "ProfileSettings": (key, props) => (<ProfileSettings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
     };
 

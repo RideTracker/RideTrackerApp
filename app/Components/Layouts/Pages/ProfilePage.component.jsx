@@ -89,7 +89,7 @@ export default class ProfilePage extends Component {
                         title="Profile"
 
                         button="cog"
-                        onButtonPress={() => this.props.showModal("ProfileSetings")}
+                        onButtonPress={() => this.props.showModal("ProfileSettings")}
 
                         navigation={(this.props?.onClose)}
                         onNavigationPress={() => this.props?.onClose()}
