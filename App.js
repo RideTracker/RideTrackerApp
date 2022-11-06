@@ -130,8 +130,13 @@ export default class App extends Component {
 
         if(User.guest) {
             switch(this.state.page) {
-                case "/record":
-                    return (<LoginPage onNavigate={(page) => this.setState({ page })}/>);
+                case "/record": {
+                    this.showModal("LoginPage");
+
+                    this.setState({ page: "/index" });
+
+                    return null;
+                }
             }
         }
         

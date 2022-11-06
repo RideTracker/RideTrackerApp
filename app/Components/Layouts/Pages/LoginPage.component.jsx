@@ -125,7 +125,7 @@ export default class LoginPage extends ThemedComponent {
 
                     <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in" onPress={() => this.onLoginPress()}/>
 
-                    <TouchableOpacity onPress={() => this.setState({ page: "forgotten" })}>
+                    <TouchableOpacity onPress={() => this.props.showNotification("This function is not available yet.\n\nPlease email support@ridetracker.app to recover your account.")}>
                         <Text style={style.sheet.text}>Forgot your credentials? <Text style={style.sheet.text.link}>Click here to recover</Text></Text>
                     </TouchableOpacity>
 

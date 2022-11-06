@@ -55,6 +55,8 @@ export default class ProfilePage extends Component {
         }
         else { 
             this.props.showModal("LoginPage");
+
+            this.props.onNavigate("/index");
         }
     };
 

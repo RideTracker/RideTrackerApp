@@ -17,6 +17,7 @@ export default class {
                 flexDirection: "column",
 
                 item: {
+                    marginTop: 12,
                     borderRadius: 4,
 
                     shadowColor: "#000",
