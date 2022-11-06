@@ -30,11 +30,17 @@ export default class Routes extends ThemedComponent {
 
             render: () => {
                 return (
-                    <ScrollView style={style.sheet.static.routes}>
-                        {(this.state?.routes) && this.state.routes.map((route) => (
-                            <RouteCompact key={route} route={route} onPress={() => this.setMode("route", route)}/>
-                        ))}
-                    </ScrollView>
+                    <View style={style.sheet.static.routes}>
+                        <View style={style.sheet.static.content}>
+                            <Text style={style.sheet.form.text}>Your routes</Text>
+                        </View>
+
+                        <ScrollView>
+                            {(this.state?.routes) && this.state.routes.map((route) => (
+                                <RouteCompact key={route} route={route} onPress={() => this.setMode("route", route)}/>
+                            ))}
+                        </ScrollView>
+                    </View>
                 );
             },
             
@@ -42,21 +48,13 @@ export default class Routes extends ThemedComponent {
                 return (
                     <View style={style.sheet.grid}>
                         <View style={style.sheet.footer}>
-                            <View style={style.sheet.footer.disregard}>
-                                {this.modes.filter((mode) => mode.icon).map((mode) => (
-                                    <TouchableOpacity key={mode.key} style={style.sheet.button} onPress={() => this.setMode(mode.key)}>
-                                        <FontAwesome5 style={style.sheet.button.icon} name={mode.icon}/>
+                            {this.modes.filter((mode) => mode.icon).map((mode) => (
+                                <TouchableOpacity key={mode.key} style={style.sheet.button} onPress={() => this.setMode(mode.key)}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={mode.icon}/>
 
-                                        <Text style={style.sheet.button.text}>{mode.title}</Text>
-                                    </TouchableOpacity>
-                                ))}
-
-                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode("route", "a7daa639-eae2-48f0-af7a-f19aada3cfa9")}>
-                                    <FontAwesome5 style={style.sheet.button.icon} name={"question"}/>
-
-                                    <Text style={style.sheet.button.text}>Debug</Text>
+                                    <Text style={style.sheet.button.text}>{mode.title}</Text>
                                 </TouchableOpacity>
-                            </View>
+                            ))}
                         </View>
                     </View>
                 );
@@ -101,27 +99,29 @@ export default class Routes extends ThemedComponent {
 
         {
             key: "draw",
-            title: "Draw a route",
-            icon: "pencil-ruler",
+            title: "Brush a route",
+            icon: "paint-brush",
 
             render: () => {
-
+                return (
+                    <View>
+                        <View style={style.sheet.instructions} pointerEvents={"none"}>
+                            <Text style={style.sheet.instructions.title}>Brush a route</Text>
+                            <Text style={style.sheet.instructions.description}>Slide your finger across the map to generate a route.</Text>
+                        </View>
+                    </View>
+                );
             },
             
             renderOverlay: () => {
                 return (
                     <View style={style.sheet.grid}>
-                        <View style={style.sheet.instructions} pointerEvents={"none"}>
-                            <Text style={style.sheet.instructions.title}>Draw a route</Text>
-                            <Text style={style.sheet.instructions.description}>Slide your finger across the map to generate a route.</Text>
-                        </View>
-
                         <View style={style.sheet.footer}>
                             {(this.state?.mapViewControl)?(
                                 <TouchableOpacity style={style.sheet.button} onPress={() => this.setState({ mapViewControl: false })}>
-                                    <FontAwesome5 style={style.sheet.button.icon} name={"pencil-alt"}/>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"paint-brush"}/>
             
-                                    <Text style={style.sheet.button.text}>Draw</Text>
+                                    <Text style={style.sheet.button.text}>Brush</Text>
                                 </TouchableOpacity>
                             ):(
                                 <TouchableOpacity style={style.sheet.button} onPress={() => this.setState({ mapViewControl: true })}>
@@ -328,7 +328,9 @@ export default class Routes extends ThemedComponent {
                             right: 10,
                             bottom: 10,
                             left: 10
-                        }
+                        },
+
+                        animated: false
                     });
                 }
             }

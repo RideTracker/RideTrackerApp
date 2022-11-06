@@ -28,6 +28,8 @@ export default class RoutesStyle {
             footer: {
                 flexDirection: "row",
 
+                marginLeft: "auto",
+
                 padding: 12,
                 //marginBottom: 24,
 
@@ -167,7 +169,7 @@ export default class RoutesStyle {
                 borderTopRightRadius: 12,
 
                 routes: {
-                    height: "40%"
+                    maxHeight: 300
                 },
 
                 content: {
