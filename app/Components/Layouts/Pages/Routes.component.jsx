@@ -4,7 +4,7 @@ import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps
 
 import * as Location from 'expo-location';
 
-import { getBoundsOfDistance } from "geolib";
+import { getBoundsOfDistance, getDistance, getRhumbLineBearing } from "geolib";
 
 import API from "app/Services/API";
 
@@ -28,8 +28,12 @@ export default class Routes extends ThemedComponent {
             key: "draw",
             title: "Draw a route",
             icon: "pencil-ruler",
-            
+
             render: () => {
+
+            },
+            
+            renderOverlay: () => {
                 return (
                     <View style={style.sheet.grid}>
                         <View style={style.sheet.instructions} pointerEvents={"none"}>
@@ -40,7 +44,7 @@ export default class Routes extends ThemedComponent {
                         <View style={style.sheet.footer}>
                             {(this.state?.mapViewControl)?(
                                 <TouchableOpacity style={style.sheet.button} onPress={() => this.setState({ mapViewControl: false })}>
-                                    <FontAwesome5 style={style.sheet.button.icon} name={"pencil-ruler"}/>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"pencil-alt"}/>
             
                                     <Text style={style.sheet.button.text}>Draw</Text>
                                 </TouchableOpacity>
@@ -52,11 +56,13 @@ export default class Routes extends ThemedComponent {
                                 </TouchableOpacity>
                             )}
 
-                            <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode(null)}>
-                                <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
+                            <View style={style.sheet.footer.disregard}>
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode(null)}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
 
-                                <Text style={style.sheet.button.text}>Cancel</Text>
-                            </TouchableOpacity>
+                                    <Text style={style.sheet.button.text}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 );
@@ -99,43 +105,72 @@ export default class Routes extends ThemedComponent {
                         return;
 
                     const coordinates = [];
-                    const step = Math.max(1, Math.floor(this.state.coordinates.length / 10));
 
-                    for(let index = 0; index < this.state.coordinates.length; index += step)
-                        coordinates.push(this.state.coordinates[index]);
+                    this.state.coordinates.forEach((coordinate) => {
+                        if(coordinates.length == 0)
+                            return coordinates.push(coordinate);
 
-                    const response = await API.post("/api/routes/draw", { coordinates });
+                        const distance = getDistance(coordinates[coordinates.length - 1], coordinate);
+
+                        if(distance > 5000 || (distance > 1000 && getRhumbLineBearing(coordinates[coordinates.length - 1], coordinate) > 45))
+                            return coordinates.push(coordinate);
+                    });
+
+                    const finalCoordinates = [];
+
+                    const step = Math.max(1, Math.floor(coordinates.length / 10));
+
+                    for(let index = 0; index < coordinates.length; index += step)
+                        finalCoordinates.push(coordinates[index]);
+
+                    console.log(finalCoordinates);
+
+                    const response = await API.post("/api/routes/draw", { origin: this.state.coordinates[0], destination: this.state.coordinates[this.state.coordinates.length - 1], coordinates: finalCoordinates });
                     const result = response.content;
 
-                    this.setMode("directions", result);
+                    this.setMode("route", result);
+                },
+
+                onFinish: () => {
+                    this.setState({ coordinates: [] });
                 }
             }
         },
         
         {
-            key: "directions",
-            
+            key: "route",
+
             render: () => {
-                return (
-                    <View style={style.sheet.grid}>
-                        <View style={style.sheet.footer}>
-                            <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode(null)}>
-                                <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
 
-                                <Text style={style.sheet.button.text}>Cancel</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                );
             },
-
-            renderMapView: () => {
+            
+            renderOverlay: () => {
                 return null;
             },
 
+            renderMapView: () => {
+                if(!this.state?.route)
+                    return null;
+
+                return this.state.route.sections.map((section, index) => (
+                    <Polyline
+                        key={index}
+                        coordinates={section}
+                        strokeWidth={3}
+                        strokeColor={Appearance.theme.colorPalette.route}
+                        />
+                ));
+            },
+
             events: {
-                onStart: () => {
+                onStart: (route) => {
                     this.setState({ mapViewControl: true });
+
+                    API.get("/api/route", { route }).then((response) => {
+                        this.setState({
+                            route: response.content
+                        });
+                    });
                 },
 
                 onPressIn: () => {
@@ -148,6 +183,10 @@ export default class Routes extends ThemedComponent {
 
                 onPressOut: async () => {
                     
+                },
+
+                onFinish: () => {
+
                 }
             }
         }
@@ -170,6 +209,10 @@ export default class Routes extends ThemedComponent {
     };
 
     setMode(mode, ...args) {
+        if(this.mode)
+            this.mode.events.onFinish();
+
+        // TODO: add a default mode
         this.mode = this.modes.find(x => x.key == mode);
 
         this.setState({ mapViewControl: true });
@@ -183,45 +226,59 @@ export default class Routes extends ThemedComponent {
     render() { 
         return (
             <View style={style.sheet}>
-                <TouchableWithoutFeedback
-                    onPressIn={() => this.mode && this.mode.events.onPressIn()}
-                    onPressOut={() => this.mode && this.mode.events.onPressOut()}
-                    >
-                    <MapView
-                        ref={this.mapView}
-                        style={style.sheet.map}
-                        customMapStyle={Appearance.theme.mapStyle || []}
-                        provider={PROVIDER_GOOGLE}
-                        onLayout={() => this.onLayout()}
-                        showsUserLocation={true}
-                        showsMyLocationButton={false}
-                        pitchEnabled={this.state?.mapViewControl}
-                        rotateEnabled={this.state?.mapViewControl}
-                        scrollEnabled={this.state?.mapViewControl}
-                        zoomEnabled={this.state?.mapViewControl}
-                        onPanDrag={(!this.state?.mapViewControl && this.mode)?((coordinate) => this.mode.events.onPanDrag(coordinate)):(null)}
+                <View style={style.sheet.dynamic}>
+                    <TouchableWithoutFeedback
+                        onPressIn={() => this.mode && this.mode.events.onPressIn()}
+                        onPressOut={() => this.mode && this.mode.events.onPressOut()}
                         >
-                        {(this.state?.mode) && (this.mode.renderMapView())}
-                    </MapView>
-                </TouchableWithoutFeedback>
+                        <MapView
+                            ref={this.mapView}
+                            style={style.sheet.map}
+                            customMapStyle={Appearance.theme.mapStyle || []}
+                            provider={PROVIDER_GOOGLE}
+                            onLayout={() => this.onLayout()}
+                            showsUserLocation={true}
+                            showsMyLocationButton={false}
+                            pitchEnabled={this.state?.mapViewControl}
+                            rotateEnabled={this.state?.mapViewControl}
+                            scrollEnabled={this.state?.mapViewControl}
+                            zoomEnabled={this.state?.mapViewControl}
+                            onPanDrag={(!this.state?.mapViewControl && this.mode)?((coordinate) => this.mode.events.onPanDrag(coordinate)):(null)}
+                            >
+                            {(this.state?.mode) && (this.mode.renderMapView())}
+                        </MapView>
+                    </TouchableWithoutFeedback>
 
-                <Header title="Routes" transparent/>
+                    <Header title="Routes" transparent/>
 
-                {(this.state?.mode)?(
-                    this.mode.render()
-                ):(
-                    <View style={style.sheet.grid}>
-                        <View style={style.sheet.footer}>
-                            {this.modes.filter((mode) => mode.icon).map((mode) => (
-                                <TouchableOpacity key={mode.key} style={style.sheet.button} onPress={() => this.setMode(mode.key)}>
-                                    <FontAwesome5 style={style.sheet.button.icon} name={mode.icon}/>
+                    {(this.state?.mode)?(
+                        this.mode.renderOverlay()
+                    ):(
+                        <View style={style.sheet.grid}>
+                            <View style={style.sheet.footer}>
+                                <View style={style.sheet.footer.disregard}>
+                                    {this.modes.filter((mode) => mode.icon).map((mode) => (
+                                        <TouchableOpacity key={mode.key} style={style.sheet.button} onPress={() => this.setMode(mode.key)}>
+                                            <FontAwesome5 style={style.sheet.button.icon} name={mode.icon}/>
 
-                                    <Text style={style.sheet.button.text}>{mode.title}</Text>
-                                </TouchableOpacity>
-                            ))}
+                                            <Text style={style.sheet.button.text}>{mode.title}</Text>
+                                        </TouchableOpacity>
+                                    ))}
+
+                                    <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode("route", "a7daa639-eae2-48f0-af7a-f19aada3cfa9")}>
+                                        <FontAwesome5 style={style.sheet.button.icon} name={"question"}/>
+
+                                        <Text style={style.sheet.button.text}>Debug</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
-                    </View>
-                )}
+                    )}
+                </View>
+                
+                <View style={style.sheet.static}>
+                    {(this.state?.mode) && (this.mode.render())}
+                </View>
             </View>
         );
     };

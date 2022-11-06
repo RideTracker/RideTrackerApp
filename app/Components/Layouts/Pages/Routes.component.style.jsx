@@ -9,6 +9,7 @@ export default class RoutesStyle {
 
             height: "100%",
 
+            flexDirection: "column",
             
             map: {
                 position: "absolute",
@@ -25,11 +26,16 @@ export default class RoutesStyle {
             },
 
             footer: {
-                marginLeft: "auto",
-
                 flexDirection: "row",
 
-                padding: 12
+                padding: 12,
+                //marginBottom: 24,
+
+                disregard: {
+                    flexDirection: "row",
+                    
+                    marginLeft: "auto"
+                }
             },
 
 
@@ -49,12 +55,24 @@ export default class RoutesStyle {
                     color: Appearance.theme.colorPalette.secondary,
 
                     fontSize: 16,
+                    textShadowColor: Appearance.theme.colorPalette.background,
+                    textShadowOffset: {
+                        width: 0,
+                        height: 0
+                    },
+                    textShadowRadius: 4,
                 },
 
                 description: {
                     color: Appearance.theme.colorPalette.secondary,
 
                     fontSize: 14,
+                    textShadowColor: Appearance.theme.colorPalette.background,
+                    textShadowOffset: {
+                        width: 0,
+                        height: 0
+                    },
+                    textShadowRadius: 4,
                 }
             },
 
@@ -66,7 +84,13 @@ export default class RoutesStyle {
 
                     fontSize: 24,
 
-                    textAlign: "center"
+                    textAlign: "center",
+                    textShadowColor: Appearance.theme.colorPalette.background,
+                    textShadowOffset: {
+                        width: 0,
+                        height: 0
+                    },
+                    textShadowRadius: 4,
                 },
 
                 text: {
@@ -74,8 +98,27 @@ export default class RoutesStyle {
 
                     fontSize: 14,
 
-                    textAlign: "center"
+                    textAlign: "center",
+                    textShadowColor: Appearance.theme.colorPalette.background,
+                    textShadowOffset: {
+                        width: 0,
+                        height: 0
+                    },
+                    textShadowRadius: 4,
                 }
+            },
+
+            dynamic: {
+                flex: 1,
+                height: "auto"
+            },
+
+            static: {
+
+                borderTopWidth: 1,
+                borderTopColor: Appearance.theme.colorPalette.border,
+                borderTopLeftRadius: 12,
+                borderTopRightRadius: 12
             }
         });
 

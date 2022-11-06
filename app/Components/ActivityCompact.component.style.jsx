@@ -114,7 +114,6 @@ export default class ActivityCompactStyle {
                             width: 0,
                             height: 0
                         },
-
                         textShadowRadius: 4,
 
                         ...Appearance.styles.activity.stats.value
