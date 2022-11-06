@@ -28,26 +28,25 @@ import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.compo
 SplashScreen.preventAutoHideAsync();
 
 export default class App extends Component {
-    pageProps = {
+    modalProps = {
         showModal: (...args) => this.showModal(...args),
-        hideModal: (...args) => this.hideModal(...args),
-        onNavigate: (page) => this.setState({ page })
+        hideModal: (...args) => this.hideModal(...args)
     };
 
-    modalProps = {
-        ...this.pageProps,
+    pageProps = {
+        ...this.modalProps,
 
-        onClose: () => this.hideModal(key)
+        onNavigate: (page) => this.setState({ page })
     };
     
     modals = {
-        "LoginPage": (key, props) => (<LoginPage {...this.modalProps} {...props}/>),
-        "ProfilePage": (key, props) => (<ProfilePage {...this.modalProps} {...props}/>),
-        "Bike": (key, props) => (<Bike {...this.modalProps} {...props}/>),
-        "Routes": (key, props) => (<Routes {...this.modalProps} {...props}/>),
-        "Activity": (key, props) => (<Activity {...this.modalProps} {...props}/>),
-        "ProifileSettings": (key, props) => (<ProfileSettings {...this.modalProps} {...props}/>),
-        "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} {...props}/>),
+        "LoginPage": (key, props) => (<LoginPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "ProfilePage": (key, props) => (<ProfilePage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "Bike": (key, props) => (<Bike {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "Routes": (key, props) => (<Routes {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "Activity": (key, props) => (<Activity {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "ProifileSettings": (key, props) => (<ProfileSettings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
     };
 
     showModal(component, props = {}) {
