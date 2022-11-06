@@ -1,5 +1,5 @@
 import { Component, useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Platform } from "react-native";
+import { StyleSheet, View, Platform, Text, TouchableOpacity } from "react-native";
 import uuid from "react-native-uuid";
 
 import * as Location from "expo-location";
@@ -27,10 +27,15 @@ import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.compo
 
 SplashScreen.preventAutoHideAsync();
 
+import style from "./App.style";
+
 export default class App extends Component {
     modalProps = {
         showModal: (...args) => this.showModal(...args),
-        hideModal: (...args) => this.hideModal(...args)
+        hideModal: (...args) => this.hideModal(...args),
+        
+        showNotification: (...args) => this.showNotification(...args),
+        hideNotification: (...args) => this.hideNotification(...args)
     };
 
     pageProps = {
@@ -66,6 +71,21 @@ export default class App extends Component {
         this.setState({ modals });
     };
 
+    showNotification(text) {
+        const key = uuid.v4();
+
+        const notifications = this.state?.notifications ?? [];
+        notifications.push({ key, text });
+
+        this.setState({ notifications });
+
+        return key;
+    };
+
+    hideNotification(key) {
+        this.setState({ notifications: this.state.notifications.filter((notification) => notification.key != key) });
+    };
+
     pages = {
         "/index": (<LandingPage  {...this.pageProps}/>),
         "/routes": (<Routes  {...this.pageProps}/>),
@@ -94,6 +114,8 @@ export default class App extends Component {
         else if(Config.user.guest == null) {
             const modal = this.showModal("LoginPage", { onClose: () => this.hideModal(modal) });
         }
+
+        this.style = style.update();
 
         await SplashScreen.hideAsync();
     
@@ -144,6 +166,14 @@ export default class App extends Component {
                         {this.modals[modal.component](modal.key, modal.props)}
                     </View>
                 ))}
+
+                <View style={style.sheet.notifications}>
+                    {this.state?.notifications?.map((notification) => (
+                        <TouchableOpacity key={notification.key} style={style.sheet.notifications.item} onPress={() => this.hideNotification(notification.key)}>
+                            <Text style={style.sheet.notifications.item.text}>{notification.text}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
             </View>
         );
     };
