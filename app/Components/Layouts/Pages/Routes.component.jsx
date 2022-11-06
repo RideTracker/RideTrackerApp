@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, ScrollView } from "react-native";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 
 import * as Location from 'expo-location';
@@ -7,10 +7,13 @@ import * as Location from 'expo-location';
 import { getBoundsOfDistance, getDistance, getRhumbLineBearing } from "geolib";
 
 import API from "app/Services/API";
+import User from "app/Data/User";
 
 import Appearance from "app/Data/Appearance";
 
 import ThemedComponent from "app/Components/ThemedComponent";
+import Button from "app/Components/Button.component";
+import RouteCompact from "app/Components/RouteCompact.component";
 
 import Header from "app/Components/Layouts/Header.component";
 
@@ -122,14 +125,77 @@ export default class Routes extends ThemedComponent {
 
                     console.log(finalCoordinates);
 
-                    const response = await API.post("/api/routes/draw", { origin: this.state.coordinates[0], destination: this.state.coordinates[this.state.coordinates.length - 1], coordinates: finalCoordinates });
+                    const response = await API.post("/api/directions/draw", { origin: this.state.coordinates[0], destination: this.state.coordinates[this.state.coordinates.length - 1], coordinates: finalCoordinates });
                     const result = response.content;
 
-                    this.setMode("route", result);
+                    this.setMode("directions", result);
                 },
 
                 onFinish: () => {
                     this.setState({ coordinates: [] });
+                }
+            }
+        },
+
+        {
+            key: "directions",
+
+            render: () => {
+
+            },
+            
+            renderOverlay: () => {
+                return (
+                    <View style={style.sheet.grid}>
+                        <View style={style.sheet.footer}>
+                            <View style={style.sheet.footer.disregard}>
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode(null)}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
+
+                                    <Text style={style.sheet.button.text}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                );
+            },
+
+            renderMapView: () => {
+                if(!this.state?.directions)
+                    return null;
+
+                return this.state.directions.sections.map((coordinates, index) => (
+                    <Polyline
+                        key={index}
+                        coordinates={coordinates}
+                        strokeWidth={3}
+                        strokeColor={Appearance.theme.colorPalette.route}
+                        />
+                ));
+            },
+
+            events: {
+                onStart: async (directions) => {
+                    const response = await API.get("/api/directions", { directions });
+                    const result = response.content;
+
+                    this.setState({ directions: result });
+                },
+
+                onPressIn: () => {
+                    
+                },
+
+                onPanDrag: (position) => {
+                    
+                },
+
+                onPressOut: async () => {
+                    
+                },
+
+                onFinish: () => {
+                    
                 }
             }
         },
@@ -142,19 +208,32 @@ export default class Routes extends ThemedComponent {
             },
             
             renderOverlay: () => {
-                return null;
+                return (
+                    <View style={style.sheet.grid}>
+                        <View style={style.sheet.footer}>
+                            <View style={style.sheet.footer.disregard}>
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode(null)}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
+
+                                    <Text style={style.sheet.button.text}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                );
             },
 
             renderMapView: () => {
                 if(!this.state?.route)
                     return null;
 
-                return this.state.route.sections.map((section, index) => (
+                return this.state.route.sections.map((coordinates, index) => (
                     <Polyline
                         key={index}
-                        coordinates={section}
+                        coordinates={coordinates}
                         strokeWidth={3}
                         strokeColor={Appearance.theme.colorPalette.route}
+                        onLayout={() => this.mode.events.onLayout(coordinates)}
                         />
                 ));
             },
@@ -184,6 +263,10 @@ export default class Routes extends ThemedComponent {
 
                 onFinish: () => {
 
+                },
+
+                onLayout: (coordinates) => {
+                    this.mapView.current.fitToCoordinates(coordinates);
                 }
             }
         }
@@ -195,7 +278,16 @@ export default class Routes extends ThemedComponent {
         this.mapView = React.createRef();
     };
 
+    componentDidMount() {
+        API.get("/api/user/routes", { user: User.id }).then((response) => {
+            this.setState({ routes: response.content });
+        });
+    };
+
     async onLayout() {
+        if(this.mode)
+            return;
+
         const position = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.BestForNavigation
         });
@@ -274,7 +366,17 @@ export default class Routes extends ThemedComponent {
                 </View>
                 
                 <View style={style.sheet.static}>
-                    {(this.state?.mode) && (this.mode.render())}
+                    {(this.state?.mode)?(this.mode.render()):(
+                        <ScrollView style={style.sheet.static.routes}>
+                            {(this.state?.routes) && this.state.routes.map((route) => (
+                                <RouteCompact key={route} route={route} onPress={() => this.setMode("route", route)}/>
+                            ))}
+
+                            <View style={style.sheet.static.content}>
+                                <Button branded title="Create a new route"/>
+                            </View>
+                        </ScrollView>
+                    )}
                 </View>
             </View>
         );

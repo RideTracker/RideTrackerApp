@@ -118,7 +118,15 @@ export default class RoutesStyle {
                 borderTopWidth: 1,
                 borderTopColor: Appearance.theme.colorPalette.border,
                 borderTopLeftRadius: 12,
-                borderTopRightRadius: 12
+                borderTopRightRadius: 12,
+
+                routes: {
+                    height: "40%"
+                },
+
+                content: {
+                    padding: 12
+                }
             }
         });
 
