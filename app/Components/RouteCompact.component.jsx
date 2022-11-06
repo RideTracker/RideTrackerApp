@@ -34,7 +34,7 @@ export default class RouteCompact extends Component {
             animated: false,
             edgePadding: {
                 top: 0,
-                bottom: 10,
+                bottom: 5,
                 
                 left: 0,
                 right: 0

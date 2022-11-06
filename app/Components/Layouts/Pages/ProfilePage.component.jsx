@@ -7,6 +7,7 @@ import API from "app/Services/API";
 
 import User from "app/Data/User";
 
+import Tabs from "app/Components/Tabs.component";
 import Button from "app/Components/Button.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
 
@@ -22,83 +23,6 @@ export default class ProfilePage extends Component {
 
     constructor(...args) {
         super(...args);
-
-        this.state = {
-            tab: "activities"
-        };
-
-        this.tabs = [
-            /*{
-                key: "activity",
-                title: "Activity",
-                
-                render: () => {
-                    return this.state?.activity?.map((activity) => {
-                        switch(activity.type) {
-                            case "comment": {
-                                return (
-                                    <Text key={activity.id}>Comment {activity.id}</Text>
-                                );
-                            }
-                            
-                            case "activity": {
-                                return (
-                                    <Text key={activity.id}>Activity {activity.id}</Text>  
-                                );
-                            }
-                            case "bike": {
-                                return (
-                                    <Text key={activity.id}>Bike {activity.id}</Text>  
-                                );
-                            }
-                        }
-                    });
-                }
-            },*/
-
-            {
-                key: "activities",
-                title: "Activities",
-                
-                render: () => {
-                    return this.state?.activities?.map((id) => 
-                        (<ActivityCompact id={id} key={id} onPress={(id) => this.showActivity(id)}/>)
-                    );
-                }
-            },
-            
-            {
-                key: "bikes",
-                title: "Bikes",
-                
-                render: () => {
-                    return (
-                        <View>
-                            {this.state?.bikes?.map((id) => 
-                                (<BikeCompact id={id} key={id} onPress={(id) => this.showBike(id)}/>)
-                            )}
-
-                            <Button style={style.sheet.button} title={"Add a new bike"} onPress={() => this.showBikeCreation()}/>
-                        </View>
-                    );
-                }
-            },
-            
-            {
-                key: "routes",
-                title: "Routes",
-                
-                render: () => {
-                    return (
-                        <View>
-                            {this.state?.routes?.map((id) => 
-                                (<RouteCompact key={id} route={id} onPress={(id) => this.props.showModal("Routes", { route: id })}/>)
-                            )}
-                        </View>
-                    );
-                }
-            }
-        ];
     };
 
     componentDidMount() {
@@ -130,28 +54,8 @@ export default class ProfilePage extends Component {
             });*/
         }
         else { 
-            const modal = this.props.showModal("LoginPage");
+            this.props.showModal("LoginPage");
         }
-    };
-
-    async onSettingsPress() {
-        const modal = this.props.showModal("ProfileSetings");
-    };
-
-    showActivity(activity) {
-        const modal = this.props.showModal("Activity", { id: activity });
-    };
-
-    showBike(bike) {
-        const modal = this.props.showModal("Bike", { id: bike });
-    };
-
-    showBikeCreation() {
-        const modal = this.props.showModal("BikeCreation");
-    };
-
-    hideModal(modal) {
-        this.props.hideModal(modal);
     };
 
     async onAvatarPress() {
@@ -183,7 +87,7 @@ export default class ProfilePage extends Component {
                         title="Profile"
 
                         button="cog"
-                        onButtonPress={() => this.onSettingsPress()}
+                        onButtonPress={() => this.props.showModal("ProfileSetings")}
 
                         navigation={(this.props?.onClose)}
                         onNavigationPress={() => this.props?.onClose()}
@@ -218,21 +122,29 @@ export default class ProfilePage extends Component {
                         )}
                     </View>
 
-                    <Text style={[ style.sheet.profile.item, style.sheet.profile.title ]}>{this.state.user?.name}</Text>
+                    <Text style={[ style.sheet.profile.item, style.sheet.profile.title ]}>{this.state?.user?.name}</Text>
 
                     <Text style={[ style.sheet.profile.item, style.sheet.profile.follow ]}>FOLLOW</Text>
 
-                    <View style={style.sheet.tabs}>
-                        {this.tabs.map((tab) => (
-                            <TouchableOpacity key={tab.key} onPress={() => this.setState({ tab: tab.key})} style={[ style.sheet.tabs.tab, (this.state.tab == tab.key) && style.sheet.tabs.tab.active ]}>
-                                <Text style={style.sheet.tabs.tab.text}>{tab.title}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
+                    <Tabs default="activities">
+                        <View id="activities" title="Activities">
+                            {this.state?.activities?.map((id) => (<ActivityCompact id={id} key={id} onPress={(id) => this.props.showModal("Activity", { id })}/>))}
+                        </View>
+                        
+                        <View id="bikes" title="Bikes">
+                            {this.state?.bikes?.map((id) => 
+                                (<BikeCompact id={id} key={id} onPress={(id) => this.props.showModal("Bike", { id })}/>)
+                            )}
 
-                    <View>
-                        {this.tabs.find(tab => tab.key == this.state.tab)?.render()}
-                    </View>
+                            <Button style={style.sheet.button} title={"Add a new bike"} onPress={() => this.props.showModal("BikeCreation")}/>
+                        </View>
+                        
+                        <View id="routes" title="Routes">
+                            {this.state?.routes?.map((id) => 
+                                (<RouteCompact key={id} route={id} onPress={(id) => this.props.showModal("Routes", { route: id })}/>)
+                            )}
+                        </View>
+                    </Tabs>
                 </ScrollView>
             </View>
         );
