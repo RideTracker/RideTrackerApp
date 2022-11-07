@@ -69,7 +69,7 @@ export default class ActivityCompact extends ThemedComponent {
                     <MapView
                         ref={this.mapView}
                         style={style.sheet.map.view}
-                        customMapStyle={Appearance.theme.mapStyleCompact || []}
+                        customMapStyle={[ ...Appearance.theme.mapStyle, ...Appearance.theme.mapStyleCompact ]}
                         provider={PROVIDER_GOOGLE}
                         onLayout={() => this.onLayout()}
                         pitchEnabled={false}

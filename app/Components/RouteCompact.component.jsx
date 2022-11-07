@@ -53,7 +53,7 @@ export default class RouteCompact extends Component {
                 <View style={style.sheet.grid}>
                     <MapView
                         ref={this.mapView}
-                        customMapStyle={Appearance.theme.mapStyleCompact || []}
+                        customMapStyle={[ ...Appearance.theme.mapStyle, ...Appearance.theme.mapStyleCompact ]}
                         userInterfaceStyle={"light"}
                         provider={PROVIDER_GOOGLE}
                         pitchEnabled={false}

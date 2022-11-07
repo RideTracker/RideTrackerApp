@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 
 import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
+import ThemedComponent from "app/Components/ThemedComponent";
 import Bike from "app/Components/Bike.component";
 import BikeCreation from "app/Components/BikeCreation.component";
 import Activity from "app/Components/Activity.component";
@@ -29,7 +30,7 @@ SplashScreen.preventAutoHideAsync();
 
 import style from "./App.style";
 
-export default class App extends Component {
+export default class App extends ThemedComponent {
     modalProps = {
         showModal: (...args) => this.showModal(...args),
         hideModal: (...args) => this.hideModal(...args),
