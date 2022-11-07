@@ -7,6 +7,35 @@ import API from "app/Services/API";
 export default class Files {
     static directory = FileSystem.documentDirectory + "/files/";
 
+    static getPath(file) {
+        return this.directory + file;
+    };
+
+    static async exists(file) {
+        const path = this.getPath(file);
+
+        const directoryInfo = await FileSystem.getInfoAsync(path);
+
+        return directoryInfo.exists;
+    };
+
+    static async write(file, content) {
+        const path = this.getPath(file);
+
+        console.log("write " + path);
+
+        await FileSystem.writeAsStringAsync(path, content);
+    };
+
+    static async create(directory) {
+        const path = this.getPath(directory) + "/";
+
+        const directoryInfo = await FileSystem.getInfoAsync(path);
+
+        if(!directoryInfo.exists)
+            await FileSystem.makeDirectoryAsync(path, { intermediates: true });
+    };
+
     static async createDirectory(directory) {
         const directoryInfo = await FileSystem.getInfoAsync(directory);
 

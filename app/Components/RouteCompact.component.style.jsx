@@ -50,10 +50,12 @@ export default class RouteCompactStyle {
             stats: {
                 flexDirection: "row",
                 flexWrap: "wrap",
-                justifyContent: "space-around",
+                justifyContent: "space-between",
 
                 item: {
                     flexDirection: "column",
+
+                    justifyContent: "center",
 
                     title: {
                         color: Appearance.theme.colorPalette.secondary,
@@ -68,6 +70,21 @@ export default class RouteCompactStyle {
 
                         textAlign: "center",
                     }
+                }
+            },
+
+            button: {
+                flexDirection: "column",
+
+                justifyContent: "center",
+                
+                icon: {
+                    marginRight: 24,
+
+                    fontSize: 16,
+                    color: Appearance.theme.colorPalette.secondary,
+
+                    textAlign: "center"
                 }
             }
         });

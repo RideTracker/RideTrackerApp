@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { Image, View, Text, TouchableWithoutFeedback, PixelRatio } from "react-native";
+import { Image, View, Text, TouchableWithoutFeedback, TouchableOpacity, PixelRatio } from "react-native";
 import MapView, { Polygon, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import { getBounds } from "geolib";
 
 import Appearance from "app/Data/Appearance";
+import Files from "app/Data/Files";
 
 import API from "app/Services/API";
 
@@ -25,6 +27,10 @@ export default class RouteCompact extends Component {
 
             API.get("/api/directions", { directions: data.content.directions }).then((data) => {
                 this.setState({ directions: data.content });
+
+                Files.exists(`directions/${data.content.id}.json`).then((exists) => {
+                    this.setState({ downloaded: exists });
+                });
             });
         });
     };
@@ -42,6 +48,20 @@ export default class RouteCompact extends Component {
         });
 
         this.setState({ ready: true });
+    };
+
+    onPlayPress() {
+
+    };
+
+    onDownloadPress() {
+        API.get("/api/directions/download", { directions: this.state.directions.id }).then(async (data) => {
+            await Files.create("directions");
+
+            await Files.write(`directions/${this.state.directions.id}.json`, JSON.stringify(data.content));
+
+            this.setState({ downloaded: true });
+        });
     };
 
     render() {
@@ -106,10 +126,15 @@ export default class RouteCompact extends Component {
                                 <Text style={style.sheet.stats.item.description}>distance</Text>
                             </View>
                             
-                            <View style={style.sheet.stats.item}>
-                                <Text style={style.sheet.stats.item.title}>? m</Text>
-                                <Text style={style.sheet.stats.item.description}>elevation</Text>
-                            </View>
+                            {(this.state?.downloaded)?(
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.onPlayPress()}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"play"}/>
+                                </TouchableOpacity>
+                            ):(
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.onDownloadPress()}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"download"}/>
+                                </TouchableOpacity>
+                            )}
                         </View>
                     </View>
                 </View>

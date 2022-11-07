@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, TouchableWithoutFeedback, ScrollView } from "react-native";
-import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import uuid from 'react-native-uuid';
 
 import * as Location from 'expo-location';
 
@@ -108,7 +109,7 @@ export default class Routes extends ThemedComponent {
 
         {
             key: "draw",
-            title: "Brush a route",
+            title: "Sketch route\nwith brush",
             icon: "paint-brush",
 
             render: () => {
@@ -210,6 +211,150 @@ export default class Routes extends ThemedComponent {
                     console.log(finalCoordinates);
 
                     const response = await API.post("/api/directions/draw", { origin: this.state.coordinates[0], destination: this.state.coordinates[this.state.coordinates.length - 1], coordinates: finalCoordinates });
+                    const result = response.content;
+
+                    this.setMode("directions", result);
+                },
+
+                onFinish: () => {
+                    this.setState({ coordinates: [] });
+                }
+            }
+        },
+
+        {
+            key: "waypoints",
+            title: "Draw with\nwaypoints",
+            icon: "map-marker-alt",
+
+            render: () => {
+                return (
+                    <View>
+                        <View style={style.sheet.instructions}>
+                            <Text style={style.sheet.instructions.title}>Plan a route</Text>
+                            <Text style={style.sheet.instructions.description}>Press on the map to add a way point to generate a route or press on a waypoint to delete it.</Text>
+                        </View>
+                    </View>
+                );
+            },
+            
+            renderOverlay: () => {
+                return (
+                    <View style={style.sheet.grid}>
+                        <View style={style.sheet.footer}>
+                            {(this.state?.waypoints?.length >= 2) && (
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.mode.events.onFinishPress()}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"check"}/>
+
+                                    <Text style={style.sheet.button.text}>Finish</Text>
+                                </TouchableOpacity>
+                            )}
+
+                            {(this.state?.mapViewControl)?(
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setState({ mapViewControl: false })}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"map-marker-alt"}/>
+            
+                                    <Text style={style.sheet.button.text}>Waypoints</Text>
+                                </TouchableOpacity>
+                            ):(
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setState({ mapViewControl: true })}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"arrows-alt"}/>
+
+                                    <Text style={style.sheet.button.text}>Move</Text>
+                                </TouchableOpacity>
+                            )}
+
+                            <View style={style.sheet.footer.disregard}>
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.setMode("default")}>
+                                    <FontAwesome5 style={style.sheet.button.icon} name={"times"}/>
+
+                                    <Text style={style.sheet.button.text}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                );
+            },
+
+            renderMapView: () => {
+                return this.state?.waypoints?.map((waypoint, index, array) => (
+                    <View key={waypoint.key}>
+                        {(index > 0) && (
+                            <Polyline
+                                coordinates={[ array[index - 1].coordinate, waypoint.coordinate ]}
+                                strokeWidth={3}
+                                strokeColor={Appearance.theme.colorPalette.secondary}
+                                />
+                        )}
+
+                        <Marker
+                            coordinate={waypoint.coordinate}
+                            pinColor={"linen"}
+                            onPress={() => this.mode.events.onWaypointPress(waypoint)}
+                            />
+                    </View>
+                ));
+            },
+
+            events: {
+                onStart: async () => {
+                    const position = await Location.getCurrentPositionAsync({
+                        accuracy: Location.Accuracy.BestForNavigation
+                    });
+
+                    this.setState({ mapViewControl: false, waypoints: [
+                        {
+                            key: "start",
+                            coordinate: {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude
+                            }
+                        }
+                    ] });
+                },
+
+                onPressIn: () => {
+                    //if(this.state.mapViewControl)
+                    //    return;
+
+                    //this.setState({ coordinates: [] });
+                },
+
+                onPress: (position) => {
+                    if(this.state.mapViewControl)
+                        return;
+
+                    const waypoints = this.state.waypoints;
+                    
+                    if(waypoints.length == 10)
+                        return;
+                    
+                    waypoints.push({
+                        key: uuid.v4(),
+                        coordinate: position.nativeEvent.coordinate
+                    });
+
+                    this.setState({ waypoints });
+                },
+
+                onWaypointPress: (waypoint) => {
+                    this.setState({
+                        waypoints: this.state.waypoints.filter((x) => x.key != waypoint.key)
+                    });
+                },
+
+                onPanDrag: (position) => {
+
+                },
+
+                onPressOut: async () => {
+
+                },
+
+                onFinishPress: async () => {
+                    const coordinates = this.state.waypoints.map((waypoint) => waypoint.coordinate);
+
+                    const response = await API.post("/api/directions/draw", { origin: coordinates[0], destination: coordinates[coordinates.length - 1], coordinates });
                     const result = response.content;
 
                     this.setMode("directions", result);
@@ -467,6 +612,7 @@ export default class Routes extends ThemedComponent {
                             rotateEnabled={this.state?.mapViewControl}
                             scrollEnabled={this.state?.mapViewControl}
                             zoomEnabled={this.state?.mapViewControl}
+                            onPress={(!this.state?.mapViewControl && this.mode && this.mode.events?.onPress)?((coordinate) => this.mode.events.onPress(coordinate)):(null)}
                             onPanDrag={(!this.state?.mapViewControl && this.mode)?((coordinate) => this.mode.events.onPanDrag(coordinate)):(null)}
                             >
                             {(this.state?.mode) && (this.mode.renderMapView())}
