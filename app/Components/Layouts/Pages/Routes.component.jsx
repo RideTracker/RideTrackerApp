@@ -35,9 +35,13 @@ export default class Routes extends ThemedComponent {
                         <Tabs default="routes">
                             <View id="routes" title="Your Routes">
                                 <ScrollView>
-                                    {(this.state?.routes) && this.state.routes.map((route) => (
+                                    {(this.state?.routes)?(this.state.routes.map((route) => (
                                         <RouteCompact key={route} route={route} onPress={() => this.setMode("route", route)}/>
-                                    ))}
+                                    ))):(
+                                        <View style={style.sheet.static.content}>
+                                            <Text style={style.sheet.form.text}>You do not have any routes.</Text>
+                                        </View>
+                                    )}
                                 </ScrollView>
                             </View>
                             
