@@ -1,4 +1,4 @@
-import { Component, useCallback, useEffect, useState } from "react";
+import React, { Component, useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Platform, Text, TouchableOpacity } from "react-native";
 import uuid from "react-native-uuid";
 
@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 
 import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
+import Animation from "app/Components/Animation.component";
 import ThemedComponent from "app/Components/ThemedComponent";
 import Bike from "app/Components/Bike.component";
 import BikeCreation from "app/Components/BikeCreation.component";
@@ -76,7 +77,7 @@ export default class App extends ThemedComponent {
         const key = uuid.v4();
 
         const notifications = this.state?.notifications ?? [];
-        notifications.push({ key, text });
+        notifications.push({ key, text, animation: React.createRef() });
 
         this.setState({ notifications });
 
@@ -119,7 +120,7 @@ export default class App extends ThemedComponent {
         this.style = style.update();
 
         await SplashScreen.hideAsync();
-    
+
         //Appearance.addEventListener("change", (theme) => this.setState({ theme }));
 
         this.setState({ page: "/index" });
@@ -173,13 +174,31 @@ export default class App extends ThemedComponent {
                     </View>
                 ))}
 
-                <View style={style.sheet.notifications}>
-                    {this.state?.notifications?.map((notification) => (
-                        <TouchableOpacity key={notification.key} style={style.sheet.notifications.item} onPress={() => this.hideNotification(notification.key)}>
+                {this.state?.notifications?.map((notification, index) => (
+                    <Animation
+                        ref={notification.animation}
+                        key={notification.key}
+                        enabled={true}
+                        style={style.sheet.notifications}
+                        transitions={[
+                            {
+                                type: "opacity",
+                                duration: 200
+                            }
+                        ]}
+                        >
+                        <TouchableOpacity style={[ style.sheet.notifications.item, { marginBottom: 12 * index } ]} onPress={() => notification.animation.current.setTransitions([
+                            {
+                                type: "opacity",
+                                direction: "out",
+                                duration: 200,
+                                callback: () => this.hideNotification(notification.key)
+                            }
+                        ])}>
                             <Text style={style.sheet.notifications.item.text}>{notification.text}</Text>
                         </TouchableOpacity>
-                    ))}
-                </View>
+                    </Animation>
+                ))}
             </View>
         );
     };

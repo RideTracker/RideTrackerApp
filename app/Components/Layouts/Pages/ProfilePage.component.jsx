@@ -135,7 +135,7 @@ export default class ProfilePage extends Component {
                         
                         <View id="bikes" title="Bikes">
                             {this.state?.bikes?.map((id) => 
-                                (<BikeCompact id={id} key={id} onPress={(id) => this.props.showModal("Bike", { id })}/>)
+                                (<BikeCompact id={id} key={id} onPress={(id) => this.props.showNotification("This feature is not implemented yet!")}/>)
                             )}
 
                             <Button style={style.sheet.button} title={"Add a new bike"} onPress={() => this.props.showModal("BikeCreation")}/>

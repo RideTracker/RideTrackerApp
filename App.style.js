@@ -9,7 +9,7 @@ export default class {
                 position: "absolute",
                 
                 width: "100%",
-
+                
                 bottom: 70,
 
                 padding: 6,
@@ -32,10 +32,12 @@ export default class {
                     
                     backgroundColor: Appearance.theme.colorPalette.accent,
 
-                    padding: 6,
+                    paddingVertical: 8,
                     paddingHorizontal: 12,
 
                     text: {
+                        fontSize: 16,
+                        
                         color: Appearance.theme.colorPalette.secondary
                     }
                 }

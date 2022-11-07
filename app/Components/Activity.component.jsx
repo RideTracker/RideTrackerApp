@@ -193,10 +193,6 @@ export default class Activity extends ThemedComponent {
         Linking.openURL(`${config.api}/api/activity/export?id=${this.state.activity.id}`);
     };
 
-    showBike() {
-        const modal = this.props.showModal("Bike", { id: this.state.activity.bike });
-    };
-
     async onDelete() {
         await API.delete("/api/activity", { activity: this.state.activity.id });
 
@@ -316,7 +312,7 @@ export default class Activity extends ThemedComponent {
                     </View>
 
                     {this.state.activity.bike && (
-                        <BikeCompact style={style.sheet.section} id={this.state.activity.bike} onPress={() => this.showBike()}/>
+                        <BikeCompact style={style.sheet.section} id={this.state.activity.bike} onPress={() => this.props.showNotification("This feature is not implemented yet!")}/>
                     )}
 
                     {this.state?.comments && (
