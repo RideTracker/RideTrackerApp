@@ -3,6 +3,7 @@ import { View } from "react-native";
 
 export default class Animation extends Component {
     transitions = [];
+    style = {};
 
     componentDidMount() {
         if(this.props?.transitions)
@@ -42,12 +43,15 @@ export default class Animation extends Component {
 
         if(!this.interval) {
             this.interval = setInterval(() => {
+                if(!this.interval)
+                    return;
+                    
                 const now = performance.now();
         
                 this.transitions = this.transitions.filter((transition) => {
-                    const currentDuration = now - transition.start;
-            
-                    if(currentDuration >= transition.duration) {
+                    if(transition.completed) {
+                        console.log("remove completed transition");
+
                         if(transition.callback)
                             transition.callback();
 
@@ -56,6 +60,13 @@ export default class Animation extends Component {
 
                     return true;
                 });
+
+                if(!this.transitions.length) {
+                    console.log("clearInterval");
+                    clearInterval(this.interval);
+        
+                    this.interval = undefined;
+                }
 
                 this.setState({ now });
             }, 10);
@@ -71,35 +82,29 @@ export default class Animation extends Component {
             );
         }
 
-        if(!this.transitions.length) {
-            if(this.interval) {
-                clearInterval(this.interval);
-    
-                this.interval = undefined;
-            }
+        this.transitions.forEach((transition, index) => {
+            if(transition.completed)
+                return;
 
-            return (
-                <View style={[ this.props?.style, this.style ]}>
-                    {this.props?.children}
-                </View>
-            );
-        }
-
-        this.style = {};
-
-        this.transitions.forEach((transition) => {
             const currentDuration = this.state.now - transition.start;
     
             let multiplier = currentDuration / transition.duration;
 
-            if(multiplier >= 1.0)
+            if(multiplier >= 1.0) {
                 multiplier = 1.0;
+
+                transition.completed = true;
+                
+                console.log("transition completed");
+            }
 
             if(transition.ease)
                 multiplier = (multiplier < 0.5)?(2 * multiplier * multiplier):(-1 + (4 - (2 * multiplier)) * multiplier);
 
             if(transition.direction == "out")
                 multiplier = 1.0 - multiplier;
+
+            console.log("multiplier " + multiplier);
 
             switch(transition.type) {
                 case "opacity": {
@@ -123,7 +128,7 @@ export default class Animation extends Component {
         });
     
         return (
-            <View style={[ this.props?.style, this.style ]}>
+            <View style={[ this.props?.style, { ...this.style } ]}>
                 {this.props?.children}
             </View>
         );
