@@ -50,10 +50,6 @@ export default class RouteCompact extends Component {
         this.setState({ ready: true });
     };
 
-    onPlayPress() {
-
-    };
-
     onDownloadPress() {
         API.get("/api/directions/download", { directions: this.state.directions.id }).then(async (data) => {
             await Files.create("directions");
@@ -127,7 +123,7 @@ export default class RouteCompact extends Component {
                             </View>
                             
                             {(this.state?.downloaded)?(
-                                <TouchableOpacity style={style.sheet.button} onPress={() => this.onPlayPress()}>
+                                <TouchableOpacity style={style.sheet.button} onPress={() => this.props.onPlayPress(this.state.route.directions)}>
                                     <FontAwesome5 style={style.sheet.button.icon} name={"play"}/>
                                 </TouchableOpacity>
                             ):(

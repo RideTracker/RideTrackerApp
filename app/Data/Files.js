@@ -22,9 +22,13 @@ export default class Files {
     static async write(file, content) {
         const path = this.getPath(file);
 
-        console.log("write " + path);
-
         await FileSystem.writeAsStringAsync(path, content);
+    };
+
+    static async read(file) {
+        const path = this.getPath(file);
+
+        return await FileSystem.readAsStringAsync(path);
     };
 
     static async create(directory) {

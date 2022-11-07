@@ -11,6 +11,71 @@ export default class RecordPageStyle {
 
             height: "100%",
 
+            directions: {
+                //backgroundColor: "#397E49",
+
+                flexDirection: "row",
+
+                padding: 6,
+                margin: 12,
+                borderRadius: 4,
+
+                /*shadowColor: "#000",
+                shadowOffset: {
+                    width: 0,
+                    height: 5,
+                },
+                shadowOpacity: 0.34,
+                shadowRadius: 6.27,
+
+                elevation: 10,*/
+
+                upcoming: {
+                    minWidth: 60,
+
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                    marginRight: 24,
+
+                    image: {
+                        tintColor: "#FFF",
+
+                        width: 50,
+                        height: 50
+                    },
+
+                    text: {
+                        fontWeight: "bold",
+                        fontSize: 24,
+                        color: Appearance.theme.colorPalette.secondary
+                    },
+
+                    unit: {
+                        fontSize: 16,
+                        color: Appearance.theme.colorPalette.secondary
+                    }
+                },
+
+                street: {
+                    flexDirection: "column",
+                    justifyContent: "center",
+
+                    flex: 1,
+
+                    text: {
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        color: Appearance.theme.colorPalette.secondary
+                    },
+
+                    instruction: {
+                        fontSize: 16,
+                        color: Appearance.theme.colorPalette.secondary
+                    }
+                }
+            },
+
             map: {
                 height: "100%",
                 width: "100%",
@@ -26,7 +91,11 @@ export default class RecordPageStyle {
             },
 
             footer: {
-                marginTop: "auto"
+                marginTop: "auto",
+
+                section: {
+                    backgroundColor: Appearance.theme.colorPalette.primary
+                }
             },
 
             stats: {
@@ -40,7 +109,7 @@ export default class RecordPageStyle {
                     flexDirection: "row",
                     justifyContent: "space-evenly",
 
-                    marginTop: 24,
+                    marginVertical: 12,
 
                     item: {
                         width: "50%"
@@ -114,7 +183,7 @@ export default class RecordPageStyle {
             },
 
             controls: {
-                padding: 32,
+                padding: 6,
 
                 flexDirection: "row",
 

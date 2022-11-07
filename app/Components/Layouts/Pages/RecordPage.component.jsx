@@ -1,9 +1,11 @@
 import React from "react";
-import { TouchableOpacity, Text, View } from "react-native";
+import { TouchableOpacity, Text, View, Image } from "react-native";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
-import { getBoundsOfDistance } from "geolib";
+import { getBoundsOfDistance, getDistance } from "geolib";
+
+import { decode } from "@googlemaps/polyline-codec";
 
 import API from "app/Services/API";
 import User from "app/Data/User";
@@ -15,13 +17,32 @@ import Header from "app/Components/Layouts/Header.component";
 
 import Recorder from "app/Data/Recorder";
 import Appearance from "app/Data/Appearance";
+import Files from "app/Data/Files";
 
 import style from "./RecordPage.component.style";
+
+const images = {
+    "merge": require("assets/directions/merge.png"),
+    "merge-left": require("assets/directions/merge-left.png"),
+    "merge-right": require("assets/directions/merge-right.png"),
+    "merge-slight-left": require("assets/directions/merge-slight-left.png"),
+    "merge-slight-right": require("assets/directions/merge-slight-right.png"),
+    "roundabout": require("assets/directions/roundabout.png"),
+    "straight": require("assets/directions/straight.png"),
+    "turn-left": require("assets/directions/turn-left.png"),
+    "turn-right": require("assets/directions/turn-right.png"),
+    "turn-sharp-left": require("assets/directions/turn-sharp-left.png"),
+    "turn-sharp-right": require("assets/directions/turn-sharp-right.png"),
+    "turn-slight-left": require("assets/directions/turn-slight-left.png"),
+    "turn-slight-right": require("assets/directions/turn-slight-right.png")
+};
 
 export default class RecordPage extends ThemedComponent {
     style = style.update();
 
-    recorder = new Recorder(!User.guest, (position) => this.onPosition(position));
+    recorder = new Recorder(false, (position) => this.onPosition(position));
+
+    shouldUpdateCamera = true;
 
     constructor(...args) {
         super(...args);
@@ -31,6 +52,23 @@ export default class RecordPage extends ThemedComponent {
 
     componentDidMount() {
         this.interval = setInterval(() => this.onInterval(), 1000);
+
+        if(this.props.directions) {
+            Files.read(`directions/${this.props.directions}.json`).then((directions) => {
+                directions = JSON.parse(directions);
+
+                this.setState({
+                    directions,
+
+                    polyline: decode(directions.routes[0].overview_polyline.points, 5).map((points) => { return { latitude: points[0], longitude: points[1] } })
+                });
+
+                if(!this.recorder.active)
+                    this.recorder.start();
+            });
+        }
+        else if(!this.recorder.active)
+            this.recorder.start();
     };
 
     componentWillUnmount() {
@@ -51,17 +89,74 @@ export default class RecordPage extends ThemedComponent {
         if(!this.mapView?.current)
             return;
 
-        const bounds = getBoundsOfDistance(position.coords, 1000);
+        if(!this.state?.freeCamera) {
+            const bounds = getBoundsOfDistance(position.coords, 200);
+    
+            this.mapView.current.fitToCoordinates(bounds, {
+                edgePadding: {
+                    top: 20,
+                    right: 20,
+                    bottom: 20,
+                    left: 20
+                },
+    
+                animated: false
+            });
+        }
 
-        this.mapView.current.fitToCoordinates(bounds, {
-            edgePadding: {
-                top: 20,
-                right: 20,
-                bottom: 20,
-                left: 20
-            },
+        if(this.state?.directions)
+            this.updateDirections(position);
+    };
 
-            animated: false
+    updateDirections(position) {
+        const coordinates = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        };
+
+        const legs = this.state.directions.routes[0].legs.sort((a, b) => {
+            const aDistance = getDistance(coordinates, {
+                latitude: a.end_location.lat,
+                longitude: a.end_location.lng
+            });
+
+            const bDistance = getDistance(coordinates, {
+                latitude: b.end_location.lat,
+                longitude: b.end_location.lng
+            });
+
+            return (aDistance - bDistance);
+        });
+
+        const leg = legs[0];
+
+        const steps = leg.steps.sort((a, b) => {
+            const aDistance = getDistance(coordinates, {
+                latitude: a.end_location.lat,
+                longitude: a.end_location.lng
+            });
+
+            const bDistance = getDistance(coordinates, {
+                latitude: b.end_location.lat,
+                longitude: b.end_location.lng
+            });
+
+            return (aDistance - bDistance);
+        });
+
+        const step = steps[0];
+
+        this.setState({
+            direction: {
+                distance: {
+                    value: step.distance.text.split(' ')[0],
+                    unit: step.distance.text.split(' ')[1]
+                },
+                maneuver: step.maneuver ?? null,
+                street: leg.start_address.substring(0, leg.start_address.indexOf(',')),
+                instruction: step.html_instructions.replace(/<\/?b[^>]*>/g, '').replace(/<\/?div[^>]*>/g, '\n') ?? "",
+                polyline: decode(step.polyline.points, 5).map((points) => { return { latitude: points[0], longitude: points[1] } })
+            }
         });
     };
 
@@ -94,7 +189,10 @@ export default class RecordPage extends ThemedComponent {
         if(this.recorder.active)
             this.recorder.stop();
 
-        this.props.onNavigate("/index");
+        if(this.props.onClose)
+            this.props.onClose();
+        else
+            this.props.onNavigate("/index");
     };
 
     onLayout() {
@@ -143,6 +241,7 @@ export default class RecordPage extends ThemedComponent {
                         showsUserLocation={true}
                         showsMyLocationButton={false}
                         maxZoomLevel={16}
+                        onPanDrag={() => !this.state?.freeCamera && this.setState({ freeCamera: true })}
                         >
                         {this.recorder != null && 
                             (this.recorder.getLatLngCoordinates().map((section, index, array) => (
@@ -153,6 +252,24 @@ export default class RecordPage extends ThemedComponent {
                                 ></Polyline>
                             )))
                         }
+
+                        {(this.state?.polyline) && (
+                            <Polyline
+                                coordinates={this.state.polyline} 
+                                strokeColor={Appearance.theme.colorPalette.routeDarker}
+                                strokeWidth={5}
+                                lineJoin={"round"}
+                                />
+                        )}
+
+                        {(this.state?.direction?.polyline) && (
+                            <Polyline
+                                coordinates={this.state.direction.polyline} 
+                                strokeColor={Appearance.theme.colorPalette.route}
+                                strokeWidth={5}
+                                lineJoin={"round"}
+                                />
+                        )}
                     </MapView>
                 )}
 
@@ -178,10 +295,42 @@ export default class RecordPage extends ThemedComponent {
                                 ></Polyline>
                             )))
                         }
+
+                        {(this.state?.polyline) && (
+                            <Polyline
+                                coordinates={this.state.polyline} 
+                                strokeColor={Appearance.theme.colorPalette.routeDarker}
+                                strokeWidth={5}
+                                lineJoin={"round"}
+                                />
+                        )}
+
+                        {(this.state?.direction?.polyline) && (
+                            <Polyline
+                                coordinates={this.state.direction.polyline} 
+                                strokeColor={Appearance.theme.colorPalette.route}
+                                strokeWidth={5}
+                                lineJoin={"round"}
+                                />
+                        )}
                     </MapView>
                 )}
 
                 <View style={style.sheet.footer}>
+                    <View style={style.sheet.controls}>
+                        <View style={style.sheet.controls.button}>
+                            <FontAwesome5 style={style.sheet.controls.button.iconSideInvisible} name={"map-marker-alt"}/>
+                        </View>
+
+                        <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.togglePause()}>
+                            <FontAwesome5 style={style.sheet.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.setState({ freeCamera: false })}>
+                            <FontAwesome5 style={(this.recorder.active && this.state?.freeCamera)?(style.sheet.controls.button.iconSide):(style.sheet.controls.button.iconSideInvisible)} name={"map-marker-alt"}/>
+                        </TouchableOpacity>
+                    </View>
+
                     <View style={style.sheet.stats}>
                         <View style={style.sheet.stats.row}>
                             <View style={style.sheet.stats.column}>
@@ -210,21 +359,37 @@ export default class RecordPage extends ThemedComponent {
                         )}
                     </View>
 
-                    <View style={style.sheet.controls}>
-                        <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.togglePause()}>
-                            <FontAwesome5 style={style.sheet.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
-                        </TouchableOpacity>
+                    <View style={style.sheet.footer.section}>
+                        {(this.recorder.active && this.state?.direction) && (
+                            <View style={style.sheet.directions}>
+                                <View style={style.sheet.directions.upcoming}>
+                                    {(this.state.direction.maneuver) && (
+                                        <Image
+                                            style={style.sheet.directions.upcoming.image}
+                                            source={images[this.state.direction.maneuver]}
+                                            />
+                                    )}
+
+                                    <Text style={style.sheet.directions.upcoming.text}>{this.state.direction.distance.value} <Text style={style.sheet.directions.upcoming.unit}>{this.state.direction.distance.unit}</Text></Text>
+                                </View>
+
+                                <View style={style.sheet.directions.street}>
+                                    <Text style={style.sheet.directions.street.text}>{this.state.direction.street}</Text>
+                                    <Text style={style.sheet.directions.street.instruction}>{this.state.direction.instruction}</Text>
+                                </View>
+                            </View>
+                        )}
+
+                        {(!this.recorder.active) &&
+                            <View style={style.sheet.buttons}>
+                                <Button title="Finish" onPress={() => this.onFinish()}/>
+
+                                <Button title="Discard" confirm={{
+                                    message: "Do you really want to discard this ride?"
+                                }} onPress={() => this.onDiscard()}/>
+                            </View>
+                        }
                     </View>
-
-                    {(!this.recorder.active) &&
-                        <View style={style.sheet.buttons}>
-                            <Button title="Finish" onPress={() => this.onFinish()}/>
-
-                            <Button title="Discard" confirm={{
-                                message: "Do you really want to discard this ride?"
-                            }} onPress={() => this.onDiscard()}/>
-                        </View>
-                    }
                 </View>
             </View>
         );

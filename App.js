@@ -54,6 +54,7 @@ export default class App extends ThemedComponent {
         "Activity": (key, props) => (<Activity {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "ProfileSettings": (key, props) => (<ProfileSettings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "RecordPage": (key, props) => (<RecordPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
     };
 
     showModal(component, props = {}) {

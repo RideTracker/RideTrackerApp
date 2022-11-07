@@ -9,6 +9,7 @@
 			"secondary": "#F1F1F1",
 			"accent": "#1D1E2B",
 			"route": "#BB87FC",
+			"routeDarker": "#372A4C",
 			"solid": "#FFF",
 
 			"contrast": "light"
@@ -352,6 +353,7 @@
 			"secondary": "#ECEDFA",
 			"accent": "#1D1E2B",
 			"route": "#BB87FC",
+			"routeDarker": "#372A4C",
 			"solid": "#FFF",
 
 			"contrast": "light"
@@ -665,6 +667,7 @@
 			"secondary": "#333",
 			"accent": "#F0F2F4",
 			"route": "#BB87FC",
+			"routeDarker": "#372A4C",
 			"solid": "#000",
 
 			"contrast": "dark"
