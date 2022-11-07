@@ -28,7 +28,7 @@ export default class Recorder extends Recording {
 
     instance = null;
 
-    constructor(start) {
+    constructor(start, callback = null) {
         super({
             meta: {
                 id: uuid.v4(),
@@ -40,6 +40,8 @@ export default class Recorder extends Recording {
     
             sections: []
         });
+
+        this.callback = callback;
 
         Recorder.instance = this;
 
@@ -148,17 +150,14 @@ export default class Recorder extends Recording {
     };
     
     onPosition(locations) {
-        console.log("onPosition");
-
-        if(!this.active)
-            return;
-
-        console.log("active");
-
         for(let index = 0; index < locations.length; index++) {
             console.log(locations[index]);
 
-            this.data.sections[this.section].coordinates.push(locations[index]);
+            if(this.callback)
+                this.callback(locations[index]);
+
+            if(this.active)
+                this.data.sections[this.section].coordinates.push(locations[index]);
         }
     };
 };

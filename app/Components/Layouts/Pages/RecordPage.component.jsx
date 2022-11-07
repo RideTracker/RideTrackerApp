@@ -21,7 +21,7 @@ import style from "./RecordPage.component.style";
 export default class RecordPage extends ThemedComponent {
     style = style.update();
 
-    recorder = new Recorder(!User.guest);
+    recorder = new Recorder(!User.guest, (position) => this.onPosition(position));
 
     constructor(...args) {
         super(...args);
@@ -47,14 +47,32 @@ export default class RecordPage extends ThemedComponent {
         });
     };
 
-    onPositionUpdate(position) {
-        console.log(position);
+    onPosition(position) {
+        if(!this.mapView?.current)
+            return;
+
+        const bounds = getBoundsOfDistance(position.coords, 1000);
+
+        this.mapView.current.fitToCoordinates(bounds, {
+            edgePadding: {
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20
+            },
+
+            animated: false
+        });
     };
 
     togglePause() {
         this.recorder.toggle();
 
-        this.setState({});
+        this.setState({ now: performance.now() });
+    };
+
+    toggleMap() {
+        this.setState({ map: !(this.state?.map) })
     };
 
     async onFinish() {
@@ -113,120 +131,102 @@ export default class RecordPage extends ThemedComponent {
         return result.join(':');
     };
 
-    renderStats() {
-        if(!this.recorder.active) {
-            return (
-                <View style={style.sheet.stats}>
-                    <View style={style.sheet.stats.row}>
-                        <View style={style.sheet.stats.column}>
-                            <Text style={style.sheet.stats.column.title}>{this.renderStateDuration()}</Text>
-                            <Text style={style.sheet.stats.column.description}>duration</Text>
-                        </View>
-
-                        <View style={style.sheet.stats.column}>
-                            <Text style={style.sheet.stats.column.title}>{this.state?.speed ?? 0} km/h</Text>
-                            <Text style={style.sheet.stats.column.description}>speed</Text>
-                        </View>
-                    </View>
-
-                    <View style={style.sheet.stats.row}>
-                        <View style={style.sheet.stats.column}>
-                            <Text style={style.sheet.stats.column.title}>0.00 km</Text>
-                            <Text style={style.sheet.stats.column.description}>distance</Text>
-                        </View>
-
-                        <View style={style.sheet.stats.column}>
-                            <Text style={style.sheet.stats.column.title}>0 m</Text>
-                            <Text style={style.sheet.stats.column.description}>elevation</Text>
-                        </View>
-                    </View>
-                </View>
-            );
-        }
-        
+    render() {
         return (
-            <View style={style.sheet.stats}>
-                <View style={[style.sheet.stats.item, style.sheet.stats.wide]}>
-                    <Text style={[style.sheet.stats.item.title, style.sheet.stats.wide.title]}>{this.renderStateDuration()}</Text>
+            <View style={style.sheet} now={this.state?.now}>
+                {(this.recorder.active && !this.state?.map) && (
+                    <MapView
+                        ref={this.mapView}
+                        style={style.sheet.map}
+                        customMapStyle={Appearance.theme.mapStyle}
+                        provider={PROVIDER_GOOGLE}
+                        showsUserLocation={true}
+                        showsMyLocationButton={false}
+                        maxZoomLevel={16}
+                        >
+                        {this.recorder != null && 
+                            (this.recorder.getLatLngCoordinates().map((section, index, array) => (
+                                <Polyline key={"index" + section.index} coordinates={section.coordinates} 
+                                    strokeColor={"#FFF"}
+                                    strokeWidth={3}
+                                    lineJoin={"round"}
+                                ></Polyline>
+                            )))
+                        }
+                    </MapView>
+                )}
 
-                    <Text style={style.sheet.stats.item.description}>duration</Text>
-                </View>
+                <Header title={(this.recorder.active)?("Recording"):("Paused")} transparent/>
 
-                <View style={[style.sheet.stats.item, style.sheet.stats.wide]}>
-                    <View style={style.sheet.stats.item.container}>
-                        <Text style={[style.sheet.stats.item.title, style.sheet.stats.high.title]}>
-                            <Text style={[style.sheet.stats.wide.text, style.sheet.stats.wide.text.hidden]}> km/h</Text>
+                {(!this.recorder.active) && (
+                    <MapView
+                        ref={this.mapView}
+                        style={style.sheet.mapCompact}
+                        customMapStyle={Appearance.theme.mapStyle}
+                        provider={PROVIDER_GOOGLE}
+                        showsUserLocation={true}
+                        showsMyLocationButton={false}
+                        onLayout={() => this.onLayout()}
+                        maxZoomLevel={16}
+                        >
+                        {this.recorder != null && 
+                            (this.recorder.getLatLngCoordinates().map((section, index, array) => (
+                                <Polyline key={"index" + section.index} coordinates={section.coordinates} 
+                                    strokeColor={"#FFF"}
+                                    strokeWidth={3}
+                                    lineJoin={"round"}
+                                ></Polyline>
+                            )))
+                        }
+                    </MapView>
+                )}
 
-                            {this.recorder.getSpeed() ?? 0}
-                            
-                            <Text style={style.sheet.stats.wide.text}> km/h</Text>
-                        </Text>
+                <View style={style.sheet.footer}>
+                    <View style={style.sheet.stats}>
+                        <View style={style.sheet.stats.row}>
+                            <View style={style.sheet.stats.column}>
+                                <Text style={style.sheet.stats.column.title}>{this.renderStateDuration()}</Text>
+                                <Text style={style.sheet.stats.column.description}>duration</Text>
+                            </View>
+
+                            <View style={style.sheet.stats.column}>
+                                <Text style={style.sheet.stats.column.title}>{this.state?.speed ?? 0} km/h</Text>
+                                <Text style={style.sheet.stats.column.description}>speed</Text>
+                            </View>
+                        </View>
+
+                        {(!this.recorder.active) && (
+                            <View style={style.sheet.stats.row}>
+                                <View style={style.sheet.stats.column}>
+                                    <Text style={style.sheet.stats.column.title}>0.00 km</Text>
+                                    <Text style={style.sheet.stats.column.description}>distance</Text>
+                                </View>
+
+                                <View style={style.sheet.stats.column}>
+                                    <Text style={style.sheet.stats.column.title}>0 m</Text>
+                                    <Text style={style.sheet.stats.column.description}>elevation</Text>
+                                </View>
+                            </View>
+                        )}
                     </View>
-                </View>
-                        
-                <View style={style.sheet.stats.row}>
-                    <View style={style.sheet.stats.row.item}>
-                        <Text style={style.sheet.stats.item.title}>{this.recorder.getDistance() ?? 0} km</Text>
-                        <Text style={style.sheet.stats.item.description}>distance</Text>
+
+                    <View style={style.sheet.controls}>
+                        <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.togglePause()}>
+                            <FontAwesome5 style={style.sheet.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
+                        </TouchableOpacity>
                     </View>
-                
-                    <View style={style.sheet.stats.row.item}>
-                        <Text style={style.sheet.stats.item.title}>{this.recorder.getElevation() ?? 0} m</Text>
-                        <Text style={style.sheet.stats.item.description}>elevation</Text>
-                    </View>
+
+                    {(!this.recorder.active) &&
+                        <View style={style.sheet.buttons}>
+                            <Button title="Finish" onPress={() => this.onFinish()}/>
+
+                            <Button title="Discard" confirm={{
+                                message: "Do you really want to discard this ride?"
+                            }} onPress={() => this.onDiscard()}/>
+                        </View>
+                    }
                 </View>
             </View>
         );
     };
-
-    render() {
-        return (
-            <View style={style.sheet}>
-                {(!this.recorder.active) && (
-                    <View>
-                        <Header key="header" title="Paused"/>
-                        
-                        <MapView
-                            ref={this.mapView}
-                            key="mapView"
-                            style={style.sheet.map}
-                            customMapStyle={Appearance.theme.mapStyle || []}
-                            provider={PROVIDER_GOOGLE}
-                            onLayout={() => this.onLayout()}
-                            maxZoomLevel={15}
-                            >
-                            {this.recorder != null && 
-                                (this.recorder.getLatLngCoordinates().map((section, index, array) => (
-                                    <Polyline key={"index" + section.index} coordinates={section.coordinates} 
-                                        strokeColor={"#FFF"}
-                                        strokeWidth={3}
-                                        lineJoin={"round"}
-                                    ></Polyline>
-                                )))
-                            }
-                        </MapView>
-                    </View>
-                )}
-
-                <View style={style.sheet.stats}>
-                    {this.renderStats()}
-                </View>
-
-                <View style={style.sheet.controls}>
-                    <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.togglePause()}>
-                        <FontAwesome5 style={style.sheet.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
-                    </TouchableOpacity>
-                </View>
-
-                { !this.recorder.active &&
-                    <View style={style.sheet.buttons}>
-                        <Button title="Finish" onPress={() => this.onFinish()}/>
-                        <Button title="Discard" confirm={{
-                            message: "Do you really want to discard this ride?"
-                        }} onPress={() => this.onDiscard()}/>
-                    </View>
-                }
-            </View>
-        );
-    }
 };

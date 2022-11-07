@@ -7,22 +7,40 @@ export default class RecordPageStyle {
         this.sheet = StyleSheet.create({
             backgroundColor: Appearance.theme.colorPalette.primary,
 
+            position: "relative",
+
             height: "100%",
 
-            paddingBottom: 20,
-
             map: {
-                height: 200
+                height: "100%",
+                width: "100%",
+
+                position: "absolute",
+
+                left: 0,
+                top: 0
+            },
+
+            mapCompact: {
+                flex: 1,
+            },
+
+            footer: {
+                marginTop: "auto"
             },
 
             stats: {
-                flex: 1,
-
                 justifyContent: "space-evenly",
+
+                overlay: {
+                    height: 100
+                },
 
                 row: {
                     flexDirection: "row",
                     justifyContent: "space-evenly",
+
+                    marginTop: 24,
 
                     item: {
                         width: "50%"
@@ -116,6 +134,26 @@ export default class RecordPageStyle {
                         color: Appearance.theme.colorPalette.secondary,
                         
                         fontSize: 70,
+                    },
+
+                    iconSide: {
+                        marginTop: "auto",
+                        marginBottom: 12,
+
+                        color: Appearance.theme.colorPalette.secondary,
+                        
+                        fontSize: 24,
+                    },
+
+                    iconSideInvisible: {
+                        marginTop: "auto",
+                        marginBottom: 12,
+
+                        opacity: 0,
+
+                        color: Appearance.theme.colorPalette.secondary,
+                        
+                        fontSize: 24,
                     },
                     
                     container: {
