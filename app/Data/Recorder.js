@@ -9,8 +9,6 @@ import Files from "app/Data/Files";
 import Recording from "app/Data/Recording";
 
 TaskManager.defineTask("recorder", ({ data, error }) => {
-    console.log("recorder");
-    
     if(error)
         return console.error(JSON.stringify(error));
     

@@ -14,8 +14,8 @@ export default class Button extends ThemedComponent {
                 this.props.confirm.title ?? "Are you sure?",
                 this.props.confirm.message ?? "Do you really want to perform this action?",
                 [
-                    { text: "Yes", onPress: () => this.props.onPress() },
-                    { text: "Cancel", style: "cancel" }
+                    { text: "Cancel", style: "cancel" },
+                    { text: "Yes", onPress: () => this.props.onPress() }
                 ]
             );
 
