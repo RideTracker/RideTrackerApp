@@ -3,6 +3,8 @@ import { TouchableOpacity, Text, View } from "react-native";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
+import { getBoundsOfDistance } from "geolib";
+
 import API from "app/Services/API";
 import User from "app/Data/User";
 
@@ -78,7 +80,9 @@ export default class RecordPage extends ThemedComponent {
     };
 
     onLayout() {
-        this.mapView.current.fitToCoordinates(this.recorder.getAllLatLngCoordinates(), {
+        const coordinates = this.recorder.getAllLatLngCoordinates();
+
+        this.mapView.current.fitToCoordinates(coordinates, {
             edgePadding: {
                 top: 20,
                 right: 20,
@@ -178,25 +182,31 @@ export default class RecordPage extends ThemedComponent {
     render() {
         return (
             <View style={style.sheet}>
-                <View>
-                    {!this.recorder.active &&
-                        [
-                            (<Header key="header" title="Paused"/>),
-                            
-                            (<MapView ref={this.mapView} key="mapView" style={style.sheet.map} customMapStyle={Appearance.theme.mapStyle || []} provider={PROVIDER_GOOGLE} onLayout={() => this.onLayout()}>
-                                {this.recorder != null && 
-                                    (this.recorder.getLatLngCoordinates().map((section) => (
-                                        <Polyline key={"index" + section.index} coordinates={section.coordinates} 
-                                            strokeColor={"#FFF"}
-                                            strokeWidth={3}
-                                            lineJoin={"round"}
-                                        ></Polyline>
-                                    )))
-                                }
-                            </MapView>)
-                        ]
-                    }
-                </View>
+                {(!this.recorder.active) && (
+                    <View>
+                        <Header key="header" title="Paused"/>
+                        
+                        <MapView
+                            ref={this.mapView}
+                            key="mapView"
+                            style={style.sheet.map}
+                            customMapStyle={Appearance.theme.mapStyle || []}
+                            provider={PROVIDER_GOOGLE}
+                            onLayout={() => this.onLayout()}
+                            maxZoomLevel={15}
+                            >
+                            {this.recorder != null && 
+                                (this.recorder.getLatLngCoordinates().map((section, index, array) => (
+                                    <Polyline key={"index" + section.index} coordinates={section.coordinates} 
+                                        strokeColor={"#FFF"}
+                                        strokeWidth={3}
+                                        lineJoin={"round"}
+                                    ></Polyline>
+                                )))
+                            }
+                        </MapView>
+                    </View>
+                )}
 
                 <View style={style.sheet.stats}>
                     {this.renderStats()}
