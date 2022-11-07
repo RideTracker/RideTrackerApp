@@ -49,6 +49,12 @@ export default class ProfilePage extends Component {
                 this.setState({ activity: data.content });
             });
 
+            if(this.user != User.id) {
+                API.get("/api/user/follow", { user: this.user }).then((data) => {
+                    this.setState({ follows: data.content });
+                });
+            }
+
             /*API.get("/api/user/comments", { user: this.user }).then((data) => {
                 this.setState({ comments: data.content });
             });*/
@@ -79,6 +85,12 @@ export default class ProfilePage extends Component {
                 this.setState({ user: data.content });
             });
         }
+    };
+
+    async onFollowPress() {
+        const response = await API.post("/api/user/follow", { user: this.user });
+        
+        this.setState({ follows: response.content });
     };
 
     render() { 
@@ -126,7 +138,11 @@ export default class ProfilePage extends Component {
 
                     <Text style={[ style.sheet.profile.item, style.sheet.profile.title ]}>{this.state?.user?.name}</Text>
 
-                    <Text style={[ style.sheet.profile.item, style.sheet.profile.follow ]}>FOLLOW</Text>
+                    {(this.state?.follows) && (
+                        <TouchableOpacity onPress={() => this.onFollowPress()}>
+                            <Text style={[ style.sheet.profile.item, style.sheet.profile.follow ]}>{(this.state?.follows)?("UNFOLLOW"):("FOLLOW")}</Text>
+                        </TouchableOpacity>
+                    )}
 
                     <Tabs default="activities">
                         <View id="activities" title="Activities">
