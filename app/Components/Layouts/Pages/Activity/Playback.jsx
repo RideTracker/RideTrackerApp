@@ -42,6 +42,12 @@ export default class ActivityPlayback extends Component {
                 direction: "out",
                 duration: 200,
                 callback: () => this.props?.onClose()
+            },
+            
+            {
+                type: "opacity",
+                direction: "out",
+                duration: 200
             }
         ]);
     };
@@ -50,8 +56,12 @@ export default class ActivityPlayback extends Component {
         this.animation.current.setTransitions([
             {
                 type: "bottom",
-                duration: 200,
-                ease: true
+                duration: 200
+            },
+            
+            {
+                type: "opacity",
+                duration: 200
             }
         ]);
     };

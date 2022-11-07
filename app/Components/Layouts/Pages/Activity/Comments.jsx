@@ -34,16 +34,14 @@ export default class ActivityComments extends Component {
                 this.background.current.setTransitions([
                     {
                         type: "opacity",
-                        duration: 200,
-                        ease: true
+                        duration: 200
                     }
                 ]);
 
                 this.container.current.setTransitions([
                     {
                         type: "bottom",
-                        duration: 200,
-                        ease: true
+                        duration: 200
                     }
                 ]);
             

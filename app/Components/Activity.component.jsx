@@ -108,8 +108,12 @@ export default class Activity extends ThemedComponent {
         
         this.animation.current.setTransitions([
             {
-                type: "left",
-                ease: true,
+                type: "bottom",
+                duration: 200
+            },
+            
+            {
+                type: "opacity",
                 duration: 200
             }
         ]);
@@ -157,10 +161,16 @@ export default class Activity extends ThemedComponent {
     onClose() {
         this.animation.current.setTransitions([
             {
-                type: "left",
+                type: "bottom",
                 direction: "out",
                 duration: 200,
                 callback: () => this.props.onClose()
+            },
+            
+            {
+                type: "opacity",
+                direction: "out",
+                duration: 200
             }
         ]);
     };

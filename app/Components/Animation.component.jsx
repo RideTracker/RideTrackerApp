@@ -50,8 +50,6 @@ export default class Animation extends Component {
         
                 this.transitions = this.transitions.filter((transition) => {
                     if(transition.completed) {
-                        console.log("remove completed transition");
-
                         if(transition.callback)
                             transition.callback();
 
@@ -62,7 +60,6 @@ export default class Animation extends Component {
                 });
 
                 if(!this.transitions.length) {
-                    console.log("clearInterval");
                     clearInterval(this.interval);
         
                     this.interval = undefined;
@@ -94,17 +91,13 @@ export default class Animation extends Component {
                 multiplier = 1.0;
 
                 transition.completed = true;
-                
-                console.log("transition completed");
             }
 
-            if(transition.ease)
+            if(transition.ease ?? true)
                 multiplier = (multiplier < 0.5)?(2 * multiplier * multiplier):(-1 + (4 - (2 * multiplier)) * multiplier);
 
             if(transition.direction == "out")
                 multiplier = 1.0 - multiplier;
-
-            console.log("multiplier " + multiplier);
 
             switch(transition.type) {
                 case "opacity": {
