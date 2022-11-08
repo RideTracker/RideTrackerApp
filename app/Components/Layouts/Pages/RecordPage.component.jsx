@@ -116,13 +116,13 @@ export default class RecordPage extends ThemedComponent {
 
         const legs = this.state.directions.routes[0].legs.sort((a, b) => {
             const aDistance = getDistance(coordinates, {
-                latitude: a.end_location.lat,
-                longitude: a.end_location.lng
+                latitude: a.start_location.lat,
+                longitude: a.start_location.lng
             });
 
             const bDistance = getDistance(coordinates, {
-                latitude: b.end_location.lat,
-                longitude: b.end_location.lng
+                latitude: b.start_location.lat,
+                longitude: b.start_location.lng
             });
 
             return (aDistance - bDistance);
@@ -132,8 +132,8 @@ export default class RecordPage extends ThemedComponent {
 
         leg.steps.forEach((step) => {
             step.user_distance = getDistance(coordinates, {
-                latitude: step.end_location.lat,
-                longitude: step.end_location.lng
+                latitude: step.start_location.lat,
+                longitude: step.start_location.lng
             });
         })
 
