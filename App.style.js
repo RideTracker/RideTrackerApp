@@ -18,7 +18,7 @@ export default class {
 
                 item: {
                     marginTop: 12,
-                    borderRadius: 4,
+                    borderRadius: 10,
 
                     shadowColor: "#000",
                     shadowOffset: {
@@ -29,16 +29,33 @@ export default class {
                     shadowRadius: 6.27,
 
                     elevation: 10,
+
+                    borderWidth: 1,
+                    borderColor: Appearance.theme.colorPalette.border,
                     
-                    backgroundColor: Appearance.theme.colorPalette.accent,
+                    backgroundColor: Appearance.theme.colorPalette.routeDarker,
 
                     paddingVertical: 8,
                     paddingHorizontal: 12,
+
+                    flexDirection: "row",
 
                     text: {
                         fontSize: 16,
                         
                         color: Appearance.theme.colorPalette.secondary
+                    },
+
+                    icon: {
+                        fontSize: 16,
+
+                        color: Appearance.theme.colorPalette.secondary,
+
+                        justifyContent: "center",
+
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                        marginLeft: "auto"
                     }
                 }
             }

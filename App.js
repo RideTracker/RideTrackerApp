@@ -1,6 +1,7 @@
 import React, { Component, useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Platform, Text, TouchableOpacity, Alert } from "react-native";
 import uuid from "react-native-uuid";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import * as Location from "expo-location";
 import * as SplashScreen from "expo-splash-screen";
@@ -88,6 +89,10 @@ export default class App extends ThemedComponent {
 
         this.setState({ notifications });
 
+        setTimeout(() => {
+            this.hideNotification(key);
+        }, 3000);
+
         return key;
     };
 
@@ -129,6 +134,8 @@ export default class App extends ThemedComponent {
         await SplashScreen.hideAsync();
 
         Production.prompt();
+
+        this.showNotification("Hello world");
 
         //Appearance.addEventListener("change", (theme) => this.setState({ theme }));
 
@@ -205,6 +212,8 @@ export default class App extends ThemedComponent {
                             }
                         ])}>
                             <Text style={style.sheet.notifications.item.text}>{notification.text}</Text>
+
+                            <FontAwesome5 style={style.sheet.notifications.item.icon} name={"times"}/>
                         </TouchableOpacity>
                     </Animation>
                 ))}
