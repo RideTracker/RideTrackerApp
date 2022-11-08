@@ -37,13 +37,13 @@ export default class App extends ThemedComponent {
         hideModal: (...args) => this.hideModal(...args),
         
         showNotification: (...args) => this.showNotification(...args),
-        hideNotification: (...args) => this.hideNotification(...args)
+        hideNotification: (...args) => this.hideNotification(...args),
+
+        onNavigate: (page) => this.setState({ page })
     };
 
     pageProps = {
-        ...this.modalProps,
-
-        onNavigate: (page) => this.setState({ page })
+        ...this.modalProps
     };
     
     modals = {
