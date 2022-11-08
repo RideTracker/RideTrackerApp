@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Platform, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Platform, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from "react-native";
 
 import * as AppleAuthentication from "expo-apple-authentication";
 
@@ -94,40 +94,42 @@ export default class LoginPage extends ThemedComponent {
                 <View style={style.sheet.form}>
                     <Text style={style.sheet.header}>Ride Tracker</Text>
 
-                    <Input
-                        ref={this.email}
-                        style={style.sheet.form.input}
-                        placeholder="E-mail address"
-                        icon="envelope"
-                        autoComplete={"email"}
-                        clearButtonMode={"while-editing"}
-                        enablesReturnKeyAutomatically={true}
-                        keyboardType={"email-address"}
-                        autoCapitalize={"none"}
-                        returnKeyType={"next"}
-                        onSubmitEditing={() => this.password.current.focus()}
-                        />
-                    <Input
-                        ref={this.password}
-                        style={style.sheet.form.input}
-                        placeholder="Password"
-                        icon="lock"
-                        autoComplete={"password"}
-                        autoCorrect={false}
-                        clearTextOnFocus={true}
-                        clearButtonMode={"while-editing"}
-                        enablesReturnKeyAutomatically={true}
-                        autoCapitalize={"none"}
-                        returnKeyType={"send"}
-                        onSubmitEditing={() => this.onLoginPress()}
-                        secure
-                        />
+                    <KeyboardAvoidingView behavior={(Platform.OS == "ios")?("padding"):("height")}>
+                        <Input
+                            ref={this.email}
+                            style={style.sheet.form.input}
+                            placeholder="E-mail address"
+                            icon="envelope"
+                            autoComplete={"email"}
+                            clearButtonMode={"while-editing"}
+                            enablesReturnKeyAutomatically={true}
+                            keyboardType={"email-address"}
+                            autoCapitalize={"none"}
+                            returnKeyType={"next"}
+                            onSubmitEditing={() => this.password.current.focus()}
+                            />
+                        <Input
+                            ref={this.password}
+                            style={style.sheet.form.input}
+                            placeholder="Password"
+                            icon="lock"
+                            autoComplete={"password"}
+                            autoCorrect={false}
+                            clearTextOnFocus={true}
+                            clearButtonMode={"while-editing"}
+                            enablesReturnKeyAutomatically={true}
+                            autoCapitalize={"none"}
+                            returnKeyType={"send"}
+                            onSubmitEditing={() => this.onLoginPress()}
+                            secure
+                            />
 
-                    <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in" onPress={() => this.onLoginPress()}/>
+                        <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in" onPress={() => this.onLoginPress()}/>
 
-                    <TouchableOpacity onPress={() => this.props.showNotification("This function is not available yet.\n\nPlease email support@ridetracker.app to recover your account.")}>
-                        <Text style={style.sheet.text}>Forgot your credentials? <Text style={style.sheet.text.link}>Click here to recover</Text></Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.showNotification("This function is not available yet.\n\nPlease email support@ridetracker.app to recover your account.")}>
+                            <Text style={style.sheet.text}>Forgot your credentials? <Text style={style.sheet.text.link}>Click here to recover</Text></Text>
+                        </TouchableOpacity>
+                    </KeyboardAvoidingView>
 
                     <View style={style.sheet.form.divider}>
                         <View style={style.sheet.form.divider.line}/>
