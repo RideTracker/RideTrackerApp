@@ -130,28 +130,37 @@ export default class RecordPage extends ThemedComponent {
 
         const leg = legs[0];
 
+        leg.steps.forEach((step) => {
+            step.user_distance = getDistance(coordinates, {
+                latitude: step.end_location.lat,
+                longitude: step.end_location.lng
+            });
+        })
+
         const steps = leg.steps.sort((a, b) => {
-            const aDistance = getDistance(coordinates, {
-                latitude: a.end_location.lat,
-                longitude: a.end_location.lng
-            });
-
-            const bDistance = getDistance(coordinates, {
-                latitude: b.end_location.lat,
-                longitude: b.end_location.lng
-            });
-
-            return (aDistance - bDistance);
+            return (a.user_distance - b.user_distance);
         });
 
         const step = steps[0];
 
+        let distance = {};
+
+        if(step.user_distance < 1000) {
+            distance = {
+                value: Math.floor(step.user_distance / 10) * 10,
+                unit: "m"
+            }
+        }
+        else {
+            distance = {
+                value: Math.floor((step.user_distance / 1000) * 10) / 10,
+                unit: "km"
+            }
+        }
+
         this.setState({
             direction: {
-                distance: {
-                    value: step.distance.text.split(' ')[0],
-                    unit: step.distance.text.split(' ')[1]
-                },
+                distance,
                 maneuver: step.maneuver ?? null,
                 street: leg.start_address.substring(0, leg.start_address.indexOf(',')),
                 instruction: step.html_instructions.replace(/<\/?b[^>]*>/g, '').replace(/<\/?div[^>]*>/g, '\n') ?? "",
