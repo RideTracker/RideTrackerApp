@@ -1,6 +1,6 @@
 import Config from "app/Data/Config";
 
-import config from "root/config.json";
+import Settings from "app/Settings";
 
 export default class API {
     static alive = null;
@@ -32,14 +32,14 @@ export default class API {
     };
 
     static async fetch(path, method, body) {
-        console.log("API FETCH " + method + " " + config.api + path);
+        console.log("API FETCH " + method + " " + Settings.api + path);
 
         const headers = new Headers();
 
         if(Config.user?.token)
             headers.set("Authorization", `Bearer ${Config.user.token}`);
 
-        const response = await fetch(config.api + path, {
+        const response = await fetch(Settings.api + path, {
             method,
             headers,
             body: JSON.stringify(body)

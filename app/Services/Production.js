@@ -1,10 +1,10 @@
 import { Alert } from "react-native";
 
-import config from "root/config.json";
+import Settings from "app/Settings";
 
 export default class Production {
     static prompt() {
-        if(config.production != "demo")
+        if(Settings.production != "demo")
             return;
 
         Alert.alert("Production mode", "You're connected to a demo server and you're unaffected by activity on the production server.",
@@ -22,6 +22,6 @@ export default class Production {
     };
 
     static get() {
-        return config.production;
+        return Settings.production;
     };
 };

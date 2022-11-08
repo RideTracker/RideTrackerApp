@@ -7,7 +7,7 @@ import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
 import Recording from "app/Data/Recording";
 
-import config from "root/config.json";
+import Settings from "app/Settings";
 
 import Animation from "app/Components/Animation.component";
 
@@ -229,7 +229,7 @@ export default class ActivityPlayback extends Component {
                     onLoad={() => this.onLoad()}
                     onMessage={(event) => this.onMessage(event)}
                     source={{
-                        uri: `${config.api}/playback/index.html?activity=${this.props.activity}&color=${Appearance.theme.colorPalette.route.replace('#', '')}&type=${this.props.type}`
+                        uri: `${Settings.api}/playback/index.html?activity=${this.props.activity}&color=${Appearance.theme.colorPalette.route.replace('#', '')}&type=${this.props.type}`
                     }}
                     />
 

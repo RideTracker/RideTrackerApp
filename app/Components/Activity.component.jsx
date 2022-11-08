@@ -28,7 +28,7 @@ import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
 
 import style from "./Activity.component.style";
 
-import config from "root/config.json";
+import Settings from "app/Settings";
 
 export default class Activity extends ThemedComponent {
     style = style.update();
@@ -190,7 +190,7 @@ export default class Activity extends ThemedComponent {
     };
 
     onExportPress() {
-        Linking.openURL(`${config.api}/api/v1/activity/export?id=${this.state.activity.id}`);
+        Linking.openURL(`${Settings.api}/api/v1/activity/export?id=${this.state.activity.id}`);
     };
 
     async onDelete() {
