@@ -131,12 +131,12 @@ export default class Register extends Component {
                             secure
                             />
                     </View>
-                </ScrollView>
 
-                <View style={style.sheet.form}>
-                    <Button style={style.sheet.form.input} title="Finish registration" branded onPress={() => this.onRegistration()}/>
-                    <Button style={style.sheet.form.input} title="Cancel" onPress={() => this.props?.onClose()}/>
-                </View>
+                    <View style={style.sheet.form}>
+                        <Button style={style.sheet.form.input} title="Finish registration" branded onPress={() => this.onRegistration()}/>
+                        <Button style={style.sheet.form.input} title="Cancel" onPress={() => this.props?.onClose()}/>
+                    </View>
+                </ScrollView>
             </View>
         );
     }
