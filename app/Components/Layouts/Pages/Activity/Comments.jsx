@@ -92,6 +92,12 @@ export default class ActivityComments extends Component {
         });
     };
 
+    onComment() {
+        this.setState({ showReply: false });
+
+        this.onRefresh();
+    };
+
     render() {
         return (
             <>
@@ -214,7 +220,7 @@ export default class ActivityComments extends Component {
                 </Animation>
 
                 {this.state?.showReply && (
-                    <ActivityCommentReply activity={this.props.activity} parent={this.state?.replyParent || null} onClose={() => this.setState({ showReply: false })}/>
+                    <ActivityCommentReply activity={this.props.activity} parent={this.state?.replyParent || null} onClose={() => this.onComment()}/>
                 )}
             </>
         );
