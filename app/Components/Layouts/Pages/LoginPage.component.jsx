@@ -135,14 +135,14 @@ export default class LoginPage extends ThemedComponent {
                         <View style={style.sheet.form.divider.line}/>
                     </View>
 
-                    {Platform.OS == "ios" && (
+                    {/*(Platform.OS == "ios") && (
                         <AppleAuthentication.AppleAuthenticationButton style={style.sheet.form.button}
                             buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
                             buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
                             cornerRadius={5}
                             onPress={() => this.onAppleAuthenticationPress()}
                         />
-                    )}
+                    )*/}
 
                     <Button style={style.sheet.form.button} onPress={() => this.onGuestPress()} title="Continue as a guest"/>
                 </View>
