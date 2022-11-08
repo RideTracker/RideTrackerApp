@@ -60,6 +60,9 @@ export default class BikeCreation extends Component {
 
         const bikeCreateId = bikeCreateResponse.content;
 
+        if(this.props.onFinish)
+            this.props.onFinish(bikeCreateId);
+
         this.props.onClose();
     };
 

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, Text, TouchableOpacity } from "react-native";
+import { View, ScrollView, Image, Text, TouchableOpacity, RefreshControl } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
 
 import API from "app/Services/API";
 
+import Appearance from "app/Data/Appearance";
 import User from "app/Data/User";
 
 import Tabs from "app/Components/Tabs.component";
@@ -23,6 +24,8 @@ export default class ProfilePage extends Component {
 
     constructor(...args) {
         super(...args);
+
+        this.tabs = React.createRef();
     };
 
     componentDidMount() {
@@ -33,20 +36,20 @@ export default class ProfilePage extends Component {
                 this.setState({ user: data.content });
             });
 
+            API.get("/api/v1/user/activity", { user: this.user }).then((data) => {
+                this.setState({ activity: data.content });
+            });
+
             API.get("/api/v1/user/activities", { user: this.user }).then((data) => {
                 this.setState({ activities: data.content });
             });
-
+    
             API.get("/api/v1/user/bikes", { user: this.user }).then((data) => {
                 this.setState({ bikes: data.content });
             });
-
+    
             API.get("/api/v1/user/routes", { user: this.user }).then((data) => {
                 this.setState({ routes: data.content });
-            });
-
-            API.get("/api/v1/user/activity", { user: this.user }).then((data) => {
-                this.setState({ activity: data.content });
             });
 
             if(this.user != User.id) {
@@ -93,6 +96,36 @@ export default class ProfilePage extends Component {
         this.setState({ follows: response.content });
     };
 
+    onRefresh() {
+        this.setState({ refreshing: true });
+
+        switch(this.tabs.current.getCurrent()) {
+            case "activities": {
+                API.get("/api/v1/user/activities", { user: this.user }).then((data) => {
+                    this.setState({ refreshing: false, activities: data.content });
+                });
+                
+                break;
+            }
+
+            case "bikes": {
+                API.get("/api/v1/user/bikes", { user: this.user }).then((data) => {
+                    this.setState({ refreshing: false, bikes: data.content });
+                });
+                
+                break;
+            }
+
+            case "routes": {
+                API.get("/api/v1/user/routes", { user: this.user }).then((data) => {
+                    this.setState({ refreshing: false, routes: data.content });
+                });
+                
+                break;
+            }
+        }
+    };
+
     render() { 
         return (
             <View style={style.sheet} timestamp={this.state?.timestamp}>
@@ -115,7 +148,15 @@ export default class ProfilePage extends Component {
                         />)
                 }
 
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            tintColor={Appearance.theme.colorPalette.solid}
+                            refreshing={this.state?.refreshing}
+                            onRefresh={() => this.onRefresh()}
+                        />
+                    }
+                    >
                     <View style={[ style.sheet.profile.item, style.sheet.profile.avatar ]}>
                         {(this.user == User.id)?(
                             <TouchableOpacity onPress={() => this.onAvatarPress()}>
@@ -144,7 +185,7 @@ export default class ProfilePage extends Component {
                         </TouchableOpacity>
                     )}
 
-                    <Tabs default="activities">
+                    <Tabs ref={this.tabs} default="activities">
                         <View id="activities" title="Activities">
                             {this.state?.activities?.map((id) => (<ActivityCompact id={id} key={id} onPress={(id) => this.props.showModal("Activity", { id })}/>))}
                         </View>
@@ -154,7 +195,7 @@ export default class ProfilePage extends Component {
                                 (<BikeCompact id={id} key={id} onPress={(id) => this.props.showNotification("This feature is not implemented yet!")}/>)
                             )}
 
-                            <Button style={style.sheet.button} title={"Add a new bike"} onPress={() => this.props.showModal("BikeCreation")}/>
+                            <Button style={style.sheet.button} title={"Add a new bike"} onPress={() => this.props.showModal("BikeCreation", { onFinish: () => this.onRefresh() })}/>
                         </View>
                         
                         <View id="routes" title="Routes">
