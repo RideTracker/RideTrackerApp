@@ -6,7 +6,7 @@ export default class {
     static update() {
         this.sheet = StyleSheet.create({
             flex: 1,
-            
+
             tabs: {
                 flexDirection: "row",
 
@@ -18,7 +18,7 @@ export default class {
                         color: Appearance.theme.colorPalette.secondary,
                         
                         paddingHorizontal: 12,
-                        paddingVertical: 6,
+                        paddingVertical: 12,
     
                         fontSize: 18
                     },
