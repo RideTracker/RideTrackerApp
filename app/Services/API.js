@@ -1,4 +1,4 @@
-import config from "root/config.json";
+import Constants from "expo-constants";
 
 import Config from "app/Data/Config";
 
@@ -39,7 +39,7 @@ export default class API {
         if(Config.user?.token)
             headers.set("Authorization", `Bearer ${Config.user.token}`);
 
-        const response = await fetch(config.api + path, {
+        const response = await fetch(Constants.expoConfig.extra.api + path, {
             method,
             headers,
             body: JSON.stringify(body)

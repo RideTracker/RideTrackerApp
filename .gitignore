@@ -75,6 +75,3 @@ dist/
 # @end expo-cli
 
 android/
-
-# custom
-/config.json

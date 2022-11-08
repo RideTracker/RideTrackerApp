@@ -2,7 +2,8 @@
   "name": "ridetracker",
   "version": "1.0.0",
   "scripts": {
-    "start": "npx eslint app/ & npx expo start",
+    "eslint": "npx eslint app/",
+    "start": "npx cross-env API=\"http://172.20.10.4:8080\" npx expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
