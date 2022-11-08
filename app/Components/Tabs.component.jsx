@@ -8,7 +8,7 @@ export default class Tabs extends Component {
 
     render() {
         return (
-            <View>
+            <View style={style.sheet}>
                 <View style={style.sheet.tabs}>
                     {this.props.children.map((child) => (
                         <TouchableOpacity key={child.props.id} onPress={() => this.setState({ tab: child.props.id})} style={[ style.sheet.tabs.tab, ((this.state?.tab ?? this.props.default) == child.props.id) && style.sheet.tabs.tab.active ]}>

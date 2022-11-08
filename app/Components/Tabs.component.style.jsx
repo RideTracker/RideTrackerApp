@@ -5,6 +5,8 @@ import Appearance from "app/Data/Appearance";
 export default class {
     static update() {
         this.sheet = StyleSheet.create({
+            flex: 1,
+            
             tabs: {
                 flexDirection: "row",
 
@@ -26,7 +28,7 @@ export default class {
                         borderBottomColor: Appearance.theme.colorPalette.route
                     }
                 }
-            },
+            }
         });
 
         return this;

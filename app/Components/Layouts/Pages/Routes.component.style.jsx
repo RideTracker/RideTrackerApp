@@ -172,7 +172,9 @@ export default class RoutesStyle {
                 borderTopRightRadius: 12,
 
                 routes: {
-                    height: 300
+                    height: 300,
+                    
+                    paddingBottom: 40
                 },
 
                 content: {
