@@ -2,6 +2,7 @@ import React from "react";
 import { View, ScrollView, RefreshControl } from "react-native";
 
 import Appearance from "app/Data/Appearance";
+import Config from "app/Data/Config";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 import Header from "app/Components/Layouts/Header.component";
@@ -15,11 +16,7 @@ export default class LandingPage extends ThemedComponent {
     style = style.update();
 
     componentDidMount() {
-        API.get("/api/v1/feed").then((result) => {
-            this.setState({
-                activities: result.content
-            });
-        });
+        this.onRefresh();
 
         //Files.uploadFiles();
     };
@@ -35,7 +32,7 @@ export default class LandingPage extends ThemedComponent {
     onRefresh() {
         this.setState({ refreshing: true });
 
-        API.get("/api/v1/feed").then((result) => {
+        API.post("/api/v1/feed", { filter: Config?.user?.filter }).then((result) => {
             this.setState({
                 activities: result.content,
                 refreshing: false
@@ -47,7 +44,12 @@ export default class LandingPage extends ThemedComponent {
         return (
             <View style={style.sheet.container}>
                 <View style={style.sheet.content}>
-                    <Header title="Home"/>
+                    <Header
+                        title="Home"
+
+                        button={"filter"}
+                        onButtonPress={() => this.props.showModal("FilterPage", { onUpdate: () => this.onRefresh() })}
+                        />
 
                     <ScrollView
                         refreshControl={

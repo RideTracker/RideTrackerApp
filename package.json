@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@googlemaps/polyline-codec": "^1.0.28",
+    "@react-native-picker/picker": "2.4.2",
     "expo": "~46.0.9",
     "expo-apple-authentication": "~4.3.0",
     "expo-cli": "^6.0.5",

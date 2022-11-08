@@ -14,7 +14,7 @@ export default class Header extends ThemedComponent {
         const colorStyle = (this.props?.transparent)?(style.sheet.transparent):(style.sheet.normal);
 
         return (
-            <View style={[style.sheet, this.props?.branded && style.sheet.branded, colorStyle, this.props?.style ]} theme={this.state?.theme}>
+            <View style={[style.sheet, this.props?.branded && style.sheet.branded, colorStyle, this.props?.style, !this.props?.hidePadding && style.sheet.showPadding ]} theme={this.state?.theme}>
                 { this.props?.title && (<Text style={style.sheet.feed}>{this.props.title}</Text>)}
 
                 {this.props?.wavy && (

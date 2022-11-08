@@ -11,7 +11,9 @@ export default class HeaderStyle {
 
             position: "relative",
 
-            paddingTop: Constants.statusBarHeight,
+            showPadding: {
+                paddingTop: Constants.statusBarHeight,
+            },
             
             borderBottomWidth: 1,
 

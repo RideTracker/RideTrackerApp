@@ -26,6 +26,7 @@ import SettingsPage from "app/Components/Layouts/Pages/SettingsPage.component";
 import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
 import Routes from "app/Components/Layouts/Pages/Routes.component";
 import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.component";
+import FilterPage from "app/Components/FilterPage.component";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -55,6 +56,7 @@ export default class App extends ThemedComponent {
         "ProfileSettings": (key, props) => (<ProfileSettings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "RecordPage": (key, props) => (<RecordPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "FilterPage": (key, props) => (<FilterPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
     };
 
     showModal(component, props = {}) {
