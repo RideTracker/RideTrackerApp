@@ -135,8 +135,6 @@ export default class App extends ThemedComponent {
 
         Production.prompt();
 
-        this.showNotification("Hello world");
-
         //Appearance.addEventListener("change", (theme) => this.setState({ theme }));
 
         this.setState({ page: "/index" });
