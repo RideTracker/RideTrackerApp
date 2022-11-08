@@ -199,6 +199,13 @@ export default class Activity extends ThemedComponent {
         this.props.onClose();
     };
 
+    onCommentsPress() {
+        if(User.guest && this.state?.comments?.length == 0)
+            return this.props.showModal("LoginPage");
+
+        return this.setState({ showComments: true });
+    };
+
     render() {
         if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
@@ -316,7 +323,7 @@ export default class Activity extends ThemedComponent {
                     )}
 
                     {this.state?.comments && (
-                        <TouchableOpacity style={[ style.sheet.comments, style.sheet.section, style.sheet.section.padded ]} onPress={() => this.setState({ showComments: true })}>
+                        <TouchableOpacity style={[ style.sheet.comments, style.sheet.section, style.sheet.section.padded ]} onPress={() => this.onCommentsPress()}>
                             <Text style={style.sheet.section.header}>Comments <Text style={style.sheet.section.header.count}>({this.state?.comments.length})</Text></Text>
                         
                             {this.state?.comments.length?(
@@ -339,20 +346,37 @@ export default class Activity extends ThemedComponent {
                                     </View>
                                 </View>
                             ):(
-                                <View style={style.sheet.comments.write}>
-                                    <View style={style.sheet.comments.write.avatar}>
-                                        <Image
-                                            style={style.sheet.comments.write.avatar.image}
-                                            source={{
-                                                uri: User.data?.avatar
-                                            }}
-                                        />
+                                (User.guest)?(
+                                    <View style={style.sheet.comments.write}>
+                                        <View style={style.sheet.comments.write.avatar}>
+                                            <Image
+                                                style={style.sheet.comments.write.avatar.image}
+                                                source={{
+                                                    uri: Settings.api + "/avatars/default.jpg"
+                                                }}
+                                            />
+                                        </View>
+    
+                                        <View style={style.sheet.comments.write.content}>
+                                            <Text style={style.sheet.comments.write.content.text}>Login to leave a comment...</Text>
+                                        </View>
                                     </View>
-
-                                    <View style={style.sheet.comments.write.content}>
-                                        <Text style={style.sheet.comments.write.content.text}>Leave a comment...</Text>
+                                ):(
+                                    <View style={style.sheet.comments.write}>
+                                        <View style={style.sheet.comments.write.avatar}>
+                                            <Image
+                                                style={style.sheet.comments.write.avatar.image}
+                                                source={{
+                                                    uri: User.data?.avatar
+                                                }}
+                                            />
+                                        </View>
+    
+                                        <View style={style.sheet.comments.write.content}>
+                                            <Text style={style.sheet.comments.write.content.text}>Leave a comment...</Text>
+                                        </View>
                                     </View>
-                                </View>
+                                )
                             )}
                         </TouchableOpacity>
                     )}
@@ -427,7 +451,7 @@ export default class Activity extends ThemedComponent {
                 </ScrollView>
 
                 {this.state?.showComments && (
-                    <ActivityComments activity={this.props.id} onClose={() => this.setState({ showComments: false })}/>
+                    <ActivityComments activity={this.props.id} showModal={(...args) => this.props.showModal(...args)} onClose={() => this.setState({ showComments: false })}/>
                 )}
 
                 {this.state?.playback && (

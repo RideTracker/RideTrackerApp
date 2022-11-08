@@ -13,6 +13,8 @@ import ActivityCommentReply from "./Comments/Reply";
 import style from "./Comments.style";
 import User from "../../../../Data/User";
 
+import Settings from "app/Settings";
+
 export default class ActivityComments extends Component {
     style = style.update();
 
@@ -123,20 +125,37 @@ export default class ActivityComments extends Component {
                             }
                         >
                             <View style={style.sheet.borders}>
-                                <TouchableOpacity style={style.sheet.write} onPress={() => this.setState({ showReply: true, replyParent: null })}>
-                                    <View style={style.sheet.write.avatar}>
-                                        <Image
-                                            style={style.sheet.write.avatar.image}
-                                            source={{
-                                                uri: User.data?.avatar
-                                            }}
-                                        />
-                                    </View>
+                                {(User.guest)?(
+                                    <TouchableOpacity style={style.sheet.write} onPress={() => this.props.showModal("LoginPage")}>
+                                        <View style={style.sheet.write.avatar}>
+                                            <Image
+                                                style={style.sheet.write.avatar.image}
+                                                source={{
+                                                    uri: Settings.api + "/avatars/default.jpg"
+                                                }}
+                                            />
+                                        </View>
 
-                                    <View style={style.sheet.write.content}>
-                                        <Text style={style.sheet.write.content.text}>Add a comment</Text>
-                                    </View>
-                                </TouchableOpacity>
+                                        <View style={style.sheet.write.content}>
+                                            <Text style={style.sheet.write.content.text}>Login to leave a comment...</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                ):(
+                                    <TouchableOpacity style={style.sheet.write} onPress={() => this.setState({ showReply: true, replyParent: null })}>
+                                        <View style={style.sheet.write.avatar}>
+                                            <Image
+                                                style={style.sheet.write.avatar.image}
+                                                source={{
+                                                    uri: User.data?.avatar
+                                                }}
+                                            />
+                                        </View>
+
+                                        <View style={style.sheet.write.content}>
+                                            <Text style={style.sheet.write.content.text}>Add a comment</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )}
                             </View>
 
                             <View style={style.sheet.comments}>
@@ -158,9 +177,11 @@ export default class ActivityComments extends Component {
 
                                             <Text style={style.sheet.comment.content.description}>{comment.text}</Text>
                                         
-                                            <TouchableOpacity onPress={() => this.setState({ showReply: true, replyParent: comment.id })}>
-                                                <Text style={style.sheet.comment.content.reply}>Reply</Text>
-                                            </TouchableOpacity>
+                                            {(!User.guest) && (
+                                                <TouchableOpacity onPress={() => this.setState({ showReply: true, replyParent: comment.id })}>
+                                                    <Text style={style.sheet.comment.content.reply}>Reply</Text>
+                                                </TouchableOpacity>
+                                            )}
 
                                             <View>
                                                 {this.state?.comments.filter(childComment => childComment.parent == comment.id).map((childComment) => (
