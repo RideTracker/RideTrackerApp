@@ -571,10 +571,19 @@ export default class Routes extends ThemedComponent {
     };
 
     componentDidMount() {
+        if(User.guest) {
+            this.props.onNavigate("/index");
+
+            this.props.showModal("LoginPage");
+
+            return;
+        }
+
         if(this.props?.route)
             this.setMode("route", this.props.route);
         else
             this.setMode("default");
+            
         //this.setMode("directions", "95b15cf0-ea40-4f6c-ada0-a3c960276761");
     };
 
