@@ -1,5 +1,5 @@
 import React, { Component, useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Platform, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Platform, Text, TouchableOpacity, Alert } from "react-native";
 import uuid from "react-native-uuid";
 
 import * as Location from "expo-location";
@@ -17,6 +17,8 @@ import Activity from "app/Components/Activity.component";
 import Config from "app/Data/Config";
 import User from "app/Data/User";
 import Appearance from "app/Data/Appearance";
+
+import Production from "./app/Services/Production";
 
 import Footer from "app/Components/Layouts/Footer.component";
 
@@ -123,6 +125,8 @@ export default class App extends ThemedComponent {
         this.style = style.update();
 
         await SplashScreen.hideAsync();
+
+        Production.prompt();
 
         //Appearance.addEventListener("change", (theme) => this.setState({ theme }));
 

@@ -16,6 +16,10 @@ export default class ButtonStyle {
                 backgroundColor: Appearance.theme.colorPalette.route
             },
 
+            transparent: {
+                backgroundColor: "transparent"
+            },
+
             text: {
                 color: Appearance.theme.colorPalette.secondary,
 

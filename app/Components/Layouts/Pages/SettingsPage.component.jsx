@@ -6,10 +6,12 @@ import Appearance from "app/Data/Appearance";
 import Themes from "app/Data/Config/Themes.json";
 
 import ThemedComponent from "app/Components/ThemedComponent";
+import Button from "app/Components/Button.component";
 
 import Header from "app/Components/Layouts/Header.component";
 
 import style from "./SettingsPage.component.style";
+import Production from "../../../Services/Production";
 
 export default class SettingsPage extends ThemedComponent {
     style = style.update();
@@ -20,6 +22,16 @@ export default class SettingsPage extends ThemedComponent {
                 <Header title="Settings"/>
 
                 <ScrollView>
+                    {(Production.get() == "demo") && (
+                        <View style={style.sheet.section}>
+                            <Text style={style.sheet.section.title}>Production Mode</Text>
+
+                            <Text style={style.sheet.section.switch.text.description}>You are in a less accessible production environment.</Text>
+                            
+                            <Button transparent style={{ marginTop: 12 }} title={"View information prompt"} onPress={() => Production.prompt()}/>
+                        </View>
+                    )}
+
                     <View style={style.sheet.section}>
                         <Text style={style.sheet.section.title}>Appearance</Text>
 
@@ -39,7 +51,7 @@ export default class SettingsPage extends ThemedComponent {
                         <View style={style.sheet.section.switch}>
                             <View style={style.sheet.section.switch.text}>
                                 <Text style={style.sheet.section.switch.text.title}>Map Matching</Text>
-                                <Text style={style.sheet.section.switch.text.description}>If enabled, we will show all activity maps aligned to the closest roads.</Text>
+                                <Text style={style.sheet.section.switch.text.description}>If enabled, we will show activity maps aligned to the closest roads.</Text>
                             </View>
 
                             <Switch
