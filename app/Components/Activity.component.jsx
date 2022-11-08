@@ -190,7 +190,7 @@ export default class Activity extends ThemedComponent {
     };
 
     onExportPress() {
-        Linking.openURL(`${config.api}/api/activity/export?id=${this.state.activity.id}`);
+        Linking.openURL(`${config.api}/api/v1/activity/export?id=${this.state.activity.id}`);
     };
 
     async onDelete() {
