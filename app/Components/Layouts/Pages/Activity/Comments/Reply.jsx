@@ -33,6 +33,8 @@ export default class ActivityCommentReply extends Component {
     };
 
     async onPress() {
+        const processing = this.props.showModal("Processing");
+        
         const result = await API.post("/api/v1/activity/comment", {
             activity: this.props.activity,
             parent: this.props?.parent || null,
@@ -40,6 +42,8 @@ export default class ActivityCommentReply extends Component {
         });
 
         this.props?.onClose(result.success, result.content);
+
+        this.props.hideModal(processing);
     };
 
     render() {

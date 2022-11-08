@@ -352,12 +352,16 @@ export default class Routes extends ThemedComponent {
                 },
 
                 onFinishPress: async () => {
+                    const processing = this.props.showModal("Processing");
+                    
                     const coordinates = this.state.waypoints.map((waypoint) => waypoint.coordinate);
 
                     const response = await API.post("/api/v1/directions/draw", { origin: coordinates[0], destination: coordinates[coordinates.length - 1], coordinates });
                     const result = response.content;
 
                     this.setMode("directions", result);
+
+                    this.props.hideModal(processing);
                 },
 
                 onFinish: () => {
@@ -462,6 +466,8 @@ export default class Routes extends ThemedComponent {
                 },
 
                 onSubmit: async () => {
+                    const processing = this.props.showModal("Processing");
+
                     const response = await API.post("/api/v1/route/create", {
                         directions: this.state.directions.id,
                         name: this.name.current.getValue()
@@ -469,6 +475,8 @@ export default class Routes extends ThemedComponent {
                     const result = response.content;
 
                     this.setMode("route", result);
+
+                    this.props.hideModal(processing);
                 },
 
                 onFinish: () => {

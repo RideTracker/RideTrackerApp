@@ -183,6 +183,8 @@ export default class RecordPage extends ThemedComponent {
         if(this.recorder.active)
             this.recorder.stop();
 
+        const processing = this.props.showModal("Processing");
+
         const content = await this.recorder.save();
 
         await API.put("/api/v1/activity/upload", JSON.parse(content));
@@ -190,6 +192,8 @@ export default class RecordPage extends ThemedComponent {
         //await Files.uploadFile(id);
 
         this.props.onNavigate("/index");
+
+        this.props.hideModal(processing);
 
         //Alert.alert(this.recorder.data.meta.id + ".json", "Saved");
     };

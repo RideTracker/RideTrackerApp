@@ -25,6 +25,8 @@ export default class Register extends Component {
     };
 
     async onRegistration() {
+        const processing = this.props.showModal("Processing");
+
         const credentials = {
             firstname: this.firstname.current.getValue(),
             lastname: this.lastname.current.getValue(),
@@ -37,6 +39,8 @@ export default class Register extends Component {
         if(!response.success) {
             Alert.alert("Something went wrong!", response.content, [{ text: "Close" }]);
 
+            this.props.hideModal(processing);
+
             return;
         }
 
@@ -47,6 +51,8 @@ export default class Register extends Component {
         await User.authenticateAsync();
 
         this.props.onRegistration();      
+
+        this.props.hideModal(processing);
     };
 
     render() { 

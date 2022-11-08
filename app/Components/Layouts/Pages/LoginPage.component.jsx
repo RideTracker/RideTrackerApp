@@ -58,6 +58,8 @@ export default class LoginPage extends ThemedComponent {
     };
 
     async onLoginPress() {
+        const processing = this.props.showModal("Processing");
+
         const credentials = {
             email: this.email.current.getValue(),
             password: this.password.current.getValue()
@@ -67,6 +69,8 @@ export default class LoginPage extends ThemedComponent {
 
         if(!response.success) {
             Alert.alert("Something went wrong!", response.content, [{ text: "Close" }]);
+
+            this.props.hideModal(processing);
 
             return;
         }
@@ -79,14 +83,16 @@ export default class LoginPage extends ThemedComponent {
 
         if(!User.guest)
             this.props.onClose();
+
+        this.props.hideModal(processing);
     };
 
     render() { 
         if(this.state?.page) {
             if(this.state?.page == "register")
-                return (<Register style={style.sheet} onRegistration={() => this.props.onClose()} onClose={() => this.setState({ page: null })}/>);
+                return (<Register style={style.sheet} onRegistration={() => this.props.onClose()} onClose={() => this.setState({ page: null })} {...this.props}/>);
             else if(this.state?.page == "forgotten")
-                return (<Forgotten style={style.sheet} onClose={() => this.setState({ page: null })}/>);
+                return (<Forgotten style={style.sheet} onClose={() => this.setState({ page: null })} {...this.props}/>);
         }
 
         return (

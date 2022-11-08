@@ -220,7 +220,7 @@ export default class ActivityComments extends Component {
                 </Animation>
 
                 {this.state?.showReply && (
-                    <ActivityCommentReply activity={this.props.activity} parent={this.state?.replyParent || null} onClose={() => this.onComment()}/>
+                    <ActivityCommentReply activity={this.props.activity} parent={this.state?.replyParent || null} onClose={() => this.onComment()} showModal={(...args) => this.props.showModal(...args)} hideModal={(...args) => this.props.hideModal(...args)}/>
                 )}
             </>
         );

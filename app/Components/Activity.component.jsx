@@ -451,7 +451,7 @@ export default class Activity extends ThemedComponent {
                 </ScrollView>
 
                 {this.state?.showComments && (
-                    <ActivityComments activity={this.props.id} showModal={(...args) => this.props.showModal(...args)} onClose={() => this.setState({ showComments: false })}/>
+                    <ActivityComments activity={this.props.id} onClose={() => this.setState({ showComments: false })} showModal={(...args) => this.props.showModal(...args)} hideModal={(...args) => this.props.hideModal(...args)}/>
                 )}
 
                 {this.state?.playback && (
