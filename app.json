@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "BikeTracker",
-    "slug": "BikeTracker",
+    "name": "Ride Tracker",
+    "slug": "ride-tracker",
+    "owner": "nora-soderlund",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -33,7 +34,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions":["ACCESS_COARSE_LOCATION","ACCESS_FINE_LOCATION","ACCESS_BACKGROUND_LOCATION"],
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyA4nsjk4nQtsOH-ccq3F1PTWZPazrKylyc"
@@ -52,6 +58,11 @@
           "photosPermission": "The app accesses your photos to let you upload a profile picture and activity images."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "7aa00640-909f-434c-8b6e-524b358adc78"
+      }
+    }
   }
 }

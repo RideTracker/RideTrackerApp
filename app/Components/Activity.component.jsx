@@ -5,8 +5,6 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import moment from "moment";
 
-import Constants from "expo-constants";
-
 import API from "app/Services/API";
 
 import Appearance from "app/Data/Appearance";
@@ -29,6 +27,8 @@ import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
 import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
 
 import style from "./Activity.component.style";
+
+import config from "root/config.json";
 
 export default class Activity extends ThemedComponent {
     style = style.update();
@@ -190,7 +190,7 @@ export default class Activity extends ThemedComponent {
     };
 
     onExportPress() {
-        Linking.openURL(`${Constants.expoConfig.extra.api}/api/v1/activity/export?id=${this.state.activity.id}`);
+        Linking.openURL(`${config.api}/api/v1/activity/export?id=${this.state.activity.id}`);
     };
 
     async onDelete() {

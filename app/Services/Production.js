@@ -1,6 +1,6 @@
 import { Alert } from "react-native";
 
-import config from "./../../config.json";
+import config from "root/config.json";
 
 export default class Production {
     static prompt() {
