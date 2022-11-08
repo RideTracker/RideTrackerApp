@@ -5,6 +5,8 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import moment from "moment";
 
+import { getDistance, getRhumbLineBearing } from "geolib";
+
 import API from "app/Services/API";
 
 import Appearance from "app/Data/Appearance";
@@ -204,6 +206,47 @@ export default class Activity extends ThemedComponent {
             return this.props.showModal("LoginPage");
 
         return this.setState({ showComments: true });
+    };
+
+    async onRouteCreate() {
+        const processing = this.props.showModal("Processing");
+
+        let startCoordinates = [];
+
+        this.state.recording.getMapCoordinates().forEach((section) => {
+            startCoordinates = startCoordinates.concat(section.coordinates);
+        });
+
+        const coordinates = [];
+
+        startCoordinates.forEach((coordinate) => {
+            if(coordinates.length == 0)
+                return coordinates.push(coordinate);
+
+            const distance = getDistance(coordinates[coordinates.length - 1], coordinate);
+
+            if(distance > 5000 || (distance > 1000 && getRhumbLineBearing(coordinates[coordinates.length - 1], coordinate) > 45))
+                return coordinates.push(coordinate);
+        });
+
+        const finalCoordinates = [];
+
+        const step = Math.max(1, Math.floor(coordinates.length / 10));
+
+        for(let index = 0; index < coordinates.length; index += step)
+            finalCoordinates.push(coordinates[index]);
+
+        const response = await API.post("/api/v1/directions/draw", { origin: startCoordinates[0], destination: startCoordinates[startCoordinates.length - 1], coordinates: finalCoordinates });
+        const result = response.content;
+
+        const routeResponse = await API.post("/api/v1/route/create", {
+            directions: result,
+            name: "Activity route"
+        });
+        const routeResult = routeResponse.content;
+
+        this.props.hideModal(processing);
+        this.props.showModal("Routes", { route: routeResult });
     };
 
     render() {
@@ -440,6 +483,12 @@ export default class Activity extends ThemedComponent {
                             height={140}
                             />
                     </View>
+
+                    {/*(!User.guest) && (
+                        <View style={{ margin: 12 }}>
+                            <Button title="Create route from activity" onPress={() => this.onRouteCreate()}/>
+                        </View>
+                    )*/}
 
                     {(this.state?.activity?.user == User.id) && (
                         <View style={{ marginVertical: 12 }}>
