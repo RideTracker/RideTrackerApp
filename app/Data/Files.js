@@ -75,7 +75,7 @@ export default class Files {
                         onPress: async () => {
                             const content = await FileSystem.readAsStringAsync(this.directory + "/" + directory + "/" + file);
 
-                            await API.put("/api/activity/upload", JSON.parse(content));
+                            await API.put("/api/v1/activity/upload", JSON.parse(content));
 
                             resolve();
                         }

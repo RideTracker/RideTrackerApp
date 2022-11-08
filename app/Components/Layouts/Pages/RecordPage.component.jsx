@@ -176,7 +176,7 @@ export default class RecordPage extends ThemedComponent {
 
         const content = await this.recorder.save();
 
-        await API.put("/api/activity/upload", JSON.parse(content));
+        await API.put("/api/v1/activity/upload", JSON.parse(content));
 
         //await Files.uploadFile(id);
 

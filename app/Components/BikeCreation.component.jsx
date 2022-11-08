@@ -49,14 +49,14 @@ export default class BikeCreation extends Component {
         };
 
         if(this.state?.base64) {
-            const uploadResponse = await API.put("/api/upload", this.state.base64);
+            const uploadResponse = await API.put("/api/v1/upload", this.state.base64);
 
             console.log({ uploadResponse });
 
             options.image = uploadResponse.content;
         }
 
-        const bikeCreateResponse = await API.post("/api/bike/create", options);
+        const bikeCreateResponse = await API.post("/api/v1/bike/create", options);
 
         const bikeCreateId = bikeCreateResponse.content;
 

@@ -15,7 +15,7 @@ export default class LandingPage extends ThemedComponent {
     style = style.update();
 
     componentDidMount() {
-        API.get("/api/feed").then((result) => {
+        API.get("/api/v1/feed").then((result) => {
             this.setState({
                 activities: result.content
             });
@@ -35,7 +35,7 @@ export default class LandingPage extends ThemedComponent {
     onRefresh() {
         this.setState({ refreshing: true });
 
-        API.get("/api/feed").then((result) => {
+        API.get("/api/v1/feed").then((result) => {
             this.setState({
                 activities: result.content,
                 refreshing: false

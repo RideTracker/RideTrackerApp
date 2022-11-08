@@ -7,7 +7,7 @@ export default class Cache {
         let activity = this.activity.find(x => x.id == id);
 
         if(activity == null) {
-            const data = await API.get("/api/activity", { id });
+            const data = await API.get("/api/v1/activity", { id });
 
             activity = data.content;
 
@@ -23,7 +23,7 @@ export default class Cache {
         let activityComment = this.activityComment.find(x => x.comment == comment);
 
         if(!activityComment) {
-            const data = (await API.get("/api/activity/comment", { comment })).content;
+            const data = (await API.get("/api/v1/activity/comment", { comment })).content;
             data.user = (await this.getUser(data.user));
             
             activityComment = {
@@ -47,7 +47,7 @@ export default class Cache {
         let activityComments = this.activityComments.find(x => x.activity == activity);
 
         if(!activityComments) {
-            const data = (await API.get("/api/activity/comments", { activity })).content;
+            const data = (await API.get("/api/v1/activity/comments", { activity })).content;
             
             activityComments = {
                 activity,
@@ -65,7 +65,7 @@ export default class Cache {
 
     static async getActivityRide(id) {
         if(this.activityRide[id] == undefined)
-            this.activityRide[id] = (await API.get("/api/activity/map?id=" + id)).content;
+            this.activityRide[id] = (await API.get("/api/v1/activity/map?id=" + id)).content;
 
         return this.activityRide[id];
     };
@@ -79,7 +79,7 @@ export default class Cache {
         let user = this.user.find(x => x.id == id);
 
         if(user == null) {
-            const data = await API.get("/api/user", { id });
+            const data = await API.get("/api/v1/user", { id });
 
             user = data.content;
 

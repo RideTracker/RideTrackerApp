@@ -33,7 +33,7 @@ export default class ActivityCommentReply extends Component {
     };
 
     async onPress() {
-        const result = await API.post("/api/activity/comment", {
+        const result = await API.post("/api/v1/activity/comment", {
             activity: this.props.activity,
             parent: this.props?.parent || null,
             text: this.input.current.getValue()

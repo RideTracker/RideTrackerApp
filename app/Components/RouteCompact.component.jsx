@@ -22,10 +22,10 @@ export default class RouteCompact extends Component {
     };
 
     componentDidMount() {
-        API.get("/api/route", { route: this.props.route }).then((data) => {
+        API.get("/api/v1/route", { route: this.props.route }).then((data) => {
             this.setState({ route: data.content });
 
-            API.get("/api/directions", { directions: data.content.directions }).then((data) => {
+            API.get("/api/v1/directions", { directions: data.content.directions }).then((data) => {
                 this.setState({ directions: data.content });
 
                 Files.exists(`directions/${data.content.id}.json`).then((exists) => {
@@ -51,7 +51,7 @@ export default class RouteCompact extends Component {
     };
 
     onDownloadPress() {
-        API.get("/api/directions/download", { directions: this.state.directions.id }).then(async (data) => {
+        API.get("/api/v1/directions/download", { directions: this.state.directions.id }).then(async (data) => {
             await Files.create("directions");
 
             await Files.write(`directions/${this.state.directions.id}.json`, JSON.stringify(data.content));

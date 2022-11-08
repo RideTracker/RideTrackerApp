@@ -84,7 +84,7 @@ export default class Routes extends ThemedComponent {
             
                     this.mapView.current.fitToCoordinates(bounds);
 
-                    API.get("/api/user/routes", { user: User.id }).then((response) => {
+                    API.get("/api/v1/user/routes", { user: User.id }).then((response) => {
                         this.setState({ routes: response.content });
                     });
                 },
@@ -210,7 +210,7 @@ export default class Routes extends ThemedComponent {
 
                     console.log(finalCoordinates);
 
-                    const response = await API.post("/api/directions/draw", { origin: this.state.coordinates[0], destination: this.state.coordinates[this.state.coordinates.length - 1], coordinates: finalCoordinates });
+                    const response = await API.post("/api/v1/directions/draw", { origin: this.state.coordinates[0], destination: this.state.coordinates[this.state.coordinates.length - 1], coordinates: finalCoordinates });
                     const result = response.content;
 
                     this.setMode("directions", result);
@@ -354,7 +354,7 @@ export default class Routes extends ThemedComponent {
                 onFinishPress: async () => {
                     const coordinates = this.state.waypoints.map((waypoint) => waypoint.coordinate);
 
-                    const response = await API.post("/api/directions/draw", { origin: coordinates[0], destination: coordinates[coordinates.length - 1], coordinates });
+                    const response = await API.post("/api/v1/directions/draw", { origin: coordinates[0], destination: coordinates[coordinates.length - 1], coordinates });
                     const result = response.content;
 
                     this.setMode("directions", result);
@@ -443,7 +443,7 @@ export default class Routes extends ThemedComponent {
                 onStart: async (directions) => {
                     this.name = React.createRef();
 
-                    const response = await API.get("/api/directions", { directions });
+                    const response = await API.get("/api/v1/directions", { directions });
                     const result = response.content;
 
                     this.setState({ directions: result });
@@ -462,7 +462,7 @@ export default class Routes extends ThemedComponent {
                 },
 
                 onSubmit: async () => {
-                    const response = await API.post("/api/route/create", {
+                    const response = await API.post("/api/v1/route/create", {
                         directions: this.state.directions.id,
                         name: this.name.current.getValue()
                     });
@@ -533,10 +533,10 @@ export default class Routes extends ThemedComponent {
 
             events: {
                 onStart: async (route) => {
-                    const response = await API.get("/api/route", { route });
+                    const response = await API.get("/api/v1/route", { route });
                     const result = response.content;
 
-                    const directions = await API.get("/api/directions", { directions: result.directions });
+                    const directions = await API.get("/api/v1/directions", { directions: result.directions });
 
                     this.setState({ route: result, directions: directions.content });
                 },

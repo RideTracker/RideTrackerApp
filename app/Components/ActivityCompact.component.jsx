@@ -40,7 +40,7 @@ export default class ActivityCompact extends ThemedComponent {
             this.setState({ recording: new Recording(ride) });
         });
 
-        API.get("/api/activity/stats", { id: this.props.id }).then((stats) => {
+        API.get("/api/v1/activity/stats", { id: this.props.id }).then((stats) => {
             this.setState({ stats: stats.content });
         });
     };

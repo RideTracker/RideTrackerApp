@@ -29,33 +29,33 @@ export default class ProfilePage extends Component {
         this.user = (this.props.user)?(this.props.user):(User.id);
 
         if(this.user) {
-            API.get("/api/user", { id: this.user }).then((data) => {
+            API.get("/api/v1/user", { id: this.user }).then((data) => {
                 this.setState({ user: data.content });
             });
 
-            API.get("/api/user/activities", { user: this.user }).then((data) => {
+            API.get("/api/v1/user/activities", { user: this.user }).then((data) => {
                 this.setState({ activities: data.content });
             });
 
-            API.get("/api/user/bikes", { user: this.user }).then((data) => {
+            API.get("/api/v1/user/bikes", { user: this.user }).then((data) => {
                 this.setState({ bikes: data.content });
             });
 
-            API.get("/api/user/routes", { user: this.user }).then((data) => {
+            API.get("/api/v1/user/routes", { user: this.user }).then((data) => {
                 this.setState({ routes: data.content });
             });
 
-            API.get("/api/user/activity", { user: this.user }).then((data) => {
+            API.get("/api/v1/user/activity", { user: this.user }).then((data) => {
                 this.setState({ activity: data.content });
             });
 
             if(this.user != User.id) {
-                API.get("/api/user/follow", { user: this.user }).then((data) => {
+                API.get("/api/v1/user/follow", { user: this.user }).then((data) => {
                     this.setState({ follows: data.content });
                 });
             }
 
-            /*API.get("/api/user/comments", { user: this.user }).then((data) => {
+            /*API.get("/api/v1/user/comments", { user: this.user }).then((data) => {
                 this.setState({ comments: data.content });
             });*/
         }
@@ -78,17 +78,17 @@ export default class ProfilePage extends Component {
         if(!result.cancelled) {
             const base64 = result.base64;
 
-            await API.put("/api/user/avatar", base64);
+            await API.put("/api/v1/user/avatar", base64);
             await User.update();
             
-            API.get("/api/user", { id: this.user }).then((data) => {
+            API.get("/api/v1/user", { id: this.user }).then((data) => {
                 this.setState({ user: data.content });
             });
         }
     };
 
     async onFollowPress() {
-        const response = await API.post("/api/user/follow", { user: this.user });
+        const response = await API.post("/api/v1/user/follow", { user: this.user });
         
         this.setState({ follows: response.content });
     };

@@ -63,7 +63,7 @@ export default class LoginPage extends ThemedComponent {
             password: this.password.current.getValue()
         };
 
-        const response = await API.post("/api/user/login", credentials);
+        const response = await API.post("/api/v1/user/login", credentials);
 
         if(!response.success) {
             Alert.alert("Something went wrong!", response.content, [{ text: "Close" }]);

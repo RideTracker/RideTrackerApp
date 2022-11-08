@@ -65,7 +65,7 @@ export default class Activity extends ThemedComponent {
             this.setState({ comments: collection });
         });
 
-        API.get("/api/activity/likes", { activity: this.props.id }).then((data) => {
+        API.get("/api/v1/activity/likes", { activity: this.props.id }).then((data) => {
             if(!data.success)
                 return;
 
@@ -73,7 +73,7 @@ export default class Activity extends ThemedComponent {
         });
 
         if(!User.guest) {
-            API.get("/api/activity/like", { activity: this.props.id }).then((data) => {
+            API.get("/api/v1/activity/like", { activity: this.props.id }).then((data) => {
                 if(!data.success)
                     return;
 
@@ -121,13 +121,13 @@ export default class Activity extends ThemedComponent {
 
     onLikePress() {
         if(!User.guest) {
-            API.post("/api/activity/like", { activity: this.props.id }).then((data) => {
+            API.post("/api/v1/activity/like", { activity: this.props.id }).then((data) => {
                 if(!data.success)
                     return;
 
                 this.setState({ like: data.content });
 
-                API.get("/api/activity/likes", { activity: this.props.id }).then((data) => {
+                API.get("/api/v1/activity/likes", { activity: this.props.id }).then((data) => {
                     if(!data.success)
                         return;
         
@@ -194,7 +194,7 @@ export default class Activity extends ThemedComponent {
     };
 
     async onDelete() {
-        await API.delete("/api/activity", { activity: this.state.activity.id });
+        await API.delete("/api/v1/activity", { activity: this.state.activity.id });
 
         this.props.onClose();
     };

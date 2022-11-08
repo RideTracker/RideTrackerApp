@@ -9,7 +9,7 @@ export default class User {
         if(!Config.user?.token)
             return false;
 
-        const result = await API.post("/api/user/authenticate", { token: Config.user.token });
+        const result = await API.post("/api/v1/user/authenticate", { token: Config.user.token });
 
         if(!result.success) {
             Config.user.token = null;
@@ -41,6 +41,6 @@ export default class User {
 
         this.data = null;
 
-        await API.post("/api/user/logout", { token: Config.user.token });
+        await API.post("/api/v1/user/logout", { token: Config.user.token });
     };
 };

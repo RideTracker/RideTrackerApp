@@ -9,11 +9,11 @@ export default class BikeCompact extends Component {
     style = style.update();
 
     componentDidMount() {
-        API.get("/api/bike", { bike: this.props.id }).then((data) => {
+        API.get("/api/v1/bike", { bike: this.props.id }).then((data) => {
             this.setState({ bike: data.content });
         });
         
-        API.get("/api/bike/stats", { id: this.props.id }).then((data) => {
+        API.get("/api/v1/bike/stats", { id: this.props.id }).then((data) => {
             this.setState({ stats: data.content });
         });
     };
