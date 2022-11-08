@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { View, Text, PixelRatio, Dimensions } from "react-native";
 import WebView from "react-native-webview";
 import CanvasWebView from "react-native-webview-canvas";
-
-import config from "app/../config.json";
+import { Constants } from "expo-constants";
 
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
@@ -229,7 +228,7 @@ export default class ActivityPlayback extends Component {
                     onLoad={() => this.onLoad()}
                     onMessage={(event) => this.onMessage(event)}
                     source={{
-                        uri: `${config.api}/playback/index.html?activity=${this.props.activity}&color=${Appearance.theme.colorPalette.route.replace('#', '')}&type=${this.props.type}`
+                        uri: `${Constants.expoConfig.extra.api}/playback/index.html?activity=${this.props.activity}&color=${Appearance.theme.colorPalette.route.replace('#', '')}&type=${this.props.type}`
                     }}
                     />
 
