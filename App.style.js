@@ -43,7 +43,9 @@ export default class {
                     text: {
                         fontSize: 16,
                         
-                        color: Appearance.theme.colorPalette.secondary
+                        color: Appearance.theme.colorPalette.secondary,
+
+                        paddingRight: 24,
                     },
 
                     icon: {
