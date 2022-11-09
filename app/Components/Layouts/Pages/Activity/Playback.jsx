@@ -71,6 +71,9 @@ export default class ActivityPlayback extends Component {
     };
 
     onMessage(event) {
+        if(!this.webView?.current)
+            return;
+
         const content = JSON.parse(event.nativeEvent.data);
 
         switch(content.event) {
