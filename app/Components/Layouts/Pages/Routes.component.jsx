@@ -9,6 +9,7 @@ import { getBoundsOfDistance, getDistance, getRhumbLineBearing } from "geolib";
 
 import API from "app/Services/API";
 import User from "app/Data/User";
+import Files from "app/Data/Files";
 
 import Appearance from "app/Data/Appearance";
 
@@ -502,7 +503,46 @@ export default class Routes extends ThemedComponent {
             key: "route",
 
             render: () => {
+                if(!this.state?.route || !this.state?.directions)
+                    return null;
 
+                return (
+                    <View style={style.sheet.static.content}>
+                        {(this.state.route.name)?(
+                            <View>
+                                <Text style={style.sheet.form.text}>{this.state.route.name}</Text>
+                                <Text style={style.sheet.form.description}>{this.state.directions.summary}</Text>
+                            </View>
+                        ):(
+                            <Text style={style.sheet.form.text}>{this.state.directions.summary}</Text>
+                        )}
+
+                        <View style={style.sheet.footer}>
+                            <View style={style.sheet.stats}>
+                                <View style={style.sheet.stats.item}>
+                                    <Text style={style.sheet.stats.item.title}>{Math.round(this.state.directions.duration / 60)} <Text style={style.sheet.stats.item.unit}>min</Text></Text>
+                                    <Text style={style.sheet.stats.item.description}>duration</Text>
+                                </View>
+
+                                <View style={style.sheet.stats.item}>
+                                    <Text style={style.sheet.stats.item.title}>{Math.round((this.state.directions.distance / 1000) * 10) / 10} <Text style={style.sheet.stats.item.unit}>km</Text></Text>
+                                    <Text style={style.sheet.stats.item.description}>distance</Text>
+                                </View>
+
+                                <View style={style.sheet.stats.item}>
+                                    <Text style={style.sheet.stats.item.title}>? <Text style={style.sheet.stats.item.unit}>m</Text></Text>
+                                    <Text style={style.sheet.stats.item.description}>elevation</Text>
+                                </View>
+                            </View>
+                        </View>
+
+                        {(this.state?.downloaded)?(
+                            <Button branded title={"Start recording"} onPress={() => this.props.showModal("RecordPage", { directions: this.state.directions.id })}/>
+                        ):(
+                            <Button title={"Download directions"} onPress={() => this.mode.events.onDownloadPress()}/>
+                        )}
+                    </View>
+                );
             },
             
             renderOverlay: () => {
@@ -547,6 +587,10 @@ export default class Routes extends ThemedComponent {
                     const directions = await API.get("/api/v1/directions", { directions: result.directions });
 
                     this.setState({ route: result, directions: directions.content });
+
+                    Files.exists(`directions/${directions.content.id}.json`).then((exists) => {
+                        this.setState({ downloaded: exists });
+                    });
                 },
 
                 onPressIn: () => {
@@ -563,6 +607,16 @@ export default class Routes extends ThemedComponent {
 
                 onFinish: () => {
 
+                },
+
+                onDownloadPress: () => {
+                    API.get("/api/v1/directions/download", { directions: this.state.directions.id }).then(async (data) => {
+                        await Files.create("directions");
+            
+                        await Files.write(`directions/${this.state.directions.id}.json`, JSON.stringify(data.content));
+            
+                        this.setState({ downloaded: true });
+                    });
                 },
 
                 onLayout: (coordinates) => {
