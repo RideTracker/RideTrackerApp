@@ -90,9 +90,9 @@ export default class LoginPage extends ThemedComponent {
     render() { 
         if(this.state?.page) {
             if(this.state?.page == "register")
-                return (<Register style={style.sheet} onRegistration={() => this.props.onClose()} onClose={() => this.setState({ page: null })} {...this.props}/>);
+                return (<Register style={style.sheet} onRegistration={() => this.props.onClose()} {...this.props} onClose={() => this.setState({ page: null })}/>);
             else if(this.state?.page == "forgotten")
-                return (<Forgotten style={style.sheet} onClose={() => this.setState({ page: null })} {...this.props}/>);
+                return (<Forgotten style={style.sheet} {...this.props} onClose={() => this.setState({ page: null })}/>);
         }
 
         return (
