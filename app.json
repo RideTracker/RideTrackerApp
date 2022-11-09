@@ -3,7 +3,7 @@
     "name": "Ride Tracker",
     "slug": "ride-tracker",
     "owner": "nora-soderlund",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -42,11 +42,11 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyA4nsjk4nQtsOH-ccq3F1PTWZPazrKylyc"
+          "apiKey": ""
         }
       },
       "package": "com.norasoderlund.ridetracker",
-      "versionCode": 4
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"
