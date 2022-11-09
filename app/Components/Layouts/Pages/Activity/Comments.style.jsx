@@ -44,17 +44,16 @@ export default class {
 
             content: {
                 backgroundColor: Appearance.theme.colorPalette.primary,
-
-                position: "absolute",
-
-                top: "20%",
-                left: 0,
-
-                width: "100%",
-                height: "100%",
+                
+                marginTop: "60%",
 
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10
+            },
+
+            scroll: {
+                flex: 1,
+                flexDirection: "column"
             },
 
             header: {
