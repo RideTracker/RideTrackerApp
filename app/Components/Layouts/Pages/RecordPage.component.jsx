@@ -256,16 +256,6 @@ export default class RecordPage extends ThemedComponent {
                         maxZoomLevel={16}
                         onPanDrag={() => !this.state?.freeCamera && this.setState({ freeCamera: true })}
                         >
-                        {this.recorder != null && 
-                            (this.recorder.getLatLngCoordinates().map((section, index, array) => (
-                                <Polyline key={"index" + section.index} coordinates={section.coordinates} 
-                                    strokeColor={"#FFF"}
-                                    strokeWidth={3}
-                                    lineJoin={"round"}
-                                ></Polyline>
-                            )))
-                        }
-
                         {(this.state?.polyline) && (
                             <Polyline
                                 coordinates={this.state.polyline} 
@@ -283,6 +273,16 @@ export default class RecordPage extends ThemedComponent {
                                 lineJoin={"round"}
                                 />
                         )}
+
+                        {this.recorder != null && 
+                            (this.recorder.getLatLngCoordinates().map((section, index, array) => (
+                                <Polyline key={"index" + section.index} coordinates={section.coordinates} 
+                                    strokeColor={"#FFF"}
+                                    strokeWidth={5}
+                                    lineJoin={"round"}
+                                ></Polyline>
+                            )))
+                        }
                     </MapView>
                 )}
 
