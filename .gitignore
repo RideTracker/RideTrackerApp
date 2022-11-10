@@ -79,3 +79,4 @@ android/
 
 # custom
 /config.json
+/app.json

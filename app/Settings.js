@@ -1,5 +1,5 @@
 export default class config {
-    static api = "https://demo.ridetracker.app";
+    static api = "https://api.ridetracker.app";
     
-    static production =  "demo";
+    static production =  "public";
 };
