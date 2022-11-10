@@ -5,19 +5,26 @@ import Appearance from "app/Data/Appearance";
 export default class {
     static update() {
         this.sheet = StyleSheet.create({
+            height: "100%",
+            width: "100%",
+
             position: "absolute",
 
-            width: "100%",
-            height: "100%",
+            left: 0,
+            top: 0,
 
-            close: {
+            flex: 1,
+
+            overlay: {
+                height: "100%",
+                width: "100%",
+    
                 position: "absolute",
-
+    
                 left: 0,
                 top: 0,
 
-                width: "100%",
-                height: "20%"
+                backgroundColor: "rgba(0, 0, 0, .5)"
             },
 
             background: {
@@ -32,28 +39,15 @@ export default class {
                 backgroundColor: "rgba(0, 0, 0, .5)"
             },
 
-            container: {
-                position: "absolute",
-
-                top: 0,
-                left: 0,
-
-                width: "100%",
-                height: "100%",
-            },
-
             content: {
                 backgroundColor: Appearance.theme.colorPalette.primary,
-                
-                marginTop: "60%",
+
+                marginTop: "auto",
+
+                maxHeight: "60%",
 
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10
-            },
-
-            scroll: {
-                flex: 1,
-                flexDirection: "column"
             },
 
             header: {

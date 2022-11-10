@@ -21,8 +21,7 @@ export default class ActivityComments extends Component {
     constructor(...args) {
         super(...args);
         
-        this.background = React.createRef();
-        this.container = React.createRef();
+        this.animation = React.createRef();
     };
 
     componentDidMount() {
@@ -32,20 +31,17 @@ export default class ActivityComments extends Component {
             for(let index = 0; index < comments.length; index++) {
                 collection[index] = await Cache.getActivityComment(comments[index]);
             }
-            
-                this.background.current.setTransitions([
-                    {
-                        type: "opacity",
-                        duration: 200
-                    }
-                ]);
 
-                this.container.current.setTransitions([
-                    {
-                        type: "bottom",
-                        duration: 200
-                    }
-                ]);
+            this.animation.current.setTransitions([
+                {
+                    type: "opacity",
+                    duration: 200
+                },
+                {
+                    type: "bottom",
+                    duration: 200
+                }
+            ]);
             
             this.setState({
                 comments: collection,
@@ -56,18 +52,14 @@ export default class ActivityComments extends Component {
     };
 
     onClose() {
-        this.container.current.setTransitions([
-            {
-                type: "bottom",
-                direction: "out",
-                duration: 200,
-                callback: () => this.props?.onClose()
-            }
-        ]);
-        
-        this.background.current.setTransitions([
+        this.animation.current.setTransitions([
             {
                 type: "opacity",
+                direction: "out",
+                duration: 200
+            },
+            {
+                type: "bottom",
                 direction: "out",
                 duration: 200,
                 callback: () => this.props?.onClose()
@@ -102,19 +94,13 @@ export default class ActivityComments extends Component {
         return (
             <>
                 <Animation
-                    ref={this.background}
+                    ref={this.animation}
                     enabled={this.state?.ready}
-                    style={style.sheet.background}
-                    />
-
-                <Animation
-                    ref={this.container}
-                    enabled={this.state?.ready}
-                    style={style.sheet.container}
+                    style={style.sheet}
                     >
 
                     <TouchableOpacity 
-                        style={style.sheet.close}
+                        style={style.sheet.overlay}
                         onPress={() => this.onClose()}
                         />
 
