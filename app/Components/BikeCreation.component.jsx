@@ -51,8 +51,6 @@ export default class BikeCreation extends Component {
         if(this.state?.base64) {
             const uploadResponse = await API.put("/api/v1/upload", this.state.base64);
 
-            console.log({ uploadResponse });
-
             options.image = uploadResponse.content;
         }
 

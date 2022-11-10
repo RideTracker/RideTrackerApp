@@ -81,7 +81,8 @@ export default class ProfilePage extends Component {
         if(!result.cancelled) {
             const base64 = result.base64;
 
-            await API.put("/api/v1/user/avatar", base64);
+            const uploadResponse = await API.put("/api/v1/upload", base64);
+            await API.post("/api/v1/user/avatar", { image: uploadResponse.content });
             await User.update();
             
             API.get("/api/v1/user", { id: this.user }).then((data) => {
