@@ -434,13 +434,17 @@ export default class RecordPage extends ThemedComponent {
                 ):(
                     <View style={style.sheet.footer}>
                         <Button
-                            style={{
-                                margin: 12,
-                                marginBottom: 35
-                            }}
+                            style={{ margin: 12 }}
                             branded
                             title={"Start recording"}
                             onPress={() => this.onStart()}
+                            />
+                            
+                        <Button
+                            style={{ margin: 12 }}
+                            transparent
+                            title={"Cancel"}
+                            onPress={() => this.props.onNavigate("/index")}
                             />
                     </View>
                 )}
