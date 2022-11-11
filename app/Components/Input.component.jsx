@@ -55,6 +55,7 @@ export default class Input extends Component {
                     autoCapitalize={this.props?.autoCapitalize}
                     returnKeyType={this.props?.returnKeyType}
                     onSubmitEditing={this.props?.onSubmitEditing}
+                    multiline={this.props?.multiline}
                     />
             </View>
         );

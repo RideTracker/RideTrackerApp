@@ -22,6 +22,12 @@ export default class Files {
     static async write(file, content) {
         const path = this.getPath(file);
 
+        const directoryPath = path.substring(0, path.lastIndexOf('/'));
+        const directoryInfo = await FileSystem.getInfoAsync(directoryPath);
+
+        if(!directoryInfo.exists)
+            await FileSystem.makeDirectoryAsync(directoryPath, { intermediates: true });
+
         await FileSystem.writeAsStringAsync(path, content);
     };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { TouchableOpacity, Text, View, Image } from "react-native";
 import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import uuid from "react-native-uuid";
 
 import { getBoundsOfDistance, getDistance } from "geolib";
 
@@ -183,17 +184,28 @@ export default class RecordPage extends ThemedComponent {
         if(this.recorder.active)
             this.recorder.stop();
 
-        const processing = this.props.showModal("Processing");
+        //const processing = this.props.showModal("Processing");
 
-        const content = await this.recorder.save();
+        const id = uuid.v4();
 
-        await API.put("/api/v1/activity/upload", JSON.parse(content));
+        Files.write(`/recordings/local/${id}.json`, JSON.stringify(this.recorder.data));
+
+        this.props.showModal("ActivityUpload", {
+            recording: id,
+            onFinish: (activity) => {
+                this.props.onNavigate("/index");
+
+                this.props.showModal("Activity", { id: activity });
+            }
+        });
+
+        //await API.put("/api/v1/activity/upload", this.recorder.data);
 
         //await Files.uploadFile(id);
 
-        this.props.onNavigate("/index");
+        //this.props.onNavigate("/index");
 
-        this.props.hideModal(processing);
+        //this.props.hideModal(processing);
 
         //Alert.alert(this.recorder.data.meta.id + ".json", "Saved");
     };

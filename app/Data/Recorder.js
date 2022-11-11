@@ -139,14 +139,6 @@ export default class Recorder extends Recording {
         Location.stopLocationUpdatesAsync("recorder");
     };
 
-    async save() {
-        const content = JSON.stringify(this.data);
-        
-        await Files.createFile("rides", this.data.meta.id + ".json", content);
-        
-        return content;
-    };
-    
     onPosition(locations) {
         for(let index = 0; index < locations.length; index++) {
             console.log(locations[index]);

@@ -31,6 +31,7 @@ import Routes from "app/Components/Layouts/Pages/Routes.component";
 import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.component";
 import FilterPage from "app/Components/FilterPage.component";
 import Processing from "app/Components/Processing.component";
+import ActivityUpload from "app/Components/ActivityUpload.component";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -61,7 +62,8 @@ export default class App extends ThemedComponent {
         "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "RecordPage": (key, props) => (<RecordPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "FilterPage": (key, props) => (<FilterPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "Processing": (key, props) => (<Processing {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>)
+        "Processing": (key, props) => (<Processing {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "ActivityUpload": (key, props) => (<ActivityUpload {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>)
     };
 
     showModal(component, props = {}) {
