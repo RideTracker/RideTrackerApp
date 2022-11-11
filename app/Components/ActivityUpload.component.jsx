@@ -3,6 +3,7 @@ import { View, TouchableOpacity } from "react-native";
 
 import API from "app/Services/API";
 import Files from "app/Data/Files";
+import User from "app/Data/User";
 
 import Button from "app/Components/Button.component";
 import Header from "app/Components/Layouts/Header.component";
@@ -21,6 +22,20 @@ export default class ActivityUpload extends Component {
         this.page = React.createRef();
         this.title = React.createRef();
         this.description = React.createRef();
+        this.bike = React.createRef();
+    };
+
+    componentDidMount() {
+        API.get("/api/v1/user/bikes/names", { user: User.id }).then((bikes) => {
+            this.setState({
+                bikes: bikes.content.map((bike) => {
+                    return {
+                        value: bike.id,
+                        text: bike.name
+                    };
+                })
+            });
+        });
     };
 
     async onPress() {
@@ -33,7 +48,8 @@ export default class ActivityUpload extends Component {
             recording,
 
             title: this.title.current.getValue(),
-            description: this.description.current.getValue()
+            description: this.description.current.getValue(),
+            bike: this.bike.current.getValue()
         });
 
         //await Files.uploadFile(id);
@@ -86,8 +102,19 @@ export default class ActivityUpload extends Component {
                             onSubmitEditing={() => this.description.current.focus()}
                             />
                     </Form.Field>
+                        
+                    <Form.Field>
+                        <Form.Title text={"Bike (optional)"}/>
+                        <Form.Description text={"This will be shown on your activity page."}/>
+                        <Form.Selection
+                            ref={this.bike}
+                            items={this.state?.bikes}
+                            />
+                    </Form.Field>
 
-                    <Button branded title={"Upload"} onPress={() => this.onPress()}/>
+                    <Form.Field>
+                        <Button branded title={"Upload"} onPress={() => this.onPress()}/>
+                    </Form.Field>
                 </Form>
             </SubPage>
         );

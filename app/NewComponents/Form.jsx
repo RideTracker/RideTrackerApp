@@ -1,9 +1,12 @@
 import { Component } from "react";
-import { View, Text } from "react-native";
-
-import Appearance from "app/Data/Appearance";
+import { View } from "react-native";
 
 import Input from "app/Components/Input.component";
+
+import Title from "./Form/Title";
+import Description from "./Form/Description";
+import Field from "./Form/Field";
+import Selection from "./Form/Selection";
 
 export default class Form extends Component {
     render() {
@@ -16,44 +19,9 @@ export default class Form extends Component {
         );
     };
 
-    static Field = (props) => {
-        return (
-            <View style={{
-                marginVertical: 6
-            }}>
-                {props.children}
-            </View>
-        );
-    };
-
-    static Title = (props) => {
-        return (
-            <Text style={{
-                marginVertical: 4,
-
-                color: Appearance.theme.colorPalette.secondary,
-
-                fontSize: 16,
-                fontWeight: "bold"
-            }}>
-                {props.text}
-            </Text>
-        );
-    };
-
-    static Description = (props) => {
-        return (
-            <Text style={{
-                marginVertical: 4,
-
-                color: Appearance.theme.colorPalette.secondary,
-
-                fontSize: 14
-            }}>
-                {props.text}
-            </Text>
-        );
-    };
-
     static Input = Input;
+    static Field = Field;
+    static Title = Title;
+    static Description = Description;
+    static Selection = Selection;
 };
