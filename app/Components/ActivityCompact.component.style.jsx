@@ -28,6 +28,15 @@ export default class ActivityCompactStyle {
                 fontWeight: "bold"
             },
 
+            description: {
+                marginTop: 6,
+                marginHorizontal: 12,
+
+                color: Appearance.theme.colorPalette.secondary,
+
+                fontSize: 16
+            },
+
             clickable: {
                 position: "absolute",
 

@@ -282,7 +282,7 @@ export default class Activity extends ThemedComponent {
                                 scrollEnabled={false}
                                 zoomEnabled={false}
                                 rotateEnabled={false}
-                                onPress={() => this.onPlaybackPress("3d")}
+                                onPress={() => !this.state.activity.outdated && this.onPlaybackPress("3d")}
                                 >
                                 {this.state.recording != null && 
                                     (this.state.recording.getMapCoordinates().map(section => (
@@ -317,6 +317,13 @@ export default class Activity extends ThemedComponent {
                                 }
                             </MapView>
                         </Images>
+
+                        {(this.state?.activity?.outdated) && (
+                            <View style={{ marginVertical: 6 }}>
+                                <Text style={style.sheet.title}>Playback unavailable</Text>
+                                <Text style={style.sheet.description}>This activity was recorded with outdated accuracy settings</Text>
+                            </View>
+                        )}
 
                         <TouchableOpacity style={style.sheet.user} onPress={() => this.showProfile()}>
                             <View>
@@ -441,11 +448,13 @@ export default class Activity extends ThemedComponent {
                             </TouchableOpacity>*/}
 
                             <View style={style.sheet.buttons.author}>
-                                <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onPlaybackPress("2d")}>
-                                    <FontAwesome5 style={style.sheet.buttons.button.icon} name={"play"}/>
-                                    
-                                    <Text style={style.sheet.buttons.button.label}>2D</Text>
-                                </TouchableOpacity>
+                                {(!this.state.activity.outdated) && (
+                                    <TouchableOpacity style={style.sheet.buttons.button} onPress={() => this.onPlaybackPress("2d")}>
+                                        <FontAwesome5 style={style.sheet.buttons.button.icon} name={"play"}/>
+                                        
+                                        <Text style={style.sheet.buttons.button.label}>2D</Text>
+                                    </TouchableOpacity>
+                                )}
 
                                 {this.state.user.id == User.id && (
                                     <TouchableOpacity style={style.sheet.buttons.export} onPress={() => this.onExportPress()}>

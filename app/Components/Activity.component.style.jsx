@@ -15,6 +15,25 @@ export default class RecordPageStyle {
 
             backgroundColor: Appearance.theme.colorPalette.background,
 
+            title: {
+                marginTop: 6,
+                marginHorizontal: 12,
+
+                color: Appearance.theme.colorPalette.secondary,
+
+                fontSize: 18,
+                fontWeight: "bold"
+            },
+
+            description: {
+                marginTop: 6,
+                marginHorizontal: 12,
+
+                color: Appearance.theme.colorPalette.secondary,
+
+                fontSize: 16
+            },
+
             section: {
                 backgroundColor: Appearance.theme.colorPalette.primary,
                 
