@@ -67,6 +67,9 @@ export default class ActivityPlayback extends Component {
     };
 
     postEvent(event) {
+        if(!this.webView?.current)
+            return;
+            
         this.webView.current.injectJavaScript(`window.playback.${event}().then(() => window.ReactNativeWebView.postMessage(JSON.stringify({ event: "${event}" })))`);
     };
 
