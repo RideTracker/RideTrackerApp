@@ -78,6 +78,9 @@ export default class Recording {
     };
 
     getSectionCoordinateSpeed(sectionIndex, coordinateIndex) {
+        if(!this.data.sections[sectionIndex] || !this.data.sections[sectionIndex].coordinates[coordinateIndex])
+            return 0;
+
         const section = this.data.sections[sectionIndex];
         const coordinate = section.coordinates[coordinateIndex];
 
@@ -87,6 +90,9 @@ export default class Recording {
     };
 
     getSectionCoordinateDistance(sectionIndex, coordinateIndex) {
+        if(!this.data.sections[sectionIndex] || !this.data.sections[sectionIndex].coordinates[coordinateIndex])
+            return 0;
+
         let distance = 0;
 
         for(let index = 0; index <= sectionIndex; index++) {
@@ -124,6 +130,9 @@ export default class Recording {
 
     getSectionCoordinateElevation(sectionIndex, coordinateIndex) {
         const coordinates = [];
+
+        if(!this.data.sections[sectionIndex] || !this.data.sections[sectionIndex].coordinates[coordinateIndex])
+            return 0;
         
         for(let index = 0; index <= sectionIndex; index++) {
             if(sectionIndex == index) {
@@ -131,7 +140,7 @@ export default class Recording {
                     coordinates.push(this.data.sections[index].coordinates[coordinate].coords);
             }
             else {
-                for(let coordinate = 0; coordinate <= this.data.sections[index].coordinates.length; coordinate++)
+                for(let coordinate = 0; coordinate < this.data.sections[index].coordinates.length; coordinate++)
                     coordinates.push(this.data.sections[index].coordinates[coordinate].coords);
             }
         }
