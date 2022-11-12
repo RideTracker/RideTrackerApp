@@ -18,6 +18,16 @@ export default class ActivityCompactStyle {
             borderTopWidth: 1,
             borderTopColor: Appearance.theme.colorPalette.border,
 
+            title: {
+                marginTop: 6,
+                marginHorizontal: 12,
+
+                color: Appearance.theme.colorPalette.secondary,
+
+                fontSize: 18,
+                fontWeight: "bold"
+            },
+
             clickable: {
                 position: "absolute",
 

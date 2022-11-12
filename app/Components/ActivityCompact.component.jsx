@@ -88,6 +88,10 @@ export default class ActivityCompact extends ThemedComponent {
                         }
                     </MapView>
 
+                    {(this.state?.activity?.title) && (
+                        <Text style={style.sheet.title}>{this.state.activity.title}</Text>
+                    )}
+
                     {this.state?.stats && (
                         <View style={style.sheet.stats}>
                             <View style={style.sheet.stats.item}>
