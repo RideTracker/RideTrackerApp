@@ -19,6 +19,12 @@ export default class ProfileSetings extends Component {
         this.props.onClose();
     };
 
+    async onDeletePress() {
+        await API.delete("/api/v1/user");
+        
+        await this.onLogoutPress();
+    };
+
     render() {
         return (
             <View style={style.sheet}>
@@ -31,6 +37,10 @@ export default class ProfileSetings extends Component {
 
                 <ScrollView>
                     <Button title={"Logout"} confirm onPress={() => this.onLogoutPress()}/>
+                    <Button title={"Delete my account"} confirm={{
+                        title: "Delete my account",
+                        message: "Are you sure? Your personal data will be deleted within a week and your account cannot be recovered!\n\nWarning! Your activities will not be deleted, you must delete those manually before you delete your account!"
+                    }} onPress={() => this.onDeletePress()}/>
                 </ScrollView>
             </View>
         );
