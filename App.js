@@ -135,7 +135,13 @@ export default class App extends ThemedComponent {
 
         await SplashScreen.hideAsync();
 
-        Production.prompt();
+        if(Config.user?.prompt != "shown") {
+            if(Production.prompt()) {
+                Config.user.prompt = "shown";
+
+                Config.saveAsync();
+            }
+        }
 
         //Appearance.addEventListener("change", (theme) => this.setState({ theme }));
 

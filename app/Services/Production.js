@@ -5,7 +5,7 @@ import Settings from "app/Settings";
 export default class Production {
     static prompt() {
         if(Settings.production != "demo")
-            return;
+            return false;
 
         Alert.alert("Production mode", "You're connected to a demo server and you're unaffected by activity on the production server.",
             [
@@ -19,6 +19,8 @@ export default class Production {
                 { text: "OK" }
             ]
         );
+
+        return true;
     };
 
     static get() {
