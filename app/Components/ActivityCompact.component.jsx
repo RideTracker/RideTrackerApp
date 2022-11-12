@@ -131,13 +131,13 @@ export default class ActivityCompact extends ThemedComponent {
 
                         <View style={style.sheet.user.texts}>
                             <Text style={style.sheet.user.texts.title}>{this.state.user.name}</Text>
-                            <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
+                            <Text style={style.sheet.user.texts.description}>{moment(this.state.activity.timestamp).fromNow()}{(this.state?.stats?.origin != null) && (" in " + this.state.stats.origin)}{(this.state?.stats?.destination && this.state?.stats?.destination != this.state?.stats?.origin) && (" to " + this.state.stats.destination)}</Text>
                         </View>
                     </View>
                 ):(
                     <View style={style.sheet.user}>
                         <View style={style.sheet.user.texts}>
-                            <Text style={[ style.sheet.user.texts.description, { textAlign: "right" }]}>{moment(this.state.activity.timestamp).fromNow()} in Vänersborg</Text>
+                            <Text style={[ style.sheet.user.texts.description, { textAlign: "right" }]}>{moment(this.state.activity.timestamp).fromNow()}{(this.state?.stats?.origin) && (" in " + this.state.stats.origin)}{(this.state?.stats?.destination && this.state?.stats?.destination != this.state?.stats?.origin) && (" to " + this.state.stats.destination)}</Text>
                         </View>
                     </View>
                 )}
