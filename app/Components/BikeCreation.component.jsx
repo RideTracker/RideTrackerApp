@@ -41,6 +41,8 @@ export default class BikeCreation extends Component {
     };
 
     async onSubmit() {
+        const processing = this.props.showModal("Processing");
+
         const options = {
             name: this.name.current.getValue(),
             brand: this.brand.current.getValue(),
@@ -57,6 +59,8 @@ export default class BikeCreation extends Component {
                 image: this.state.base64
             });
         }
+
+        this.props.hideModal(processing);
 
         if(this.props.onFinish)
             this.props.onFinish(bikeCreateId);
