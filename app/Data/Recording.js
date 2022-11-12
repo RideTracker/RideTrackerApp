@@ -129,7 +129,7 @@ export default class Recording {
     };
 
     getSectionCoordinateElevation(sectionIndex, coordinateIndex) {
-        const coordinates = [];
+        let coordinates = [];
 
         if(!this.data.sections[sectionIndex] || !this.data.sections[sectionIndex].coordinates[coordinateIndex])
             return 0;
@@ -140,8 +140,7 @@ export default class Recording {
                     coordinates.push(this.data.sections[index].coordinates[coordinate].coords);
             }
             else {
-                for(let coordinate = 0; coordinate < this.data.sections[index].coordinates.length; coordinate++)
-                    coordinates.push(this.data.sections[index].coordinates[coordinate].coords);
+                coordinates = coordinates.concat(this.data.sections[index].coordinates);
             }
         }
         
