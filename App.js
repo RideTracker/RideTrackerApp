@@ -1,5 +1,5 @@
 import React, { Component, useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Platform, Text, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, View, Platform, Text, TouchableOpacity, Alert, BackHandler } from "react-native";
 import uuid from "react-native-uuid";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
@@ -146,6 +146,20 @@ export default class App extends ThemedComponent {
         //Appearance.addEventListener("change", (theme) => this.setState({ theme }));
 
         this.setState({ page: "/index" });
+
+        BackHandler.addEventListener("hardwareBackPress", () => {
+            if(!this.state?.modals)
+                return false;
+
+            const currentModal = this.state.modals[this.state.modals.length - 1];
+
+            if(!currentModal)
+                return false;
+
+            this.hideModal(currentModal.key);
+
+            return true;
+        });
     };
 
     render() {
