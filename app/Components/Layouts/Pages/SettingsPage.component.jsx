@@ -73,8 +73,10 @@ export default class SettingsPage extends ThemedComponent {
                         </View>
                     </View>
 
-                    <Text style={style.sheet.version}>Ride Tracker {Constants.manifest.version}-{Production.get()}</Text>
-                    <Text style={style.sheet.website}>ridetracker.app</Text>
+                    <View style={style.sheet.about}>
+                        <Text style={style.sheet.about.version}>Ride Tracker {Constants.manifest.version}-{Production.get()}</Text>
+                        <Text style={style.sheet.about.website}>ridetracker.app</Text>
+                    </View>
                 </ScrollView>
             </View>
         );

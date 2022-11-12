@@ -70,17 +70,21 @@ export default class SettingsPageStyle {
                     }
                 }
             },
-            
-            website: {
-                textAlign: "center",
-                fontSize: 18.5,
-                color: Appearance.theme.colorPalette.secondary
-            },
 
-            version: {
-                textAlign: "center",
-                fontSize: 11,
-                color: Appearance.theme.colorPalette.secondary
+            about: {
+                marginVertical: 6,
+                
+                website: {
+                    textAlign: "center",
+                    fontSize: 18.5,
+                    color: Appearance.theme.colorPalette.secondary
+                },
+    
+                version: {
+                    textAlign: "center",
+                    fontSize: 11,
+                    color: Appearance.theme.colorPalette.secondary
+                }
             }
         });
 
