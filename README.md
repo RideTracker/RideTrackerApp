@@ -7,7 +7,7 @@
 A mobile application to record and share bike activities, plan routes, and replay your rides!
 
 ## Inspiration
-I'm a huge cyclist hobbyist and I love to keep track of my activities and look back at what sections I can try to improve on. I also love exploring new places and routes around me. I wanted to create a community where you can easily share your bike activities, thoughts, images, and videos. From my experience using fitness apps, the focus on the hobby part is very low and everything is very private. I wanted the community to be connected to an mobile application where you can do all of the technical stuff, such as planning your route, and I wanted it to be as straight forward as possible.
+I'm a big cyclist hobbyist and I love to keep track of my activities and look back at what sections I can try to improve on. I also love exploring new places and routes around me. I wanted to create a community where you can easily share your bike activities, thoughts, images, and videos. From my experience using fitness apps, the focus on the hobby part is very low and everything is very private. I wanted the community to be connected to an mobile application where you can do all of the technical stuff, such as planning your route, and I wanted it to be as straight forward as possible.
 
 My goal is to also provide the user with all of the data and statistics they may want, and I don't want to hide the very basic statistics and data behind a paywall (such as being able to export your recoreded rides in a GPX format, view your performance, etc).
 
