@@ -69,6 +69,18 @@ export default class SettingsPageStyle {
                         width: "20%"
                     }
                 }
+            },
+            
+            website: {
+                textAlign: "center",
+                fontSize: 18.5,
+                color: Appearance.theme.colorPalette.secondary
+            },
+
+            version: {
+                textAlign: "center",
+                fontSize: 11,
+                color: Appearance.theme.colorPalette.secondary
             }
         });
 

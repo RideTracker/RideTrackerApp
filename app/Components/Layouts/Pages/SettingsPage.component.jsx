@@ -1,6 +1,8 @@
 import React from "react";
 import { View, ScrollView, Text, TouchableOpacity, Switch } from "react-native";
 
+import Constants from "expo-constants";
+
 import Config from "app/Data/Config";
 import Appearance from "app/Data/Appearance";
 import Themes from "app/Data/Config/Themes.json";
@@ -70,6 +72,9 @@ export default class SettingsPage extends ThemedComponent {
                                 />
                         </View>
                     </View>
+
+                    <Text style={style.sheet.version}>Ride Tracker {Constants.manifest.version}-{Production.get()}</Text>
+                    <Text style={style.sheet.website}>ridetracker.app</Text>
                 </ScrollView>
             </View>
         );
