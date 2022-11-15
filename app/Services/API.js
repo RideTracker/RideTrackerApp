@@ -1,6 +1,9 @@
+import Constants from "expo-constants";
+
 import Config from "app/Data/Config";
 
 import Settings from "app/Settings";
+import Production from "app/Services/Production";
 
 export default class API {
     static alive = null;
@@ -38,6 +41,8 @@ export default class API {
 
         if(Config.user?.token)
             headers.set("Authorization", `Bearer ${Config.user.token}`);
+
+        headers.set("User-Agent", `RideTracker-${Constants.manifest.version}-${Production.get()}`);
 
         const response = await fetch(Settings.api + path, {
             method,
