@@ -20,6 +20,10 @@ export default class ButtonStyle {
                 backgroundColor: "transparent"
             },
 
+            opaque: {
+                backgroundColor: "rgba(0, 0, 0, .2)"
+            },
+
             text: {
                 color: Appearance.theme.colorPalette.secondary,
 

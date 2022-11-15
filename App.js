@@ -30,6 +30,7 @@ import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
 import Routes from "app/Components/Layouts/Pages/Routes.component";
 import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.component";
 import FilterPage from "app/Components/FilterPage.component";
+import Prompt from "app/Components/Prompt";
 import Processing from "app/Components/Processing.component";
 import ActivityUpload from "app/Components/ActivityUpload.component";
 
@@ -63,7 +64,8 @@ export default class App extends ThemedComponent {
         "RecordPage": (key, props) => (<RecordPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "FilterPage": (key, props) => (<FilterPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Processing": (key, props) => (<Processing {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "ActivityUpload": (key, props) => (<ActivityUpload {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>)
+        "ActivityUpload": (key, props) => (<ActivityUpload {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "Prompt": (key, props) => (<Prompt {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
     };
 
     showModal(component, props = {}) {
@@ -111,9 +113,6 @@ export default class App extends ThemedComponent {
     };
 
     async componentDidMount() {
-        try { await Location.requestForegroundPermissionsAsync(); } catch {}
-        try { await Location.requestBackgroundPermissionsAsync(); } catch {}
-
         // uncomment to debug login dialog
         // await Config.resetAsync();
 
@@ -160,6 +159,13 @@ export default class App extends ThemedComponent {
 
             return true;
         });
+        
+        const backgroundPermission = await Location.getBackgroundPermissionsAsync();
+
+        this.showModal("Prompt");
+
+        try { await Location.requestForegroundPermissionsAsync(); } catch {}
+        try { await Location.requestBackgroundPermissionsAsync(); } catch {}
     };
 
     render() {
