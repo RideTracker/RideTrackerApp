@@ -1,6 +1,7 @@
 import React from "react";
-import { View, ScrollView, Text, TouchableOpacity, Switch } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Switch, Platform } from "react-native";
 
+import { startActivityAsync, ActivityAction } from 'expo-intent-launcher';
 import Constants from "expo-constants";
 
 import Config from "app/Data/Config";
@@ -73,9 +74,13 @@ export default class SettingsPage extends ThemedComponent {
                         </View>
                     </View>
 
+                    {(Platform.OS == "android") && (
+                        <Button style={{ marginHorizontal: 12 }} title={"Open Location Permissions"} onPress={() => startActivityAsync(ActivityAction.LOCATION_SOURCE_SETTINGS)}/>
+                    )}
+
                     <View style={style.sheet.about}>
-                        <Text style={style.sheet.about.version}>Ride Tracker {Constants.manifest.version}-{Production.get()}</Text>
                         <Text style={style.sheet.about.website}>ridetracker.app</Text>
+                        <Text style={style.sheet.about.version}>ride tracker {Constants.manifest.version}-{Production.get()}</Text>
                     </View>
                 </ScrollView>
             </View>

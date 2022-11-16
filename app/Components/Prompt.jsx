@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, Image, Platform, Alert } from "react-nati
 
 import * as Location from "expo-location";
 import * as NavigationBar from "expo-navigation-bar";
+import { startActivityAsync, ActivityAction } from 'expo-intent-launcher';
 
 import Header from "app/Components/Layouts/Header.component";
 import Button from "app/Components/Button.component";
@@ -56,8 +57,9 @@ export default class Prompt extends Component {
             const permissions = await Location.requestBackgroundPermissionsAsync();
 
             if(!permissions.granted)
-                return Alert.alert("", "Background location access was not granted, try again or choose to continue without these features.");
+                return startActivityAsync(ActivityAction.LOCATION_SOURCE_SETTINGS);
 
+            this.props.onFinish();
             this.onClose();
         }
         catch {
@@ -66,9 +68,9 @@ export default class Prompt extends Component {
     };
 
     onContinuePress() {
-        Alert.alert("", "If you decide to enable background location access in the future, you can do this through App Permissions under the Settings tab.", [
+        Alert.alert("", "If you decide to enable background location access in the future, you can do this through App Location Permissions under the Settings tab.", [
             {
-                onPress: () => this.onClose()
+                onPress: () => { this.props.onFinish(); this.onClose(); }
             }
         ]);
     };

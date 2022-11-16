@@ -49,10 +49,17 @@ export default class API {
             headers,
             body: JSON.stringify(body)
         });
-            
-        const result = await response.json();
+        
+        try {
+            const result = await response.json();
 
-        return result;
+            return result;
+        }
+        catch(error) {
+            console.error("Failed to parse response for " + method + " " + Settings.api + path);
+
+            throw error;
+        }
     };
 
     static async get(path, parameters) {

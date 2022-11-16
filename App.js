@@ -1,7 +1,9 @@
 import React, { Component, useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Platform, Text, TouchableOpacity, Alert, BackHandler } from "react-native";
+import { StyleSheet, View, Platform, Text, TouchableOpacity, Alert, BackHandler, LogBox } from "react-native";
 import uuid from "react-native-uuid";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+
+LogBox.ignoreAllLogs();
 
 import * as Location from "expo-location";
 import * as SplashScreen from "expo-splash-screen";
@@ -186,9 +188,11 @@ export default class App extends ThemedComponent {
                     else if(event.status == "denied") {
                         Location.getForegroundPermissionsAsync().then((event) => {
                             if(!event.granted) {
-                                this.showModal("Prompt");
-
-                                this.setState({ page: "/index" });
+                                this.showModal("Prompt", {
+                                    onFinish: () => {
+                                        this.setState({ page: "/index" });
+                                    }
+                                });
             
                                 return null;
                             }

@@ -91,14 +91,6 @@ export default class RecordPage extends ThemedComponent {
         });
     };
 
-    componentDidUpdate() {
-        Location.getBackgroundPermissionsAsync().then((permissions) => {
-            this.setState({
-                hasBackgroundLocation: permissions.granted
-            });
-        });
-    };
-
     componentWillUnmount() {
         clearInterval(this.interval);
     }
