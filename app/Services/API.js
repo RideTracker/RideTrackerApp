@@ -35,7 +35,7 @@ export default class API {
     };
 
     static async fetch(path, method, body) {
-        console.log("API FETCH " + method + " " + Settings.api + path);
+        console.log(method + " " + Settings.api + path);
 
         const headers = new Headers();
 
@@ -44,21 +44,23 @@ export default class API {
 
         headers.set("User-Agent", `RideTracker-${Constants.manifest.version}-${Production.get()}`);
 
-        const response = await fetch(Settings.api + path, {
-            method,
-            headers,
-            body: JSON.stringify(body)
-        });
-        
         try {
+            const response = await fetch(Settings.api + path, {
+                method,
+                headers,
+                body: JSON.stringify(body)
+            });
+            
             const result = await response.json();
 
             return result;
         }
         catch(error) {
-            console.error("Failed to parse response for " + method + " " + Settings.api + path);
+            console.error(method + " " + Settings.api + path + ": " + error);
 
-            throw error;
+            return {
+                error: true
+            };
         }
     };
 

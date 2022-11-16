@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, RefreshControl } from "react-native";
+import { View, ScrollView, RefreshControl, Text } from "react-native";
 
 import Appearance from "app/Data/Appearance";
 import Config from "app/Data/Config";
@@ -7,6 +7,7 @@ import Config from "app/Data/Config";
 import ThemedComponent from "app/Components/ThemedComponent";
 import Header from "app/Components/Layouts/Header.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
+import Error from "app/Components/Error.component";
 
 import API from "app/Services/API";
 
@@ -33,9 +34,23 @@ export default class LandingPage extends ThemedComponent {
         this.setState({ refreshing: true });
 
         API.post("/api/v1/feed", { filter: Config?.user?.filter }).then((result) => {
+            if(result.error) {
+                this.setState({
+                    refreshing: false,
+                    error: true
+                });
+
+                this.props.showModal("Error", {
+                    description: "We couldn't connect to the server, please try again later!"
+                });
+
+                return;
+            }
+
             this.setState({
                 activities: result.content,
-                refreshing: false
+                refreshing: false,
+                error: false
             });
         });
     };
@@ -61,8 +76,12 @@ export default class LandingPage extends ThemedComponent {
                             }
                         >
                         
-                        {this.state?.activities && this.state?.activities.map(id => <ActivityCompact key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
+                        {(this.state?.activities) && this.state?.activities.map(id => <ActivityCompact key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
                     </ScrollView>
+
+                    {(this.state?.error && !this.state?.activities) && (
+                        <Error darker description={"We couldn't connect to the server, please try again later!"}/>
+                    )}
                 </View>
             </View>
         );
