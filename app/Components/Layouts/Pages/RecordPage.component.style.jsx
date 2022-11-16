@@ -247,6 +247,23 @@ export default class RecordPageStyle {
                 }
             },
 
+            warning: {
+                margin: 12,
+
+                title: {
+                    fontWeight: "bold",
+                    fontSize: 18,
+    
+                    color: Appearance.theme.colorPalette.secondary
+                },
+
+                description: {
+                    fontSize: 16,
+    
+                    color: Appearance.theme.colorPalette.secondary
+                }
+            },
+
             buttons: {
                 margin: 12
             }

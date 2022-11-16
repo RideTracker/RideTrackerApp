@@ -159,13 +159,6 @@ export default class App extends ThemedComponent {
 
             return true;
         });
-        
-        const backgroundPermission = await Location.getBackgroundPermissionsAsync();
-
-        this.showModal("Prompt");
-
-        try { await Location.requestForegroundPermissionsAsync(); } catch {}
-        try { await Location.requestBackgroundPermissionsAsync(); } catch {}
     };
 
     render() {
@@ -181,6 +174,27 @@ export default class App extends ThemedComponent {
 
                     return null;
                 }
+            }
+        }
+
+        if(this.state?.page == "/record") {
+            if((!this.state?.modals || !this.state.modals.length) || this.state.modals[this.state.modals.length - 1].component != "Prompt") {
+                Location.getBackgroundPermissionsAsync().then((event) => {
+                    if(event.status == "undetermined") {
+                        this.showModal("Prompt");
+                    }
+                    else if(event.status == "denied") {
+                        Location.getForegroundPermissionsAsync().then((event) => {
+                            if(!event.granted) {
+                                this.showModal("Prompt");
+
+                                this.setState({ page: "/index" });
+            
+                                return null;
+                            }
+                        });
+                    }
+                });
             }
         }
         

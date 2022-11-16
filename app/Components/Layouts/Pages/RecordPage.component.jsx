@@ -53,16 +53,8 @@ export default class RecordPage extends ThemedComponent {
         this.mapView = React.createRef();
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.interval = setInterval(() => this.onInterval(), 1000);
-
-        Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.BestForNavigation
-        }).then((position) => {
-            this.mapView.current.fitToCoordinates([ position.coords ], {
-                animated: false
-            });
-        });
 
         if(this.props.directions) {
             Files.read(`directions/${this.props.directions}.json`).then((directions) => {
@@ -78,6 +70,33 @@ export default class RecordPage extends ThemedComponent {
                 //    this.recorder.start();
             });
         }
+        
+        Location.getBackgroundPermissionsAsync().then((permissions) => {
+            this.setState({
+                hasBackgroundLocation: permissions.granted
+            });
+        });
+
+        const permissions = await Location.getForegroundPermissionsAsync();
+
+        if(!permissions.granted)
+            return;
+
+        Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.BestForNavigation
+        }).then((position) => {
+            this.mapView.current.fitToCoordinates([ position.coords ], {
+                animated: false
+            });
+        });
+    };
+
+    componentDidUpdate() {
+        Location.getBackgroundPermissionsAsync().then((permissions) => {
+            this.setState({
+                hasBackgroundLocation: permissions.granted
+            });
+        });
     };
 
     componentWillUnmount() {
@@ -355,99 +374,109 @@ export default class RecordPage extends ThemedComponent {
                     </MapView>
                 )}
 
-                {(this.state?.started)?(
-                    <View style={style.sheet.footer}>
-                        <View style={style.sheet.controls}>
-                            <View style={style.sheet.controls.button}>
-                                <FontAwesome5 style={style.sheet.controls.button.iconSideInvisible} name={"map-marker-alt"}/>
-                            </View>
+                <View style={style.sheet.footer}>
+                    {(this.state?.hasBackgroundLocation == false) && (
+                        <View style={style.sheet.warning}>
+                            <Text style={style.sheet.warning.title}>Warning!</Text>
 
-                            <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.togglePause()}>
-                                <FontAwesome5 style={style.sheet.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.setState({ freeCamera: false })}>
-                                <FontAwesome5 style={(this.recorder.active && this.state?.freeCamera)?(style.sheet.controls.button.iconSide):(style.sheet.controls.button.iconSideInvisible)} name={"map-marker-alt"}/>
-                            </TouchableOpacity>
+                            <Text style={style.sheet.warning.description}>You have not granted Ride Tracker background location access and you won't be able to track your position with the screen closed.</Text>
                         </View>
+                    )}
 
-                        <View style={style.sheet.stats}>
-                            <View style={style.sheet.stats.row}>
-                                <View style={style.sheet.stats.column}>
-                                    <Text style={style.sheet.stats.column.title}>{this.renderStateDuration()}</Text>
-                                    <Text style={style.sheet.stats.column.description}>duration</Text>
+                    {(this.state?.started)?(
+                        <>
+                            <View style={style.sheet.controls}>
+                                <View style={style.sheet.controls.button}>
+                                    <FontAwesome5 style={style.sheet.controls.button.iconSideInvisible} name={"map-marker-alt"}/>
                                 </View>
 
-                                <View style={style.sheet.stats.column}>
-                                    <Text style={style.sheet.stats.column.title}>{this.state?.speed ?? 0} km/h</Text>
-                                    <Text style={style.sheet.stats.column.description}>speed</Text>
-                                </View>
+                                <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.togglePause()}>
+                                    <FontAwesome5 style={style.sheet.controls.button.icon} name={(!this.recorder.active)?("play-circle"):("stop-circle")} solid/>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={style.sheet.controls.button} onPress={() => this.setState({ freeCamera: false })}>
+                                    <FontAwesome5 style={(this.recorder.active && this.state?.freeCamera)?(style.sheet.controls.button.iconSide):(style.sheet.controls.button.iconSideInvisible)} name={"map-marker-alt"}/>
+                                </TouchableOpacity>
                             </View>
 
-                            {(!this.recorder.active) && (
+                            <View style={style.sheet.stats}>
                                 <View style={style.sheet.stats.row}>
                                     <View style={style.sheet.stats.column}>
-                                        <Text style={style.sheet.stats.column.title}>0.00 km</Text>
-                                        <Text style={style.sheet.stats.column.description}>distance</Text>
+                                        <Text style={style.sheet.stats.column.title}>{this.renderStateDuration()}</Text>
+                                        <Text style={style.sheet.stats.column.description}>duration</Text>
                                     </View>
 
                                     <View style={style.sheet.stats.column}>
-                                        <Text style={style.sheet.stats.column.title}>0 m</Text>
-                                        <Text style={style.sheet.stats.column.description}>elevation</Text>
+                                        <Text style={style.sheet.stats.column.title}>{this.state?.speed ?? 0} km/h</Text>
+                                        <Text style={style.sheet.stats.column.description}>speed</Text>
                                     </View>
                                 </View>
-                            )}
-                        </View>
 
-                        <View style={style.sheet.footer.section}>
-                            {(this.recorder.active && this.state?.direction) && (
-                                <View style={style.sheet.directions}>
-                                    <View style={style.sheet.directions.upcoming}>
-                                        {(this.state.direction.maneuver) && (
-                                            <Image
-                                                style={style.sheet.directions.upcoming.image}
-                                                source={images[this.state.direction.maneuver]}
-                                                />
-                                        )}
+                                {(!this.recorder.active) && (
+                                    <View style={style.sheet.stats.row}>
+                                        <View style={style.sheet.stats.column}>
+                                            <Text style={style.sheet.stats.column.title}>0.00 km</Text>
+                                            <Text style={style.sheet.stats.column.description}>distance</Text>
+                                        </View>
 
-                                        <Text style={style.sheet.directions.upcoming.text}>{this.state.direction.distance.value} <Text style={style.sheet.directions.upcoming.unit}>{this.state.direction.distance.unit}</Text></Text>
+                                        <View style={style.sheet.stats.column}>
+                                            <Text style={style.sheet.stats.column.title}>0 m</Text>
+                                            <Text style={style.sheet.stats.column.description}>elevation</Text>
+                                        </View>
                                     </View>
+                                )}
+                            </View>
 
-                                    <View style={style.sheet.directions.street}>
-                                        <Text style={style.sheet.directions.street.text}>{this.state.direction.street}</Text>
-                                        <Text style={style.sheet.directions.street.instruction}>{this.state.direction.instruction}</Text>
+                            <View style={style.sheet.footer.section}>
+                                {(this.recorder.active && this.state?.direction) && (
+                                    <View style={style.sheet.directions}>
+                                        <View style={style.sheet.directions.upcoming}>
+                                            {(this.state.direction.maneuver) && (
+                                                <Image
+                                                    style={style.sheet.directions.upcoming.image}
+                                                    source={images[this.state.direction.maneuver]}
+                                                    />
+                                            )}
+
+                                            <Text style={style.sheet.directions.upcoming.text}>{this.state.direction.distance.value} <Text style={style.sheet.directions.upcoming.unit}>{this.state.direction.distance.unit}</Text></Text>
+                                        </View>
+
+                                        <View style={style.sheet.directions.street}>
+                                            <Text style={style.sheet.directions.street.text}>{this.state.direction.street}</Text>
+                                            <Text style={style.sheet.directions.street.instruction}>{this.state.direction.instruction}</Text>
+                                        </View>
                                     </View>
-                                </View>
-                            )}
+                                )}
 
-                            {(!this.recorder.active) &&
-                                <View style={style.sheet.buttons}>
-                                    <Button title="Finish" onPress={() => this.onFinish()}/>
+                                {(!this.recorder.active) &&
+                                    <View style={style.sheet.buttons}>
+                                        <Button title="Finish" onPress={() => this.onFinish()}/>
 
-                                    <Button title="Discard" confirm={{
-                                        message: "Do you really want to discard this ride?"
-                                    }} onPress={() => this.onDiscard()}/>
-                                </View>
-                            }
-                        </View>
-                    </View>
-                ):(
-                    <View style={style.sheet.footer}>
-                        <Button
-                            style={{ margin: 12 }}
-                            branded
-                            title={"Start recording"}
-                            onPress={() => this.onStart()}
-                            />
-                            
-                        <Button
-                            style={{ margin: 12 }}
-                            transparent
-                            title={"Cancel"}
-                            onPress={() => this.props.onNavigate("/index")}
-                            />
-                    </View>
-                )}
+                                        <Button title="Discard" confirm={{
+                                            message: "Do you really want to discard this ride?"
+                                        }} onPress={() => this.onDiscard()}/>
+                                    </View>
+                                }
+                            </View>
+                        </>
+                    ):(
+                        <>
+                            <Button
+                                style={{ margin: 12 }}
+                                branded
+                                title={"Start recording"}
+                                onPress={() => this.onStart()}
+                                />
+                                
+                            <Button
+                                style={{ margin: 12 }}
+                                transparent
+                                title={"Cancel"}
+                                onPress={() => this.props.onNavigate("/index")}
+                                />
+                        </>
+                    )}
+                </View>
             </View>
         );
     };
