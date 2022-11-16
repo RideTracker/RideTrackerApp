@@ -1,6 +1,6 @@
 {
   "name": "ridetracker",
-  "version": "1.0.5",
+  "version": "1.0.10",
   "scripts": {
     "eslint": "npx eslint app/",
     "start": "npx expo start",
@@ -36,7 +36,8 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.7",
     "react-native-webview": "11.23.0",
-    "react-native-webview-canvas": "^1.1.6"
+    "react-native-webview-canvas": "^1.1.6",
+    "expo-intent-launcher": "~10.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

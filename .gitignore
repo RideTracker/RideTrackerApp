@@ -79,4 +79,5 @@ android/
 
 # custom
 /config.json
-app/Settings.js
+/app/Settings.js
+/app.json
