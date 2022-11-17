@@ -26,7 +26,7 @@ export default class ActivityUpload extends Component {
     };
 
     componentDidMount() {
-        API.get("/api/v1/user/bikes/names", { user: User.id }).then((bikes) => {
+        API.get("/api/v1/user/bikes/names").then((bikes) => {
             this.setState({
                 bikes: bikes.content.map((bike) => {
                     return {
