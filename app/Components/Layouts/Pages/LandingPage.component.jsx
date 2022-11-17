@@ -40,10 +40,6 @@ export default class LandingPage extends ThemedComponent {
                     error: true
                 });
 
-                this.props.showModal("Error", {
-                    description: "We couldn't connect to the server, please try again later!"
-                });
-
                 return;
             }
 
@@ -66,21 +62,21 @@ export default class LandingPage extends ThemedComponent {
                         onButtonPress={() => this.props.showModal("FilterPage", { onUpdate: () => this.onRefresh() })}
                         />
 
-                    <ScrollView
-                        refreshControl={
-                            <RefreshControl
-                                tintColor={Appearance.theme.colorPalette.solid}
-                                refreshing={this.state?.refreshing}
-                                onRefresh={() => this.onRefresh()}
-                                />
-                            }
-                        >
-                        
-                        {(this.state?.activities) && this.state?.activities.map(id => <ActivityCompact key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
-                    </ScrollView>
-
-                    {(this.state?.error && !this.state?.activities) && (
-                        <Error darker description={"We couldn't connect to the server, please try again later!"}/>
+                    {(this.state?.error)?(
+                        <Error color={Appearance.theme.colorPalette.secondary} description={"We couldn't connect to the server, please try again later!"}/>
+                    ):(
+                        <ScrollView
+                            refreshControl={
+                                <RefreshControl
+                                    tintColor={Appearance.theme.colorPalette.solid}
+                                    refreshing={this.state?.refreshing}
+                                    onRefresh={() => this.onRefresh()}
+                                    />
+                                }
+                            >
+                            
+                            {(this.state?.activities) && this.state?.activities.map(id => <ActivityCompact key={id} style={style.sheet.container.activity} id={id} onPress={(id) => this.showActivity(id)}/>)}
+                        </ScrollView>
                     )}
                 </View>
             </View>

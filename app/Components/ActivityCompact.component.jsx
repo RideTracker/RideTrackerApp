@@ -37,6 +37,9 @@ export default class ActivityCompact extends ThemedComponent {
         });
 
         Cache.getActivityRide(this.props.id).then((ride) => {
+            if(!ride)
+                return;
+
             this.setState({ recording: new Recording(ride) });
         });
 

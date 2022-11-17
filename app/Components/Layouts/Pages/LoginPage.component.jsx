@@ -68,7 +68,9 @@ export default class LoginPage extends ThemedComponent {
         const response = await API.post("/api/v1/user/login", credentials);
 
         if(!response.success) {
-            Alert.alert("Something went wrong!", response.content, [{ text: "Close" }]);
+            this.props.showModal("Error", {
+                description: response.content
+            });
 
             this.props.hideModal(processing);
 
