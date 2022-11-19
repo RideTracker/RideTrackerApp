@@ -8,7 +8,6 @@ import API from "app/Services/API";
 import Appearance from "app/Data/Appearance";
 import User from "app/Data/User";
 
-import Tabs from "app/Components/Tabs.component";
 import Button from "app/Components/Button.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
 
@@ -16,6 +15,8 @@ import BikeCompact from "app/Components/BikeCompact.component";
 import RouteCompact from "app/Components/RouteCompact.component";
 
 import Header from "app/Components/Layouts/Header.component";
+
+import { Tabs } from "app/Components";
 
 import style from "./ProfilePage.component.style";
 

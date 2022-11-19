@@ -13,13 +13,14 @@ import Files from "app/Data/Files";
 
 import Appearance from "app/Data/Appearance";
 
-import Tabs from "app/Components/Tabs.component";
 import Input from "app/Components/Input.component";
 import ThemedComponent from "app/Components/ThemedComponent";
 import Button from "app/Components/Button.component";
 import RouteCompact from "app/Components/RouteCompact.component";
 
 import Header from "app/Components/Layouts/Header.component";
+
+import { Tabs } from "app/Components";
 
 import style from "./Routes.component.style";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
