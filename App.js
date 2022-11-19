@@ -34,7 +34,6 @@ import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.compo
 import FilterPage from "app/Components/FilterPage.component";
 import Prompt from "app/Components/Prompt";
 import Processing from "app/Components/Processing.component";
-import ErrorPage from "app/Components/ErrorPage.component";
 import ActivityUpload from "app/Components/ActivityUpload.component";
 
 SplashScreen.preventAutoHideAsync();
@@ -69,7 +68,6 @@ export default class App extends ThemedComponent {
         "Processing": (key, props) => (<Processing {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "ActivityUpload": (key, props) => (<ActivityUpload {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Prompt": (key, props) => (<Prompt {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "Error": (key, props) => (<ErrorPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
     };
 
     showModal(component, props = {}) {

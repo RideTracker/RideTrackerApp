@@ -7,7 +7,8 @@ import Config from "app/Data/Config";
 import ThemedComponent from "app/Components/ThemedComponent";
 import Header from "app/Components/Layouts/Header.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
-import Error from "app/Components/Error.component";
+
+import { Modal } from "app/Components";
 
 import API from "app/Services/API";
 
@@ -63,7 +64,7 @@ export default class LandingPage extends ThemedComponent {
                         />
 
                     {(this.state?.error)?(
-                        <Error color={Appearance.theme.colorPalette.secondary} description={"We couldn't connect to the server, please try again later!"}/>
+                        <Modal.Error description={"We couldn't connect to the server, please try again later!"}/>
                     ):(
                         <ScrollView
                             refreshControl={

@@ -1,14 +1,14 @@
 import { Component } from "react";
 import { View } from "react-native";
 
-export default class Field extends Component {
-    render() {
-        return (
-            <View style={{
+export default function Field({ children }) {
+    return (
+        <View
+            style={{
                 marginVertical: 6
-            }}>
-                {this.props.children}
-            </View>
-        );
-    };
+            }}
+            >
+            {children}
+        </View>
+    );
 };

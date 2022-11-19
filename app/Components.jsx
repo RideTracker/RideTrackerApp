@@ -1,3 +1,4 @@
+import Modal from "./NewComponents/Modal";
 import Form from "./NewComponents/Form";
 
-export { Form };
+export { Modal, Form };
