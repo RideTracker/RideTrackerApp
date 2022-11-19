@@ -10,6 +10,8 @@ import Files from "app/Data/Files";
 
 import API from "app/Services/API";
 
+import { Section } from "app/Components";
+
 import style from "./RouteCompact.component.style";
 
 export default class RouteCompact extends Component {
@@ -65,7 +67,7 @@ export default class RouteCompact extends Component {
             return null;
 
         return (
-            <TouchableWithoutFeedback style={[ style.sheet, this.props?.style ]} onPress={() => this.props.onPress(this.props.route)}>
+            <Section style={this.props?.style} onPress={() => this.props.onPress(this.props.route)} allergicToOpacity>
                 <View style={style.sheet.grid}>
                     <MapView
                         ref={this.mapView}
@@ -134,7 +136,7 @@ export default class RouteCompact extends Component {
                         </View>
                     </View>
                 </View>
-            </TouchableWithoutFeedback>
+            </Section>
         );
     };
 };

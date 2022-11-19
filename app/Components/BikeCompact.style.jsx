@@ -5,19 +5,6 @@ import Appearance from "app/Data/Appearance";
 export default class BikeCompactStyle {
     static update() {
         this.sheet = StyleSheet.create({
-            position: "relative",
-            
-            marginTop: 6,
-            marginBottom: 6,
-
-            backgroundColor: Appearance.theme.colorPalette.primary,
-            
-            borderBottomWidth: 1,
-            borderBottomColor: Appearance.theme.colorPalette.border,
-            
-            borderTopWidth: 1,
-            borderTopColor: Appearance.theme.colorPalette.border,
-
             image: {
                 width: "40%",
                 aspectRatio: 16 / 9,

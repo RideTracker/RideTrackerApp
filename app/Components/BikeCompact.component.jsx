@@ -3,6 +3,8 @@ import { Image, View, Text, TouchableOpacity } from "react-native";
 
 import API from "app/Services/API";
 
+import { Section } from "app/Components";
+
 import style from "./BikeCompact.style";
 
 export default class BikeCompact extends Component {
@@ -20,7 +22,7 @@ export default class BikeCompact extends Component {
 
     render() {
         return (
-            <TouchableOpacity style={[ style.sheet, this.props?.style ]} onPress={() => this.props.onPress(this.props.id)}>
+            <Section style={this.props?.style} onPress={() => this.props.onPress(this.props.id)}>
                 <View style={style.sheet.grid}>
                     {this.state?.bike && this.state.bike?.image && (
                         <Image
@@ -60,7 +62,7 @@ export default class BikeCompact extends Component {
                         )}
                     </View>
                 </View>
-            </TouchableOpacity>
+            </Section>
         );
     };
 };

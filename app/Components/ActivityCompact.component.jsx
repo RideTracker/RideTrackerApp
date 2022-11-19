@@ -13,6 +13,8 @@ import Cache from "app/Data/Cache";
 import Config from "app/Data/Config";
 import Recording from "app/Data/Recording";
 
+import { Section } from "app/Components";
+
 import style from "./ActivityCompact.component.style";
 
 export default class ActivityCompact extends ThemedComponent {
@@ -67,7 +69,7 @@ export default class ActivityCompact extends ThemedComponent {
         }
 
         return (
-            <View style={[ style.sheet, this.props?.style ]}>
+            <Section style={this.props?.style} onPress={() => this.props.onPress(this.state.activity.id)} allergicToOpacity>
                 <View style={style.sheet.map}>
                     <MapView
                         ref={this.mapView}
@@ -144,15 +146,7 @@ export default class ActivityCompact extends ThemedComponent {
                         </View>
                     </View>
                 )}
-
-                <TouchableOpacity
-                    useOpacity={0}
-                    style={[ style.sheet.clickable, (this.state?.pressing && style.sheet.clickable.pressing) ]}
-                    onPress={() => this.props.onPress(this.state.activity.id)}
-                    onPressIn={() => this.setState({ pressing: true })}
-                    onPressOut={() => this.setState({ pressing: false })}
-                    />
-            </View>
+            </Section>
         );
     }
 };
