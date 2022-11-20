@@ -4,11 +4,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import Appearance from "app/Data/Appearance";
 
-import style from "./Input.component.style";
-
 export default class Input extends Component {
-    style = style.update();
-
     constructor(...args) {
         super(...args);
 
@@ -32,17 +28,53 @@ export default class Input extends Component {
 
     render() {
         return (
-            <View style={[ style.sheet, ((this.props?.border ?? true) && style.sheet.border), this.props?.style ]}>
+            <View style={{
+                flexDirection: "row",
+
+                backgroundColor: Appearance.theme.colorPalette.primary,
+
+                width: "100%",
+                height: 44,
+
+                borderRadius: 6,
+    
+                borderColor: Appearance.theme.colorPalette.border,
+                borderWidth: 1,
+
+                ...this.props?.style
+            }}>
                 {this.props?.icon && (
-                    <View style={style.sheet.icon}>
-                        <FontAwesome5 style={style.sheet.icon.text} name={this.props?.icon} solid={this.props?.solid ?? true}/>
+                    <View style={{
+                        justifyContent: "center",
+                        height: 44,
+                        width: 44
+                    }}>
+                        <FontAwesome5
+                            name={this.props?.icon}
+                            solid={this.props?.solid ?? true}
+                            style={{
+                                textAlign: "center",
+
+                                fontSize: 18,
+                
+                                color: Appearance.theme.colorPalette.secondary
+                            }}/>
                     </View>
                 )}
 
                 <TextInput
                     ref={this.input}
                     onChangeText={(text) => this.onChangeText(text)}
-                    style={[ style.sheet.input, (!this.props?.icon && { paddingLeft: 12 }) ]}
+                    style={{
+                        width: "100%",
+                        fontSize: 18,
+
+                        color: Appearance.theme.colorPalette.secondary,
+                        
+                        height: 44,
+                        
+                        paddingLeft: (!this.props?.icon)?(12):(0)
+                    }}
                     placeholder={this.props?.placeholder}
                     placeholderTextColor={Appearance.theme.colorPalette.secondary}
                     secureTextEntry={this.props?.secure}

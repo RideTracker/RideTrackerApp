@@ -16,7 +16,6 @@ import Recording from "app/Data/Recording";
 import Config from "app/Data/Config";
 
 import ThemedComponent from "app/Components/ThemedComponent";
-import Images from "app/Components/Images.component";
 import BikeCompact from "app/Components/BikeCompact.component";
 
 import Header from "app/Components/Layouts/Header.component"
@@ -26,7 +25,7 @@ import ActivityComments from "./Layouts/Pages/Activity/Comments";
 import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
 import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
 
-import { Page, Form } from "app/Components";
+import { Page, Form, Images } from "app/Components";
 
 import style from "./Activity.component.style";
 

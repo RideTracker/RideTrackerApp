@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { PanResponder, TouchableHighlight, TouchableOpacity, View } from "react-native";
+import { PanResponder, TouchableOpacity, View } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
-import style from "./Images.component.style";
+import Appearance from "app/Data/Appearance";
 
 export default class Images extends Component {
-    style = style.update();
-
     constructor(...args) {
         super(...args);
 
@@ -81,25 +79,36 @@ export default class Images extends Component {
                 >
                 <View
                     style={{
-                        left: this.state.left,
+                        position: "relative",
 
-                        ...style.sheet
+                        width: "100%",
+                        height: "100%",
+                        
+                        left: this.state.left
                     }}
                     {...this.panResponder.panHandlers}
-                >
+                    >
                     <View
                         style={{
-                            left: `-${this.state.index * 100}%`,
-                            ...style.sheet.images,
+                            position: "relative",
+
+                            width: "100%",
+                            height: "100%",
+                            
+                            left: `-${this.state.index * 100}%`
                         }}
-                    >
+                        >
                         {this.props.children.map((child, index) => (
                             <View
                                 key={index}
                                 style={{
+                                    position: "absolute",
+
+                                    width: "100%",
+                                    height: "100%",
+
                                     left: `${index * 100}%`,
-                                    
-                                    ...style.sheet.images.image
+                                    top: 0
                                 }}
                             >
                                 {child}
@@ -108,17 +117,89 @@ export default class Images extends Component {
                     </View>
                 </View>
 
-                <TouchableOpacity onPress={() => this.onPress(-1)} style={[ style.sheet.button, style.sheet.button.previous ]}>
-                    <FontAwesome5 style={style.sheet.button.text} name="chevron-left" solid/>
+                <TouchableOpacity
+                    onPress={() => this.onPress(-1)}
+                    style={{
+                        position: "absolute",
+                        top: 0,
+        
+                        height: "100%",
+        
+                        justifyContent: "center",
+        
+                        padding: 12,
+                        
+                        left: 0
+                    }}
+                    >
+                    <FontAwesome5
+                        name="chevron-left"
+                        solid
+
+                        style={{
+                            color: Appearance.theme.colorPalette.secondary,
+                            fontSize: 24,
+                        }}
+                        />
                 </TouchableOpacity>
                 
-                <TouchableOpacity onPress={() => this.onPress(+1)} style={[ style.sheet.button, style.sheet.button.next ]}>
-                    <FontAwesome5 style={style.sheet.button.text} name="chevron-right" solid/>
+                <TouchableOpacity
+                    onPress={() => this.onPress(+1)}
+                    style={{
+                        position: "absolute",
+                        top: 0,
+        
+                        height: "100%",
+        
+                        justifyContent: "center",
+        
+                        padding: 12,
+                        
+                        right: 0
+                    }}
+                    >
+                    <FontAwesome5
+                        name="chevron-right"
+                        solid
+
+                        style={{
+                            color: Appearance.theme.colorPalette.secondary,
+                            fontSize: 24,
+                        }}
+                        />
                 </TouchableOpacity>
 
-                <View style={style.sheet.dots}>
+                <View style={{
+                    position: "absolute",
+
+                    width: "100%",
+                    
+                    padding: 12,
+    
+                    left: 0,
+                    bottom: 0,
+    
+                    justifyContent: "center",
+                    flexDirection: "row"
+                }}>
                     {this.props.children.map((child, index) => (
-                        <FontAwesome5 key={index} style={[ style.sheet.dots.dot, this.state.index == index && style.sheet.dots.selected ]} name="circle" solid={this.state.index == index}/>
+                        <FontAwesome5 
+                            key={index}
+                            
+                            name="circle"
+                            solid={this.state.index == index}
+
+                            style={{
+                                color: Appearance.theme.colorPalette.secondary,
+
+                                fontSize: 12,
+
+                                opacity: (this.state.index == index)?(1):(.75),
+
+                                marginRight: 6,
+                                marginLeft: 6
+                            }}
+                            />
                     ))}
                 </View>
             </View>

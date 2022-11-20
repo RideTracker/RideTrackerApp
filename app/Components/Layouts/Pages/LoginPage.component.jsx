@@ -8,7 +8,6 @@ import User from "app/Data/User";
 import API from "app/Services/API";
 
 import ThemedComponent from "app/Components/ThemedComponent";
-import Input from "app/Components/Input.component";
 
 import Forgotten from "app/Components/Layouts/Pages/Login/Forgotten.component";
 import Register from "app/Components/Layouts/Pages/Login/Register.component";
@@ -104,7 +103,7 @@ export default class LoginPage extends ThemedComponent {
                     <Text style={style.sheet.header}>Ride Tracker</Text>
 
                     <KeyboardAvoidingView behavior={(Platform.OS == "ios")?("padding"):("height")}>
-                        <Input
+                        <Form.Input
                             ref={this.email}
                             style={style.sheet.form.input}
                             placeholder="E-mail address"
@@ -117,7 +116,7 @@ export default class LoginPage extends ThemedComponent {
                             returnKeyType={"next"}
                             onSubmitEditing={() => this.password.current.focus()}
                             />
-                        <Input
+                        <Form.Input
                             ref={this.password}
                             style={style.sheet.form.input}
                             placeholder="Password"

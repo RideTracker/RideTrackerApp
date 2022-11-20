@@ -7,7 +7,6 @@ import * as ImagePicker from "expo-image-picker";
 import API from "app/Services/API";
 
 import Header from "app/Components/Layouts/Header.component";
-import Input from "app/Components/Input.component";
 
 import { Page, Form } from "app/Components";
 
@@ -102,7 +101,7 @@ export default class BikeCreation extends Component {
                         <Form.Field>
                             <Form.Title>What's your bike's name?</Form.Title>
 
-                            <Input
+                            <Form.Input
                                 ref={this.name}
                                 style={style.sheet.form.input}
                                 placeholder="Bike name (optional)"
@@ -118,7 +117,7 @@ export default class BikeCreation extends Component {
                         <Form.Field>
                             <Form.Title>What model is your bike?</Form.Title>
 
-                            <Input
+                            <Form.Input
                                 ref={this.brand}
                                 style={style.sheet.form.input}
                                 placeholder="Brand (optional)"
@@ -131,7 +130,7 @@ export default class BikeCreation extends Component {
                                 />
 
                             <View style={style.sheet.form.grid}>
-                                <Input
+                                <Form.Input
                                     ref={this.model}
                                     style={style.sheet.form.grid.input}
                                     placeholder="Model (optional)"
@@ -143,7 +142,7 @@ export default class BikeCreation extends Component {
                                     onSubmitEditing={() => this.year.current.focus()}
                                     />
 
-                                <Input
+                                <Form.Input
                                     ref={this.year}
                                     style={style.sheet.form.grid.input}
                                     placeholder="Year (optional)"

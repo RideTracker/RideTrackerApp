@@ -5,8 +5,6 @@ import API from "app/Services/API";
 import Config from "app/Data/Config";
 import User from "app/Data/User";
 
-import Input from "app/Components/Input.component";
-
 import Header from "../../Header.component";
 
 import { Form } from "app/Components";
@@ -68,7 +66,7 @@ export default class Register extends Component {
 
                         <View style={[ style.sheet.form.input, style.sheet.form.multiInput ]}>
                             <View style={[ style.sheet.form.multiInput.input, { paddingRight: 6 } ]}>
-                                <Input
+                                <Form.Input
                                     ref={this.firstname}
                                     placeholder="Firstname"
                                     autoComplete={"name-given"}
@@ -82,7 +80,7 @@ export default class Register extends Component {
                             </View>
 
                             <View style={[style.sheet.form.multiInput.input, { paddingLeft: 6 } ]}>
-                                <Input
+                                <Form.Input
                                     ref={this.lastname}
                                     placeholder="Lastname"
                                     autoComplete={"name-family"}
@@ -103,7 +101,7 @@ export default class Register extends Component {
                         <Text style={[ style.sheet.form.input, style.sheet.form.text ]}>What's your e-mail address?</Text>
                         <Text style={[ style.sheet.form.input, style.sheet.form.description ]}>You will use this to login but we won't show it to other users!</Text>
 
-                        <Input
+                        <Form.Input
                             ref={this.email}
                             style={style.sheet.form.input}
                             placeholder="E-mail address"
@@ -123,7 +121,7 @@ export default class Register extends Component {
                         <Text style={[ style.sheet.form.input, style.sheet.form.text ]}>Choose your password:</Text>
                         <Text style={[ style.sheet.form.input, style.sheet.form.description ]}>You can skip having a password by using one of our other login options, such as Apple or Google login!</Text>
 
-                        <Input
+                        <Form.Input
                             ref={this.password}
                             style={style.sheet.form.input}
                             placeholder="Password"

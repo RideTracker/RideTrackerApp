@@ -8,7 +8,7 @@ import API from "app/Services/API";
 
 import Cache from "app/Data/Cache";
 
-import Input from "app/Components/Input.component";
+import { Form } from "app/Components";
 
 import style from "./Reply.style";
 import User from "../../../../../Data/User";
@@ -79,7 +79,7 @@ export default class ActivityCommentReply extends Component {
 
                     <View style={style.sheet.write} onClick={() => this.setState({ showWriteComment: true })}>
                         <View style={style.sheet.write.content}>
-                            <Input ref={this.input} style={style.sheet.write.content.input} placeholder="Write your message..." onChangeText={(text) => this.setState({ showSubmit: (text.length != 0) })}/>
+                            <Form.Input ref={this.input} style={style.sheet.write.content.input} placeholder="Write your message..." onChangeText={(text) => this.setState({ showSubmit: (text.length != 0) })}/>
                         </View>
 
                         <TouchableOpacity style={style.sheet.write.submit} onPress={() => this.onPress()}>

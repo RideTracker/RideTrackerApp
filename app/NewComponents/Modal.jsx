@@ -1,8 +1,6 @@
 import { Component } from "react";
 import { View } from "react-native";
 
-import Input from "app/Components/Input.component";
-
 import Error from "./Modal/Error";
 
 export default class Modal extends Component {

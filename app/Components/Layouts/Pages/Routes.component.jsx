@@ -13,7 +13,6 @@ import Files from "app/Data/Files";
 
 import Appearance from "app/Data/Appearance";
 
-import Input from "app/Components/Input.component";
 import ThemedComponent from "app/Components/ThemedComponent";
 import RouteCompact from "app/Components/RouteCompact.component";
 
@@ -406,7 +405,7 @@ export default class Routes extends ThemedComponent {
                             <Text style={style.sheet.form.text}>Route Name</Text>
                             <Text style={style.sheet.form.description}>This will be visible to everyone with access to this route.</Text>
 
-                            <Input
+                            <Form.Input
                                 ref={this.name}
                                 style={style.sheet.form.input}
                                 placeholder="Name (optional)"

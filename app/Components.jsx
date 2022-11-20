@@ -4,6 +4,7 @@ import Section from "./NewComponents/Section";
 import Tabs from "./NewComponents/Tabs";
 import { Page, SubPage } from "./NewComponents/Page";
 import Graph from "./NewComponents/Graph";
+import Images from "./NewComponents/Images";
 
 export {
     Form,
@@ -12,5 +13,6 @@ export {
     Tabs,
     Page,
     SubPage,
-    Graph
+    Graph,
+    Images
 };
