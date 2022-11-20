@@ -1,14 +1,11 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity } from "react-native";
 
 import API from "app/Services/API";
 import Files from "app/Data/Files";
-import User from "app/Data/User";
 
 import Header from "app/Components/Layouts/Header.component";
-import SubPage from "app/Components/SubPage.component";
 
-import { Form } from "app/Components";
+import { SubPage, Form } from "app/Components";
 
 import style from "./ActivityUpload.component.style";
 
@@ -53,7 +50,7 @@ export default class ActivityUpload extends Component {
 
         //await Files.uploadFile(id);
 
-        this.onClose();
+        this.page.current.onClose();
 
         this.props.onFinish(response.content.activity);
 
@@ -62,13 +59,9 @@ export default class ActivityUpload extends Component {
         //Alert.alert(this.recorder.data.meta.id + ".json", "Saved");
     };
 
-    onClose() {
-        this.props.onClose();
-    };
-
     render() {
         return (
-            <SubPage ref={this.page} onClose={() => this.onClose()}>
+            <SubPage ref={this.page} onClose={() => this.props.onClose()}>
                 <Header title={"Publish Activity"} hidePadding/>
 
                 <Form>
