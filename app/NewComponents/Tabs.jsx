@@ -1,6 +1,8 @@
 import { Component } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
+import Appearance from "app/Data/Appearance";
+
 export default class Tabs extends Component {
     getCurrent() {
         return this.state?.tab ?? this.props.default;
