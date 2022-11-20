@@ -8,7 +8,8 @@ import API from "app/Services/API";
 
 import Header from "app/Components/Layouts/Header.component";
 import Input from "app/Components/Input.component";
-import Button from "app/Components/Button.component";
+
+import { Page, Form } from "app/Components";
 
 import style from "./BikeCreation.style";
 
@@ -17,6 +18,8 @@ export default class BikeCreation extends Component {
 
     constructor(...args) {
         super(...args);
+
+        this.page = React.createRef();
 
         this.name = React.createRef();
         this.brand = React.createRef();
@@ -70,93 +73,95 @@ export default class BikeCreation extends Component {
 
     render() {
         return (
-            <View style={style.sheet}>
+            <Page ref={this.page} onClose={() => this.props.onClose()}>
                 <Header
                     title="Bike Creation"
                     navigation="true"
-                    onNavigationPress={() => this.props.onClose()}
+                    onNavigationPress={() => this.page.current.onClose()}
                     />
 
                 <ScrollView style={style.sheet.section}>
-                    <TouchableOpacity onPress={() => this.onImageUpload()}>
-                        {(this.state?.image)?(
-                            <Image
-                                style={style.sheet.image}
-                                source={{
-                                    uri: this.state.image
-                                }}
-                                />
-                        ):(
-                            <View style={[ style.sheet.form, style.sheet.placeholder ]}>
-                                <FontAwesome5 style={style.sheet.placeholder.icon} name={"image"}/>
-                            </View>
-                        )}
-                    </TouchableOpacity>
+                    <Form>
+                        <TouchableOpacity onPress={() => this.onImageUpload()}>
+                            {(this.state?.image)?(
+                                <Image
+                                    style={style.sheet.image}
+                                    source={{
+                                        uri: this.state.image
+                                    }}
+                                    />
+                            ):(
+                                <View style={[ style.sheet.form, style.sheet.placeholder ]}>
+                                    <FontAwesome5 style={style.sheet.placeholder.icon} name={"image"}/>
+                                </View>
+                            )}
+                        </TouchableOpacity>
 
-                    <Text style={[ style.sheet.form, style.sheet.form.description ]}>You must enter either a bike name or the detail details and upload an image of the bike.</Text>
+                        <Text style={[ style.sheet.form, style.sheet.form.description ]}>You must enter either a bike name or the detail details and upload an image of the bike.</Text>
 
-                    <View style={style.sheet.form}>
-                        <Text style={[ style.sheet.form, style.sheet.form.text ]}>What's your bike's name?</Text>
+                        <Form.Field>
+                            <Form.Title>What's your bike's name?</Form.Title>
 
-                        <Input
-                            ref={this.name}
-                            style={style.sheet.form.input}
-                            placeholder="Bike name (optional)"
-                            clearButtonMode={"while-editing"}
-                            enablesReturnKeyAutomatically={true}
-                            keyboardType={"default"}
-                            autoCapitalize={"sentences"}
-                            returnKeyType={"next"}
-                            onSubmitEditing={() => this.brand.current.focus()}
-                            />
-                    </View>
-
-                    <View style={style.sheet.form}>
-                        <Text style={[ style.sheet.form, style.sheet.form.text ]}>What model is your bike?</Text>
-
-                        <Input
-                            ref={this.brand}
-                            style={style.sheet.form.input}
-                            placeholder="Brand (optional)"
-                            clearButtonMode={"while-editing"}
-                            enablesReturnKeyAutomatically={true}
-                            keyboardType={"default"}
-                            autoCapitalize={"sentences"}
-                            returnKeyType={"next"}
-                            onSubmitEditing={() => this.model.current.focus()}
-                            />
-
-                        <View style={style.sheet.form.grid}>
                             <Input
-                                ref={this.model}
-                                style={style.sheet.form.grid.input}
-                                placeholder="Model (optional)"
+                                ref={this.name}
+                                style={style.sheet.form.input}
+                                placeholder="Bike name (optional)"
                                 clearButtonMode={"while-editing"}
                                 enablesReturnKeyAutomatically={true}
                                 keyboardType={"default"}
                                 autoCapitalize={"sentences"}
                                 returnKeyType={"next"}
-                                onSubmitEditing={() => this.year.current.focus()}
+                                onSubmitEditing={() => this.brand.current.focus()}
                                 />
+                        </Form.Field>
+
+                        <Form.Field>
+                            <Form.Title>What model is your bike?</Form.Title>
 
                             <Input
-                                ref={this.year}
-                                style={style.sheet.form.grid.input}
-                                placeholder="Year (optional)"
+                                ref={this.brand}
+                                style={style.sheet.form.input}
+                                placeholder="Brand (optional)"
                                 clearButtonMode={"while-editing"}
                                 enablesReturnKeyAutomatically={true}
-                                keyboardType={"numeric"}
+                                keyboardType={"default"}
+                                autoCapitalize={"sentences"}
                                 returnKeyType={"next"}
-                                onSubmitEditing={() => this.onSubmit()}
+                                onSubmitEditing={() => this.model.current.focus()}
                                 />
-                        </View>
-                    </View>
-                </ScrollView>
 
-                <View style={[ style.sheet.section ]}>
-                    <Button style={style.sheet.form.input} title="Upload bike" branded onPress={() => this.onSubmit()}/>
-                </View>
-            </View>
+                            <View style={style.sheet.form.grid}>
+                                <Input
+                                    ref={this.model}
+                                    style={style.sheet.form.grid.input}
+                                    placeholder="Model (optional)"
+                                    clearButtonMode={"while-editing"}
+                                    enablesReturnKeyAutomatically={true}
+                                    keyboardType={"default"}
+                                    autoCapitalize={"sentences"}
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={() => this.year.current.focus()}
+                                    />
+
+                                <Input
+                                    ref={this.year}
+                                    style={style.sheet.form.grid.input}
+                                    placeholder="Year (optional)"
+                                    clearButtonMode={"while-editing"}
+                                    enablesReturnKeyAutomatically={true}
+                                    keyboardType={"numeric"}
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={() => this.onSubmit()}
+                                    />
+                            </View>
+                        </Form.Field>
+
+                        <Form.Field>
+                            <Form.Button style={style.sheet.form.input} title="Upload bike" branded onPress={() => this.onSubmit()}/>
+                        </Form.Field>
+                    </Form>
+                </ScrollView>
+            </Page>
         );
     };
 };

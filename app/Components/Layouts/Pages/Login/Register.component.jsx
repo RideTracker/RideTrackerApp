@@ -6,9 +6,10 @@ import Config from "app/Data/Config";
 import User from "app/Data/User";
 
 import Input from "app/Components/Input.component";
-import Button from "app/Components/Button.component";
 
 import Header from "../../Header.component";
+
+import { Form } from "app/Components";
 
 import style from "./Register.component.style";
 
@@ -139,8 +140,8 @@ export default class Register extends Component {
                     </View>
 
                     <View style={style.sheet.form}>
-                        <Button style={style.sheet.form.input} title="Finish registration" branded onPress={() => this.onRegistration()}/>
-                        <Button style={style.sheet.form.input} title="Cancel" onPress={() => this.props?.onClose()}/>
+                        <Form.Button style={style.sheet.form.input} title="Finish registration" branded onPress={() => this.onRegistration()}/>
+                        <Form.Button style={style.sheet.form.input} title="Cancel" onPress={() => this.props?.onClose()}/>
                     </View>
                 </ScrollView>
             </View>

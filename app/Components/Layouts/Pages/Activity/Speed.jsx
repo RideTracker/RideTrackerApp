@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import Cache from "app/Data/Cache";
 import Recording from "app/Data/Recording";
 
-import Graph from "app/Components/Graph.component";
+import { Graph } from "app/Components";
 
 export default class ActivitySpeed extends Component {
     componentDidMount() {

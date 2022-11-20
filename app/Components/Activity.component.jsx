@@ -1,5 +1,5 @@
 import React from "react";
-import { Share, Text, View, ScrollView, Image, TouchableOpacity, Linking } from "react-native";
+import { Share, Text, View, ScrollView, Image, TouchableOpacity, Linking, TouchableWithoutFeedbackBase } from "react-native";
 import MapView, { MAP_TYPES, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
@@ -16,9 +16,7 @@ import Recording from "app/Data/Recording";
 import Config from "app/Data/Config";
 
 import ThemedComponent from "app/Components/ThemedComponent";
-import Button from "app/Components/Button.component";
 import Images from "app/Components/Images.component";
-import Animation from "app/Components/Animation.component";
 import BikeCompact from "app/Components/BikeCompact.component";
 
 import Header from "app/Components/Layouts/Header.component"
@@ -27,6 +25,8 @@ import ActivityPlayback from "./Layouts/Pages/Activity/Playback";
 import ActivityComments from "./Layouts/Pages/Activity/Comments";
 import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
 import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
+
+import { Page, Form } from "app/Components";
 
 import style from "./Activity.component.style";
 
@@ -43,9 +43,10 @@ export default class Activity extends ThemedComponent {
     constructor(...args) {
         super(...args);
 
+        this.page = React.createRef();
+
         this.mapView = React.createRef();
         this.mapViewSatellite = React.createRef();
-        this.animation = React.createRef();
     }
 
     componentDidMount() {
@@ -107,18 +108,6 @@ export default class Activity extends ThemedComponent {
 
     onPrimaryLayout() {
         this.setState({ ready: true });
-        
-        this.animation.current.setTransitions([
-            {
-                type: "bottom",
-                duration: 200
-            },
-            
-            {
-                type: "opacity",
-                duration: 200
-            }
-        ]);
     };
 
     onLikePress() {
@@ -160,23 +149,6 @@ export default class Activity extends ThemedComponent {
         }
     };
 
-    onClose() {
-        this.animation.current.setTransitions([
-            {
-                type: "bottom",
-                direction: "out",
-                duration: 200,
-                callback: () => this.props.onClose()
-            },
-            
-            {
-                type: "opacity",
-                direction: "out",
-                duration: 200
-            }
-        ]);
-    };
-
     onPlaybackPress(type) {
         this.setState({
             playback: type
@@ -198,7 +170,7 @@ export default class Activity extends ThemedComponent {
     async onDelete() {
         await API.delete("/api/v1/activity", { activity: this.state.activity.id });
 
-        this.props.onClose();
+        this.page.current.onClose();
     };
 
     onCommentsPress() {
@@ -208,47 +180,6 @@ export default class Activity extends ThemedComponent {
         return this.setState({ showComments: true });
     };
 
-    async onRouteCreate() {
-        const processing = this.props.showModal("Processing");
-
-        let startCoordinates = [];
-
-        this.state.recording.getMapCoordinates().forEach((section) => {
-            startCoordinates = startCoordinates.concat(section.coordinates);
-        });
-
-        const coordinates = [];
-
-        startCoordinates.forEach((coordinate) => {
-            if(coordinates.length == 0)
-                return coordinates.push(coordinate);
-
-            const distance = getDistance(coordinates[coordinates.length - 1], coordinate);
-
-            if(distance > 5000 || (distance > 1000 && getRhumbLineBearing(coordinates[coordinates.length - 1], coordinate) > 45))
-                return coordinates.push(coordinate);
-        });
-
-        const finalCoordinates = [];
-
-        const step = Math.max(1, Math.floor(coordinates.length / 10));
-
-        for(let index = 0; index < coordinates.length; index += step)
-            finalCoordinates.push(coordinates[index]);
-
-        const response = await API.post("/api/v1/directions/draw", { origin: startCoordinates[0], destination: startCoordinates[startCoordinates.length - 1], coordinates: finalCoordinates });
-        const result = response.content;
-
-        const routeResponse = await API.post("/api/v1/route/create", {
-            directions: result,
-            name: "Activity route"
-        });
-        const routeResult = routeResponse.content;
-
-        this.props.hideModal(processing);
-        this.props.showModal("Routes", { route: routeResult });
-    };
-
     render() {
         if(this.state?.recording == null || this.state?.user == null) {
             // add a placeholder layout
@@ -256,15 +187,11 @@ export default class Activity extends ThemedComponent {
         }
 
         return (
-            <Animation
-                ref={this.animation}
-                enabled={this.state?.ready}
-                style={[ this.props?.style, style.sheet ]}
-                >
+            <Page ref={this.page} visible={this.state?.ready} onClose={() => this.props.onClose()}>
                 <Header
                     title="Activity"
                     navigation="true"
-                    onNavigationPress={() => this.onClose()}
+                    onNavigationPress={() => this.page.current.onClose()}
                     />
                 
                 <ScrollView>
@@ -493,18 +420,12 @@ export default class Activity extends ThemedComponent {
                             />
                     </View>
 
-                    {/*(!User.guest) && (
-                        <View style={{ margin: 12 }}>
-                            <Button title="Create route from activity" onPress={() => this.onRouteCreate()}/>
-                        </View>
-                    )*/}
-
                     {(this.state?.activity?.user == User.id) && (
-                        <View style={{ marginVertical: 12 }}>
-                            <Button title="Delete Activity" confirm={{
+                        <Form>
+                            <Form.Button title="Delete Activity" confirm={{
                                 message: "Do you really want to delete this activity? This cannot be undone! You can instead choose to hide it from everyone if you wish."
                             }} onPress={() => this.onDelete()}/>
-                        </View>
+                        </Form>
                     )}
                 </ScrollView>
 
@@ -515,7 +436,7 @@ export default class Activity extends ThemedComponent {
                 {this.state?.playback && (
                     <ActivityPlayback type={this.state.playback} activity={this.props.id} onClose={() => this.setState({ playback: false })}/>
                 )}
-            </Animation>
+            </Page>
         );
     }
 };

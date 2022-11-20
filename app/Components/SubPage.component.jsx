@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity } from "react-native";
 
-import Animation from "app/Components/Animation.component";
+import Animation from "app/Animation";
 
 import style from "./SubPage.component.style";
 

@@ -7,6 +7,7 @@ import Title from "./Form/Title";
 import Description from "./Form/Description";
 import Field from "./Form/Field";
 import Selection from "./Form/Selection";
+import Button from "./Form/Button";
 
 export default class Form extends Component {
     render() {
@@ -23,5 +24,6 @@ export default class Form extends Component {
     static Field = Field;
     static Title = Title;
     static Description = Description;
+    static Button = Button;
     static Selection = Selection;
 };

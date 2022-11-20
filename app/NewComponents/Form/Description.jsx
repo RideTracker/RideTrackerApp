@@ -2,7 +2,7 @@ import { Text } from "react-native";
 
 import Appearance from "app/Data/Appearance";
 
-export default function Description({ text }) {
+export default function Description({ children }) {
     return (
         <Text
             style={{
@@ -13,7 +13,7 @@ export default function Description({ text }) {
                 fontSize: 14
             }}
             >
-            {text}
+            {children}
         </Text>
     );
 };

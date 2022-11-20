@@ -5,7 +5,6 @@ import API from "app/Services/API";
 import Files from "app/Data/Files";
 import User from "app/Data/User";
 
-import Button from "app/Components/Button.component";
 import Header from "app/Components/Layouts/Header.component";
 import SubPage from "app/Components/SubPage.component";
 
@@ -74,8 +73,8 @@ export default class ActivityUpload extends Component {
 
                 <Form>
                     <Form.Field>
-                        <Form.Title text={"Activity Title"}/>
-                        <Form.Description text={"This will be shown above your activity."}/>
+                        <Form.Title>Activity Title</Form.Title>
+                        <Form.Description>This will be shown above your activity.</Form.Description>
                         <Form.Input
                             ref={this.title}
                             placeholder="Activity title (optional)"
@@ -89,8 +88,8 @@ export default class ActivityUpload extends Component {
                     </Form.Field>
                         
                     <Form.Field>
-                        <Form.Title text={"Activity Description"}/>
-                        <Form.Description text={"This will be shown on your activity page."}/>
+                        <Form.Title>Activity Description</Form.Title>
+                        <Form.Description>This will be shown on your activity page.</Form.Description>
                         <Form.Input
                             ref={this.description}
                             placeholder="Activity description (optional)"
@@ -104,8 +103,8 @@ export default class ActivityUpload extends Component {
                     </Form.Field>
                         
                     <Form.Field>
-                        <Form.Title text={"Bike (optional)"}/>
-                        <Form.Description text={"This will be shown on your activity page."}/>
+                        <Form.Title>Bike (optional)</Form.Title>
+                        <Form.Description>This will be shown on your activity page.</Form.Description>
                         <Form.Selection
                             ref={this.bike}
                             items={this.state?.bikes}
@@ -113,7 +112,7 @@ export default class ActivityUpload extends Component {
                     </Form.Field>
 
                     <Form.Field>
-                        <Button branded title={"Upload"} onPress={() => this.onPress()}/>
+                        <Form.Button branded title={"Upload"} onPress={() => this.onPress()}/>
                     </Form.Field>
                 </Form>
             </SubPage>

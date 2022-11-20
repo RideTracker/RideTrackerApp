@@ -5,7 +5,7 @@ import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
 import Recording from "app/Data/Recording";
 
-import Graph from "app/Components/Graph.component";
+import { Graph } from "app/Components";
 
 export default class ActivityElevation extends Component {
     componentDidMount() {

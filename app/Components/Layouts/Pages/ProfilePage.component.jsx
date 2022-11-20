@@ -8,7 +8,6 @@ import API from "app/Services/API";
 import Appearance from "app/Data/Appearance";
 import User from "app/Data/User";
 
-import Button from "app/Components/Button.component";
 import ActivityCompact from "app/Components/ActivityCompact.component";
 
 import BikeCompact from "app/Components/BikeCompact.component";
@@ -16,7 +15,7 @@ import RouteCompact from "app/Components/RouteCompact.component";
 
 import Header from "app/Components/Layouts/Header.component";
 
-import { Tabs } from "app/Components";
+import { Form, Tabs } from "app/Components";
 
 import style from "./ProfilePage.component.style";
 
@@ -196,7 +195,7 @@ export default class ProfilePage extends Component {
                                 (<BikeCompact id={id} key={id} onPress={(id) => this.props.showNotification("This feature is not implemented yet!")}/>)
                             )}
 
-                            <Button style={style.sheet.button} title={"Add a new bike"} onPress={() => this.props.showModal("BikeCreation", { onFinish: () => this.onRefresh() })}/>
+                            <Form.Button style={style.sheet.button} title={"Add a new bike"} onPress={() => this.props.showModal("BikeCreation", { onFinish: () => this.onRefresh() })}/>
                         </View>
                         
                         <View id="routes" title="Routes">

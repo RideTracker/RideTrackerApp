@@ -6,14 +6,14 @@ import moment from "moment";
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
 
-import Animation from "app/Components/Animation.component";
-
 import ActivityCommentReply from "./Comments/Reply";
 
 import style from "./Comments.style";
 import User from "../../../../Data/User";
 
 import Settings from "app/Settings";
+
+import Animation from "app/Animation";
 
 export default class ActivityComments extends Component {
     style = style.update();

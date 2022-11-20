@@ -8,11 +8,18 @@ export default class Selection extends Component {
         return this.state?.value ?? this.props?.default;
     };
 
+    onValueChange(value) {
+        this.setState({ value });
+
+        if(this.props?.onChange)
+            this.props.onChange(value);
+    };
+
     render() {
         return (
             <Picker
                 selectedValue={this.state?.value ?? this.props?.default}
-                onValueChange={(value) => this.setState({ value })}
+                onValueChange={(value) => this.onValueChange(value)}
                 dropdownIconColor={Appearance.theme.colorPalette.secondary}
                 dropdownIconRippleColor={Appearance.theme.colorPalette.secondary}
                 mode={"dropdown"}

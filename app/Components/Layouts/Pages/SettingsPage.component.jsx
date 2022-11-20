@@ -9,12 +9,13 @@ import Appearance from "app/Data/Appearance";
 import Themes from "app/Data/Config/Themes.json";
 
 import ThemedComponent from "app/Components/ThemedComponent";
-import Button from "app/Components/Button.component";
 
 import Header from "app/Components/Layouts/Header.component";
+import Production from "../../../Services/Production";
+
+import { Form } from "app/Components";
 
 import style from "./SettingsPage.component.style";
-import Production from "../../../Services/Production";
 
 export default class SettingsPage extends ThemedComponent {
     style = style.update();
@@ -31,7 +32,7 @@ export default class SettingsPage extends ThemedComponent {
 
                             <Text style={style.sheet.section.switch.text.description}>You are in a less accessible production environment.</Text>
                             
-                            <Button transparent style={{ marginTop: 12 }} title={"View information prompt"} onPress={() => Production.prompt()}/>
+                            <Form.Button transparent style={{ marginTop: 12 }} title={"View information prompt"} onPress={() => Production.prompt()}/>
                         </View>
                     )}
 
@@ -75,7 +76,7 @@ export default class SettingsPage extends ThemedComponent {
                     </View>
 
                     {(Platform.OS == "android") && (
-                        <Button style={{ marginHorizontal: 12 }} title={"Open Location Permissions"} onPress={() => startActivityAsync(ActivityAction.LOCATION_SOURCE_SETTINGS)}/>
+                        <Form.Button style={{ marginHorizontal: 12 }} title={"Open Location Permissions"} onPress={() => startActivityAsync(ActivityAction.LOCATION_SOURCE_SETTINGS)}/>
                     )}
 
                     <View style={style.sheet.about}>

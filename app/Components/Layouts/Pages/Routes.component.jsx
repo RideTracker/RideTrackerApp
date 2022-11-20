@@ -15,12 +15,11 @@ import Appearance from "app/Data/Appearance";
 
 import Input from "app/Components/Input.component";
 import ThemedComponent from "app/Components/ThemedComponent";
-import Button from "app/Components/Button.component";
 import RouteCompact from "app/Components/RouteCompact.component";
 
 import Header from "app/Components/Layouts/Header.component";
 
-import { Tabs } from "app/Components";
+import { Form, Tabs } from "app/Components";
 
 import style from "./Routes.component.style";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
@@ -420,8 +419,8 @@ export default class Routes extends ThemedComponent {
                                 />
                         </View>
 
-                        <Button branded title="Submit" onPress={() => this.mode.events.onSubmit()}/>
-                        <Button confirm title="Disregard" onPress={() => this.setMode("draw")}/>
+                        <Form.Button branded title="Submit" onPress={() => this.mode.events.onSubmit()}/>
+                        <Form.Button confirm title="Disregard" onPress={() => this.setMode("draw")}/>
                     </View>
                 );
             },
@@ -538,9 +537,9 @@ export default class Routes extends ThemedComponent {
                         </View>
 
                         {(this.state?.downloaded)?(
-                            <Button branded title={"Start recording"} onPress={() => this.props.showModal("RecordPage", { directions: this.state.directions.id })}/>
+                            <Form.Button branded title={"Start recording"} onPress={() => this.props.showModal("RecordPage", { directions: this.state.directions.id })}/>
                         ):(
-                            <Button title={"Download directions"} onPress={() => this.mode.events.onDownloadPress()}/>
+                            <Form.Button title={"Download directions"} onPress={() => this.mode.events.onDownloadPress()}/>
                         )}
                     </View>
                 );

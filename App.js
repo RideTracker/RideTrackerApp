@@ -11,9 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 
 import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
-import Animation from "app/Components/Animation.component";
 import ThemedComponent from "app/Components/ThemedComponent";
-import Bike from "app/Components/Bike.component";
 import BikeCreation from "app/Components/BikeCreation.component";
 import Activity from "app/Components/Activity.component";
 
@@ -38,6 +36,8 @@ import ActivityUpload from "app/Components/ActivityUpload.component";
 
 SplashScreen.preventAutoHideAsync();
 
+import Animation from "app/Animation";
+
 import style from "./App.style";
 
 export default class App extends ThemedComponent {
@@ -58,7 +58,6 @@ export default class App extends ThemedComponent {
     modals = {
         "LoginPage": (key, props) => (<LoginPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "ProfilePage": (key, props) => (<ProfilePage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "Bike": (key, props) => (<Bike {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Routes": (key, props) => (<Routes {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Activity": (key, props) => (<Activity {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "ProfileSettings": (key, props) => (<ProfileSettings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),

@@ -1,16 +1,12 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, Text, Image, Platform, Alert } from "react-native";
+import { View, Text, Image, Platform, Alert } from "react-native";
 
 import * as Location from "expo-location";
 import * as NavigationBar from "expo-navigation-bar";
 import { startActivityAsync, ActivityAction } from 'expo-intent-launcher';
 
-import Header from "app/Components/Layouts/Header.component";
-import Button from "app/Components/Button.component";
-
-import Appearance from "app/Data/Appearance";
-
-import Animation from "app/Components/Animation.component";
+import Animation from "app/Animation";
+import { Form } from "app/Components";
 
 import style from "./Prompt.style";
 
@@ -111,8 +107,8 @@ export default class Prompt extends Component {
                     </View>
 
                     <View style={style.sheet.footer}>
-                        <Button style={style.sheet.footer.button} branded title={"Enable background location access"} onPress={() => this.onAcceptPress()}/>
-                        <Button style={style.sheet.footer.button} transparent title={"Continue without those features"} onPress={() => this.onContinuePress()}/>
+                        <Form.Button style={style.sheet.footer.button} branded title={"Enable background location access"} onPress={() => this.onAcceptPress()}/>
+                        <Form.Button style={style.sheet.footer.button} transparent title={"Continue without those features"} onPress={() => this.onContinuePress()}/>
                     </View>
                 </View>
             </Animation>

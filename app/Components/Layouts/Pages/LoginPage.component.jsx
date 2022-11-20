@@ -13,8 +13,9 @@ import Input from "app/Components/Input.component";
 import Forgotten from "app/Components/Layouts/Pages/Login/Forgotten.component";
 import Register from "app/Components/Layouts/Pages/Login/Register.component";
 
+import { Form } from "app/Components";
+
 import style from "./LoginPage.component.style";
-import Button from "app/Components/Button.component";
 
 export default class LoginPage extends ThemedComponent {
     style = style.update();
@@ -132,7 +133,7 @@ export default class LoginPage extends ThemedComponent {
                             secure
                             />
 
-                        <Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in" onPress={() => this.onLoginPress()}/>
+                        <Form.Button style={style.sheet.form.button} margin={0} branded={true} title="Sign in" onPress={() => this.onLoginPress()}/>
 
                         <TouchableOpacity onPress={() => this.props.showNotification("This function is not available yet.\n\nPlease email support@ridetracker.app to recover your account.")}>
                             <Text style={style.sheet.text}>Forgot your credentials? <Text style={style.sheet.text.link}>Click here to recover</Text></Text>
@@ -154,7 +155,7 @@ export default class LoginPage extends ThemedComponent {
                         />
                     )*/}
 
-                    <Button style={style.sheet.form.button} onPress={() => this.onGuestPress()} title="Continue as a guest"/>
+                    <Form.Button style={style.sheet.form.button} onPress={() => this.onGuestPress()} title="Continue as a guest"/>
                 </View>
 
                 <View style={style.sheet.footer}>

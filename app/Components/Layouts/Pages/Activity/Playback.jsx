@@ -9,9 +9,9 @@ import Recording from "app/Data/Recording";
 
 import Settings from "app/Settings";
 
-import Animation from "app/Components/Animation.component";
-
 import Header from "app/Components/Layouts/Header.component";
+
+import Animation from "app/Animation";
 
 import style from "./Playback.style";
 

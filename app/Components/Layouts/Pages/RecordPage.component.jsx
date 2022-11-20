@@ -10,17 +10,15 @@ import { getBoundsOfDistance, getDistance } from "geolib";
 
 import { decode } from "@googlemaps/polyline-codec";
 
-import API from "app/Services/API";
-import User from "app/Data/User";
-
 import ThemedComponent from "app/Components/ThemedComponent";
-import Button from "app/Components/Button.component";
 
 import Header from "app/Components/Layouts/Header.component";
 
 import Recorder from "app/Data/Recorder";
 import Appearance from "app/Data/Appearance";
 import Files from "app/Data/Files";
+
+import { Form } from "app/Components";
 
 import style from "./RecordPage.component.style";
 
@@ -442,9 +440,9 @@ export default class RecordPage extends ThemedComponent {
 
                                 {(!this.recorder.active) &&
                                     <View style={style.sheet.buttons}>
-                                        <Button title="Finish" onPress={() => this.onFinish()}/>
+                                        <Form.Button title="Finish" onPress={() => this.onFinish()}/>
 
-                                        <Button title="Discard" confirm={{
+                                        <Form.Button title="Discard" confirm={{
                                             message: "Do you really want to discard this ride?"
                                         }} onPress={() => this.onDiscard()}/>
                                     </View>
@@ -453,14 +451,14 @@ export default class RecordPage extends ThemedComponent {
                         </>
                     ):(
                         <>
-                            <Button
+                            <Form.Button
                                 style={{ margin: 12 }}
                                 branded
                                 title={"Start recording"}
                                 onPress={() => this.onStart()}
                                 />
                                 
-                            <Button
+                            <Form.Button
                                 style={{ margin: 12 }}
                                 transparent
                                 title={"Cancel"}

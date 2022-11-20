@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { View, Text } from "react-native";
 
-import Animation from "app/Components/Animation.component";
+import Animation from "app/Animation";
 
 import style from "./Processing.component.style";
 
