@@ -18,8 +18,6 @@ import Config from "app/Data/Config";
 import ThemedComponent from "app/Components/ThemedComponent";
 import BikeCompact from "app/Components/BikeCompact.component";
 
-import Header from "app/Components/Layouts/Header.component"
-
 import ActivityPlayback from "./Layouts/Pages/Activity/Playback";
 import ActivityComments from "./Layouts/Pages/Activity/Comments";
 import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
@@ -187,7 +185,7 @@ export default class Activity extends ThemedComponent {
 
         return (
             <Page ref={this.page} visible={this.state?.ready} onClose={() => this.props.onClose()}>
-                <Header
+                <Page.Header
                     title="Activity"
                     navigation="true"
                     onNavigationPress={() => this.page.current.onClose()}

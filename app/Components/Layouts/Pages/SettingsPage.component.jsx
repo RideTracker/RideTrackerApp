@@ -10,10 +10,9 @@ import Themes from "app/Data/Config/Themes.json";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 
-import Header from "app/Components/Layouts/Header.component";
 import Production from "../../../Services/Production";
 
-import { Form } from "app/Components";
+import { Page, Form } from "app/Components";
 
 import style from "./SettingsPage.component.style";
 
@@ -23,7 +22,7 @@ export default class SettingsPage extends ThemedComponent {
     render() { 
         return (
             <View style={style.sheet}>
-                <Header title="Settings"/>
+                <Page.Header title="Settings"/>
 
                 <ScrollView>
                     {(Production.get() == "demo") && (

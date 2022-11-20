@@ -5,7 +5,11 @@ import Animation from "app/Animation";
 
 import Appearance from "app/Data/Appearance";
 
+import Header from "./Page/Header";
+
 export class Page extends Component {
+    static Header = Header;
+    
     constructor(...args) {
         super(...args);
 

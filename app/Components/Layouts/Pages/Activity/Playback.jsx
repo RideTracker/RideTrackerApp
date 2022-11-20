@@ -9,9 +9,9 @@ import Recording from "app/Data/Recording";
 
 import Settings from "app/Settings";
 
-import Header from "app/Components/Layouts/Header.component";
-
 import Animation from "app/Animation";
+
+import { Page } from "app/Components";
 
 import style from "./Playback.style";
 
@@ -239,7 +239,7 @@ export default class ActivityPlayback extends Component {
                     }}
                     />
 
-                <Header
+                <Page.Header
                     title="Playback"
                     transparent={true}
                     navigation="true"

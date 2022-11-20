@@ -3,8 +3,6 @@ import React, { Component } from "react";
 import API from "app/Services/API";
 import Files from "app/Data/Files";
 
-import Header from "app/Components/Layouts/Header.component";
-
 import { SubPage, Form } from "app/Components";
 
 import style from "./ActivityUpload.component.style";
@@ -62,7 +60,7 @@ export default class ActivityUpload extends Component {
     render() {
         return (
             <SubPage ref={this.page} onClose={() => this.props.onClose()}>
-                <Header title={"Publish Activity"} hidePadding/>
+                <SubPage.Header title={"Publish Activity"} hidePadding/>
 
                 <Form>
                     <Form.Field>

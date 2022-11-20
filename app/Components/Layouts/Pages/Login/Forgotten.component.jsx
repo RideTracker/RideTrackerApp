@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, ScrollView } from "react-native";
 
-import Header from "app/Components/Layouts/Header.component";
+import { Page } from "app/Components";
 
 import style from "./Forgotten.component.style";
 
@@ -11,7 +11,7 @@ export default class Forgotten extends Component {
     render() { 
         return (
             <View style={style.sheet}>
-                <Header title="Forgotten" navigation onNavigationPress={() => this.props?.onClose()}/>
+                <Page.Header title="Forgotten" navigation onNavigationPress={() => this.props?.onClose()}/>
 
                 <ScrollView></ScrollView>
             </View>

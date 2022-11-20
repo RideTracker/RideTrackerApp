@@ -5,9 +5,7 @@ import API from "app/Services/API";
 import Config from "app/Data/Config";
 import User from "app/Data/User";
 
-import Header from "../../Header.component";
-
-import { Form } from "app/Components";
+import { Page, Form } from "app/Components";
 
 import style from "./Register.component.style";
 
@@ -57,7 +55,7 @@ export default class Register extends Component {
     render() { 
         return (
             <View style={style.sheet}>
-                <Header title="Register" navigation onNavigationPress={() => this.props?.onClose()}/>
+                <Page.Header title="Register" navigation onNavigationPress={() => this.props?.onClose()}/>
 
                 <ScrollView style={style.sheet.form}>
                     <View>

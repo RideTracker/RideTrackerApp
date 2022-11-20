@@ -13,9 +13,7 @@ import ActivityCompact from "app/Components/ActivityCompact.component";
 import BikeCompact from "app/Components/BikeCompact.component";
 import RouteCompact from "app/Components/RouteCompact.component";
 
-import Header from "app/Components/Layouts/Header.component";
-
-import { Form, Tabs } from "app/Components";
+import { Page, Form, Tabs } from "app/Components";
 
 import style from "./ProfilePage.component.style";
 
@@ -130,7 +128,7 @@ export default class ProfilePage extends Component {
         return (
             <View style={style.sheet} timestamp={this.state?.timestamp}>
                 { (this.user == User.id) ?
-                    (<Header
+                    (<Page.Header
                         title="Profile"
 
                         button="cog"
@@ -140,7 +138,7 @@ export default class ProfilePage extends Component {
                         onNavigationPress={() => this.props?.onClose()}
                         />)
                     :
-                    (<Header
+                    (<Page.Header
                         title="Profile"
 
                         navigation={(this.props?.onClose)}

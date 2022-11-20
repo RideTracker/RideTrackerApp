@@ -6,8 +6,6 @@ import * as ImagePicker from "expo-image-picker";
 
 import API from "app/Services/API";
 
-import Header from "app/Components/Layouts/Header.component";
-
 import { Page, Form } from "app/Components";
 
 import style from "./BikeCreation.style";
@@ -73,7 +71,7 @@ export default class BikeCreation extends Component {
     render() {
         return (
             <Page ref={this.page} onClose={() => this.props.onClose()}>
-                <Header
+                <Page.Header
                     title="Bike Creation"
                     navigation="true"
                     onNavigationPress={() => this.page.current.onClose()}

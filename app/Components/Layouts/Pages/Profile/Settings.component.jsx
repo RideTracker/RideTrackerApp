@@ -3,9 +3,7 @@ import { View, ScrollView } from "react-native";
 
 import User from "app/Data/User";
 
-import Header from "app/Components/Layouts/Header.component";
-
-import { Form } from "app/Components";
+import { Page, Form } from "app/Components";
 
 import style from "./Settings.component.style";
 
@@ -29,7 +27,7 @@ export default class ProfileSetings extends Component {
     render() {
         return (
             <View style={style.sheet}>
-                <Header
+                <Page.Header
                     title="Settings"
 
                     navigation={(this.props?.onClose)}

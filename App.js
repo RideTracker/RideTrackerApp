@@ -215,7 +215,12 @@ export default class App extends ThemedComponent {
                 >
                 <StatusBar style={Appearance.theme.colorPalette.contrast}/>
 
-                {this.pages[this.state.page]}
+                <View style={{
+                    flex: 1,
+                    height: "100%"
+                }}>
+                    {this.pages[this.state.page]}
+                </View>
 
                 <Footer onNavigate={(page) => this.setState({ page })}/>
 

@@ -12,13 +12,11 @@ import { decode } from "@googlemaps/polyline-codec";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 
-import Header from "app/Components/Layouts/Header.component";
-
 import Recorder from "app/Data/Recorder";
 import Appearance from "app/Data/Appearance";
 import Files from "app/Data/Files";
 
-import { Form } from "app/Components";
+import { Page, Form } from "app/Components";
 
 import style from "./RecordPage.component.style";
 
@@ -321,7 +319,7 @@ export default class RecordPage extends ThemedComponent {
                     </MapView>
                 )}
 
-                <Header title={(this.recorder.active || !this.state?.started)?("Recording"):("Paused")} transparent/>
+                <Page.Header title={(this.recorder.active || !this.state?.started)?("Recording"):("Paused")} transparent/>
 
                 {(!this.recorder.active && this.state?.started) && (
                     <MapView

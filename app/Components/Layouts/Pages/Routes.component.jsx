@@ -16,9 +16,7 @@ import Appearance from "app/Data/Appearance";
 import ThemedComponent from "app/Components/ThemedComponent";
 import RouteCompact from "app/Components/RouteCompact.component";
 
-import Header from "app/Components/Layouts/Header.component";
-
-import { Form, Tabs } from "app/Components";
+import { Page, Form, Tabs } from "app/Components";
 
 import style from "./Routes.component.style";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
@@ -689,7 +687,7 @@ export default class Routes extends ThemedComponent {
                         </MapView>
                     </TouchableWithoutFeedback>
 
-                    <Header
+                    <Page.Header
                         title="Routes"
                         transparent
                         
