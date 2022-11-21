@@ -6,9 +6,11 @@ import Animation from "app/Animation";
 import Appearance from "app/Data/Appearance";
 
 import Header from "./Page/Header";
+import Footer from "./Page/Footer";
 
 export class Page extends Component {
     static Header = Header;
+    static Footer = Footer;
     
     constructor(...args) {
         super(...args);

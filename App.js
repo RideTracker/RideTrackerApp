@@ -21,8 +21,6 @@ import Appearance from "app/Data/Appearance";
 
 import Production from "./app/Services/Production";
 
-import Footer from "app/Components/Layouts/Footer.component";
-
 import LandingPage from "app/Components/Layouts/Pages/LandingPage.component";
 import RecordPage from "app/Components/Layouts/Pages/RecordPage.component";
 import SettingsPage from "app/Components/Layouts/Pages/SettingsPage.component";
@@ -37,6 +35,7 @@ import ActivityUpload from "app/Components/ActivityUpload.component";
 SplashScreen.preventAutoHideAsync();
 
 import Animation from "app/Animation";
+import { Page } from "app/Components";
 
 import style from "./App.style";
 
@@ -222,7 +221,7 @@ export default class App extends ThemedComponent {
                     {this.pages[this.state.page]}
                 </View>
 
-                <Footer onNavigate={(page) => this.setState({ page })}/>
+                <Page.Footer onNavigate={(page) => this.setState({ page })}/>
 
                 {this.state?.modals && this.state.modals.map((modal) => (
                     <View key={modal.key} style={{
