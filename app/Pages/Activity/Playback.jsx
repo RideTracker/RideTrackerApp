@@ -15,7 +15,7 @@ import { Page } from "app/Components";
 
 import style from "./Playback.style";
 
-export default class ActivityPlayback extends Component {
+export default class Playback extends Component {
     style = style.update();
 
     constructor(...args) {

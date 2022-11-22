@@ -10,7 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 
-import ThemedComponent from "app/Components/ThemedComponent";
+import ThemedComponent from "app/ThemedComponent";
 
 import Config from "app/Data/Config";
 import User from "app/Data/User";

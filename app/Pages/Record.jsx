@@ -10,7 +10,7 @@ import { getBoundsOfDistance, getDistance } from "geolib";
 
 import { decode } from "@googlemaps/polyline-codec";
 
-import ThemedComponent from "app/Components/ThemedComponent";
+import ThemedComponent from "app/ThemedComponent";
 
 import Recorder from "app/Data/Recorder";
 import Appearance from "app/Data/Appearance";

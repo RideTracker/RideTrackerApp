@@ -5,7 +5,7 @@ import Recording from "app/Data/Recording";
 
 import { Graph } from "app/Components";
 
-export default class ActivitySpeed extends Component {
+export default class Elevation extends Component {
     componentDidMount() {
         Cache.getActivityRide(this.props.activity).then((ride) => {
             this.setState({ recording: new Recording(ride) });
@@ -15,27 +15,25 @@ export default class ActivitySpeed extends Component {
     render() {
         if(!this.state?.recording)
             return (null);
-
-        // implement a better and "less logical" solution
             
         const coordinates = this.state.recording.getAllCoordinates();
 
-        const minSpeed = Math.min(...coordinates.map(coordinate => coordinate.speed));
-        const maxSpeed = Math.max(...coordinates.map(coordinate => coordinate.speed));
+        const minAltitude = Math.min(...coordinates.map(coordinate => coordinate.altitude));
+        const maxAltitude = Math.max(...coordinates.map(coordinate => coordinate.altitude));
         
-        const speedDifference = maxSpeed - minSpeed;
+        const altitudeDifference = maxAltitude - minAltitude;
 
         return (
             <Graph
                 onReady={() => this.props?.onReady && this.props.onReady()}
-                maxLeftAmount={speedDifference}
+                maxLeftAmount={altitudeDifference}
                 maxBottomAmount={this.state.recording.getDistance()}
-                leftUnit={"km/h"}
+                leftUnit={"m"}
                 bottomUnit={"km"}
                 bottomPoints={coordinates.length}
                 points={
                     coordinates.map((coordinate) => {
-                        return coordinate.speed - minSpeed
+                        return coordinate.altitude - minAltitude
                     })
                 }
                 />

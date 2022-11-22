@@ -6,7 +6,7 @@ import Constants from "expo-constants";
 
 import Appearance from "app/Data/Appearance";
 
-import ThemedComponent from "app/Components/ThemedComponent";
+import ThemedComponent from "app/ThemedComponent";
 
 export default class Header extends ThemedComponent {
     render() { 

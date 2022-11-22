@@ -13,24 +13,23 @@ import User from "app/Data/User";
 import Recording from "app/Data/Recording";
 import Config from "app/Data/Config";
 
-import ThemedComponent from "app/Components/ThemedComponent";
-
-import ActivityPlayback from "app/Components/Layouts/Pages/Activity/Playback";
-import ActivityComments from "app/Components/Layouts/Pages/Activity/Comments";
-import ActivityElevation from "app/Components/Layouts/Pages/Activity/Elevation";
-import ActivitySpeed from "app/Components/Layouts/Pages/Activity/Speed";
+import ThemedComponent from "app/ThemedComponent";
 
 import { Page, Form, Images } from "app/Components";
-import { Bike } from "app/Layouts";
+import { Activity, Bike } from "app/Layouts";
 
 import style from "./Activity.style";
 
 import Settings from "app/Settings";
 
 import Upload from "./Activity/Upload";
+import Playback from "./Activity/Playback";
+import Comments from "./Activity/Comments";
 
-export default class Activity extends ThemedComponent {
+export default class extends ThemedComponent {
     static Upload = Upload;
+    static Playback = Playback;
+    static Comments = Comments;
     
     style = style.update();
 
@@ -402,7 +401,7 @@ export default class Activity extends ThemedComponent {
                     <View style={style.sheet.section}>
                         <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Elevation Gain</Text>
                         
-                        <ActivityElevation
+                        <Activity.Graphs.Elevation
                             activity={this.props.id}
                             width={"100%"}
                             height={140}
@@ -412,7 +411,7 @@ export default class Activity extends ThemedComponent {
                     <View style={style.sheet.section}>
                         <Text style={[ style.sheet.section.header, style.sheet.section.padded ]}>Speed</Text>
                         
-                        <ActivitySpeed
+                        <Activity.Graphs.Speed
                             activity={this.props.id}
                             width={"100%"}
                             height={140}
@@ -429,11 +428,11 @@ export default class Activity extends ThemedComponent {
                 </ScrollView>
 
                 {this.state?.showComments && (
-                    <ActivityComments activity={this.props.id} onClose={() => this.setState({ showComments: false })} showModal={(...args) => this.props.showModal(...args)} hideModal={(...args) => this.props.hideModal(...args)}/>
+                    <Comments activity={this.props.id} onClose={() => this.setState({ showComments: false })} showModal={(...args) => this.props.showModal(...args)} hideModal={(...args) => this.props.hideModal(...args)}/>
                 )}
 
                 {this.state?.playback && (
-                    <ActivityPlayback type={this.state.playback} activity={this.props.id} onClose={() => this.setState({ playback: false })}/>
+                    <Playback type={this.state.playback} activity={this.props.id} onClose={() => this.setState({ playback: false })}/>
                 )}
             </Page>
         );

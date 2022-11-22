@@ -8,7 +8,7 @@ import Config from "app/Data/Config";
 import Appearance from "app/Data/Appearance";
 import Themes from "app/Data/Config/Themes.json";
 
-import ThemedComponent from "app/Components/ThemedComponent";
+import ThemedComponent from "app/ThemedComponent";
 
 import Production from "app/Services/Production";
 

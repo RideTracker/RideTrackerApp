@@ -13,7 +13,7 @@ import Files from "app/Data/Files";
 
 import Appearance from "app/Data/Appearance";
 
-import ThemedComponent from "app/Components/ThemedComponent";
+import ThemedComponent from "app/ThemedComponent";
 
 import { Page, Form, Tabs } from "app/Components";
 import { Route } from "app/Layouts";

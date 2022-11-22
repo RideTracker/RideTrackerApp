@@ -7,7 +7,7 @@ import Config from "app/Data/Config";
 import User from "app/Data/User";
 import API from "app/Services/API";
 
-import ThemedComponent from "app/Components/ThemedComponent";
+import ThemedComponent from "app/ThemedComponent";
 
 import { Form } from "app/Components";
 

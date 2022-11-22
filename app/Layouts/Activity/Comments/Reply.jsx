@@ -11,9 +11,9 @@ import Cache from "app/Data/Cache";
 import { Form } from "app/Components";
 
 import style from "./Reply.style";
-import User from "../../../../../Data/User";
+import User from "app/Data/User";
 
-export default class ActivityCommentReply extends Component {
+export default class Reply extends Component {
     style = style.update();
 
     constructor(...args) {

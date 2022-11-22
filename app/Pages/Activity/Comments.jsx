@@ -6,16 +6,16 @@ import moment from "moment";
 import Appearance from "app/Data/Appearance";
 import Cache from "app/Data/Cache";
 
-import ActivityCommentReply from "./Comments/Reply";
-
 import style from "./Comments.style";
-import User from "../../../../Data/User";
+import User from "app/Data/User";
 
 import Settings from "app/Settings";
 
 import Animation from "app/Animation";
 
-export default class ActivityComments extends Component {
+import { Activity } from "app/Layouts";
+
+export default class Comments extends Component {
     style = style.update();
 
     constructor(...args) {
@@ -206,7 +206,7 @@ export default class ActivityComments extends Component {
                 </Animation>
 
                 {this.state?.showReply && (
-                    <ActivityCommentReply activity={this.props.activity} parent={this.state?.replyParent || null} onClose={() => this.onComment()} showModal={(...args) => this.props.showModal(...args)} hideModal={(...args) => this.props.hideModal(...args)}/>
+                    <Activity.Comments.Reply activity={this.props.activity} parent={this.state?.replyParent || null} onClose={() => this.onComment()} showModal={(...args) => this.props.showModal(...args)} hideModal={(...args) => this.props.hideModal(...args)}/>
                 )}
             </>
         );

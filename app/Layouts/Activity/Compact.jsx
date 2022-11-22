@@ -4,7 +4,7 @@ import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 
 import moment from "moment";
 
-import ThemedComponent from "app/Components/ThemedComponent";
+import ThemedComponent from "app/ThemedComponent";
 
 import API from "app/Services/API";
 
