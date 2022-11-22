@@ -21,11 +21,6 @@ import Appearance from "app/Data/Appearance";
 
 import Production from "./app/Services/Production";
 
-import LandingPage from "app/Components/Layouts/Pages/LandingPage.component";
-import RecordPage from "app/Components/Layouts/Pages/RecordPage.component";
-import SettingsPage from "app/Components/Layouts/Pages/SettingsPage.component";
-import ProfilePage from "app/Components/Layouts/Pages/ProfilePage.component";
-import Routes from "app/Components/Layouts/Pages/Routes.component";
 import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.component";
 import FilterPage from "app/Components/FilterPage.component";
 import Prompt from "app/Components/Prompt";
@@ -36,6 +31,7 @@ SplashScreen.preventAutoHideAsync();
 
 import Animation from "app/Animation";
 import { Page } from "app/Components";
+import { Home, Routes, Record, Profile, Settings } from "app/Pages";
 
 import style from "./App.style";
 
@@ -47,7 +43,23 @@ export default class App extends ThemedComponent {
         showNotification: (...args) => this.showNotification(...args),
         hideNotification: (...args) => this.hideNotification(...args),
 
-        onNavigate: (page) => this.setState({ page })
+        onNavigate: (page) => this.onNavigate(page)
+    };
+
+    onNavigate(page) {
+        if(this.state?.page == page)
+            return;
+
+        if(page == "/record")
+            this.showModal("RecordPage");
+        
+        if(this.state.page == "/record") {
+            const modals = this.state.modals.filter((modal) => modal.component != "RecordPage");
+
+            this.setState({ modals, page });
+        }
+        else
+            this.setState({ page })
     };
 
     pageProps = {
@@ -56,12 +68,12 @@ export default class App extends ThemedComponent {
     
     modals = {
         "LoginPage": (key, props) => (<LoginPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "ProfilePage": (key, props) => (<ProfilePage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "ProfilePage": (key, props) => (<Profile {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Routes": (key, props) => (<Routes {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Activity": (key, props) => (<Activity {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "ProfileSettings": (key, props) => (<ProfileSettings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "RecordPage": (key, props) => (<RecordPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "RecordPage": (key, props) => (<Record {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "FilterPage": (key, props) => (<FilterPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Processing": (key, props) => (<Processing {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "ActivityUpload": (key, props) => (<ActivityUpload {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
@@ -105,11 +117,11 @@ export default class App extends ThemedComponent {
     };
 
     pages = {
-        "/index": (<LandingPage  {...this.pageProps}/>),
-        "/routes": (<Routes  {...this.pageProps}/>),
-        "/record": (<RecordPage  {...this.pageProps}/>),
-        "/profile": (<ProfilePage  {...this.pageProps}/>),
-        "/settings": (<SettingsPage  {...this.pageProps}/>)
+        "/index": (<Home {...this.pageProps}/>),
+        "/routes": (<Routes {...this.pageProps}/>),
+        "/record": null,
+        "/profile": (<Profile {...this.pageProps}/>),
+        "/settings": (<Settings {...this.pageProps}/>)
     };
 
     async componentDidMount() {
@@ -214,14 +226,15 @@ export default class App extends ThemedComponent {
                 >
                 <StatusBar style={Appearance.theme.colorPalette.contrast}/>
 
-                <View style={{
-                    flex: 1,
-                    height: "100%"
-                }}>
+                <View
+                    style={{
+                        flex: 1
+                    }}
+                    >
                     {this.pages[this.state.page]}
                 </View>
 
-                <Page.Footer onNavigate={(page) => this.setState({ page })}/>
+                <Page.Footer onNavigate={(page) => this.onNavigate(page)}/>
 
                 {this.state?.modals && this.state.modals.map((modal) => (
                     <View key={modal.key} style={{

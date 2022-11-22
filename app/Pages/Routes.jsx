@@ -18,7 +18,7 @@ import RouteCompact from "app/Components/RouteCompact.component";
 
 import { Page, Form, Tabs } from "app/Components";
 
-import style from "./Routes.component.style";
+import style from "./Routes.style";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 export default class Routes extends ThemedComponent {

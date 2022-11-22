@@ -15,9 +15,9 @@ import RouteCompact from "app/Components/RouteCompact.component";
 
 import { Page, Form, Tabs } from "app/Components";
 
-import style from "./ProfilePage.component.style";
+import style from "./Profile.style";
 
-export default class ProfilePage extends Component {
+export default class Profile extends Component {
     style = style.update();
 
     constructor(...args) {

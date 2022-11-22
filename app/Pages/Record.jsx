@@ -18,7 +18,7 @@ import Files from "app/Data/Files";
 
 import { Page, Form } from "app/Components";
 
-import style from "./RecordPage.component.style";
+import style from "./Record.style";
 
 const images = {
     "merge": require("assets/directions/merge.png"),
@@ -36,7 +36,7 @@ const images = {
     "turn-slight-right": require("assets/directions/turn-slight-right.png")
 };
 
-export default class RecordPage extends ThemedComponent {
+export default class Record extends ThemedComponent {
     style = style.update();
 
     recorder = new Recorder(false, (position) => this.onPosition(position));

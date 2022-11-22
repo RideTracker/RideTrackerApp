@@ -10,15 +10,13 @@ import { Page, Modal } from "app/Components";
 
 import API from "app/Services/API";
 
-export default class LandingPage extends Component {
+export default class Home extends Component {
     componentDidMount() {
         this.onRefresh();
-
-        //Files.uploadFiles();
     };
 
     showActivity(id) {
-        this.props.showModal("Activity", { id, style: style.sheet.container.page });
+        this.props.showModal("Activity", { id });
     };
 
     hideModal(modal) {

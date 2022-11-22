@@ -5,8 +5,6 @@ import Config from "app/Data/Config";
 import { SubPage, Form } from "app/Components";
 
 export default class FilterPage extends Component {
-    style = style.update();
-
     constructor(...args) {
         super(...args);
 
@@ -71,9 +69,7 @@ export default class FilterPage extends Component {
             <SubPage ref={this.page} onClose={() => this.props.onClose()}>
                 <Form>
                     <Form.Field>
-                        <Form.Title
-                            text={"Sort activities by:"}
-                            />
+                        <Form.Title>Sort activities by:</Form.Title>
 
                         <Form.Selection
                             items={this.options.sort}
@@ -83,9 +79,7 @@ export default class FilterPage extends Component {
                     </Form.Field>
                 
                     <Form.Field>
-                        <Form.Title
-                            text={"Include activities within:"}
-                            />
+                        <Form.Title>Include activities within:</Form.Title>
 
                         <Form.Selection
                             items={this.options.timeframe}

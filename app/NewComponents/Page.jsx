@@ -44,13 +44,15 @@ export class Page extends Component {
                 ref={this.animation}
                 enabled={(this.props?.visible != undefined)?(this.props.visible):(true)}
                 style={{
-                    position: "absolute",
+                    position: "relative",
     
                     left: 0,
                     top: 0,
     
                     width: "100%",
-                    height: "100%"
+                    height: "100%",
+
+                    flex: 1
                 }}
                 transitions={[
                     {

@@ -14,9 +14,9 @@ import Production from "../../../Services/Production";
 
 import { Page, Form } from "app/Components";
 
-import style from "./SettingsPage.component.style";
+import style from "./Settings.style";
 
-export default class SettingsPage extends ThemedComponent {
+export default class Settings extends ThemedComponent {
     style = style.update();
 
     render() { 

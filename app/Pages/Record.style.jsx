@@ -7,9 +7,15 @@ export default class RecordPageStyle {
         this.sheet = StyleSheet.create({
             backgroundColor: Appearance.theme.colorPalette.primary,
 
-            position: "relative",
+            position: "absolute",
+
+            left: 0,
+            top: 0,
+
+            flex: 1,
 
             height: "100%",
+            width: "100%",
 
             directions: {
                 //backgroundColor: "#397E49",
