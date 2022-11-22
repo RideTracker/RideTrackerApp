@@ -16,7 +16,6 @@ import Recording from "app/Data/Recording";
 import Config from "app/Data/Config";
 
 import ThemedComponent from "app/Components/ThemedComponent";
-import BikeCompact from "app/Components/BikeCompact.component";
 
 import ActivityPlayback from "./Layouts/Pages/Activity/Playback";
 import ActivityComments from "./Layouts/Pages/Activity/Comments";
@@ -24,6 +23,7 @@ import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
 import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
 
 import { Page, Form, Images } from "app/Components";
+import { Bike } from "app/Layouts";
 
 import style from "./Activity.component.style";
 
@@ -293,7 +293,7 @@ export default class Activity extends ThemedComponent {
                     </View>
 
                     {this.state.activity.bike && (
-                        <BikeCompact style={style.sheet.section} id={this.state.activity.bike} onPress={() => this.props.showNotification("This feature is not implemented yet!")}/>
+                        <Bike.Compact style={style.sheet.section} id={this.state.activity.bike} onPress={() => this.props.showNotification("This feature is not implemented yet!")}/>
                     )}
 
                     {this.state?.comments && (

@@ -10,7 +10,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 
-import LoginPage from "app/Components/Layouts/Pages/LoginPage.component";
 import ThemedComponent from "app/Components/ThemedComponent";
 import BikeCreation from "app/Components/BikeCreation.component";
 import Activity from "app/Components/Activity.component";
@@ -21,7 +20,6 @@ import Appearance from "app/Data/Appearance";
 
 import Production from "./app/Services/Production";
 
-import ProfileSettings from "app/Components/Layouts/Pages/Profile/Settings.component";
 import FilterPage from "app/Components/FilterPage.component";
 import Prompt from "app/Components/Prompt";
 import Processing from "app/Components/Processing.component";
@@ -31,7 +29,7 @@ SplashScreen.preventAutoHideAsync();
 
 import Animation from "app/Animation";
 import { Page } from "app/Components";
-import { Home, Routes, Record, Profile, Settings } from "app/Pages";
+import { Home, Routes, Record, Profile, Settings, Login } from "app/Pages";
 
 import style from "./App.style";
 
@@ -67,11 +65,11 @@ export default class App extends ThemedComponent {
     };
     
     modals = {
-        "LoginPage": (key, props) => (<LoginPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "LoginPage": (key, props) => (<Login {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "ProfilePage": (key, props) => (<Profile {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Routes": (key, props) => (<Routes {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Activity": (key, props) => (<Activity {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "ProfileSettings": (key, props) => (<ProfileSettings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "ProfileSettings": (key, props) => (<Profile.Settings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "RecordPage": (key, props) => (<Record {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "FilterPage": (key, props) => (<FilterPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),

@@ -3,7 +3,7 @@ import { View, ScrollView } from "react-native";
 
 import { Page } from "app/Components";
 
-import style from "./Forgotten.component.style";
+import style from "./Forgotten.style";
 
 export default class Forgotten extends Component {
     style = style.update();

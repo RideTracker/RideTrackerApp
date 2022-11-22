@@ -5,9 +5,9 @@ import API from "app/Services/API";
 
 import { Section } from "app/Components";
 
-import style from "./BikeCompact.style";
+import style from "./Compact.style";
 
-export default class BikeCompact extends Component {
+export default class Compact extends Component {
     style = style.update();
 
     componentDidMount() {

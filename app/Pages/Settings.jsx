@@ -10,7 +10,7 @@ import Themes from "app/Data/Config/Themes.json";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 
-import Production from "../../../Services/Production";
+import Production from "app/Services/Production";
 
 import { Page, Form } from "app/Components";
 

@@ -5,9 +5,9 @@ import User from "app/Data/User";
 
 import { Page, Form } from "app/Components";
 
-import style from "./Settings.component.style";
+import style from "./Settings.style";
 
-export default class ProfileSetings extends Component {
+export default class Settings extends Component {
     style = style.update();
 
     async onLogoutPress() {

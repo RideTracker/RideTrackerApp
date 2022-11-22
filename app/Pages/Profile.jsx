@@ -10,14 +10,18 @@ import User from "app/Data/User";
 
 import ActivityCompact from "app/Components/ActivityCompact.component";
 
-import BikeCompact from "app/Components/BikeCompact.component";
 import RouteCompact from "app/Components/RouteCompact.component";
 
 import { Page, Form, Tabs } from "app/Components";
+import { Bike } from "app/Layouts";
 
 import style from "./Profile.style";
 
+import Settings from "./Profile/Settings";
+
 export default class Profile extends Component {
+    static Settings = Settings;
+
     style = style.update();
 
     constructor(...args) {
@@ -190,7 +194,7 @@ export default class Profile extends Component {
                         
                         <View id="bikes" title="Bikes">
                             {this.state?.bikes?.map((id) => 
-                                (<BikeCompact id={id} key={id} onPress={(id) => this.props.showNotification("This feature is not implemented yet!")}/>)
+                                (<Bike.Compact id={id} key={id} onPress={(id) => this.props.showNotification("This feature is not implemented yet!")}/>)
                             )}
 
                             <Form.Button style={style.sheet.button} title={"Add a new bike"} onPress={() => this.props.showModal("BikeCreation", { onFinish: () => this.onRefresh() })}/>

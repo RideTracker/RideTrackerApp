@@ -7,7 +7,7 @@ import User from "app/Data/User";
 
 import { Page, Form } from "app/Components";
 
-import style from "./Register.component.style";
+import style from "./Register.style";
 
 export default class Register extends Component {
     style = style.update();

@@ -9,14 +9,17 @@ import API from "app/Services/API";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 
-import Forgotten from "app/Components/Layouts/Pages/Login/Forgotten.component";
-import Register from "app/Components/Layouts/Pages/Login/Register.component";
-
 import { Form } from "app/Components";
 
-import style from "./LoginPage.component.style";
+import style from "./Login.style";
 
-export default class LoginPage extends ThemedComponent {
+import Forgotten from "./Login/Forgotten";
+import Register from "./Login/Register";
+
+export default class Login extends ThemedComponent {
+    static Forgotten = Forgotten;
+    static Register = Register;
+
     style = style.update();
 
     constructor(...args) {
@@ -90,11 +93,12 @@ export default class LoginPage extends ThemedComponent {
     };
 
     render() { 
+        // TODO: move this to App.js, preferably as modals
         if(this.state?.page) {
             if(this.state?.page == "register")
-                return (<Register style={style.sheet} onRegistration={() => this.props.onClose()} {...this.props} onClose={() => this.setState({ page: null })}/>);
+                return (<Login.Register style={style.sheet} onRegistration={() => this.props.onClose()} {...this.props} onClose={() => this.setState({ page: null })}/>);
             else if(this.state?.page == "forgotten")
-                return (<Forgotten style={style.sheet} {...this.props} onClose={() => this.setState({ page: null })}/>);
+                return (<Login.Forgotten style={style.sheet} {...this.props} onClose={() => this.setState({ page: null })}/>);
         }
 
         return (
