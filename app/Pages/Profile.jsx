@@ -8,12 +8,8 @@ import API from "app/Services/API";
 import Appearance from "app/Data/Appearance";
 import User from "app/Data/User";
 
-import ActivityCompact from "app/Components/ActivityCompact.component";
-
-import RouteCompact from "app/Components/RouteCompact.component";
-
 import { Page, Form, Tabs } from "app/Components";
-import { Bike } from "app/Layouts";
+import { Activity, Bike, Route } from "app/Layouts";
 
 import style from "./Profile.style";
 
@@ -189,7 +185,7 @@ export default class Profile extends Component {
 
                     <Tabs ref={this.tabs} default="activities">
                         <View id="activities" title="Activities">
-                            {this.state?.activities?.map((id) => (<ActivityCompact id={id} key={id} onPress={(id) => this.props.showModal("Activity", { id })}/>))}
+                            {this.state?.activities?.map((id) => (<Activity.Compact id={id} key={id} onPress={(id) => this.props.showModal("Activity", { id })}/>))}
                         </View>
                         
                         <View id="bikes" title="Bikes">
@@ -202,7 +198,7 @@ export default class Profile extends Component {
                         
                         <View id="routes" title="Routes">
                             {this.state?.routes?.map((id) => 
-                                (<RouteCompact key={id} route={id} onPress={(id) => this.props.showModal("Routes", { route: id })}/>)
+                                (<Route.Compact key={id} route={id} onPress={(id) => this.props.showModal("Routes", { route: id })}/>)
                             )}
                         </View>
                     </Tabs>

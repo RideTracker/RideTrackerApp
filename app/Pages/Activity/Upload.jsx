@@ -5,9 +5,9 @@ import Files from "app/Data/Files";
 
 import { SubPage, Form } from "app/Components";
 
-import style from "./ActivityUpload.component.style";
+import style from "./Upload.style";
 
-export default class ActivityUpload extends Component {
+export default class Upload extends Component {
     style = style.update();
 
     constructor(...args) {

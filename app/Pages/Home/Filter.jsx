@@ -4,7 +4,7 @@ import Config from "app/Data/Config";
 
 import { SubPage, Form } from "app/Components";
 
-export default class FilterPage extends Component {
+export default class Filter extends Component {
     constructor(...args) {
         super(...args);
 

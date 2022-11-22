@@ -20,15 +20,13 @@ export default class Prompt extends Component {
     };
 
     componentDidMount() {
-        if(Platform.OS == "android") {
+        if(Platform.OS == "android")
             NavigationBar.setVisibilityAsync("hidden");
-        }
     };
 
     componentWillUnmount() {
-        if(Platform.OS == "android") {
+        if(Platform.OS == "android")
             NavigationBar.setVisibilityAsync("visible");
-        }
     };
 
     onClose() {

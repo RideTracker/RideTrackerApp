@@ -14,9 +14,9 @@ import Files from "app/Data/Files";
 import Appearance from "app/Data/Appearance";
 
 import ThemedComponent from "app/Components/ThemedComponent";
-import RouteCompact from "app/Components/RouteCompact.component";
 
 import { Page, Form, Tabs } from "app/Components";
+import { Route } from "app/Layouts";
 
 import style from "./Routes.style";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
@@ -35,7 +35,7 @@ export default class Routes extends ThemedComponent {
                             <View id="routes" title="Your Routes">
                                 <ScrollView>
                                     {(this.state?.routes)?(this.state.routes.map((route) => (
-                                        <RouteCompact key={route} route={route} onPress={() => this.setMode("route", route)} onPlayPress={(directions) => this.props.showModal("RecordPage", { directions })}/>
+                                        <Route.Compact key={route} route={route} onPress={() => this.setMode("route", route)} onPlayPress={(directions) => this.props.showModal("RecordPage", { directions })}/>
                                     ))):(
                                         <View style={style.sheet.static.content}>
                                             <Text style={style.sheet.form.text}>You do not have any routes.</Text>

@@ -4,13 +4,16 @@ import { ScrollView, RefreshControl } from "react-native";
 import Appearance from "app/Data/Appearance";
 import Config from "app/Data/Config";
 
-import ActivityCompact from "app/Components/ActivityCompact.component";
-
 import { Page, Modal } from "app/Components";
+import { Activity } from "app/Layouts";
 
 import API from "app/Services/API";
 
+import Filter from "./Home/Filter";
+
 export default class Home extends Component {
+    static Filter = Filter;
+
     componentDidMount() {
         this.onRefresh();
     };
@@ -67,7 +70,7 @@ export default class Home extends Component {
                             }
                         >
                         
-                        {(this.state?.activities) && this.state?.activities.map(id => <ActivityCompact key={id} id={id} onPress={(id) => this.showActivity(id)}/>)}
+                        {(this.state?.activities) && this.state?.activities.map(id => <Activity.Compact key={id} id={id} onPress={(id) => this.showActivity(id)}/>)}
                     </ScrollView>
                 )}
             </Page>

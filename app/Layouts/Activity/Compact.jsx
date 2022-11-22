@@ -15,9 +15,9 @@ import Recording from "app/Data/Recording";
 
 import { Section } from "app/Components";
 
-import style from "./ActivityCompact.component.style";
+import style from "./Compact.style";
 
-export default class ActivityCompact extends ThemedComponent {
+export default class Compact extends ThemedComponent {
     style = style.update();
 
     ready = false;

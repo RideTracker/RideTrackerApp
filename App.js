@@ -11,25 +11,18 @@ import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 
 import ThemedComponent from "app/Components/ThemedComponent";
-import BikeCreation from "app/Components/BikeCreation.component";
-import Activity from "app/Components/Activity.component";
 
 import Config from "app/Data/Config";
 import User from "app/Data/User";
 import Appearance from "app/Data/Appearance";
 
-import Production from "./app/Services/Production";
-
-import FilterPage from "app/Components/FilterPage.component";
-import Prompt from "app/Components/Prompt";
-import Processing from "app/Components/Processing.component";
-import ActivityUpload from "app/Components/ActivityUpload.component";
+import Production from "app/Services/Production";
 
 SplashScreen.preventAutoHideAsync();
 
 import Animation from "app/Animation";
 import { Page } from "app/Components";
-import { Home, Routes, Record, Profile, Settings, Login } from "app/Pages";
+import { Home, Routes, Record, Profile, Settings, Login, Activity, Bike, Processing, Prompt } from "app/Pages";
 
 import style from "./App.style";
 
@@ -70,11 +63,11 @@ export default class App extends ThemedComponent {
         "Routes": (key, props) => (<Routes {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Activity": (key, props) => (<Activity {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "ProfileSettings": (key, props) => (<Profile.Settings {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "BikeCreation": (key, props) => (<BikeCreation {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "BikeCreation": (key, props) => (<Bike.Creation {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "RecordPage": (key, props) => (<Record {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "FilterPage": (key, props) => (<FilterPage {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "FilterPage": (key, props) => (<Home.Filter {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Processing": (key, props) => (<Processing {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
-        "ActivityUpload": (key, props) => (<ActivityUpload {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
+        "ActivityUpload": (key, props) => (<Activity.Upload {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
         "Prompt": (key, props) => (<Prompt {...this.modalProps} onClose={() => this.hideModal(key)} {...props}/>),
     };
 

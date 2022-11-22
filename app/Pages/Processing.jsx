@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 
 import Animation from "app/Animation";
 
-import style from "./Processing.component.style";
+import style from "./Processing.style";
 
 export default class Processing extends Component {
     style = style.update();

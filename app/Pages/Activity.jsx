@@ -5,8 +5,6 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import moment from "moment";
 
-import { getDistance, getRhumbLineBearing } from "geolib";
-
 import API from "app/Services/API";
 
 import Appearance from "app/Data/Appearance";
@@ -17,19 +15,23 @@ import Config from "app/Data/Config";
 
 import ThemedComponent from "app/Components/ThemedComponent";
 
-import ActivityPlayback from "./Layouts/Pages/Activity/Playback";
-import ActivityComments from "./Layouts/Pages/Activity/Comments";
-import ActivityElevation from "./Layouts/Pages/Activity/Elevation";
-import ActivitySpeed from "./Layouts/Pages/Activity/Speed";
+import ActivityPlayback from "app/Components/Layouts/Pages/Activity/Playback";
+import ActivityComments from "app/Components/Layouts/Pages/Activity/Comments";
+import ActivityElevation from "app/Components/Layouts/Pages/Activity/Elevation";
+import ActivitySpeed from "app/Components/Layouts/Pages/Activity/Speed";
 
 import { Page, Form, Images } from "app/Components";
 import { Bike } from "app/Layouts";
 
-import style from "./Activity.component.style";
+import style from "./Activity.style";
 
 import Settings from "app/Settings";
 
+import Upload from "./Activity/Upload";
+
 export default class Activity extends ThemedComponent {
+    static Upload = Upload;
+    
     style = style.update();
 
     ready = false;

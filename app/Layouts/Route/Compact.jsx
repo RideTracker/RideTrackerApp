@@ -12,9 +12,9 @@ import API from "app/Services/API";
 
 import { Section } from "app/Components";
 
-import style from "./RouteCompact.component.style";
+import style from "./Compact.style";
 
-export default class RouteCompact extends Component {
+export default class Compact extends Component {
     style = style.update();
 
     constructor(...args) {

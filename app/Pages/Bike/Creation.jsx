@@ -8,9 +8,9 @@ import API from "app/Services/API";
 
 import { Page, Form } from "app/Components";
 
-import style from "./BikeCreation.style";
+import style from "./Creation.style";
 
-export default class BikeCreation extends Component {
+export default class Creation extends Component {
     style = style.update();
 
     constructor(...args) {
