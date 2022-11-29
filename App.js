@@ -25,6 +25,7 @@ import { Page } from "app/Components";
 import { Home, Routes, Record, Profile, Settings, Login, Activity, Bike, Processing, Prompt } from "app/Pages";
 
 import style from "./App.style";
+import API from "./app/Services/API";
 
 export default class App extends ThemedComponent {
     modalProps = {
@@ -121,6 +122,8 @@ export default class App extends ThemedComponent {
 
         await Config.readAsync();
         Appearance.readConfig();
+
+        await API.getManifestAsync();
 
         if(Config.user?.token) {
             User.authenticateAsync().then((success) => {

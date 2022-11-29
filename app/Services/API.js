@@ -1,5 +1,7 @@
 import Constants from "expo-constants";
 
+import JsonMessage from "@nora-soderlund/json-messages";
+
 import Config from "app/Data/Config";
 
 import Settings from "app/Settings";
@@ -8,6 +10,12 @@ import Production from "app/Services/Production";
 export default class API {
     static alive = null;
     static timestamp = null;
+
+    static async getManifestAsync() {
+        API.manifest = await this.get("/api/v1/manifest");
+
+        console.log(JSON.stringify(this.manifest));
+    };
 
     static async ping(forced = false) {
         if(forced == false) {
@@ -50,10 +58,22 @@ export default class API {
                 headers,
                 body: JSON.stringify(body)
             });
-            
-            const result = await response.json();
 
-            return result;
+            const text = await response.text();
+
+            if(text[0] == '*') {
+                console.log(text);
+                
+                const object = JsonMessage.decompressWithoutHeader(API.manifest, path.substring(0, path.indexOf('?')), text);
+
+                console.log(object);
+
+                const result = { success: true, content: object };
+            
+                return result;
+            }
+            
+            return JSON.parse(text);
         }
         catch(error) {
             console.error(method + " " + Settings.api + path + ": " + error);
