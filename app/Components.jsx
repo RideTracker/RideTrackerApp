@@ -1,10 +1,10 @@
-import Form from "./NewComponents/Form";
-import Modal from "./NewComponents/Modal";
-import Section from "./NewComponents/Section";
-import Tabs from "./NewComponents/Tabs";
-import { Page, SubPage } from "./NewComponents/Page";
-import Graph from "./NewComponents/Graph";
-import Images from "./NewComponents/Images";
+import Form from "./Components/Form";
+import Modal from "./Components/Modal";
+import Section from "./Components/Section";
+import Tabs from "./Components/Tabs";
+import { Page, SubPage } from "./Components/Page";
+import Graph from "./Components/Graph";
+import Images from "./Components/Images";
 
 export {
     Form,
