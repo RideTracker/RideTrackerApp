@@ -1,15 +1,8 @@
-<p align="center">
-  <img src="https://i.imgur.com/2UOCtvd.png" width="128">
-  
-  <h1 align="center">ridetracker.app</h1>
-</p>
+# Ride Tracker
 
 A mobile application to record and share bike activities, plan routes, and replay your rides!
 
-## Infrastructure
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/78360666/209476010-0c3762f7-808f-4691-ba29-ce9bf6dfa765.svg">
-</p>
+See also [RideTrackerServer](https://github.com/nora-soderlund/RideTrackerServer#readme).
 
 ## Inspiration
 I'm a big cyclist hobbyist and I love to keep track of my activities and look back at what sections I can try to improve on. I also love exploring new places and routes around me. I wanted to create a community where you can easily share your bike activities, thoughts, images, and videos. From my experience using fitness apps, the focus on the hobby part is very low and everything is very private. I wanted the community to be connected to an mobile application where you can do all of the technical stuff, such as planning your route, and I wanted it to be as straight forward as possible.
