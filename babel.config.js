@@ -1,20 +1,11 @@
-module.exports = function(api) {
-	api.cache(true);
-	return {
-		presets: ["babel-preset-expo"],
-		plugins: [
-			[
-				"module-resolver",
-				{
-					alias: {
-						assets: "./assets",
-						app: "./app",
-						root: "./"
-					},
-				},
-			],
+module.exports = function (api) {
+    api.cache(true);
 
-			["@babel/plugin-proposal-private-methods", { "loose": true }]
-		]
-	};
+    return {
+        presets: [ "babel-preset-expo" ],
+
+        plugins: [
+            require.resolve("expo-router/babel")
+        ]
+    };
 };
