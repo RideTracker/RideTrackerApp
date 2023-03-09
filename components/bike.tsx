@@ -3,20 +3,20 @@ import { Image, Text, View } from "react-native";
 import { BikeResponse, getBikeById } from "../models/bike";
 
 type BikeProps = {
-    id: string | null;
+    id?: string;
+    data?: BikeResponse;
 
     style?: any;
 };
 
-export default function Bike({ id, style }: BikeProps) {
+export default function Bike({ id, style, data }: BikeProps) {
     const [ bike, setBike ]: [ BikeResponse, any] = useState(null);
-
     useEffect(() => {
-        if(id !== null)
+        if(data)
+            setBike(data);
+        else if(id)
             getBikeById(id).then((result) => setBike(result));
     }, []);
-
-    console.log(bike);
 
     return (
         <View style={style}>

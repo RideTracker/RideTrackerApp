@@ -30,11 +30,11 @@ export default function ActivityPage({ params }) {
                 {(activity)?(
                     (activity.bike) && (
                         <TouchableOpacity onPress={() => router.push(`/bike/${activity.bike}`)}>
-                            <Bike id={activity.bike} style={{ marginVertical: 10 }}/>
+                            <Bike data={activity.bike} style={{ marginVertical: 10 }}/>
                         </TouchableOpacity>
                     )
                 ):(
-                    <Bike id={null} style={{ marginVertical: 10 }}/>
+                    <Bike style={{ marginVertical: 10 }}/>
                 )}
 
                 <View style={{
