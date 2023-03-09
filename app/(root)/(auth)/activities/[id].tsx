@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
-import { getActivityById } from "../../../models/activity";
-import Activity from "../../../layouts/activity";
-import Bike from "../../../components/bike";
+import { getActivityById } from "../../../../models/activity";
+import Activity from "../../../../layouts/activity";
+import Bike from "../../../../components/bike";
 
 export default function ActivityPage({ params }) {
     const router = useRouter();

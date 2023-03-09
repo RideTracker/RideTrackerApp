@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { RefreshControl, ScrollView, Text, View, useColorScheme } from "react-native";
-import { getFeed } from "../../../models/feed";
-import Error from "../../../components/error";
-import Empty from "../../../components/empty";
-import ActivityCompact from "../../../components/activity/compact";
-import { useThemeConfig } from "../../../utils/themes";
+import { getFeed } from "../../../../models/feed";
+import Error from "../../../../components/error";
+import Empty from "../../../../components/empty";
+import ActivityCompact from "../../../../components/activity/compact";
+import { useThemeConfig } from "../../../../utils/themes";
 
 export default function Index() {
     const themeConfig = useThemeConfig();
