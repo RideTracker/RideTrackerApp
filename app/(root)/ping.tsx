@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { useRouter, Stack } from "expo-router";
-import { PingResponse, ping } from "../models/ping";
+import { PingResponse, ping } from "../../models/ping";
 
 export default function Ping() {
     const router = useRouter();

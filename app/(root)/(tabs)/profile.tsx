@@ -1,6 +1,6 @@
 import { ScrollView, View } from "react-native";
 import { Stack } from "expo-router";
-import Footer from "../components/footer";
+import Footer from "../../../components/footer";
 
 export default function Profile() {
     return (
@@ -11,8 +11,6 @@ export default function Profile() {
                 flex: 1
             }}>
                 <ScrollView></ScrollView>
-
-                <Footer active="/profile"/>
             </View>
         </View>
     );

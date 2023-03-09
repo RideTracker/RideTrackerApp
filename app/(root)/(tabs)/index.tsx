@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Appearance, RefreshControl, ScrollView, Text, View } from "react-native";
 import { Link, Stack } from "expo-router";
-import { getFeed } from "../models/feed";
-import Error from "../components/error";
+import { getFeed } from "../../../models/feed";
+import Error from "../../../components/error";
 import { StatusBar } from "expo-status-bar";
-import Empty from "../components/empty";
-import ActivityCompact from "../components/activity/compact";
-import Footer from "../components/footer";
+import Empty from "../../../components/empty";
+import ActivityCompact from "../../../components/activity/compact";
+import Footer from "../../../components/footer";
 
 export default function Index() {
     const [ feed, setFeed ] = useState(null);
@@ -24,8 +24,6 @@ export default function Index() {
 
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: "#FFF" }}>
-            <Stack.Screen options={{ title: "Feed" }} />
-
             <View style={{
                 flex: 1
             }}>
@@ -65,8 +63,6 @@ export default function Index() {
                         )}
                     </View>
                 </ScrollView>
-
-                <Footer active="/"/>
             </View>
         </View>
     );
