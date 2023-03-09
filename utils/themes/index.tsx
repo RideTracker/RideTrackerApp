@@ -7,3 +7,9 @@ export function useThemeConfig() {
 
     return config[colorScheme];
 };
+
+import mapStyle from "./mapStyle.json";
+
+export function useMapStyle() {
+    return mapStyle;
+};

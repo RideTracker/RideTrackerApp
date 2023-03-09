@@ -1,9 +1,13 @@
 {
     "light": {
-        "background": "#FFF"
+        "background": "#FFF",
+
+        "mapStyle": []
     },
 
     "dark": {
-        "background": "#000"
+        "background": "#000",
+
+        "mapStyle": []
     }
 }
