@@ -1,10 +1,13 @@
 import { Image, Text, View } from "react-native";
+import { useThemeConfig } from "../../utils/themes";
 
 type ActivityCommentProps = {
     style?: any;
 };
 
 export default function ActivityComment({ style }: ActivityCommentProps) {
+    const themeConfig = useThemeConfig();
+
     return (
         <View style={style}>
             <View style={{
@@ -31,14 +34,21 @@ export default function ActivityComment({ style }: ActivityCommentProps) {
                     }}>
                         <Text style={{
                             fontSize: 18,
-                            fontWeight: "bold"
-                        }}>Nora Söderlund</Text>
-                        <Text>14 hours ago</Text>
+                            fontWeight: "bold",
+                            color: themeConfig.color
+                        }}>
+                            Nora Söderlund
+                        </Text>
+                        
+                        <Text style={{ color: themeConfig.color }}>14 hours ago</Text>
                     </View>
 
                     <Text style={{
-                        fontSize: 17
-                    }}>This is a comment!</Text>
+                        fontSize: 17,
+                        color: themeConfig.color
+                    }}>
+                        This is a comment!
+                    </Text>
                 </View>
             </View>
         </View>

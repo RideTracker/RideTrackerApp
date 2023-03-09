@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { ActivityResponse } from "../../models/activity";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useThemeConfig } from "../../utils/themes";
 
 type ActivityAuthorProps = {
     activity: ActivityResponse | null;
@@ -9,6 +10,8 @@ type ActivityAuthorProps = {
 
 export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
     const router = useRouter();
+
+    const themeConfig = useThemeConfig();
 
     return (
         <View style={{
@@ -40,7 +43,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                             }}/>
                     ):(
                         <View style={{
-                            backgroundColor: "#EEE",
+                            backgroundColor: themeConfig.placeholder,
                             
                             width: "100%",
                             height: "100%"
@@ -59,13 +62,15 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                         <>
                             <Text style={{
                                 fontSize: 20,
-                                fontWeight: "bold"
+                                fontWeight: "bold",
+                                color: themeConfig.color
                             }}>
                                 {activity.user.name}
                             </Text>
                             
                             <Text style={{
-                                fontSize: 18
+                                fontSize: 18,
+                                color: themeConfig.color
                             }}>
                                 13 days ago in Vänersborg
                             </Text>
@@ -73,7 +78,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                     ):(
                         <>
                             <Text style={{
-                                backgroundColor: "#EEE",
+                                backgroundColor: themeConfig.placeholder,
                                 color: "transparent",
 
                                 fontSize: 20,
@@ -83,7 +88,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                             </Text>
                             
                             <Text style={{
-                                backgroundColor: "#EEE",
+                                backgroundColor: themeConfig.placeholder,
                                 color: "transparent",
 
                                 fontSize: 18
@@ -110,7 +115,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                             justifyContent: "center",
                             alignItems: "center"
                         }}>
-                            <FontAwesome name="thumbs-o-up" size={24} color="black" />
+                            <FontAwesome name="thumbs-o-up" size={24} color={themeConfig.color} />
                         </TouchableOpacity>
                         
                         <TouchableOpacity style={{
@@ -120,7 +125,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                             justifyContent: "center",
                             alignItems: "center"
                         }}>
-                            <FontAwesome name="ellipsis-v" size={24} color="black" />
+                            <FontAwesome name="ellipsis-v" size={24} color={themeConfig.color} />
                         </TouchableOpacity>
                     </>
                 )}

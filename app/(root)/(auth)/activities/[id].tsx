@@ -4,8 +4,10 @@ import { useRouter, Stack, useSearchParams } from "expo-router";
 import { getActivityById } from "../../../../models/activity";
 import Activity from "../../../../layouts/activity";
 import Bike from "../../../../components/bike";
+import { useThemeConfig } from "../../../../utils/themes";
 
 export default function ActivityPage({ params }) {
+    const themeConfig = useThemeConfig();
     const router = useRouter();
     const { id } = useSearchParams();
 
@@ -17,7 +19,7 @@ export default function ActivityPage({ params }) {
     }, []);
 
     return (
-        <View style={{ flex: 1, backgroundColor: "#FFF" }}>
+        <View style={{ flex: 1, backgroundColor: themeConfig.background }}>
             <Stack.Screen options={{ title: "Activity" }} />
 
             <ScrollView style={{ padding: 10 }}>
@@ -41,7 +43,7 @@ export default function ActivityPage({ params }) {
                     marginVertical: 20,
                     gap: 10
                 }}>
-                    <Text style={{ fontSize: 20 }}><Text style={{ fontWeight: "bold" }}>Comments</Text> (11)</Text>
+                    <Text style={{ fontSize: 20, color: themeConfig.color }}><Text style={{ fontWeight: "bold" }}>Comments</Text> (11)</Text>
 
                     <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)}>
                         <Activity.Comment/>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Image, Text, View } from "react-native";
 import { BikeResponse, getBikeById } from "../models/bike";
+import { useThemeConfig } from "../utils/themes";
 
 type BikeProps = {
     id?: string;
@@ -10,7 +11,10 @@ type BikeProps = {
 };
 
 export default function Bike({ id, style, data }: BikeProps) {
+    const themeConfig = useThemeConfig();
+
     const [ bike, setBike ]: [ BikeResponse, any] = useState(null);
+
     useEffect(() => {
         if(data)
             setBike(data);
@@ -33,7 +37,7 @@ export default function Bike({ id, style, data }: BikeProps) {
                             }}/>
                     ):(
                         <View style={{
-                            backgroundColor: "#EEE",
+                            backgroundColor: themeConfig.placeholder,
 
                             width: "100%",
                             height: "100%"  
@@ -50,13 +54,14 @@ export default function Bike({ id, style, data }: BikeProps) {
                     {(bike)?(
                         <Text style={{
                             fontSize: 20,
-                            fontWeight: "500"
+                            fontWeight: "500",
+                            color: themeConfig.color
                         }}>
                             {bike.model}
                         </Text>
                     ):(
                         <Text style={{
-                            backgroundColor: "#EEE",
+                            backgroundColor: themeConfig.placeholder,
                             color: "transparent",
 
                             fontSize: 20,
@@ -71,34 +76,52 @@ export default function Bike({ id, style, data }: BikeProps) {
                         <View>
                             <Text style={{
                                 fontSize: 18,
-                                textAlign: "center"
+                                textAlign: "center",
+                                color: themeConfig.color
                             }}>
                                 4
                             </Text>
 
-                            <Text style={{ textAlign: "center" }}>rides</Text>
+                            <Text style={{
+                                textAlign: "center",
+                                color: themeConfig.color
+                                }}>
+                                    rides
+                            </Text>
                         </View>
 
                         <View>
                             <Text style={{
                                 fontSize: 18,
-                                textAlign: "center"
+                                textAlign: "center",
+                                color: themeConfig.color
                             }}>
                                 39 km
                             </Text>
 
-                            <Text style={{ textAlign: "center" }}>distance</Text>
+                            <Text style={{
+                                textAlign: "center",
+                                color: themeConfig.color
+                                }}>
+                                    distance
+                            </Text>
                         </View>
 
                         <View>
                             <Text style={{
                                 fontSize: 18,
-                                textAlign: "center"
+                                textAlign: "center",
+                                color: themeConfig.color
                             }}>
                                 78 m
                             </Text>
 
-                            <Text style={{ textAlign: "center" }}>elevation</Text>
+                            <Text style={{
+                                textAlign: "center",
+                                color: themeConfig.color
+                                }}>
+                                    elevation
+                            </Text>
                         </View>
                     </View>
                 </View>

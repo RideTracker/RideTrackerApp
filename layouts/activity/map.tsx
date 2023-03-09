@@ -20,7 +20,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                 height: 200,
                 borderRadius: 10,
 
-                backgroundColor: "#EEE"
+                backgroundColor: themeConfig.placeholder
             }}/>
         );
     }
@@ -31,7 +31,8 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                 style={{
                     width: "100%",
                     height: 200,
-                    borderRadius: 10
+                    borderRadius: 10,
+                    backgroundColor: "black"
                 }}
                 initialCamera={{
                     center: {
@@ -44,8 +45,8 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
 
                     zoom: 10
                 }}
-                customMapStyle={(compact)?(themeConfig.mapStyle.concat(mapStyle.compact as any[])):(themeConfig.mapStyle)}
                 provider={PROVIDER_GOOGLE}
+                customMapStyle={(compact)?(themeConfig.mapStyle.concat(mapStyle.compact as any[])):(themeConfig.mapStyle)}
                 zoomEnabled={false}
                 pitchEnabled={false}
                 rotateEnabled={false}
