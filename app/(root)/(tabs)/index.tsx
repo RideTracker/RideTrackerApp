@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { RefreshControl, ScrollView, Text, View } from "react-native";
+import { RefreshControl, ScrollView, Text, View, useColorScheme } from "react-native";
 import { getFeed } from "../../../models/feed";
 import Error from "../../../components/error";
 import Empty from "../../../components/empty";
 import ActivityCompact from "../../../components/activity/compact";
+import { useThemeConfig } from "../../../utils/themes";
 
 export default function Index() {
+    const themeConfig = useThemeConfig();
+    
     const [ feed, setFeed ] = useState(null);
     const [ refreshing, setRefreshing ] = useState(true);
 
@@ -20,7 +23,7 @@ export default function Index() {
     }, [ refreshing ]);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", backgroundColor: "#FFF" }}>
+        <View style={{ flex: 1, justifyContent: "center", backgroundColor: themeConfig.background }}>
             <View style={{
                 flex: 1
             }}>

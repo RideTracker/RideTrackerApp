@@ -1,0 +1,9 @@
+{
+    "light": {
+        "background": "#FFF"
+    },
+
+    "dark": {
+        "background": "#000"
+    }
+}
