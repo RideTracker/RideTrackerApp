@@ -1,12 +1,5 @@
-import { useState, useEffect } from "react";
-import { Appearance, RefreshControl, ScrollView, Text, View } from "react-native";
-import { Link, Stack } from "expo-router";
-import { getFeed } from "../../../models/feed";
-import Error from "../../../components/error";
-import { StatusBar } from "expo-status-bar";
-import Empty from "../../../components/empty";
-import ActivityCompact from "../../../components/activity/compact";
-import Footer from "../../../components/footer";
+import { ScrollView, View } from "react-native";
+import { Stack } from "expo-router";
 
 export default function Routes() {
     return (

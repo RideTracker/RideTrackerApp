@@ -1,6 +1,5 @@
 import { ScrollView, View } from "react-native";
 import { Stack } from "expo-router";
-import Footer from "../../../components/footer";
 
 export default function Record() {
     return (
