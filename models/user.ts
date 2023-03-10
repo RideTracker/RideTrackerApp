@@ -17,11 +17,30 @@ export async function getUserById(id: string): Promise<UserResponse> {
     return result;
 };
 
-export type RegisterUserResponse = Response & {
+export type AuthenticateUserResponse = Response & {
     key?: string;
 };
 
-export async function registerUser(firstname: string, lastname: string, email: string, password: string): Promise<RegisterUserResponse> {
+export async function loginUser(email: string, password: string): Promise<AuthenticateUserResponse> {
+    const url = new URL(`user/login`, Constants.expoConfig.extra.apiHost);
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email,
+            password
+        })
+    });
+
+    const result = await response.json();
+
+    return result;
+};
+
+export async function registerUser(firstname: string, lastname: string, email: string, password: string): Promise<AuthenticateUserResponse> {
     const url = new URL(`user/register`, Constants.expoConfig.extra.apiHost);
 
     const response = await fetch(url, {
@@ -40,10 +59,6 @@ export async function registerUser(firstname: string, lastname: string, email: s
     const result = await response.json();
 
     return result;
-};
-
-export type AuthenticateUserResponse = Response & {
-    key?: string;
 };
 
 export async function authenticateUser(key: string): Promise<AuthenticateUserResponse> {

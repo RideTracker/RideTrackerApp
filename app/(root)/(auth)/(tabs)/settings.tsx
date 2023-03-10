@@ -18,9 +18,13 @@ export default function Settings() {
             <View style={{
                 flex: 1
             }}>
-                <ScrollView>
-                    <Button primary={true} label="Dark mode" onPress={() => dispatch(setUserData({ theme: "dark"}))}/>
-                    <Button primary={true} label="Light mode" onPress={() => dispatch(setUserData({ theme: "light"}))}/>
+                <ScrollView style={{ padding: 10 }}>
+                    <View style={{ gap: 10 }}>
+                        <Button primary={true} label="Dark mode" onPress={() => dispatch(setUserData({ theme: "dark"}))}/>
+                        <Button primary={true} label="Light mode" onPress={() => dispatch(setUserData({ theme: "light"}))}/>
+
+                        <Button primary={false} label="Reset key" onPress={() => dispatch(setUserData({ key: null }))}/>
+                    </View>
                 </ScrollView>
             </View>
         </View>
