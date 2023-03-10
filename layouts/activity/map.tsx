@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { ActivityResponse } from "../../models/activity";
@@ -12,6 +13,7 @@ type ActivityMapProps = {
 export default function ActivityMap({ activity, children, compact }: ActivityMapProps) {
     const mapStyle = useMapStyle();
     const themeConfig = useThemeConfig();
+    useEffect(() => {}, [themeConfig]);
 
     if(!activity) {
         return (

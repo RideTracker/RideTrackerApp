@@ -1,5 +1,7 @@
 import React from "react";
 import { useRouter, useSegments } from "expo-router";
+import { Provider as ReduxProvider } from "react-redux";
+import store from "../stores/store";
 
 const AuthContext = React.createContext(null);
 
@@ -27,12 +29,14 @@ export function Provider({ children }) {
     useProtectedRoute(user);
 
     return (
-        <AuthContext.Provider value={{
-                signIn: () => setAuth({}),
-                signOut: () => setAuth(null),
-                user
-            }}>
-            {children}
-        </AuthContext.Provider>
+        <ReduxProvider store={store}>
+            <AuthContext.Provider value={{
+                    signIn: () => setAuth({}),
+                    signOut: () => setAuth(null),
+                    user
+                }}>
+                {children}
+            </AuthContext.Provider>
+        </ReduxProvider>
     );
 };

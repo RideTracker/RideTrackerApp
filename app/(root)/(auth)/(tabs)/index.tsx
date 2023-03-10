@@ -8,7 +8,7 @@ import { useThemeConfig } from "../../../../utils/themes";
 
 export default function Index() {
     const themeConfig = useThemeConfig();
-    
+   
     const [ feed, setFeed ] = useState(null);
     const [ refreshing, setRefreshing ] = useState(true);
 

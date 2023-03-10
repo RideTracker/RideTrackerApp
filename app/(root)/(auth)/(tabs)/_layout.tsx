@@ -1,9 +1,11 @@
-import { Stack, Tabs } from "expo-router";
+import { useEffect } from "react";
+import { Tabs } from "expo-router";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
 import { useThemeConfig } from "../../../../utils/themes";
 
 export default function Layout() {
     const themeConfig = useThemeConfig();
+    useEffect(() => {}, [themeConfig]);
 
     return (
         <Tabs screenOptions={{

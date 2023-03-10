@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Image, Text, View } from "react-native";
 import { useThemeConfig } from "../../utils/themes";
 
@@ -7,6 +8,7 @@ type ActivityCommentProps = {
 
 export default function ActivityComment({ style }: ActivityCommentProps) {
     const themeConfig = useThemeConfig();
+    useEffect(() => {}, [themeConfig]);
 
     return (
         <View style={style}>

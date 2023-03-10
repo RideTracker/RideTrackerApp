@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 import { ActivityResponse } from "../../models/activity";
 import { useThemeConfig } from "../../utils/themes";
@@ -8,6 +9,7 @@ type ActivityStatsProps = {
 
 export default function ActivityStats({ activity }: ActivityStatsProps) {
     const themeConfig = useThemeConfig();
+    useEffect(() => {}, [themeConfig]);
     
     return (
         <View style={{ gap: 20, padding: 20 }}>

@@ -8,6 +8,8 @@ import { useThemeConfig } from "../../../../utils/themes";
 
 export default function ActivityPage({ params }) {
     const themeConfig = useThemeConfig();
+    useEffect(() => {}, [themeConfig]);
+    
     const router = useRouter();
     const { id } = useSearchParams();
 

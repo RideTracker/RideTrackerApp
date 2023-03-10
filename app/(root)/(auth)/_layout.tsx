@@ -1,8 +1,11 @@
+import { useEffect } from "react";
+
 import { Stack, Tabs } from "expo-router";
 import { useThemeConfig } from "../../../utils/themes";
 
 export default function Layout() {
     const themeConfig = useThemeConfig();
+    useEffect(() => {}, [themeConfig]);
 
     return (
         <Stack screenOptions={{

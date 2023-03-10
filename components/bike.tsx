@@ -12,6 +12,7 @@ type BikeProps = {
 
 export default function Bike({ id, style, data }: BikeProps) {
     const themeConfig = useThemeConfig();
+    useEffect(() => {}, [themeConfig]);
 
     const [ bike, setBike ]: [ BikeResponse, any] = useState(null);
 

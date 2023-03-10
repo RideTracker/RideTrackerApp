@@ -5,6 +5,7 @@
         "placeholder": "#EEE",
         "border": "#EEE",
 		"brand": "#BB87FC",
+		"brandText": "#FFF",
         "contrast": "dark",
 
         "mapStyle": []
@@ -16,6 +17,7 @@
         "placeholder": "#111",
         "border": "#242730",
 		"brand": "#BB87FC",
+		"brandText": "#FFF",
         "contrast": "dark",
 
         "mapStyle": [

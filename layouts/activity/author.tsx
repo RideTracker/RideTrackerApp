@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useRouter } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { ActivityResponse } from "../../models/activity";
@@ -12,6 +13,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
     const router = useRouter();
 
     const themeConfig = useThemeConfig();
+    useEffect(() => {}, [themeConfig]);
 
     return (
         <View style={{
