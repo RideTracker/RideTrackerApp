@@ -5,8 +5,10 @@ import Error from "../../../../components/error";
 import Empty from "../../../../components/empty";
 import ActivityCompact from "../../../../components/activity/compact";
 import { useThemeConfig } from "../../../../utils/themes";
+import { useSelector } from "react-redux";
 
 export default function Index() {
+    const userData = useSelector((state: any) => state.userData);
     const themeConfig = useThemeConfig();
    
     const [ feed, setFeed ] = useState(null);
@@ -16,7 +18,7 @@ export default function Index() {
         if(!refreshing)
             return;
 
-        getFeed().then((result) => {
+        getFeed(userData.key).then((result) => {
             setRefreshing(false);
             setFeed(result);
         });
@@ -30,6 +32,7 @@ export default function Index() {
                 <ScrollView
                     refreshControl={
                         <RefreshControl
+                            tintColor={themeConfig.contrast}
                             refreshing={refreshing}
                             onRefresh={() => !refreshing && setRefreshing(true)}
                             />

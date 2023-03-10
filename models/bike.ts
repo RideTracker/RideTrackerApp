@@ -1,5 +1,6 @@
 import Constants from "expo-constants";
 import { Response } from "./response";
+import { useSelector } from "react-redux";
 
 export type BikeResponse = Response & {
     id: string;
@@ -11,10 +12,14 @@ export type BikeResponse = Response & {
     image: string;
 };
 
-export async function getBikeById(id: string): Promise<BikeResponse> {
+export async function getBikeById(authorization: string, id: string): Promise<BikeResponse> {
     const url = new URL(`bike/${id}`, Constants.expoConfig.extra.apiHost);
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            "Authorization": authorization
+        }
+    });
     const result = await response.json();
 
     return result;

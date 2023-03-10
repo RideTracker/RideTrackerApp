@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { getActivityById, ActivityResponse } from "../../models/activity";
 import Error from "../error";
 import Activity from "../../layouts/activity";
+import { useSelector } from "react-redux";
 
 type ActivityCompactProps = {
     id: string | null;
@@ -12,13 +13,15 @@ type ActivityCompactProps = {
 };
 
 export default function ActivityCompact({ id, style }: ActivityCompactProps) {
+    const userData = useSelector((state: any) => state.userData);
+
     const router = useRouter();
 
     const [ activity, setActivity ]: [ ActivityResponse, any ] = useState(null);
 
     useEffect(() => {
         if(id !== null)
-            getActivityById(id).then((result) => setActivity(result));
+            getActivityById(userData.key, id).then((result) => setActivity(result));
     }, []);
 
 

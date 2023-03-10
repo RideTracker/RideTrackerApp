@@ -4,6 +4,7 @@ import { Provider } from "../utils/auth/provider";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "../utils/stores/store";
 import { useThemeConfig } from "../utils/themes";
+import { StatusBar } from "expo-status-bar";
 
 export default function Layout() {
     const themeConfig = useThemeConfig();

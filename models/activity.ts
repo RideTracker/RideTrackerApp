@@ -1,5 +1,6 @@
 import Constants from "expo-constants";
 import { Response } from "./response";
+import { useSelector } from "react-redux";
 
 export type ActivityResponse = Response & {
     id: string;
@@ -15,11 +16,17 @@ export type ActivityResponse = Response & {
     timestamp: number;
 };
 
-export async function getActivityById(id: string): Promise<ActivityResponse> {
+export async function getActivityById(authorization: string, id: string): Promise<ActivityResponse> {
     const url = new URL(`activity/${id}`, Constants.expoConfig.extra.apiHost);
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            "Authorization": authorization
+        }
+    });
     const result = await response.json();
+
+    console.log(result);
 
     return result;
 };

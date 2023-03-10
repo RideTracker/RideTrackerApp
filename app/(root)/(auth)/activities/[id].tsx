@@ -5,8 +5,11 @@ import { getActivityById } from "../../../../models/activity";
 import Activity from "../../../../layouts/activity";
 import Bike from "../../../../components/bike";
 import { useThemeConfig } from "../../../../utils/themes";
+import { useSelector } from "react-redux";
 
 export default function ActivityPage({ params }) {
+    const userData = useSelector((state: any) => state.userData);
+
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
     
@@ -17,7 +20,7 @@ export default function ActivityPage({ params }) {
 
     useEffect(() => {
         if(id !== null)
-            getActivityById(id as string).then((result) => setActivity(result));
+            getActivityById(userData.key, id as string).then((result) => setActivity(result));
     }, []);
 
     return (

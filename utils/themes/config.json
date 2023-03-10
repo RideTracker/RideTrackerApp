@@ -8,7 +8,8 @@
 		"brand": "#BB87FC",
 		"brandText": "#FFF",
 
-        "contrast": "dark",
+        "contrast": "black",
+		"contrastStyle": "dark",
 
         "mapStyle": []
     },
@@ -22,7 +23,8 @@
 		"brand": "#BB87FC",
 		"brandText": "#FFF",
 
-        "contrast": "dark",
+        "contrast": "white",
+		"contrastStyle": "light",
 
         "mapStyle": [
             {

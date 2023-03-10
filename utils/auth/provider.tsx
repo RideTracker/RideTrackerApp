@@ -4,6 +4,8 @@ import { useDispatch, Provider as ReduxProvider, useSelector } from "react-redux
 import store from "../stores/store";
 import { readUserData, setUserData } from "../stores/userData";
 import { authenticateUser } from "../../models/user";
+import { StatusBar } from "expo-status-bar";
+import { useThemeConfig } from "../themes";
 
 const AuthContext = React.createContext(null);
 
@@ -29,6 +31,8 @@ function useProtectedRoute(user) {
 
 export function Provider({ children }) {
     const dispatch = useDispatch();
+
+    const themeConfig = useThemeConfig();
 
     const [user, setAuth] = React.useState(null);
     const [ready, setReady] = React.useState(false);
@@ -59,6 +63,8 @@ export function Provider({ children }) {
                 user
             }}>
             {children}
+
+            <StatusBar style={themeConfig.contrastStyle}/>
         </AuthContext.Provider>
     );
 };
