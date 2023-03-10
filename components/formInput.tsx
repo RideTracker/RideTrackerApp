@@ -1,18 +1,26 @@
-import { useEffect } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { Text, TextInput, TextInputComponent, TouchableOpacity, View } from "react-native";
 import { useThemeConfig } from "../utils/themes";
 
 type FormInputProps = {
     placeholder?: string;
     icon?: any;
+    props?: any;
 
+    inputRef?: any;
     children?: any;
     style?: any;
 };
 
-export default function FormInput({ placeholder, icon, children, style }: FormInputProps) {
+export default function FormInput({ props, placeholder, icon, inputRef, style }: FormInputProps) {
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
+
+    const [ value, setValue ] = useState("");
+
+    function getValue() {
+        return value;
+    };
 
     return (
         <View style={style}>
@@ -27,11 +35,12 @@ export default function FormInput({ placeholder, icon, children, style }: FormIn
                     alignItems: "center",
 
                     flexDirection: "row",
-                    gap: 10
+                    gap: 10,
+
+                    paddingLeft: 10
                 }}>
                 {(icon) && (
                     <View style={{
-                        marginLeft: 10,
                         width: 30,
                         alignItems: "center"
                     }}>
@@ -40,6 +49,7 @@ export default function FormInput({ placeholder, icon, children, style }: FormIn
                 )}
 
                 <TextInput
+                    ref={inputRef}
                     style={{
                         color: themeConfig.color,
                         fontSize: 20,
@@ -51,6 +61,9 @@ export default function FormInput({ placeholder, icon, children, style }: FormIn
                     }}
                     placeholder={placeholder}
                     placeholderTextColor={themeConfig.color}
+                    onChangeText={(text) => setValue(text)}
+
+                    {...props}
                     />
             </View>
         </View>

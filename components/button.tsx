@@ -26,6 +26,8 @@ export default function Button({ primary, label, icon, children, style, onPress 
                 padding: 10,
                 borderRadius: 6,
 
+                height: 45,
+
                 flexDirection: "row",
                 gap: 5,
 
@@ -35,7 +37,7 @@ export default function Button({ primary, label, icon, children, style, onPress 
 
             {(icon) && icon}
                 {(label) && (
-                   <Text style={{ color: (primary)?(themeConfig.brandText):(themeConfig.color), fontSize: 20, textAlign: "center", padding: 5 }}>{label}</Text>
+                   <Text style={{ color: (primary)?(themeConfig.brandText):(themeConfig.color), fontSize: 20, textAlign: "center" }}>{label}</Text>
                 )}
 
                 {children}

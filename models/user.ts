@@ -16,3 +16,30 @@ export async function getUserById(id: string): Promise<UserResponse> {
 
     return result;
 };
+
+export type RegisterUserResponse = Response & {
+    token?: string;
+};
+
+export async function registerUser(firstname: string, lastname: string, email: string, password: string): Promise<RegisterUserResponse> {
+    const url = new URL(`user/register`, Constants.expoConfig.extra.apiHost);
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            firstname,
+            lastname,
+            email,
+            password
+        })
+    });
+
+    const result = await response.json();
+
+    console.log(result);
+
+    return result;
+};
