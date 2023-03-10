@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 export default function ActivityMapStats({ activity }) {
     return (
         <LinearGradient 
-            colors={[ "transparent", "rgba(0, 0, 0, .4)" ]}
+            colors={[ "transparent", "rgba(20, 20, 20, .4)" ]}
             locations={[ 0.5, 1 ]}
             style={{
             position: "absolute",

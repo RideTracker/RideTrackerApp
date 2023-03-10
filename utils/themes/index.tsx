@@ -8,10 +8,6 @@ export function useThemeConfig() {
     const userData = useSelector((state: any) => state.userData);
     const colorScheme = useColorScheme();
 
-    useEffect(() => {
-        console.log("theme is ", userData);
-    }, [ userData ]);
-
     return config[userData?.theme ?? colorScheme];
 };
 

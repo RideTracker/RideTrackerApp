@@ -1,7 +1,8 @@
-import React from "react";
-import { useRouter, useSegments } from "expo-router";
-import { Provider as ReduxProvider } from "react-redux";
+import React, { useEffect } from "react";
+import { SplashScreen, useRouter, useSegments } from "expo-router";
+import { useDispatch, Provider as ReduxProvider } from "react-redux";
 import store from "../stores/store";
+import { readUserData, setUserData } from "../stores/userData";
 
 const AuthContext = React.createContext(null);
 
@@ -24,19 +25,31 @@ function useProtectedRoute(user) {
 };
 
 export function Provider({ children }) {
+    const dispatch = useDispatch();
+
     const [user, setAuth] = React.useState(null);
+    const [ready, setReady] = React.useState(false);
+
+    useEffect(() => {
+        readUserData().then((data) => {
+            dispatch(setUserData(data));
+
+            setReady(true);
+        });
+    }, []);
 
     useProtectedRoute(user);
 
+    if(!ready)
+        return (<SplashScreen/>);
+
     return (
-        <ReduxProvider store={store}>
-            <AuthContext.Provider value={{
-                    signIn: () => setAuth({}),
-                    signOut: () => setAuth(null),
-                    user
-                }}>
-                {children}
-            </AuthContext.Provider>
-        </ReduxProvider>
+        <AuthContext.Provider value={{
+                signIn: () => setAuth({}),
+                signOut: () => setAuth(null),
+                user
+            }}>
+            {children}
+        </AuthContext.Provider>
     );
 };

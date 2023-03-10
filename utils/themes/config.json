@@ -4,8 +4,10 @@
         "color": "#000",
         "placeholder": "#EEE",
         "border": "#EEE",
+
 		"brand": "#BB87FC",
 		"brandText": "#FFF",
+
         "contrast": "dark",
 
         "mapStyle": []
@@ -16,8 +18,10 @@
         "color": "#FFF",
         "placeholder": "#111",
         "border": "#242730",
+
 		"brand": "#BB87FC",
 		"brandText": "#FFF",
+
         "contrast": "dark",
 
         "mapStyle": [
