@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { SplashScreen, useRouter, useSegments } from "expo-router";
-import { useDispatch, Provider as ReduxProvider } from "react-redux";
+import { useDispatch, Provider as ReduxProvider, useSelector } from "react-redux";
 import store from "../stores/store";
 import { readUserData, setUserData } from "../stores/userData";
+import { authenticateUser } from "../../models/user";
 
 const AuthContext = React.createContext(null);
 
@@ -14,14 +15,16 @@ function useProtectedRoute(user) {
     const segments = useSegments();
     const router = useRouter();
 
+    const userData = useSelector((state: any) => state.userData);
+
     React.useEffect(() => {
         const inAuthGroup = segments.includes("(auth)");
 
-        if (!user && inAuthGroup)
+        if (!userData?.key && inAuthGroup)
             router.replace("/login");
-        else if (user && !inAuthGroup)
-            router.replace("/");
-    }, [user, segments]);
+        //else if (userData?.key && !inAuthGroup)
+            //router.replace("/");
+    }, [userData?.key, segments]);
 };
 
 export function Provider({ children }) {
@@ -31,8 +34,14 @@ export function Provider({ children }) {
     const [ready, setReady] = React.useState(false);
 
     useEffect(() => {
-        readUserData().then((data) => {
+        readUserData().then(async (data) => {
             dispatch(setUserData(data));
+
+            if(data.key) {
+                const authentication = await authenticateUser(data.key);
+                
+                dispatch(setUserData({ key: authentication.key }));
+            }
 
             setReady(true);
         });

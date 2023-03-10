@@ -8,9 +8,14 @@ export const userDataSlice = createSlice({
     initialState: {},
     reducers: {
         setUserData(state, action) {
-            FileSystem.writeAsStringAsync(userDataPath, JSON.stringify(action.payload));
+            const newData = {
+                ...state,
+                ...action.payload
+            };
+        
+            FileSystem.writeAsStringAsync(userDataPath, JSON.stringify(newData));
 
-            return action.payload;
+            return newData;
         }
     }
 });
@@ -23,6 +28,8 @@ export async function readUserData() {
 
     const content = await FileSystem.readAsStringAsync(userDataPath);
     const data = JSON.parse(content);
+
+    console.log(data);
 
     return data;
 };

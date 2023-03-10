@@ -8,10 +8,15 @@ import Button from "../../components/button";
 import { FontAwesome } from '@expo/vector-icons'; 
 import FormInput from "../../components/formInput";
 import { registerUser } from "../../models/user";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../utils/stores/userData";
 
 export default function Register() {
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
+
+    const router = useRouter();
+    const dispatch = useDispatch();
 
     const [ submitting, setSubmitting ] = useState(false);
 
@@ -39,6 +44,10 @@ export default function Register() {
 
                     return;
                 }
+
+                dispatch(setUserData({ key: response.key }));
+
+                router.push("/");
             });
         }
     }, [ submitting ]);
