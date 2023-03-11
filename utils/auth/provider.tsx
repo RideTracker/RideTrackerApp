@@ -44,7 +44,10 @@ export function Provider({ children }) {
             if(data.key) {
                 const authentication = await authenticateUser(data.key);
                 
-                dispatch(setUserData({ key: authentication.key }));
+                dispatch(setUserData({
+                    key: authentication.key,
+                    user: authentication.user
+                }));
             }
 
             setReady(true);

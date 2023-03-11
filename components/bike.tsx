@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Image, Text, View } from "react-native";
 import { BikeResponse, getBikeById } from "../models/bike";
 import { useThemeConfig } from "../utils/themes";
+import { useSelector } from "react-redux";
 
 type BikeProps = {
     id?: string;
@@ -11,6 +12,8 @@ type BikeProps = {
 };
 
 export default function Bike({ id, style, data }: BikeProps) {
+    const userData = useSelector((state: any) => state.userData);
+
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
 
@@ -19,8 +22,6 @@ export default function Bike({ id, style, data }: BikeProps) {
     useEffect(() => {
         if(data)
             setBike(data);
-        else if(id)
-            getBikeById(id).then((result) => setBike(result));
     }, []);
 
     return (
@@ -78,14 +79,18 @@ export default function Bike({ id, style, data }: BikeProps) {
                             <Text style={{
                                 fontSize: 18,
                                 textAlign: "center",
-                                color: themeConfig.color
+                                
+                                color: (bike?.summary)?(themeConfig.color):("transparent"),
+                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
                             }}>
-                                4
+                                {bike?.summary?.rides}
                             </Text>
 
                             <Text style={{
                                 textAlign: "center",
-                                color: themeConfig.color
+                                
+                                color: (bike?.summary)?(themeConfig.color):("transparent"),
+                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
                                 }}>
                                     rides
                             </Text>
@@ -95,14 +100,18 @@ export default function Bike({ id, style, data }: BikeProps) {
                             <Text style={{
                                 fontSize: 18,
                                 textAlign: "center",
-                                color: themeConfig.color
+                                
+                                color: (bike?.summary)?(themeConfig.color):("transparent"),
+                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
                             }}>
-                                39 km
+                                {bike?.summary?.distance} km
                             </Text>
 
                             <Text style={{
                                 textAlign: "center",
-                                color: themeConfig.color
+                                
+                                color: (bike?.summary)?(themeConfig.color):("transparent"),
+                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
                                 }}>
                                     distance
                             </Text>
@@ -112,14 +121,18 @@ export default function Bike({ id, style, data }: BikeProps) {
                             <Text style={{
                                 fontSize: 18,
                                 textAlign: "center",
-                                color: themeConfig.color
+                                
+                                color: (bike?.summary)?(themeConfig.color):("transparent"),
+                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
                             }}>
-                                78 m
+                                {bike?.summary?.elevation} m
                             </Text>
 
                             <Text style={{
                                 textAlign: "center",
-                                color: themeConfig.color
+                                
+                                color: (bike?.summary)?(themeConfig.color):("transparent"),
+                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
                                 }}>
                                     elevation
                             </Text>

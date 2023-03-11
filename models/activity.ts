@@ -1,11 +1,21 @@
 import Constants from "expo-constants";
 import { Response } from "./response";
 import { useSelector } from "react-redux";
+import { BikeResponse } from "./bike";
 
 export type ActivityResponse = Response & {
     id: string;
 
     likes?: boolean;
+
+    summary?: {
+        area: string;
+        distance: number;
+        averageSpeed: number;
+        elevation: number;
+        maxSpeed: number;
+        comments: number;
+    },
 
     user: {
         id: string;
@@ -13,7 +23,29 @@ export type ActivityResponse = Response & {
         avatar: string;
     };
 
-    bike: string | null;
+    comment?: {
+        message: string;
+        timestamp: number;
+
+        user: {
+            id: string;
+            name: string;
+            avatar: string;
+        }
+    };
+
+    bike?: {
+        id: string;
+        name: string;
+        model: string;
+        image: string;
+
+        summary?: {
+            rides: number;
+            distance: number;
+            elevation: number;
+        };
+    };
 
     timestamp: number;
 };

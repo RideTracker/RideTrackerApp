@@ -48,10 +48,10 @@ export default function ActivityPage({ params }) {
                     marginVertical: 20,
                     gap: 10
                 }}>
-                    <Text style={{ fontSize: 20, color: themeConfig.color }}><Text style={{ fontWeight: "bold" }}>Comments</Text> (11)</Text>
+                    <Text style={{ fontSize: 20, color: themeConfig.color }}><Text style={{ fontWeight: "bold" }}>Comments</Text>{(activity?.summary > 0) && (` (${activity.summary.comments})`)}</Text>
 
                     <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)}>
-                        <Activity.Comment/>
+                        <Activity.Comment activity={activity}/>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

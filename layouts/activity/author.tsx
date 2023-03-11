@@ -4,6 +4,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { ActivityResponse } from "../../models/activity";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useThemeConfig } from "../../utils/themes";
+import { timeSince } from "../../utils/time";
 
 type ActivityAuthorProps = {
     activity: ActivityResponse | null;
@@ -74,7 +75,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                                 fontSize: 18,
                                 color: themeConfig.color
                             }}>
-                                13 days ago in Vänersborg
+                                {timeSince(activity.timestamp)} {(activity.summary) && (`in ${activity.summary.area}`)}
                             </Text>
                         </>
                     ):(

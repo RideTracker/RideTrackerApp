@@ -10,6 +10,12 @@ export type BikeResponse = Response & {
     model: string;
 
     image: string;
+
+    summary?: {
+        rides: number;
+        distance: number;
+        elevation: number;
+    };
 };
 
 export async function getBikeById(authorization: string, id: string): Promise<BikeResponse> {

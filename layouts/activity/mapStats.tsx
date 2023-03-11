@@ -2,6 +2,9 @@ import { Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function ActivityMapStats({ activity }) {
+    if(!activity?.summary)
+        return null;
+
     return (
         <LinearGradient 
             colors={[ "transparent", "rgba(20, 20, 20, .4)" ]}
@@ -25,17 +28,17 @@ export default function ActivityMapStats({ activity }) {
             justifyContent: "space-between"
         }}>
             <View>
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>7.3<Text style={{ fontSize: 18 }}> km</Text></Text>
+                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.distance}<Text style={{ fontSize: 18 }}> km</Text></Text>
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 }}>distance</Text>
             </View>
             
             <View>
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>23.7<Text style={{ fontSize: 18 }}> km/h</Text></Text>
+                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.averageSpeed}<Text style={{ fontSize: 18 }}> km/h</Text></Text>
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 }}>average speed</Text>
             </View>
             
             <View>
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>33<Text style={{ fontSize: 18 }}> m</Text></Text>
+                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.elevation}<Text style={{ fontSize: 18 }}> m</Text></Text>
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 }}>elevation</Text>
             </View>
         </LinearGradient>

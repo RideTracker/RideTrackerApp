@@ -19,6 +19,10 @@ export async function getUserById(id: string): Promise<UserResponse> {
 
 export type AuthenticateUserResponse = Response & {
     key?: string;
+    user?: {
+        name: string;
+        avatar?: string;
+    }
 };
 
 export async function loginUser(email: string, password: string): Promise<AuthenticateUserResponse> {
@@ -77,6 +81,8 @@ export async function authenticateUser(key: string): Promise<AuthenticateUserRes
     });
 
     const result = await response.json();
+
+    console.log("authenticate", result);
 
     return result;
 };
