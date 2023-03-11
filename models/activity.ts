@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 export type ActivityResponse = Response & {
     id: string;
 
+    likes?: boolean;
+
     user: {
         id: string;
         name: string;

@@ -110,15 +110,17 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
             }}>
                 {(activity) && (
                     <>
-                        <TouchableOpacity style={{
-                            width: 30,
-                            height: 30,
+                        {(activity.likes !== null) && (
+                            <TouchableOpacity style={{
+                                width: 30,
+                                height: 30,
 
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}>
-                            <FontAwesome name="thumbs-o-up" size={24} color={themeConfig.color} />
-                        </TouchableOpacity>
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}>
+                                <FontAwesome name={(activity.likes)?("thumbs-up"):("thumbs-o-up")} size={24} color={themeConfig.color} />
+                            </TouchableOpacity>
+                        )}
                         
                         <TouchableOpacity style={{
                             width: 30,
