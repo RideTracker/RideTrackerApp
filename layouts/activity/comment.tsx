@@ -45,7 +45,7 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                 )}
 
                 <View style={{ gap: 5, justifyContent: "center" }}>
-                    {(activity.comment) && (
+                    {(!activity || activity?.comment) && (
                         <View style={{
                             flexDirection: "row",
                             alignItems: "baseline",
