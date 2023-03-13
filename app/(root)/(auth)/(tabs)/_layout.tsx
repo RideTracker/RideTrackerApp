@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Tabs } from "expo-router";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
 import { useThemeConfig } from "../../../../utils/themes";
+import { View } from "react-native";
 
 export default function Layout() {
     const themeConfig = useThemeConfig();
@@ -23,37 +24,51 @@ export default function Layout() {
             tabBarActiveTintColor: themeConfig.color,
 
             tabBarStyle: {
-                paddingTop: 15,
-                backgroundColor: themeConfig.background
+                backgroundColor: themeConfig.background,
+                paddingTop: 5,
+                paddingBottom: 5
             }
         }}>
             <Tabs.Screen name="index" options={{
                 title: "Feed",
-                tabBarIcon: () => (<FontAwesome name="home" color={themeConfig.color} size={26}/>)
+                tabBarIcon: () => (
+                    <FontAwesome name="home" color={themeConfig.color} size={22}/>
+                )
             }}/>
 
             <Tabs.Screen name="routes" options={{
                 title: "Routes",
-                tabBarIcon: () => (<FontAwesome5 name="route" color={themeConfig.color} size={22}/>)
+                tabBarIcon: () => (
+                    <FontAwesome5 name="route" color={themeConfig.color} size={18}/>
+                )
             }}/>
 
             <Tabs.Screen name="record" options={{
                 title: "Record",
 
-                tabBarIcon: () => (<FontAwesome5 name="dot-circle" color={themeConfig.color} size={32}/>),
                 tabBarStyle: {
                     display: "none"
-                }
+                },
+                
+                tabBarIcon: () => (
+                    <View style={{ height: 22 }}>
+                        <FontAwesome5 name="dot-circle" color={themeConfig.color} size={32}/>
+                    </View>
+                )
             }}/>
 
             <Tabs.Screen name="profile" options={{
                 title: "Profile",
-                tabBarIcon: () => (<FontAwesome5 name="user-alt" color={themeConfig.color} size={20}/>)
+                tabBarIcon: () => (
+                    <FontAwesome5 name="user-alt" color={themeConfig.color} size={16}/>
+                )
             }}/>
 
             <Tabs.Screen name="settings" options={{
                 title: "Settings",
-                tabBarIcon: () => (<FontAwesome5 name="cog" color={themeConfig.color} size={23}/>)
+                tabBarIcon: () => (
+                    <FontAwesome5 name="cog" color={themeConfig.color} size={19}/>
+                )
             }}/>
         </Tabs>
     );
