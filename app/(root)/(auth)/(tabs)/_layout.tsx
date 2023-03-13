@@ -51,7 +51,7 @@ export default function Layout() {
                 },
                 
                 tabBarIcon: () => (
-                    <View style={{ height: 22 }}>
+                    <View style={{ height: 24 }}>
                         <FontAwesome5 name="dot-circle" color={themeConfig.color} size={32}/>
                     </View>
                 )
