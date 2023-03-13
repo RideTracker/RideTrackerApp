@@ -28,12 +28,11 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
     }
 
     return (
-        <View style={{ position: "relative" }}>
+        <View style={{ position: "relative", borderRadius: 10, overflow: "hidden" }}>
             <MapView
                 style={{
                     width: "100%",
                     height: 200,
-                    borderRadius: 10,
                     backgroundColor: "black"
                 }}
                 initialCamera={{

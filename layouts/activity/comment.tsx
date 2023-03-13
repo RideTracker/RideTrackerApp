@@ -23,26 +23,26 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                 paddingHorizontal: 10,
                 gap: 10
             }}>
-                {(activity)?(
-                    <Image
-                        style={{
-                            width: 40,
-                            aspectRatio: 1,
-                            borderRadius: 40,
-                            overflow: "hidden"
-                        }}
-                        source={{
-                            uri: (activity.comment)?(activity.comment.user.avatar):(userData.user?.avatar)
-                        }}/>
-                ):(
-                    <View style={{
-                        width: 40,
-                        aspectRatio: 1,
-                        borderRadius: 40,
-                        overflow: "hidden",
-                        backgroundColor: themeConfig.placeholder
-                    }}/>
-                )}
+                <View style={{
+                    backgroundColor: themeConfig.placeholder,
+                    width: 40,
+                    aspectRatio: 1,
+                    borderRadius: 40,
+                    overflow: "hidden",
+                }}>
+                    {(activity) && (
+                        <Image
+                            style={{
+                                width: 40,
+                                aspectRatio: 1,
+                                borderRadius: 40,
+                                overflow: "hidden"
+                            }}
+                            source={{
+                                uri: (activity.comment)?(activity.comment.user.avatar):(userData.user?.avatar)
+                            }}/>
+                    )}
+                </View>
 
                 <View style={{ gap: 5, justifyContent: "center" }}>
                     {(!activity || activity?.comment) && (

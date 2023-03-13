@@ -32,6 +32,8 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                     height: 50,
                     aspectRatio: 1,
                     
+                    backgroundColor: themeConfig.placeholder,
+                    
                     borderRadius: 50,
                     overflow: "hidden"
                 }}>
@@ -64,7 +66,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                     {(activity && activity.user)?(
                         <>
                             <Text style={{
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: "bold",
                                 color: themeConfig.color
                             }}>
@@ -72,7 +74,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                             </Text>
                             
                             <Text style={{
-                                fontSize: 18,
+                                fontSize: 16,
                                 color: themeConfig.color
                             }}>
                                 {timeSince(activity.timestamp)} {(activity.summary) && (`in ${activity.summary.area}`)}
@@ -84,7 +86,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                                 backgroundColor: themeConfig.placeholder,
                                 color: "transparent",
 
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: "bold"
                             }}>
                                 Firstname Lastname
@@ -94,7 +96,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                                 backgroundColor: themeConfig.placeholder,
                                 color: "transparent",
 
-                                fontSize: 18
+                                fontSize: 16
                             }}>
                                 13 days ago in Vänersborg
                             </Text>

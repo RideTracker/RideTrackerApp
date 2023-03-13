@@ -39,7 +39,11 @@ export default function Layout() {
 
             <Tabs.Screen name="record" options={{
                 title: "Record",
-                tabBarIcon: () => (<FontAwesome5 name="dot-circle" color={themeConfig.color} size={32}/>)
+
+                tabBarIcon: () => (<FontAwesome5 name="dot-circle" color={themeConfig.color} size={32}/>),
+                tabBarStyle: {
+                    display: "none"
+                }
             }}/>
 
             <Tabs.Screen name="profile" options={{
