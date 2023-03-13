@@ -26,7 +26,8 @@ export default function Layout() {
             tabBarStyle: {
                 backgroundColor: themeConfig.background,
                 paddingTop: 5,
-                paddingBottom: 5
+                paddingBottom: 5,
+                borderTopColor: themeConfig.border
             }
         }}>
             <Tabs.Screen name="index" options={{

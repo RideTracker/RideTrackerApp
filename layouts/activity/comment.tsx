@@ -44,7 +44,7 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                     )}
                 </View>
 
-                <View style={{ gap: 5, justifyContent: "center" }}>
+                <View style={{ gap: 5, justifyContent: "center", flexGrow: 1 }}>
                     {(!activity || activity?.comment) && (
                         <View style={{
                             flexDirection: "row",
@@ -70,13 +70,13 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                     )}
 
                     <Text style={{
+                        paddingRight: 50,
                         fontSize: 17,
-
                         color: (activity)?(themeConfig.color):("transparent"),
                         backgroundColor: (activity)?("transparent"):(themeConfig.placeholder)
                     }}>
                         {(activity)?(
-                            (activity.comment)?(activity.comment.message):("There's no comments, be the first one!")
+                            (activity.comment)?(activity.comment.message):("There's no comments, you can be the first one!")
                         ):("This is a comment!")}
                     </Text>
                 </View>

@@ -51,7 +51,8 @@ export default function Bike({ id, style, data }: BikeProps) {
                     flex: 1,
                     paddingVertical: 2,
                     paddingHorizontal: 10,
-                    justifyContent: "space-around",
+                    justifyContent: "space-between",
+                    gap: 5
                 }}>
                     {(bike)?(
                         <Text style={{
@@ -68,76 +69,75 @@ export default function Bike({ id, style, data }: BikeProps) {
 
                             fontSize: 20,
                             fontWeight: "500"
-                        }}>Bike name and model</Text>
+                        }}>Name</Text>
                     )}
 
-                    <View style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between"
-                    }}>
-                        <View>
-                            <Text style={{
-                                fontSize: 18,
-                                textAlign: "center",
-                                
-                                color: (bike?.summary)?(themeConfig.color):("transparent"),
-                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
-                            }}>
-                                {bike?.summary?.rides}
-                            </Text>
-
-                            <Text style={{
-                                textAlign: "center",
-                                
-                                color: (bike?.summary)?(themeConfig.color):("transparent"),
-                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
+                    {(bike)?(
+                        <View style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between"
+                        }}>
+                            <View>
+                                <Text style={{
+                                    fontSize: 18,
+                                    textAlign: "center",
+                                    color: themeConfig.color
                                 }}>
-                                    rides
-                            </Text>
-                        </View>
+                                    {bike?.summary?.rides}
+                                </Text>
 
-                        <View>
-                            <Text style={{
-                                fontSize: 18,
-                                textAlign: "center",
-                                
-                                color: (bike?.summary)?(themeConfig.color):("transparent"),
-                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
-                            }}>
-                                {bike?.summary?.distance} km
-                            </Text>
+                                <Text style={{
+                                    textAlign: "center",
+                                    color: themeConfig.color
+                                    }}>
+                                        rides
+                                </Text>
+                            </View>
 
-                            <Text style={{
-                                textAlign: "center",
-                                
-                                color: (bike?.summary)?(themeConfig.color):("transparent"),
-                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
+                            <View>
+                                <Text style={{
+                                    fontSize: 18,
+                                    textAlign: "center",
+                                    color: themeConfig.color
                                 }}>
-                                    distance
-                            </Text>
-                        </View>
+                                    {bike?.summary?.distance} km
+                                </Text>
 
-                        <View>
-                            <Text style={{
-                                fontSize: 18,
-                                textAlign: "center",
-                                
-                                color: (bike?.summary)?(themeConfig.color):("transparent"),
-                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
-                            }}>
-                                {bike?.summary?.elevation} m
-                            </Text>
+                                <Text style={{
+                                    textAlign: "center",
+                                    color: themeConfig.color
+                                    }}>
+                                        distance
+                                </Text>
+                            </View>
 
-                            <Text style={{
-                                textAlign: "center",
-                                
-                                color: (bike?.summary)?(themeConfig.color):("transparent"),
-                                backgroundColor: (bike?.summary)?("transparent"):(themeConfig.placeholder)
+                            <View>
+                                <Text style={{
+                                    fontSize: 18,
+                                    textAlign: "center",
+                                    color: themeConfig.color
                                 }}>
-                                    elevation
-                            </Text>
+                                    {bike?.summary?.elevation} m
+                                </Text>
+
+                                <Text style={{
+                                    textAlign: "center",
+                                    
+                                    color: themeConfig.color
+                                    }}>
+                                        elevation
+                                </Text>
+                            </View>
                         </View>
-                    </View>
+                    ):(
+                        <View style={{
+                            height: 16,
+
+                            flexGrow: 1,
+
+                            backgroundColor: themeConfig.placeholder
+                        }}/>
+                    )}
                 </View>
             </View>
         </View>

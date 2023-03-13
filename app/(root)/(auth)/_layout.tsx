@@ -13,6 +13,8 @@ export default function Layout() {
                 backgroundColor: themeConfig.background
             },
 
+            headerTintColor: themeConfig.color,
+
             headerTitleStyle: {
                 fontSize: 24,
                 fontWeight: "500",

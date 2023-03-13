@@ -43,18 +43,20 @@ export default function ActivityPage({ params }) {
                 ):(
                     <Bike style={{ marginVertical: 10 }}/>
                 )}
-
-                <View style={{
-                    marginVertical: 20,
-                    gap: 10
-                }}>
-                    <Text style={{ fontSize: 20, color: themeConfig.color }}><Text style={{ fontWeight: "bold" }}>Comments</Text>{(activity?.summary > 0) && (` (${activity.summary.comments})`)}</Text>
-
-                    <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)}>
-                        <Activity.Comment activity={activity}/>
-                    </TouchableOpacity>
-                </View>
             </ScrollView>
+
+            <View style={{
+                marginBottom: 10,
+                gap: 10,
+                padding: 10,
+                paddingTop: 5
+            }}>
+                <Text style={{ fontSize: 20, color: themeConfig.color }}><Text style={{ fontWeight: "bold" }}>Comments</Text>{(activity?.summary > 0) && (` (${activity.summary.comments})`)}</Text>
+
+                <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)}>
+                    <Activity.Comment activity={activity}/>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
