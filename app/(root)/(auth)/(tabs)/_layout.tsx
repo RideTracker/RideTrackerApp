@@ -44,7 +44,7 @@ export default function Layout() {
                 )
             }}/>
 
-            <Tabs.Screen name="record" options={{
+            <Tabs.Screen name="record/index" options={{
                 title: "Record",
 
                 tabBarStyle: {

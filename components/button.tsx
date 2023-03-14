@@ -6,13 +6,14 @@ type ButtonProps = {
     label?: string;
     icon?: any;
     primary: boolean;
+    type?: "danger";
 
     children?: any;
     style?: any;
     onPress?: any;
 };
 
-export default function Button({ primary, label, icon, children, style, onPress }: ButtonProps) {
+export default function Button({ primary, label, icon, type, children, style, onPress }: ButtonProps) {
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
 
@@ -21,7 +22,7 @@ export default function Button({ primary, label, icon, children, style, onPress 
             <TouchableOpacity style={{
                 width: "100%",
 
-                backgroundColor: (primary)?(themeConfig.brand):(themeConfig.border),
+                backgroundColor: (type === "danger")?("transparent"):((primary)?(themeConfig.brand):(themeConfig.border)),
                 
                 padding: 10,
                 borderRadius: 6,
@@ -37,7 +38,7 @@ export default function Button({ primary, label, icon, children, style, onPress 
 
             {(icon) && icon}
                 {(label) && (
-                   <Text style={{ color: (primary)?(themeConfig.brandText):(themeConfig.color), fontSize: 20, textAlign: "center" }}>{label}</Text>
+                   <Text style={{ color: (type === "danger")?("#FF0000"):((primary)?(themeConfig.brandText):(themeConfig.color)), fontSize: 20, textAlign: "center" }}>{label}</Text>
                 )}
 
                 {children}

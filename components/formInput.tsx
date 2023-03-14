@@ -23,49 +23,51 @@ export default function FormInput({ props, placeholder, icon, inputRef, style }:
     };
 
     return (
-        <View style={style}>
-            <View
-                style={{
-                    width: "100%",
+        <View
+            style={{
+                width: "100%",
 
-                    borderWidth: 1,
-                    borderColor: themeConfig.border,
-                    borderRadius: 6,
+                borderWidth: 1,
+                borderColor: themeConfig.border,
+                borderRadius: 6,
 
+                alignItems: "center",
+
+                flexDirection: "row",
+                gap: 10,
+
+                paddingLeft: 10
+            }}>
+            {(icon) && (
+                <View style={{
+                    marginVertical: 10,
+                    width: 30,
                     alignItems: "center",
-
-                    flexDirection: "row",
-                    gap: 10,
-
-                    paddingLeft: 10
+                    alignSelf: "flex-start"
                 }}>
-                {(icon) && (
-                    <View style={{
-                        width: 30,
-                        alignItems: "center"
-                    }}>
-                        {icon}
-                    </View>
-                )}
+                    {icon}
+                </View>
+            )}
 
-                <TextInput
-                    ref={inputRef}
-                    style={{
-                        color: themeConfig.color,
-                        fontSize: 20,
+            <TextInput
+                ref={inputRef}
+                style={{
+                    color: themeConfig.color,
+                    fontSize: 20,
 
-                        paddingVertical: 5,
+                    marginVertical: 5,
 
-                        flex: 1,
-                        height: 45
-                    }}
-                    placeholder={placeholder}
-                    placeholderTextColor={themeConfig.color}
-                    onChangeText={(text) => setValue(text)}
+                    flex: 1,
+                    height: 35,
 
-                    {...props}
-                    />
-            </View>
+                    ...style
+                }}
+                placeholder={placeholder}
+                placeholderTextColor={themeConfig.color}
+                onChangeText={(text) => setValue(text)}
+
+                {...props}
+                />
         </View>
     );
 };

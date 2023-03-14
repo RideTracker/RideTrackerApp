@@ -7,11 +7,12 @@ import { useSelector } from "react-redux";
 type BikeProps = {
     id?: string;
     data?: BikeResponse;
+    buttons?: any;
 
     style?: any;
 };
 
-export default function Bike({ id, style, data }: BikeProps) {
+export default function Bike({ id, style, data, buttons }: BikeProps) {
     const userData = useSelector((state: any) => state.userData);
 
     const themeConfig = useThemeConfig();
@@ -27,7 +28,7 @@ export default function Bike({ id, style, data }: BikeProps) {
     return (
         <View style={style}>
             <View style={{ flexDirection: "row", height: 80, gap: 10 }}>
-                <View style={{ width: "40%", borderRadius: 6, overflow: "hidden" }}>
+                <View style={{ width: 140, borderRadius: 6, overflow: "hidden" }}>
                     {(bike)?(
                         <Image
                             style={{
@@ -55,13 +56,17 @@ export default function Bike({ id, style, data }: BikeProps) {
                     gap: 5
                 }}>
                     {(bike)?(
-                        <Text style={{
-                            fontSize: 20,
-                            fontWeight: "500",
-                            color: themeConfig.color
-                        }}>
-                            {bike.model}
-                        </Text>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                            <Text style={{
+                                fontSize: 20,
+                                fontWeight: "500",
+                                color: themeConfig.color
+                            }}>
+                                {bike.model}
+                            </Text>
+
+                            {buttons}
+                        </View>
                     ):(
                         <Text style={{
                             backgroundColor: themeConfig.placeholder,
