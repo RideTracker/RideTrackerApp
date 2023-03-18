@@ -64,23 +64,27 @@ export default function Register() {
                             flexDirection: "row",
                             gap: 10
                         }}>
-                            <FormInput style={{ flexGrow: 1 }} inputRef={firstnameRef} placeholder="Firstname" icon={(<FontAwesome name="user" size={24} color={themeConfig.color}/>)} props={{
-                                autoCapitalize: "words",
-                                onChangeText: (text) => setFirstname(text),
-                                autoComplete: "given-name",
-                                autoCorrect: true,
-                                enterKeyHint: "next",
-                                onSubmitEditing: () => lastnameRef.current.focus()
-                            }}/>
+                            <View style={{ flexGrow: 1 }}>
+                                <FormInput inputRef={firstnameRef} placeholder="Firstname" icon={(<FontAwesome name="user" size={24} color={themeConfig.color}/>)} props={{
+                                    autoCapitalize: "words",
+                                    onChangeText: (text) => setFirstname(text),
+                                    autoComplete: "given-name",
+                                    autoCorrect: true,
+                                    enterKeyHint: "next",
+                                    onSubmitEditing: () => lastnameRef.current.focus()
+                                }}/>
+                            </View>
 
-                            <FormInput style={{ flexGrow: 1 }} inputRef={lastnameRef} placeholder="Lastname" props={{
-                                autoCapitalize: "words",
-                                onChangeText: (text) => setLastname(text),
-                                autoComplete: "family-name",
-                                autoCorrect: true,
-                                enterKeyHint: "next",
-                                onSubmitEditing: () => emailRef.current.focus()
-                            }}/>
+                            <View style={{ flexGrow: 1 }}>
+                                <FormInput inputRef={lastnameRef} placeholder="Lastname" props={{
+                                    autoCapitalize: "words",
+                                    onChangeText: (text) => setLastname(text),
+                                    autoComplete: "family-name",
+                                    autoCorrect: true,
+                                    enterKeyHint: "next",
+                                    onSubmitEditing: () => emailRef.current.focus()
+                                }}/>
+                            </View>
                         </View>
                     </SafeAreaView>
 
