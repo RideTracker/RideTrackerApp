@@ -8,6 +8,7 @@ import * as Location from "expo-location";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
+import { LinearGradient } from "expo-linear-gradient";
 
 const RECORD_TASK_NAME = "RECORD_GEOLOCATION";
 export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
@@ -58,7 +59,7 @@ export default function Record() {
         if(Platform.OS !== "android")
             return;
 
-        async function startLocationUpdates() {
+        async function getLocationPermissions() {
             {
                 let { status } = await Location.requestForegroundPermissionsAsync();
     
@@ -79,6 +80,11 @@ export default function Record() {
                 }
             }
 
+            const lastLocation = await Location.getLastKnownPositionAsync();
+
+            if(lastLocation !== null)
+                setLocation(lastLocation);
+
             TaskManager.defineTask(RECORD_TASK_NAME, ({ data, error }: { data: any, error: any }) => {
                 const locations = data.locations;
 
@@ -94,7 +100,7 @@ export default function Record() {
             });
         };
 
-        startLocationUpdates();
+        getLocationPermissions();
 
         return () => {
             if(TaskManager.isTaskDefined(RECORD_TASK_NAME))
@@ -209,6 +215,13 @@ export default function Record() {
                 showsCompass={false}
                 showsUserLocation={true}
                 showsMyLocationButton={false}
+
+                zoomEnabled={!recording}
+                pitchEnabled={!recording}
+                rotateEnabled={!recording}
+                scrollEnabled={!recording}
+                zoomControlEnabled={!recording}
+                zoomTapEnabled={!recording}
                 >
             </MapView>
 
@@ -235,75 +248,82 @@ export default function Record() {
             </View>
 
             <View style={{
-                alignItems: "center",
-
                 position: "absolute",
-                top: 60,
-
-                width: "100%",
-
-                gap: 10,
-                marginVertical: 40,
-
-                flexDirection: "column"
+                top: 0,
+                left: 0,
+                width: "100%"
             }}>
-                {(recording)?(
-                    ((location) && (
+                <LinearGradient colors={[ "rgba(0, 0, 0, .5)", "transparent" ]} locations={[ 0.5, 1.0 ]} style={{
+                    gap: 10,
+                    width: "100%",
+
+                    alignItems: "center",
+
+                    paddingTop: 100,
+                    paddingBottom: 40,
+    
+                    flexDirection: "column"
+                }}>
+                    {(recording)?(
+                        ((location) && (
+                            <View>
+                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>{Math.round((location.coords.speed * 3.6) * 10) / 10} km/h</Text>
+                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 46 }}>current speed</Text>
+                            </View>
+                        ))
+                    ):((recording !== null) && (
                         <View>
-                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>{Math.round((location.coords.speed * 3.6) * 10) / 10} km/h</Text>
-                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 46 }}>current speed</Text>
+                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>23.6 km/h</Text>
+                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 46 }}>average 
+                            speed</Text>
                         </View>
-                    ))
-                ):((recording !== null) && (
-                    <View>
-                        <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>23.6 km/h</Text>
-                        <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 46 }}>average 
-                        speed</Text>
-                    </View>
-                ))}
+                    ))}
+                </LinearGradient>
             </View>
 
             <View style={{
-                alignItems: "center",
-
                 position: "absolute",
                 bottom: 0,
 
-                width: "100%",
-
-                gap: 10,
-                marginVertical: 40,
-
-                flexDirection: "column"
+                width: "100%"
             }}>
-                <View style={{ marginBottom: (recording !== null)?(-20):(0) }}>
-                    <TouchableOpacity onPress={() => setRecording(!recording)} style={{
-                        width: 66,
-                        borderRadius: 100,
-                        aspectRatio: 1,
+                <LinearGradient colors={[ "transparent", "rgba(0, 0, 0, .5)" ]} style={{
+                    alignItems: "center",
 
-                        justifyContent: "center",
-                        alignItems: "center",
+                    gap: 10,
+                    paddingVertical: 40,
 
-                        backgroundColor: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF")
+                    flexDirection: "column"
                     }}>
-                        <FontAwesome5 name={(recording)?("stop"):("play")} color={(recording && themeConfig.contrast === "black")?("#FFF"):("#000")} style={{ marginLeft: (!recording)?(4):(0) }} size={34}/>
-                    </TouchableOpacity>
-                </View>
+                    <View>
+                        <TouchableOpacity onPress={() => setRecording(!recording)} style={{
+                            width: 66,
+                            borderRadius: 100,
+                            aspectRatio: 1,
 
-                {(recording !== null) && (
-                    <View style={{ flexDirection: "row" }}>
-                        <View style={{ width: "50%" }}>
-                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.round(elevation)} m</Text>
-                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 30 }}>elevation</Text>
-                        </View>
+                            justifyContent: "center",
+                            alignItems: "center",
 
-                        <View style={{ width: "50%" }}>
-                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>? km</Text>
-                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 30 }}>distance</Text>
-                        </View>
+                            backgroundColor: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF")
+                        }}>
+                            <FontAwesome5 name={(recording)?("stop"):("play")} color={(recording && themeConfig.contrast === "black")?("#FFF"):("#000")} style={{ marginLeft: (!recording)?(4):(0) }} size={34}/>
+                        </TouchableOpacity>
                     </View>
-                )}
+
+                    {(recording !== null) && (
+                        <View style={{ flexDirection: "row" }}>
+                            <View style={{ width: "50%" }}>
+                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.round(elevation)} m</Text>
+                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 30 }}>elevation</Text>
+                            </View>
+
+                            <View style={{ width: "50%" }}>
+                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>? km</Text>
+                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 30 }}>distance</Text>
+                            </View>
+                        </View>
+                    )}
+                </LinearGradient>
             </View>
         </View>
     );

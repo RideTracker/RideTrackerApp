@@ -67,14 +67,14 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                         <>
                             <Text style={{
                                 fontSize: 18,
-                                fontWeight: "bold",
+                                fontWeight: "500",
                                 color: themeConfig.color
                             }}>
                                 {activity.user.name}
                             </Text>
                             
                             <Text style={{
-                                fontSize: 16,
+                                fontSize: 14,
                                 color: themeConfig.color
                             }}>
                                 {timeSince(activity.timestamp)} {(activity.summary) && (`in ${activity.summary.area}`)}
@@ -87,7 +87,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                                 color: "transparent",
 
                                 fontSize: 18,
-                                fontWeight: "bold"
+                                fontWeight: "500"
                             }}>
                                 Firstname Lastname
                             </Text>
@@ -96,7 +96,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                                 backgroundColor: themeConfig.placeholder,
                                 color: "transparent",
 
-                                fontSize: 16
+                                fontSize: 14
                             }}>
                                 13 days ago in Vänersborg
                             </Text>
@@ -113,7 +113,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
             }}>
                 {(activity) && (
                     <>
-                        {(activity.likes !== null) && (
+                        {/*(activity.likes !== null) && (
                             <TouchableOpacity style={{
                                 width: 30,
                                 height: 30,
@@ -123,7 +123,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                             }}>
                                 <FontAwesome name={(activity.likes)?("thumbs-up"):("thumbs-o-up")} size={24} color={themeConfig.color} />
                             </TouchableOpacity>
-                        )}
+                        )*/}
                         
                         <TouchableOpacity style={{
                             width: 30,
