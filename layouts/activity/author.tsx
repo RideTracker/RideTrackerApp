@@ -5,6 +5,8 @@ import { ActivityResponse } from "../../models/activity";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useThemeConfig } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
+import { CaptionText } from "../../components/texts/caption";
+import { ParagraphText } from "../../components/texts/paragraph";
 
 type ActivityAuthorProps = {
     activity: ActivityResponse | null;
@@ -65,41 +67,25 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                 }}>
                     {(activity && activity.user)?(
                         <>
-                            <Text style={{
-                                fontSize: 18,
-                                fontWeight: "500",
-                                color: themeConfig.color
-                            }}>
-                                {activity.user.name}
-                            </Text>
-                            
-                            <Text style={{
-                                fontSize: 14,
-                                color: themeConfig.color
-                            }}>
-                                {timeSince(activity.timestamp)} {(activity.summary) && (`in ${activity.summary.area}`)}
-                            </Text>
+                            <CaptionText>{activity.user.name}</CaptionText>
+
+                            <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary) && (`in ${activity.summary.area}`)}</ParagraphText>
                         </>
                     ):(
                         <>
-                            <Text style={{
+                            <CaptionText style={{
                                 backgroundColor: themeConfig.placeholder,
-                                color: "transparent",
-
-                                fontSize: 18,
-                                fontWeight: "500"
+                                color: "transparent"
                             }}>
                                 Firstname Lastname
-                            </Text>
+                            </CaptionText>
                             
-                            <Text style={{
+                            <ParagraphText style={{
                                 backgroundColor: themeConfig.placeholder,
-                                color: "transparent",
-
-                                fontSize: 14
+                                color: "transparent"
                             }}>
                                 13 days ago in Vänersborg
-                            </Text>
+                            </ParagraphText>
                         </>
                     )}
                 </View>

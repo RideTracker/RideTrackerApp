@@ -9,9 +9,26 @@ import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
 import { LinearGradient } from "expo-linear-gradient";
+import EventEmitter from "EventEmitter";
 
 const RECORD_TASK_NAME = "RECORD_GEOLOCATION";
 export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
+
+const locationEmitter = new EventEmitter();
+
+TaskManager.defineTask(RECORD_TASK_NAME, ({ data, error }: { data: any, error: any }) => {
+    const locations = data.locations;
+
+    if(error || !locations.length) {
+        console.error("Geolocation error occurred, ", error);
+
+        return;
+    }
+
+    console.log("Geolocation received new locations", locations);
+
+    locationEmitter.emit("LOCATION_UPDATE", locations);
+});
 
 export default function Record() {
     const themeConfig = useThemeConfig();
@@ -84,27 +101,18 @@ export default function Record() {
 
             if(lastLocation !== null)
                 setLocation(lastLocation);
-
-            TaskManager.defineTask(RECORD_TASK_NAME, ({ data, error }: { data: any, error: any }) => {
-                const locations = data.locations;
-
-                if(error || !locations.length) {
-                    console.error("Geolocation error occurred, ", error);
-            
-                    return;
-                }
-            
-                console.log("Geolocation received new locations", locations);
-
-                setLocation(locations[locations.length - 1]);
-            });
         };
 
         getLocationPermissions();
+    }, []);
+
+    useEffect(() => {
+        locationEmitter.on("LOCATION_UPDATE", (locations) => {
+            setLocation(locations[locations.length - 1]);
+        });
 
         return () => {
-            if(TaskManager.isTaskDefined(RECORD_TASK_NAME))
-                TaskManager.unregisterTaskAsync(RECORD_TASK_NAME);
+            locationEmitter.off("LOCATION_UPDATE");
         };
     }, []);
 
@@ -125,12 +133,12 @@ export default function Record() {
                 accuracy: Location.Accuracy.BestForNavigation,
                 activityType: Location.ActivityType.Fitness,
 
-                foregroundService: {
-                    killServiceOnDestroy: true,
+                showsBackgroundLocationIndicator: true,
 
-                    notificationColor: themeConfig.brand,
+                foregroundService: {
                     notificationTitle: "Ride Tracker Recording",
-                    notificationBody: "Ride Tracker is tracking your position in the background while you're recording an activity."
+                    notificationBody: "Ride Tracker is tracking your position in the background while you're recording an activity.",
+                    notificationColor: themeConfig.brand
                 }
             });
 
@@ -163,8 +171,6 @@ export default function Record() {
                 ...session,
                 locations: [ ...session.locations, location ]
             });
-
-
         }
     }, [ location ]);
 

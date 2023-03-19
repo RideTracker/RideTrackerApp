@@ -4,6 +4,8 @@ import { useThemeConfig } from "../../utils/themes";
 import { ActivityResponse } from "../../models/activity";
 import { timeSince } from "../../utils/time";
 import { useSelector } from "react-redux";
+import { ParagraphText } from "../../components/texts/paragraph";
+import { CaptionText } from "../../components/texts/caption";
 
 type ActivityCommentProps = {
     style?: any;
@@ -51,34 +53,33 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                             alignItems: "baseline",
                             gap: 5
                         }}>
-                            <Text style={{
-                                fontSize: 18,
-                                fontWeight: "bold",
-
-                                color: (activity)?(themeConfig.color):("transparent"),
-                                backgroundColor: (activity)?("transparent"):(themeConfig.placeholder)
+                            <CaptionText style={(!activity) && {
+                                color: "transparent",
+                                backgroundColor: themeConfig.placeholder
                             }}>
                                 {(activity)?(
                                     (activity.comment)?(activity.comment.user.name):(userData.user?.name)
                                 ):("Firstname lastname")}
-                            </Text>
+                            </CaptionText>
                             
-                            <Text style={{ color: themeConfig.color }}>
+                            <ParagraphText>
                                 {(activity?.comment) && timeSince(activity.comment.timestamp)}
-                            </Text>
+                            </ParagraphText>
                         </View>
                     )}
 
-                    <Text style={{
+                    <ParagraphText style={{
                         paddingRight: 50,
-                        fontSize: 17,
-                        color: (activity)?(themeConfig.color):("transparent"),
-                        backgroundColor: (activity)?("transparent"):(themeConfig.placeholder)
+
+                        ...((!activity)?({
+                            color: "transparent",
+                            backgroundColor: themeConfig.placeholder
+                        }):({}))
                     }}>
                         {(activity)?(
                             (activity.comment)?(activity.comment.message):("There's no comments, you can be the first one!")
                         ):("This is a comment!")}
-                    </Text>
+                    </ParagraphText>
                 </View>
             </View>
         </View>

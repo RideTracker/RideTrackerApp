@@ -11,6 +11,8 @@ import { getBikes } from "../../../../../models/bike";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../../(tabs)/record";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
+import { CaptionText } from "../../../../../components/texts/caption";
+import { ParagraphText } from "../../../../../components/texts/paragraph";
 
 export default function UploadRecordingPage() {
     const userData = useSelector((state: any) => state.userData);
@@ -69,13 +71,9 @@ export default function UploadRecordingPage() {
                         )}
                     </View>
 
-                    <Text style={{ color: themeConfig.color, fontSize: 40, fontWeight: "500", textAlign: "center" }}>
-                        Great job, Nora!
-                    </Text>
+                    <CaptionText style={{ fontSize: 40, textAlign: "center" }}>Great job, Nora!</CaptionText>
 
-                    <Text style={{ color: themeConfig.color, fontSize: 18 }}>
-                        You reached 28.3 km at an average of 32.7 km/h, at which you topped off at 45.2 km/h!
-                    </Text>
+                    <ParagraphText>You reached 28.3 km at an average of 32.7 km/h, at which you topped off at 45.2 km/h!</ParagraphText>
 
                     <View>
                         <SafeAreaView style={{ gap: 10, marginVertical: 10, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>

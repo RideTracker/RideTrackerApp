@@ -10,6 +10,8 @@ import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "./record";
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
+import { ParagraphText } from "../../../../components/texts/paragraph";
+import { LinkText } from "../../../../components/texts/link";
 
 export default function Index() {
     const userData = useSelector((state: any) => state.userData);
@@ -97,9 +99,9 @@ export default function Index() {
                         <View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
                             <FontAwesome name="warning" size={24} color={themeConfig.color}/>
 
-                            <Text style={{ color: themeConfig.color, fontSize: 16, paddingRight: 20 + 24 }}>
-                                You have {recordings.length} {(recordings.length > 1)?("recordings"):("recording")} that hasn't been uploaded. <Text style={{ color: themeConfig.brand }}>Take action.</Text>
-                            </Text>
+                            <ParagraphText style={{ paddingRight: 20 + 24 }}>
+                                You have {recordings.length} {(recordings.length > 1)?("recordings"):("recording")} that hasn't been uploaded. <LinkText>Take action.</LinkText>
+                            </ParagraphText>
                         </View>
                     </TouchableOpacity>
                 )}

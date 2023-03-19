@@ -3,6 +3,8 @@ import { Image, Text, View } from "react-native";
 import { BikeResponse, getBikeById } from "../models/bike";
 import { useThemeConfig } from "../utils/themes";
 import { useSelector } from "react-redux";
+import { CaptionText } from "./texts/caption";
+import { ParagraphText } from "./texts/paragraph";
 
 type BikeProps = {
     id?: string;
@@ -57,24 +59,17 @@ export default function Bike({ id, style, data, buttons }: BikeProps) {
                 }}>
                     {(bike)?(
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                            <Text style={{
-                                fontSize: 20,
-                                fontWeight: "500",
-                                color: themeConfig.color
-                            }}>
-                                {bike.model}
-                            </Text>
+                            <CaptionText>{bike.model}</CaptionText>
 
                             {buttons}
                         </View>
                     ):(
-                        <Text style={{
+                        <CaptionText style={{
                             backgroundColor: themeConfig.placeholder,
-                            color: "transparent",
-
-                            fontSize: 20,
-                            fontWeight: "500"
-                        }}>Name</Text>
+                            color: "transparent"
+                        }}>
+                            Name
+                        </CaptionText>
                     )}
 
                     {(bike)?(
@@ -83,55 +78,18 @@ export default function Bike({ id, style, data, buttons }: BikeProps) {
                             justifyContent: "space-between"
                         }}>
                             <View>
-                                <Text style={{
-                                    fontSize: 18,
-                                    textAlign: "center",
-                                    color: themeConfig.color
-                                }}>
-                                    {bike?.summary?.rides}
-                                </Text>
-
-                                <Text style={{
-                                    textAlign: "center",
-                                    color: themeConfig.color
-                                    }}>
-                                        rides
-                                </Text>
+                                <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{bike?.summary?.rides}</ParagraphText>
+                                <ParagraphText style={{ textAlign: "center" }}>rides</ParagraphText>
                             </View>
 
                             <View>
-                                <Text style={{
-                                    fontSize: 18,
-                                    textAlign: "center",
-                                    color: themeConfig.color
-                                }}>
-                                    {bike?.summary?.distance} km
-                                </Text>
-
-                                <Text style={{
-                                    textAlign: "center",
-                                    color: themeConfig.color
-                                    }}>
-                                        distance
-                                </Text>
+                                <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{bike?.summary?.distance} km</ParagraphText>
+                                <ParagraphText style={{ textAlign: "center" }}>distance</ParagraphText>
                             </View>
 
                             <View>
-                                <Text style={{
-                                    fontSize: 18,
-                                    textAlign: "center",
-                                    color: themeConfig.color
-                                }}>
-                                    {bike?.summary?.elevation} m
-                                </Text>
-
-                                <Text style={{
-                                    textAlign: "center",
-                                    
-                                    color: themeConfig.color
-                                    }}>
-                                        elevation
-                                </Text>
+                                <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{bike?.summary?.elevation} m</ParagraphText>
+                                <ParagraphText style={{ textAlign: "center" }}>elevation</ParagraphText>
                             </View>
                         </View>
                     ):(

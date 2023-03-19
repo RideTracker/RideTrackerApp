@@ -6,6 +6,8 @@ import Activity from "../../../../layouts/activity";
 import Bike from "../../../../components/bike";
 import { useThemeConfig } from "../../../../utils/themes";
 import { useSelector } from "react-redux";
+import { HeaderText } from "../../../../components/texts/header";
+import { ParagraphText } from "../../../../components/texts/paragraph";
 
 export default function ActivityPage({ params }) {
     const userData = useSelector((state: any) => state.userData);
@@ -51,7 +53,7 @@ export default function ActivityPage({ params }) {
                 padding: 10,
                 paddingTop: 5
             }}>
-                <Text style={{ fontSize: 20, color: themeConfig.color }}><Text style={{ fontWeight: "bold" }}>Comments</Text>{(activity?.summary > 0) && (` (${activity.summary.comments})`)}</Text>
+                <HeaderText>Comments {(activity?.summary) && (<Text style={{ fontWeight: "normal" }}>({activity.summary.comments})</Text>)}</HeaderText>
 
                 <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)}>
                     <Activity.Comment activity={activity}/>
