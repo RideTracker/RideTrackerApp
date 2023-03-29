@@ -10,11 +10,18 @@ import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
 import { LinearGradient } from "expo-linear-gradient";
 import EventEmitter from "EventEmitter";
+import { formatTime } from "../../../../../utils/time";
+import PagerView from 'react-native-pager-view';
 
 const RECORD_TASK_NAME = "RECORD_GEOLOCATION";
 export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
 
 const locationEmitter = new EventEmitter();
+const timeEmitter = new EventEmitter();
+
+setInterval(() => {
+    timeEmitter.emit("INTERVAL");
+});
 
 TaskManager.defineTask(RECORD_TASK_NAME, ({ data, error }: { data: any, error: any }) => {
     const locations = data.locations;
@@ -41,7 +48,10 @@ export default function Record() {
     const [ location, setLocation ] = useState(null);
     const [ recording, setRecording ] = useState(null);
     const [ session, setSession ] = useState(null);
+    const [ distance, setDistance ] = useState(0);
     const [ elevation, setElevation ] = useState(0);
+    const [ time, setTime ] = useState(0);
+    const [ overlayVisible, setOverlayVisible ] = useState(true);
 
     async function ensureDirectoryExists() {
         const info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
@@ -117,6 +127,17 @@ export default function Record() {
     }, []);
 
     useEffect(() => {
+        timeEmitter.on("INTERVAL", () => {
+            if(recording)
+                setTime(time + 1);
+        });
+
+        return () => {
+            timeEmitter.off("INTERVAL");
+        };
+    }, []);
+
+    useEffect(() => {
         if(location && mapRef.current) {
             const map: MapView = mapRef.current;
 
@@ -142,6 +163,8 @@ export default function Record() {
                 }
             });
 
+            setOverlayVisible(true);
+
             setSession({
                 id: uuid.v4(),
                 locations: []
@@ -161,6 +184,9 @@ export default function Record() {
 
             if(previousLocation) {
                 const altitude = (location.coords.altitude - previousLocation.coords.altitude);
+                const timeDifference = location.timestamp - previousLocation.timestamp;
+
+                setDistance(distance + location.coords.speed * (timeDifference / 1000));
 
                 if(altitude > 0) {
                     setElevation(elevation + (location.coords.altitude - previousLocation.coords.altitude));
@@ -171,6 +197,8 @@ export default function Record() {
                 ...session,
                 locations: [ ...session.locations, location ]
             });
+
+            setTime(time + 1);
         }
     }, [ location ]);
 
@@ -226,32 +254,34 @@ export default function Record() {
                 pitchEnabled={!recording}
                 rotateEnabled={!recording}
                 scrollEnabled={!recording}
-                zoomControlEnabled={!recording}
+                zoomControlEnabled={false}
                 zoomTapEnabled={!recording}
                 >
             </MapView>
 
-            <View style={{
-                backgroundColor: (recording)?("rgba(0, 0, 0, .25)"):("rgba(0, 0, 0, .7)"),
-                
-                width: "100%",
-                height: "100%",
+            {(overlayVisible) && (
+                <View onTouchStart={() => !recording && setOverlayVisible(false)} style={{
+                    backgroundColor: (recording)?("rgba(0, 0, 0, .25)"):("rgba(0, 0, 0, .7)"),
+                    
+                    width: "100%",
+                    height: "100%",
 
-                position: "absolute",
+                    position: "absolute",
 
-                justifyContent: "center",
-                alignItems: "center"
-            }} pointerEvents="none">
-                {(recording === null) && (
-                    <Text style={{
-                        color: "#FFF",
-                        textAlign: "center",
-                        fontSize: 24
-                    }}>
-                        Press the play button to start
-                    </Text>
-                )}
-            </View>
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}>
+                    {(recording === null) && (
+                        <Text style={{
+                            color: "#FFF",
+                            textAlign: "center",
+                            fontSize: 24
+                        }}>
+                            Press the play button to start
+                        </Text>
+                    )}
+                </View>
+            )}
 
             <View style={{
                 position: "absolute",
@@ -270,20 +300,6 @@ export default function Record() {
     
                     flexDirection: "column"
                 }}>
-                    {(recording)?(
-                        ((location) && (
-                            <View>
-                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>{Math.round((location.coords.speed * 3.6) * 10) / 10} km/h</Text>
-                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 46 }}>current speed</Text>
-                            </View>
-                        ))
-                    ):((recording !== null) && (
-                        <View>
-                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>23.6 km/h</Text>
-                            <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 46 }}>average 
-                            speed</Text>
-                        </View>
-                    ))}
                 </LinearGradient>
             </View>
 
@@ -293,7 +309,7 @@ export default function Record() {
 
                 width: "100%"
             }}>
-                <LinearGradient colors={[ "transparent", "rgba(0, 0, 0, .5)" ]} style={{
+                <LinearGradient colors={[ "transparent", "rgba(0, 0, 0, .6)" ]} style={{
                     alignItems: "center",
 
                     gap: 10,
@@ -301,6 +317,27 @@ export default function Record() {
 
                     flexDirection: "column"
                     }}>
+                    {(recording !== null) && (
+                        <>
+                            <View style={{ width: "100%" }}>
+                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>TIME</Text>
+                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>{formatTime(time)}</Text>
+                            </View>
+                        
+                            <View style={{ flexDirection: "row" }}>
+                                <View style={{ width: "50%" }}>
+                                    <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>ELEVATION</Text>
+                                    <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.round(elevation)} m</Text>
+                                </View>
+
+                                <View style={{ width: "50%" }}>
+                                    <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>DISTANCE</Text>
+                                    <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.floor((distance / 1000) * 10) / 10} km</Text>
+                                </View>
+                            </View>
+                        </>
+                    )}
+
                     <View>
                         <TouchableOpacity onPress={() => setRecording(!recording)} style={{
                             width: 66,
@@ -315,20 +352,6 @@ export default function Record() {
                             <FontAwesome5 name={(recording)?("stop"):("play")} color={(recording && themeConfig.contrast === "black")?("#FFF"):("#000")} style={{ marginLeft: (!recording)?(4):(0) }} size={34}/>
                         </TouchableOpacity>
                     </View>
-
-                    {(recording !== null) && (
-                        <View style={{ flexDirection: "row" }}>
-                            <View style={{ width: "50%" }}>
-                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.round(elevation)} m</Text>
-                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 30 }}>elevation</Text>
-                            </View>
-
-                            <View style={{ width: "50%" }}>
-                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>? km</Text>
-                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 30 }}>distance</Text>
-                            </View>
-                        </View>
-                    )}
                 </LinearGradient>
             </View>
         </View>

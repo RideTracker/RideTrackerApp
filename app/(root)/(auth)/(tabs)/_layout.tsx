@@ -50,6 +50,8 @@ export default function Layout() {
                 tabBarStyle: {
                     display: "none"
                 },
+
+                unmountOnBlur: true,
                 
                 tabBarIcon: () => (
                     <View style={{ height: 24 }}>

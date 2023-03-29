@@ -22,7 +22,7 @@ function useProtectedRoute(user) {
     React.useEffect(() => {
         const inAuthGroup = segments.includes("(auth)");
 
-        if (!userData?.key && inAuthGroup)
+        if(!userData?.key && inAuthGroup)
             router.replace("/login");
         //else if (userData?.key && !inAuthGroup)
             //router.replace("/");
