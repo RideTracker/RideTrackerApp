@@ -31,8 +31,8 @@ export default function Login() {
     useEffect(() => {
         if(submitting) {
             loginUser(email, password).then((response) => {
-                if(response.error) {
-                    Alert.alert("An error occurred!", response.error, [
+                if(!response.success) {
+                    Alert.alert("An error occurred!", response.message, [
                         {
                             onPress(value) {
                                 setSubmitting(false);
@@ -43,9 +43,9 @@ export default function Login() {
                     return;
                 }
 
-                dispatch(setUserData({ key: response.key }));
+                //dispatch(setUserData({ key: response.key }));
 
-                router.push("/");
+                router.push(`/verify/${response.verification}`);
             });
         }
     }, [ submitting ]);

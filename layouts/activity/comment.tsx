@@ -41,7 +41,7 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                                 overflow: "hidden"
                             }}
                             source={{
-                                uri: (activity.comment)?(activity.comment.user.avatar):(userData.user?.avatar)
+                                uri: (activity.comment?.user)?(activity.comment.user.avatar):(userData.user?.avatar)
                             }}/>
                     )}
                 </View>
@@ -58,7 +58,7 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                                 backgroundColor: themeConfig.placeholder
                             }}>
                                 {(activity)?(
-                                    (activity.comment)?(activity.comment.user.name):(userData.user?.name)
+                                    (activity.comment?.user)?(activity.comment.user.name):(userData.user?.name)
                                 ):("Firstname lastname")}
                             </CaptionText>
                             

@@ -50,12 +50,12 @@ export type ActivityResponse = Response & {
     timestamp: number;
 };
 
-export async function getActivityById(authorization: string, id: string): Promise<ActivityResponse> {
+export async function getActivityById(authorization: string, id: string) {
     const url = new URL(`/api/activities/${id}`, Constants.expoConfig.extra.api);
 
     const response = await fetch(url, {
         method: "GET",
-        
+
         headers: {
             "Authorization": `Bearer ${authorization}`
         }

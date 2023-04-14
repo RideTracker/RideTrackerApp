@@ -67,11 +67,11 @@ export default function Index() {
                 >
                     <View style={{ padding: 10 }}>
                         {(feed)?(
-                            (!feed.error)?(
+                            (feed.success)?(
                                 (feed.activities.length)?(
                                     <View style={{ gap: 10 }}>
-                                        {(feed.activities.map((id) => (
-                                            <ActivityCompact key={id} id={id}/>
+                                        {(feed.activities.map((activity) => (
+                                            <ActivityCompact key={activity.id} id={activity.id}/>
                                         )))}
                                     </View>
                                 ):(

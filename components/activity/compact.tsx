@@ -21,17 +21,8 @@ export default function ActivityCompact({ id, style }: ActivityCompactProps) {
 
     useEffect(() => {
         if(id !== null)
-            getActivityById(userData.key, id).then((result) => setActivity(result));
+            getActivityById(userData.key, id).then((result) => result.success && setActivity(result.activity));
     }, []);
-
-
-    if(activity && activity.error) {
-        return (
-            <Error>
-                <Text>Failed to load the activity, try again!</Text>
-            </Error>
-        );
-    };
 
     return (
         <View style={style}>

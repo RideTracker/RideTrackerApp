@@ -22,7 +22,7 @@ export default function ActivityPage({ params }) {
 
     useEffect(() => {
         if(id !== null)
-            getActivityById(userData.key, id as string).then((result) => setActivity(result));
+            getActivityById(userData.key, id as string).then((result) => setActivity(result.activity));
     }, []);
 
     return (

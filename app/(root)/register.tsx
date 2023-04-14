@@ -33,8 +33,8 @@ export default function Register() {
     useEffect(() => {
         if(submitting) {
             registerUser(firstname, lastname, email, password).then((response) => {
-                if(response.error) {
-                    Alert.alert("An error occurred!", response.error, [
+                if(!response.success) {
+                    Alert.alert("An error occurred!", response.message, [
                         {
                             onPress(value) {
                                 setSubmitting(false);
@@ -45,9 +45,9 @@ export default function Register() {
                     return;
                 }
 
-                dispatch(setUserData({ key: response.key }));
+                //dispatch(setUserData({ key: response.key }));
 
-                router.push("/");
+                router.push(`/verify/${response.verification}`);
             });
         }
     }, [ submitting ]);

@@ -11,13 +11,15 @@ export async function getFeed(authorization: string): Promise<FeedResponse> {
 
     const response = await fetch(url, {
         method: "GET",
-        
+
         headers: {
             "Authorization": `Bearer ${authorization}`
         }
     });
 
     const result = await response.json();
+
+    console.log("/api/feed", result);
 
     return result;
 };

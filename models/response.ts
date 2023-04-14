@@ -1,3 +1,4 @@
 export type Response = {
-    error?: string;
+    success?: boolean;
+    message?: string;
 };
