@@ -44,7 +44,7 @@
       ]
     ],
     "extra": {
-      "apiHost": "http://192.168.1.178:19001",
+      "api": "https://service-staging.norasoderlund9092.workers.dev",
       "eas": {
         "projectId": "b821b60b-3f8b-4b59-b660-9e6a51e1714f"
       }

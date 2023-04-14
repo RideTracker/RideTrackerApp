@@ -8,15 +8,6 @@ export type UserResponse = Response & {
     timestamp: number;
 };
 
-export async function getUserById(id: string): Promise<UserResponse> {
-    const url = new URL(`user/${id}`, Constants.expoConfig.extra.apiHost);
-
-    const response = await fetch(url);
-    const result = await response.json();
-
-    return result;
-};
-
 export type AuthenticateUserResponse = Response & {
     key?: string;
     user?: {
@@ -26,7 +17,7 @@ export type AuthenticateUserResponse = Response & {
 };
 
 export async function loginUser(email: string, password: string): Promise<AuthenticateUserResponse> {
-    const url = new URL(`guest/login`, Constants.expoConfig.extra.apiHost);
+    const url = new URL(`/api/auth/login`, Constants.expoConfig.extra.api);
 
     const response = await fetch(url, {
         method: "POST",
@@ -47,7 +38,7 @@ export async function loginUser(email: string, password: string): Promise<Authen
 };
 
 export async function registerUser(firstname: string, lastname: string, email: string, password: string): Promise<AuthenticateUserResponse> {
-    const url = new URL(`guest/register`, Constants.expoConfig.extra.apiHost);
+    const url = new URL(`/api/auth/register`, Constants.expoConfig.extra.api);
 
     const response = await fetch(url, {
         method: "POST",
@@ -68,16 +59,15 @@ export async function registerUser(firstname: string, lastname: string, email: s
 };
 
 export async function authenticateUser(key: string): Promise<AuthenticateUserResponse> {
-    const url = new URL(`guest/authenticate`, Constants.expoConfig.extra.apiHost);
+    const url = new URL(`/api/auth/renew`, Constants.expoConfig.extra.api);
 
     const response = await fetch(url, {
         method: "POST",
         headers: {
+            "Authorization": `Bearer ${key}`,
+            
             "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            key
-        })
+        }
     });
 
     const result = await response.json();

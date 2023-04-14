@@ -51,11 +51,13 @@ export type ActivityResponse = Response & {
 };
 
 export async function getActivityById(authorization: string, id: string): Promise<ActivityResponse> {
-    const url = new URL(`activity/${id}`, Constants.expoConfig.extra.apiHost);
+    const url = new URL(`/api/activities/${id}`, Constants.expoConfig.extra.api);
 
     const response = await fetch(url, {
+        method: "GET",
+        
         headers: {
-            "Authorization": authorization
+            "Authorization": `Bearer ${authorization}`
         }
     });
     const result = await response.json();

@@ -18,25 +18,14 @@ export type BikeResponse = Response & {
     };
 };
 
-export async function getBikeById(authorization: string, id: string): Promise<BikeResponse> {
-    const url = new URL(`bike/${id}`, Constants.expoConfig.extra.apiHost);
-
-    const response = await fetch(url, {
-        headers: {
-            "Authorization": authorization
-        }
-    });
-    const result = await response.json();
-
-    return result;
-};
-
 export async function getBikes(authorization: string): Promise<BikeResponse> {
-    const url = new URL(`bikes`, Constants.expoConfig.extra.apiHost);
+    const url = new URL(`/api/bikes`, Constants.expoConfig.extra.api);
 
     const response = await fetch(url, {
+        method: "GET",
+        
         headers: {
-            "Authorization": authorization
+            "Authorization": `Bearer ${authorization}`
         }
     });
     

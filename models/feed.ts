@@ -7,11 +7,13 @@ export type FeedResponse = Response & {
 };
 
 export async function getFeed(authorization: string): Promise<FeedResponse> {
-    const url = new URL("feed", Constants.expoConfig.extra.apiHost);
+    const url = new URL("/api/feed", Constants.expoConfig.extra.api);
 
     const response = await fetch(url, {
+        method: "GET",
+        
         headers: {
-            "Authorization": authorization
+            "Authorization": `Bearer ${authorization}`
         }
     });
 

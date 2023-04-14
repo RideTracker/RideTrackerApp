@@ -6,8 +6,7 @@ export type PingResponse = Response & {
 };
 
 export async function ping(validation: boolean): Promise<PingResponse> {
-    const url = new URL("ping", Constants.expoConfig.extra.apiHost);
-    url.searchParams.append("validation", validation.toString());
+    const url = new URL("/api/ping", Constants.expoConfig.extra.api);
 
     const response = await fetch(url);
     const result = await response.json();
