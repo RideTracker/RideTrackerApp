@@ -150,18 +150,20 @@ export default function Record() {
 
     useEffect(() => {
         if(recording && !session) {
-            Location.startLocationUpdatesAsync(RECORD_TASK_NAME, {
-                accuracy: Location.Accuracy.BestForNavigation,
-                activityType: Location.ActivityType.Fitness,
-
-                showsBackgroundLocationIndicator: true,
-
-                foregroundService: {
-                    notificationTitle: "Ride Tracker Recording",
-                    notificationBody: "Ride Tracker is tracking your position in the background while you're recording an activity.",
-                    notificationColor: themeConfig.brand
-                }
-            });
+            if(Platform.OS === "android") {
+                Location.startLocationUpdatesAsync(RECORD_TASK_NAME, {
+                    accuracy: Location.Accuracy.BestForNavigation,
+                    activityType: Location.ActivityType.Fitness,
+    
+                    showsBackgroundLocationIndicator: true,
+    
+                    foregroundService: {
+                        notificationTitle: "Ride Tracker Recording",
+                        notificationBody: "Ride Tracker is tracking your position in the background while you're recording an activity.",
+                        notificationColor: themeConfig.brand
+                    }
+                });
+            }
 
             setOverlayVisible(true);
 
@@ -171,7 +173,8 @@ export default function Record() {
             });
         }
         else if(!recording && session) {
-            Location.stopLocationUpdatesAsync(RECORD_TASK_NAME);
+            if(Platform.OS === "android")
+                Location.stopLocationUpdatesAsync(RECORD_TASK_NAME);
 
             saveSession(session);
             setSession(null);

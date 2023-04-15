@@ -70,7 +70,7 @@ export default function RecordingsPage() {
                 return {
                     id: file.substring(0, file.length - ".json".length),
                     locations: sessions.reduce((accumulator, currentValue) => accumulator.concat(currentValue.locations), []),
-                    timestamp: lastSession && lastSession.locations[lastSession.locations.length - 1].timestamp
+                    timestamp: (lastSession?.locations?.length)?(lastSession.locations[lastSession.locations.length - 1].timestamp):(0)
                 };
             }));
 

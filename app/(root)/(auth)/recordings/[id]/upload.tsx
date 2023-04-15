@@ -33,6 +33,7 @@ export default function UploadRecordingPage() {
     const { id } = useSearchParams();
 
     useEffect(() => {
+        console.log("call get Bikes");
         getBikes(userData.key).then((bikes) => setBikes(bikes));
     }, []);
 

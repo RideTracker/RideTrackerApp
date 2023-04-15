@@ -31,5 +31,7 @@ export async function getBikes(authorization: string): Promise<BikeResponse> {
     
     const result = await response.json();
 
+    console.log("/api/bikes", result);
+
     return result;
 };
