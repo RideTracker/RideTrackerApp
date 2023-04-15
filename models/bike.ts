@@ -18,6 +18,24 @@ export type BikeResponse = Response & {
     };
 };
 
+export async function getBikeById(authorization: string, id: string) {
+    const url = new URL(`/api/bikes/${id}`, Constants.expoConfig.extra.api);
+
+    const response = await fetch(url, {
+        method: "GET",
+        
+        headers: {
+            "Authorization": `Bearer ${authorization}`
+        }
+    });
+    
+    const result = await response.json();
+
+    console.log(`/api/bikes/${id}`, result);
+
+    return result;
+};
+
 export async function getBikes(authorization: string): Promise<BikeResponse> {
     const url = new URL(`/api/bikes`, Constants.expoConfig.extra.api);
 

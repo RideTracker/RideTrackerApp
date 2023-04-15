@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Image, Text, View } from "react-native";
-import { BikeResponse } from "../models/bike";
+import { BikeResponse, getBikeById } from "../models/bike";
 import { useThemeConfig } from "../utils/themes";
 import { useSelector } from "react-redux";
 import { CaptionText } from "./texts/caption";
@@ -25,6 +25,12 @@ export default function Bike({ id, style, data, buttons }: BikeProps) {
     useEffect(() => {
         if(data)
             setBike(data);
+        else if(id) {
+            getBikeById(userData.key, id).then((result) => {
+                if(result.success)
+                    setBike(result.bike);
+            });
+        }
     }, []);
 
     return (

@@ -124,7 +124,7 @@ export function ProfileBikes({ profile }) {
             if(!result.success)
                 return false;
 
-            return result.activities;
+            return result.bikes;
         }} render={(bike) => (
             <TouchableOpacity key={bike} onPress={() => router.push(`/bikes/${bike}`)}>
                 <Bike id={bike}/>
