@@ -79,6 +79,24 @@ export async function verifyUser(verification: string, code: string): Promise<Au
     return result;
 };
 
+export async function getProfileById(key: string, user: string) {
+    const url = new URL(`/api/profiles/${user}`, Constants.expoConfig.extra.api);
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${key}`,
+            "Content-Type": "application/json"
+        }
+    });
+
+    const result = await response.json();
+
+    console.log(result);
+
+    return result;
+};
+
 export async function authenticateUser(key: string): Promise<AuthenticateUserResponse> {
     const url = new URL(`/api/auth/renew`, Constants.expoConfig.extra.api);
 
