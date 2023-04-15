@@ -3,10 +3,13 @@ import { Tabs } from "expo-router";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
 import { useThemeConfig } from "../../../../utils/themes";
 import { View } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function Layout() {
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
+
+    const userData = useSelector((state: any) => state.userData);
 
     return (
         <Tabs screenOptions={{
@@ -62,6 +65,7 @@ export default function Layout() {
 
             <Tabs.Screen name="profile" options={{
                 title: "Profile",
+                href: `/profile/${userData.user.id}`,
                 tabBarIcon: () => (
                     <FontAwesome5 name="user-alt" color={themeConfig.color} size={16}/>
                 )
