@@ -1,11 +1,36 @@
-import { useEffect, useState } from "react";
-import { Image, ScrollView, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, PixelRatio, ScrollView, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { useSelector } from "react-redux";
 import { useThemeConfig } from "../../../../utils/themes";
 import { getAvatars } from "../../../../models/avatars";
 import { CaptionText } from "../../../../components/texts/caption";
 
+const avatarTypes = [
+    {
+        name: "Helmets",
+        type: "helmet"
+    },
+
+    {
+        name: "Sunglasses",
+        type: "sunglass"
+    },
+
+    {
+        name: "Heads",
+        type: "head",
+
+        required: true
+    },
+
+    {
+        name: "Jerseys",
+        type: "jersey",
+        
+        required: true
+    }
+];
 
 export default function AvatarEditorPage() {
     const userData = useSelector((state: any) => state.userData);
@@ -16,6 +41,7 @@ export default function AvatarEditorPage() {
     const router = useRouter();
 
     const [ avatars, setAvatars ] = useState(null);
+    const [ combination, setCombination ] = useState(null);
 
     useEffect(() => {
         getAvatars(userData.key).then((result) => {
@@ -23,6 +49,17 @@ export default function AvatarEditorPage() {
                 return;
 
             setAvatars(result.avatars);
+
+            const userAvatar = result.user.avatars.find((userAvatar) => userAvatar.id === userData.user.avatar);
+
+            if(!userAvatar) {
+                setCombination({
+                    head: result.avatars.find((avatar) => avatar.type === "head"),
+                    jersey: result.avatars.find((avatar) => avatar.type === "jersey")
+                });
+            }
+            else
+                setCombination(userAvatar.combination);
         });
     }, []);
 
@@ -46,117 +83,37 @@ export default function AvatarEditorPage() {
 
             <ScrollView>
                 <View style={{ padding: 10, gap: 10 }}>
-                    <CaptionText>Helmets</CaptionText>
+                    {(avatarTypes).map((avatarType) => (
+                        <React.Fragment key={avatarType.type}>
+                            <CaptionText>{avatarType.name}</CaptionText>
 
-                    <ScrollView horizontal={true}>
-                        <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
-                            {(avatars) && avatars.filter((avatar) => avatar.type === "helmet").map((avatar) => (
-                                <View key={avatar.id} style={{
-                                    width: 140,
-                                    height: 80,
+                            <ScrollView horizontal={true}>
+                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
+                                    {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
+                                        <View key={avatar.id} style={{
+                                            width: 140,
+                                            height: 80,
 
-                                    borderRadius: 6,
-                                    overflow: "hidden",
+                                            borderRadius: 6,
+                                            overflow: "hidden",
 
-                                    padding: 10,
+                                            padding: 10,
 
-                                    backgroundColor: themeConfig.placeholder
-                                }}>
-                                    <Image source={{
-                                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`
-                                    }} style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        resizeMode: "contain"
-                                    }}/>
+                                            backgroundColor: themeConfig.placeholder
+                                        }}>
+                                            <Image source={{
+                                                uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`
+                                            }} style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                resizeMode: "contain"
+                                            }}/>
+                                        </View>
+                                    ))}
                                 </View>
-                            ))}
-                        </View>
-                    </ScrollView>
-                    
-                    <CaptionText>Sunglasses</CaptionText>
-
-                    <ScrollView horizontal={true}>
-                        <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
-                            {(avatars) && avatars.filter((avatar) => avatar.type === "sunglass").map((avatar) => (
-                                <View key={avatar.id} style={{
-                                    width: 140,
-                                    height: 80,
-
-                                    borderRadius: 6,
-                                    overflow: "hidden",
-
-                                    padding: 10,
-
-                                    backgroundColor: themeConfig.placeholder
-                                }}>
-                                    <Image source={{
-                                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`
-                                    }} style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        resizeMode: "contain"
-                                    }}/>
-                                </View>
-                            ))}
-                        </View>
-                    </ScrollView>
-
-                    <CaptionText>Heads</CaptionText>
-
-                    <ScrollView horizontal={true}>
-                        <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
-                            {(avatars) && avatars.filter((avatar) => avatar.type === "head").map((avatar) => (
-                                <View key={avatar.id} style={{
-                                    width: 140,
-                                    height: 80,
-
-                                    borderRadius: 6,
-                                    overflow: "hidden",
-
-                                    padding: 10,
-
-                                    backgroundColor: themeConfig.placeholder
-                                }}>
-                                    <Image source={{
-                                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`
-                                    }} style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        resizeMode: "contain"
-                                    }}/>
-                                </View>
-                            ))}
-                        </View>
-                    </ScrollView>
-
-                    <CaptionText>Jerseys</CaptionText>
-
-                    <ScrollView horizontal={true}>
-                        <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
-                            {(avatars) && avatars.filter((avatar) => avatar.type === "jersey").map((avatar) => (
-                                <View key={avatar.id} style={{
-                                    width: 140,
-                                    height: 80,
-
-                                    borderRadius: 6,
-                                    overflow: "hidden",
-
-                                    padding: 10,
-
-                                    backgroundColor: themeConfig.placeholder
-                                }}>
-                                    <Image source={{
-                                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`
-                                    }} style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        resizeMode: "contain"
-                                    }}/>
-                                </View>
-                            ))}
-                        </View>
-                    </ScrollView>
+                            </ScrollView>
+                        </React.Fragment>
+                    ))}
                 </View>
             </ScrollView>
         </View>
