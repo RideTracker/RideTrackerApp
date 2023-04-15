@@ -10,6 +10,7 @@ import { CaptionText } from "../texts/caption";
 import { useThemeConfig } from "../../utils/themes";
 import { ParagraphText } from "../texts/paragraph";
 import { timeSince } from "../../utils/time";
+import ActivityAuthor from "../../layouts/activity/author";
 
 type ActivityListProps = {
     id: string | null;
@@ -43,12 +44,6 @@ export default function ActivityList({ id, style }: ActivityListProps) {
                         justifyContent: "space-around",
                         gap: 5
                     }}>
-                    <ParagraphText style={(!activity) && {
-                        backgroundColor: themeConfig.placeholder,
-                        color: "transparent"
-                    }}>
-                        {(activity)?(`${timeSince(activity.timestamp)} ${(activity.summary)?(`in ${activity.summary.area}`):("")}`):("Some time ago in some place")}
-                    </ParagraphText>
 
                     {(activity)?(
                         (activity.summary) && (
@@ -83,6 +78,8 @@ export default function ActivityList({ id, style }: ActivityListProps) {
                     )}
                 </View>
             </View>
+
+            <ActivityAuthor activity={activity}/>
         </View>
     );
 };

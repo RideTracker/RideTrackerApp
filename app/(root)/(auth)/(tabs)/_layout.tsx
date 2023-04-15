@@ -29,7 +29,7 @@ export default function Layout() {
             tabBarStyle: {
                 backgroundColor: themeConfig.background,
                 paddingTop: 5,
-                paddingBottom: 5,
+                paddingBottom: 25,
                 borderTopColor: themeConfig.border
             }
         }}>
@@ -54,11 +54,16 @@ export default function Layout() {
                     display: "none"
                 },
 
+                tabBarShowLabel: false,
+                tabBarLabelStyle: {
+                    color: "transparent"
+                },
+
                 unmountOnBlur: true,
                 
                 tabBarIcon: () => (
-                    <View style={{ height: 24 }}>
-                        <FontAwesome5 name="dot-circle" color={themeConfig.color} size={32}/>
+                    <View style={{ height: 40 }}>
+                        <FontAwesome5 name="dot-circle" color={themeConfig.color} size={40}/>
                     </View>
                 )
             }}/>
