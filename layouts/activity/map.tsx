@@ -46,6 +46,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
 
                     zoom: 10
                 }}
+                pointerEvents={(compact)?("none"):("auto")}
                 provider={PROVIDER_GOOGLE}
                 customMapStyle={(compact)?(themeConfig.mapStyle.concat(mapStyle.compact as any[])):(themeConfig.mapStyle)}
                 zoomEnabled={false}

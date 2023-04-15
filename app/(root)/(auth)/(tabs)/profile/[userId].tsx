@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
-import { Stack, useSearchParams } from "expo-router";
+import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useThemeConfig } from "../../../../../utils/themes";
-import { getProfileActivitiesById, getProfileById } from "../../../../../models/user";
+import { getProfileActivitiesById, getProfileBikesById, getProfileById } from "../../../../../models/user";
 import { useSelector } from "react-redux";
 import { CaptionText } from "../../../../../components/texts/caption";
 import { ParagraphText } from "../../../../../components/texts/paragraph";
 import Tabs, { TabsPage } from "../../../../../components/tabs";
 import ActivityCompact from "../../../../../components/activity/compact";
 import ActivityList from "../../../../../components/activity/list";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Pagination } from "../../../../../components/pagination";
+import Bike from "../../../../../components/bike";
 
 export default function Profile() {
     const themeConfig = useThemeConfig();
@@ -76,11 +79,11 @@ export default function Profile() {
 
                 <Tabs initialTab={"activities"} style={{ marginTop: 10 }}>
                     <TabsPage id={"activities"} title={"Activities"}>
-                        <ProfileActivities profile={profile}/>
+                        {(profile) && (<ProfileActivities profile={profile}/>)}
                     </TabsPage>
                     
                     <TabsPage id={"bikes"} title={"Bikes"}>
-                        <ParagraphText>bikes page</ParagraphText>
+                        {(profile) && (<ProfileBikes profile={profile}/>)}
                     </TabsPage>
                 </Tabs>
             </View>
@@ -91,33 +94,41 @@ export default function Profile() {
 export function ProfileActivities({ profile }) {
     const userData = useSelector((state: any) => state.userData);
 
-    const [ activities, setActivities ] = useState([]);
-    const [ offset, setOffset ] = useState(0);
-
-    useEffect(() => {
-        if(!profile)
-            return;
-
-        async function getActivities() {
-            const result = await getProfileActivitiesById(userData.key, profile.user.id, offset);
-
-            if(!result.success)
-                return;
-
-            setOffset(result.offset);
-            setActivities(activities.concat(result.activities));
-        };
-
-        getActivities();
-    }, [ profile ]);
+    const router = useRouter();
 
     return (
-        <ScrollView style={{ padding: 10 }}>
-            <View style={{ gap: 10 }}>
-                {activities.map((activity) => (
-                    <ActivityList key={activity} id={activity}/>
-                ))}
-            </View>
-        </ScrollView>
+        <Pagination style={{ padding: 10, height: "100%" }} paginate={async (offset) => {
+            const result = await getProfileActivitiesById(userData.key, profile.user.id, offset);
+    
+            if(!result.success)
+                return false;
+
+            return result.activities;
+        }} render={(activity) => (
+            <TouchableOpacity key={activity} onPress={() => router.push(`/activities/${activity}`)}>
+                <ActivityList id={activity}/>
+            </TouchableOpacity>
+        )}/>
+    );
+};
+
+export function ProfileBikes({ profile }) {
+    const userData = useSelector((state: any) => state.userData);
+
+    const router = useRouter();
+
+    return (
+        <Pagination style={{ padding: 10, height: "100%" }} paginate={async (offset) => {
+            const result = await getProfileBikesById(userData.key, profile.user.id, offset);
+    
+            if(!result.success)
+                return false;
+
+            return result.activities;
+        }} render={(bike) => (
+            <TouchableOpacity key={bike} onPress={() => router.push(`/bikes/${bike}`)}>
+                <Bike id={bike}/>
+            </TouchableOpacity>
+        )}/>
     );
 };

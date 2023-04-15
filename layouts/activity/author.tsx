@@ -29,7 +29,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                 flexDirection: "row",
 
                 gap: 15,
-            }} onPress={() => activity && router.push(`/users/${activity.user}`)}>
+            }} onPress={() => activity && router.push(`/profile/${activity.user.id}`)}>
                 <View style={{
                     height: 40,
                     aspectRatio: 1,

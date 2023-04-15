@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Image, Text, View } from "react-native";
-import { BikeResponse, getBikeById } from "../models/bike";
+import { BikeResponse } from "../models/bike";
 import { useThemeConfig } from "../utils/themes";
 import { useSelector } from "react-redux";
 import { CaptionText } from "./texts/caption";
@@ -54,7 +54,7 @@ export default function Bike({ id, style, data, buttons }: BikeProps) {
                     flex: 1,
                     paddingVertical: 2,
                     paddingHorizontal: 10,
-                    justifyContent: "space-between",
+                    justifyContent: "space-around",
                     gap: 5
                 }}>
                     {(bike)?(
