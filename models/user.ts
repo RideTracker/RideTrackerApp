@@ -97,6 +97,27 @@ export async function getProfileById(key: string, user: string) {
     return result;
 };
 
+export async function getProfileActivitiesById(key: string, user: string, offset: number) {
+    const url = new URL(`/api/profiles/${user}/activities`, Constants.expoConfig.extra.api);
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${key}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            offset
+        })
+    });
+
+    const result = await response.json();
+
+    console.log(result);
+
+    return result;
+};
+
 export async function authenticateUser(key: string): Promise<AuthenticateUserResponse> {
     const url = new URL(`/api/auth/renew`, Constants.expoConfig.extra.api);
 

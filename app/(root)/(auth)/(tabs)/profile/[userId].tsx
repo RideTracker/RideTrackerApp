@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import { Stack, useSearchParams } from "expo-router";
 import { useThemeConfig } from "../../../../../utils/themes";
-import { getProfileById } from "../../../../../models/user";
+import { getProfileActivitiesById, getProfileById } from "../../../../../models/user";
 import { useSelector } from "react-redux";
 import { CaptionText } from "../../../../../components/texts/caption";
 import { ParagraphText } from "../../../../../components/texts/paragraph";
+import Tabs, { TabsPage } from "../../../../../components/tabs";
+import ActivityCompact from "../../../../../components/activity/compact";
+import ActivityList from "../../../../../components/activity/list";
 
 export default function Profile() {
     const themeConfig = useThemeConfig();
@@ -71,10 +74,50 @@ export default function Profile() {
                     </ParagraphText>
                 </View>
 
-                <ScrollView>
+                <Tabs initialTab={"activities"} style={{ marginTop: 10 }}>
+                    <TabsPage id={"activities"} title={"Activities"}>
+                        <ProfileActivities profile={profile}/>
+                    </TabsPage>
                     
-                </ScrollView>
+                    <TabsPage id={"bikes"} title={"Bikes"}>
+                        <ParagraphText>bikes page</ParagraphText>
+                    </TabsPage>
+                </Tabs>
             </View>
         </View>
+    );
+};
+
+export function ProfileActivities({ profile }) {
+    const userData = useSelector((state: any) => state.userData);
+
+    const [ activities, setActivities ] = useState([]);
+    const [ offset, setOffset ] = useState(0);
+
+    useEffect(() => {
+        if(!profile)
+            return;
+
+        async function getActivities() {
+            const result = await getProfileActivitiesById(userData.key, profile.user.id, offset);
+
+            if(!result.success)
+                return;
+
+            setOffset(result.offset);
+            setActivities(activities.concat(result.activities));
+        };
+
+        getActivities();
+    }, [ profile ]);
+
+    return (
+        <ScrollView style={{ padding: 10 }}>
+            <View style={{ gap: 10 }}>
+                {activities.map((activity) => (
+                    <ActivityList key={activity} id={activity}/>
+                ))}
+            </View>
+        </ScrollView>
     );
 };

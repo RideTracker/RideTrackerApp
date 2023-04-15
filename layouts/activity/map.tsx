@@ -19,7 +19,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
         return (
             <View style={{
                 width: "100%",
-                height: 200,
+                height: "100%",
                 borderRadius: 10,
 
                 backgroundColor: themeConfig.placeholder
@@ -32,7 +32,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
             <MapView
                 style={{
                     width: "100%",
-                    height: 200,
+                    height: "100%",
                     backgroundColor: "black"
                 }}
                 initialCamera={{

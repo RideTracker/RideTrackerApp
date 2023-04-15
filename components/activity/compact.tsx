@@ -26,7 +26,7 @@ export default function ActivityCompact({ id, style }: ActivityCompactProps) {
 
     return (
         <View style={style}>
-            <TouchableOpacity disabled={activity === null} onPress={() => router.push(`/activities/${id}`)}>
+            <TouchableOpacity disabled={activity === null} onPress={() => router.push(`/activities/${id}`)} style={{ height: 200 }}>
                 <Activity.Map activity={activity} compact={true}>
                     <Activity.MapStats activity={activity}/>
                 </Activity.Map>

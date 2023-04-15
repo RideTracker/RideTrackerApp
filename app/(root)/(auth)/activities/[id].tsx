@@ -30,7 +30,9 @@ export default function ActivityPage({ params }) {
             <Stack.Screen options={{ title: "Activity" }} />
 
             <ScrollView style={{ padding: 10 }}>
-                <Activity.Map activity={activity} compact={false}/>
+                <View style={{ height: 200 }}>
+                    <Activity.Map activity={activity} compact={false}/>
+                </View>
 
                 <Activity.Author activity={activity}/>
 
