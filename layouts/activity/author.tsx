@@ -31,12 +31,12 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                 gap: 15,
             }} onPress={() => activity && router.push(`/users/${activity.user}`)}>
                 <View style={{
-                    height: 50,
+                    height: 40,
                     aspectRatio: 1,
                     
                     backgroundColor: themeConfig.placeholder,
                     
-                    borderRadius: 50,
+                    borderRadius: 40,
                     overflow: "hidden"
                 }}>
                     {(activity && activity.user)?(
