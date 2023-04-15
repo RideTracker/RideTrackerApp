@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { useDispatch } from "react-redux";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useThemeConfig } from "../../../../utils/themes";
 import Button from "../../../../components/button";
 import { setUserData } from "../../../../utils/stores/userData";
@@ -10,6 +10,8 @@ export default function Settings() {
     const dispatch = useDispatch();
 
     const themeConfig = useThemeConfig();
+
+    const router = useRouter();
     
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: themeConfig.background }}>
@@ -20,6 +22,8 @@ export default function Settings() {
             }}>
                 <ScrollView style={{ padding: 10 }}>
                     <View style={{ gap: 10 }}>
+                        <Button primary={false} label="Avatar editor" onPress={() => router.push("/avatar-editor/")}/>
+
                         <Button primary={true} label="Dark mode" onPress={() => dispatch(setUserData({ theme: "dark"}))}/>
                         <Button primary={true} label="Light mode" onPress={() => dispatch(setUserData({ theme: "light"}))}/>
 
