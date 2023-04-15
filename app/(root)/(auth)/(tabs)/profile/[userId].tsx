@@ -32,45 +32,47 @@ export default function Profile() {
                 flex: 1,
                 paddingVertical: 10
             }}>
-                <ScrollView>
+                <View style={{
+                    alignItems: "center",
+                    gap: 10
+                }}>
                     <View style={{
-                        alignItems: "center",
-                        gap: 10
+                        width: 80,
+                        aspectRatio: 1,
+                        borderRadius: 80,
+                        backgroundColor: themeConfig.placeholder,
+                        overflow: "hidden"
                     }}>
-                        <View style={{
-                            width: 100,
-                            aspectRatio: 1,
-                            borderRadius: 100,
-                            backgroundColor: themeConfig.placeholder,
-                            overflow: "hidden"
-                        }}>
-                            {(profile?.user?.avatar) && (
-                                <Image source={{
-                                    uri: profile.user.avatar
-                                }} style={{
-                                    width: "100%",
-                                    height: "100%"
-                                }}/>
-                            )}
-                        </View>
-
-                        
-                        <CaptionText style={(!profile) && {
-                            backgroundColor: themeConfig.placeholder,
-                            color: "transparent"
-                        }}>
-                            {(profile)?(profile.user.name):("Firstname Lastname")}
-                        </CaptionText>
-
-                        <ParagraphText style={(!profile) && {
-                            backgroundColor: themeConfig.placeholder,
-                            color: "transparent"
-                        }}>
-                            {(!profile || profile.stats.followers === 0)?("No followers"):(`${profile.stats.followers} followers`)}
-                            <Text>     </Text>
-                            {(!profile || profile.stats.activities === 0)?("No activities"):(`${profile.stats.followers} activities`)}
-                        </ParagraphText>
+                        {(profile?.user?.avatar) && (
+                            <Image source={{
+                                uri: profile.user.avatar
+                            }} style={{
+                                width: "100%",
+                                height: "100%"
+                            }}/>
+                        )}
                     </View>
+
+                    
+                    <CaptionText style={(!profile) && {
+                        backgroundColor: themeConfig.placeholder,
+                        color: "transparent"
+                    }}>
+                        {(profile)?(profile.user.name):("Firstname Lastname")}
+                    </CaptionText>
+
+                    <ParagraphText style={(!profile) && {
+                        backgroundColor: themeConfig.placeholder,
+                        color: "transparent"
+                    }}>
+                        {(!profile || profile.stats.followers === 0)?("No followers"):(`${profile.stats.followers} followers`)}
+                        <Text>     </Text>
+                        {(!profile || profile.stats.activities === 0)?("No activities"):(`${profile.stats.activities} activities`)}
+                    </ParagraphText>
+                </View>
+
+                <ScrollView>
+                    
                 </ScrollView>
             </View>
         </View>

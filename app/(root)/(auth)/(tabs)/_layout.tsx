@@ -65,7 +65,7 @@ export default function Layout() {
 
             <Tabs.Screen name="profile/[userId]" options={{
                 title: "Profile",
-                href: `/profile/${userData.user.id}`,
+                href: `/profile/${userData?.user?.id}`,
                 tabBarIcon: () => (
                     <FontAwesome5 name="user-alt" color={themeConfig.color} size={16}/>
                 )
