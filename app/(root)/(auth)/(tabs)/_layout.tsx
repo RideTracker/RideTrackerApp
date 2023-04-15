@@ -63,7 +63,7 @@ export default function Layout() {
                 )
             }}/>
 
-            <Tabs.Screen name="profile" options={{
+            <Tabs.Screen name="profile/[userId]" options={{
                 title: "Profile",
                 href: `/profile/${userData.user.id}`,
                 tabBarIcon: () => (
