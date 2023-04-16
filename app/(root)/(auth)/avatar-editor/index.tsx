@@ -7,21 +7,26 @@ import { getAvatars } from "../../../../models/avatars";
 import { CaptionText } from "../../../../components/texts/caption";
 import Avatar from "../../../../components/avatar";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Tabs, { TabsPage } from "../../../../components/tabs";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const avatarTypes = [
     {
         name: "Helmets",
-        type: "helmet"
+        type: "helmet",
+        tab: "appearance"
     },
 
     {
         name: "Sunglasses",
-        type: "sunglass"
+        type: "sunglass",
+        tab: "appearance"
     },
 
     {
         name: "Heads",
         type: "head",
+        tab: "appearance",
 
         required: true
     },
@@ -29,6 +34,7 @@ const avatarTypes = [
     {
         name: "Jerseys",
         type: "jersey",
+        tab: "appearance",
         
         required: true
     }
@@ -70,67 +76,80 @@ export default function AvatarEditorPage() {
             <Stack.Screen options={{ title: "Avatar Editor" }}/>
 
             <View style={{
-                alignItems: "center",
-
-                borderBottomColor: themeConfig.placeholder,
-                borderBottomWidth: 2
+                alignItems: "center"
             }}>
                 {(combination) && (<Avatar combination={combination}/>)}
             </View>
 
-            <ScrollView>
-                <View style={{ padding: 10, gap: 10 }}>
-                    {(avatarTypes).map((avatarType) => (
-                        <React.Fragment key={avatarType.type}>
-                            <CaptionText>{avatarType.name}</CaptionText>
+            <Tabs initialTab={"appearance"} style={{ marginTop: 10, flex: 1 }}>
+                <TabsPage id={"appearance"} title={"Appearance"}>
+                    <ScrollView>
+                        <View style={{ padding: 10, gap: 10 }}>
+                            {(avatarTypes).filter((avatarType) => avatarType.tab === "appearance").map((avatarType) => (
+                                <React.Fragment key={avatarType.type}>
+                                    <CaptionText>{avatarType.name}</CaptionText>
 
-                            <ScrollView horizontal={true}>
-                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 90 }}>
-                                    {(!avatarType.required) && (
-                                        <TouchableOpacity onPress={() => setCombination({ ...combination, [avatarType.type]: null })} style={{
-                                            width: 140,
-                                            height: 80,
+                                    <ScrollView horizontal={true}>
+                                        <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 90 }}>
+                                            {(!avatarType.required) && (
+                                                <TouchableOpacity onPress={() => setCombination({ ...combination, [avatarType.type]: null })} style={{
+                                                    width: 140,
+                                                    height: 80,
 
-                                            borderRadius: 6,
-                                            overflow: "hidden",
+                                                    borderRadius: 6,
+                                                    overflow: "hidden",
 
-                                            justifyContent: "center",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
 
-                                            padding: 10,
+                                                    padding: 10,
 
-                                            backgroundColor: (!combination || !combination[avatarType.type])?("transparent"):(themeConfig.placeholder)
-                                        }}>
-                                            <CaptionText>I DON'T WANT TO BE HERE</CaptionText>
-                                        </TouchableOpacity>
-                                    )}
+                                                    borderWidth: (!combination || !combination[avatarType.type])?(1):(0),
+                                                    borderColor: themeConfig.border
+                                                }}>
+                                                    <FontAwesome5 name="times-circle" size={48} color={themeConfig.placeholder}/>
+                                                </TouchableOpacity>
+                                            )}
 
-                                    {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
-                                        <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: avatar })} style={{
-                                            width: 140,
-                                            height: 80,
+                                            {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
+                                                <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: avatar })} style={{
+                                                    width: 140,
+                                                    height: 80,
 
-                                            borderRadius: 6,
-                                            overflow: "hidden",
+                                                    borderRadius: 6,
+                                                    overflow: "hidden",
 
-                                            padding: 10,
+                                                    padding: 10,
 
-                                            backgroundColor: (combination && combination[avatar.type]?.id === avatar.id)?("transparent"):(themeConfig.placeholder)
-                                        }}>
-                                            <Image source={{
-                                                uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`
-                                            }} style={{
-                                                width: "100%",
-                                                height: "100%",
-                                                resizeMode: "contain"
-                                            }}/>
-                                        </TouchableOpacity>
-                                    ))}
-                                </View>
-                            </ScrollView>
-                        </React.Fragment>
-                    ))}
-                </View>
-            </ScrollView>
+                                                    backgroundColor: (combination && combination[avatar.type]?.id === avatar.id)?(themeConfig.highlight):(themeConfig.placeholder),
+                                                    borderWidth: (combination && combination[avatar.type]?.id === avatar.id)?(1):(0),
+                                                    borderColor: themeConfig.border
+                                                }}>
+                                                    <Image source={{
+                                                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`
+                                                    }} style={{
+                                                        width: "100%",
+                                                        height: "100%",
+                                                        resizeMode: "contain"
+                                                    }}/>
+                                                </TouchableOpacity>
+                                            ))}
+                                        </View>
+                                    </ScrollView>
+                                </React.Fragment>
+                            ))}
+                        </View>
+                    </ScrollView>
+                </TabsPage>
+
+                <TabsPage id={"wallpapers"} title={"Wallpapers"}>
+                    
+                </TabsPage>
+
+                <TabsPage id={"history"} title={"History"}>
+
+                </TabsPage>
+            </Tabs>
         </View>
     );
 };

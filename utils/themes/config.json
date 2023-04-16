@@ -3,6 +3,7 @@
         "background": "#FFF",
         "color": "#000",
         "placeholder": "#EEE",
+		"highlight": "#DDD",
         "border": "#EEE",
 
 		"brand": "#BB87FC",
@@ -18,6 +19,7 @@
         "background": "#171A23",
         "color": "#FFF",
         "placeholder": "#222633",
+		"highlight": "#313749",
         "border": "#242730",
 
 		"brand": "#BB87FC",

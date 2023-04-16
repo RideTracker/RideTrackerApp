@@ -23,7 +23,9 @@ export default function Tabs({ initialTab, style, children }: TabsProps) {
                 borderBottomColor: themeConfig.placeholder,
                 borderBottomWidth: 2,
 
-                paddingHorizontal: 10
+                paddingHorizontal: 10,
+
+                gap: 5
             }}>
                 {React.Children.map(children, (child, index) => (
                     <TouchableOpacity key={index} style={{
@@ -35,8 +37,7 @@ export default function Tabs({ initialTab, style, children }: TabsProps) {
                         borderBottomWidth: 2
                     }} onPress={() => setTab(child.props.id)}>
                         <CaptionText style={{
-                            textTransform: "uppercase",
-
+                            fontSize: 18,
                             opacity: (tab === child.props.id)?(1):(0.6)
                         }}>
                             {child.props.title}
@@ -45,7 +46,7 @@ export default function Tabs({ initialTab, style, children }: TabsProps) {
                 ))}
             </View>
 
-            <View>
+            <View style={{ paddingBottom: 50 }}>
                 {children.find((child) => child.props.id === tab)}
             </View>
         </View>
