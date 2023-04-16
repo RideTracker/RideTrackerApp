@@ -30,6 +30,7 @@ export default function Tabs({ initialTab, style, children }: TabsProps) {
                 {React.Children.map(children, (child, index) => (
                     <TouchableOpacity key={index} style={{
                         padding: 10,
+                        paddingVertical: 15,
 
                         marginBottom: -2,
 

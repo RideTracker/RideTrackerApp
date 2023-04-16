@@ -37,6 +37,14 @@ const avatarTypes = [
         tab: "appearance",
         
         required: true
+    },
+
+    {
+        name: "Wallapers",
+        type: "wallpaper",
+        tab: "wallpapers",
+        
+        required: false
     }
 ];
 
@@ -76,12 +84,29 @@ export default function AvatarEditorPage() {
             <Stack.Screen options={{ title: "Avatar Editor" }}/>
 
             <View style={{
-                alignItems: "center"
+                alignItems: "center",
+                position: "relative"
             }}>
+                {(combination?.wallpaper) && (
+                    <Image source={{
+                        uri: `https://imagedelivery.net/iF-n-0zUOubWqw15Yx-oAg/${combination.wallpaper.id}/wallpaper`
+                    }} style={{
+                        position: "absolute",
+
+                        width: "100%",
+                        height: "100%",
+
+                        resizeMode: "cover",
+                        
+                        left: 0,
+                        bottom: 0
+                    }}/>
+                )}
+
                 {(combination) && (<Avatar combination={combination}/>)}
             </View>
 
-            <Tabs initialTab={"appearance"} style={{ marginTop: 10, flex: 1 }}>
+            <Tabs initialTab={"appearance"} style={{ flex: 1 }}>
                 <TabsPage id={"appearance"} title={"Appearance"}>
                     <ScrollView>
                         <View style={{ padding: 10, gap: 10 }}>
@@ -142,8 +167,36 @@ export default function AvatarEditorPage() {
                     </ScrollView>
                 </TabsPage>
 
-                <TabsPage id={"wallpapers"} title={"Wallpapers"}>
-                    
+                <TabsPage id={"wallpapers"} title={"Wallpapers"} style={{ gap: 10, padding: 10 }}>
+                    {(avatarTypes).filter((avatarType) => avatarType.tab === "wallpapers").map((avatarType) => (
+                        <React.Fragment key={avatarType.type}>
+                            <ScrollView>
+                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 90 }}>
+                                    {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
+                                        <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: avatar })} style={{
+                                            width: 140,
+                                            height: 80,
+
+                                            borderRadius: 6,
+                                            overflow: "hidden",
+
+                                            backgroundColor: (combination && combination[avatar.type]?.id === avatar.id)?(themeConfig.highlight):(themeConfig.placeholder),
+                                            borderWidth: (combination && combination[avatar.type]?.id === avatar.id)?(1):(0),
+                                            borderColor: themeConfig.border
+                                        }}>
+                                            <Image source={{
+                                                uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/wallpaper`
+                                            }} style={{
+                                                width: 140,
+                                                height: 80,
+                                                resizeMode: "cover"
+                                            }}/>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            </ScrollView>
+                        </React.Fragment>
+                    ))}
                 </TabsPage>
 
                 <TabsPage id={"history"} title={"History"}>
