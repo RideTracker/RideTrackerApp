@@ -30,10 +30,11 @@
     "react-native-screens": "~3.20.0",
     "react-native-uuid": "^2.0.1",
     "react-native-web": "~0.18.10",
-    "react-native-webview-canvas": "^1.1.6",
+    "react-native-webview-canvas": "^1.1.8",
     "react-redux": "^8.0.5",
     "redux": "^4.2.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "react-native-webview": "11.26.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Image, ScrollView, View } from "react-native";
+import { Image, ScrollView, View, PixelRatio } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { useSelector } from "react-redux";
 import { useThemeConfig } from "../../../../utils/themes";
 import { getAvatars } from "../../../../models/avatars";
 import { CaptionText } from "../../../../components/texts/caption";
+import Avatar from "../../../../components/avatar";
 
 
 export default function AvatarEditorPage() {
@@ -36,12 +37,7 @@ export default function AvatarEditorPage() {
                 borderBottomColor: themeConfig.placeholder,
                 borderBottomWidth: 2
             }}>
-                <Image source={{
-                    uri: "https://i.imgur.com/ZRzBir4.png"
-                }} style={{
-                    width: "50%",
-                    aspectRatio: 1
-                }}/>
+                <Avatar combination={{}}/>
             </View>
 
             <ScrollView>
