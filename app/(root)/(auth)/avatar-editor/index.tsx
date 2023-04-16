@@ -85,7 +85,25 @@ export default function AvatarEditorPage() {
                             <CaptionText>{avatarType.name}</CaptionText>
 
                             <ScrollView horizontal={true}>
-                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 80 }}>
+                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 90 }}>
+                                    {(!avatarType.required) && (
+                                        <TouchableOpacity onPress={() => setCombination({ ...combination, [avatarType.type]: null })} style={{
+                                            width: 140,
+                                            height: 80,
+
+                                            borderRadius: 6,
+                                            overflow: "hidden",
+
+                                            justifyContent: "center",
+
+                                            padding: 10,
+
+                                            backgroundColor: (!combination || !combination[avatarType.type])?("transparent"):(themeConfig.placeholder)
+                                        }}>
+                                            <CaptionText>I DON'T WANT TO BE HERE</CaptionText>
+                                        </TouchableOpacity>
+                                    )}
+
                                     {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
                                         <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: avatar })} style={{
                                             width: 140,
@@ -96,7 +114,7 @@ export default function AvatarEditorPage() {
 
                                             padding: 10,
 
-                                            backgroundColor: themeConfig.placeholder
+                                            backgroundColor: (combination && combination[avatar.type]?.id === avatar.id)?("transparent"):(themeConfig.placeholder)
                                         }}>
                                             <Image source={{
                                                 uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`

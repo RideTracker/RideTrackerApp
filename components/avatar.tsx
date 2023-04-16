@@ -13,10 +13,9 @@ export default function Avatar({ combination }) {
         const pixelRatio = PixelRatio.get();
 
         context.startBundle();
-        
-        context.fillStyle = "green";
-        context.fillRect(0, 0, 250 * pixelRatio, 250 * pixelRatio);
 
+        context.clearRect(0, 0, 3000 * pixelRatio, 3000 * pixelRatio);
+        
         await renderImage(canvasWebView, context, combination.head);
         await renderImage(canvasWebView, context, combination.jersey);
 
@@ -29,23 +28,43 @@ export default function Avatar({ combination }) {
         await context.executeBundle();
     };
 
-    function renderImage(canvasWebView, context, avatar): Promise<void> {
-        const pixelRatio = PixelRatio.get();
-
+    function getImage(canvasWebView, avatar): Promise<any> {
         return new Promise(async (resolve) => {
             const image = await canvasWebView.createImage();
     
             image.onload = async () => {
                 const width = await image.width;
                 const height = await image.height;
-    
-                context.drawImage(image, 0, 0, width * pixelRatio, height * pixelRatio);
 
-                resolve();
+                resolve({ image, width, height });
             };
     
-            image.src = `https://imagedelivery.net/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`;
+            image.src = `https://imagedelivery.net/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatars`;
         });
+    };
+
+    async function renderImage(canvasWebView, context, avatar) {
+        const pixelRatio = PixelRatio.get();
+
+        const { image, width, height } = await getImage(canvasWebView, avatar);
+
+        let left = 0, top = 0;
+
+        const center = {
+            left: avatar.left ?? Math.floor(avatar.width / 2),
+            top: avatar.top ?? Math.floor(avatar.height / 2)
+        };
+
+        if(avatar.type === "jersey") {
+            left = Math.floor(1500 - center.left);
+            top = Math.ceil(3000 - avatar.height);
+        }
+        else {
+            left = Math.floor(1500 - center.left);
+            top = Math.floor(1500 - center.top);
+        }
+
+        context.drawImage(image, left * pixelRatio, top * pixelRatio, avatar.width * pixelRatio, avatar.height * pixelRatio);
     };
 
     useEffect(() => {
@@ -63,15 +82,28 @@ export default function Avatar({ combination }) {
     }, [ context ]);
 
     return (
-        <CanvasWebView ref={canvasWebViewRef} width={250} height={250} onLoad={async (canvasWebView) => {
-            const canvas = await canvasWebView.createCanvas();
+        <View style={{
+            width: 275,
+            height: 275
+        }}>
+            <CanvasWebView ref={canvasWebViewRef} width={300} height={300} onLoad={async (canvasWebView) => {
+                const canvas = await canvasWebView.createCanvas();
 
-            const pixelRatio = PixelRatio.get();
+                const pixelRatio = PixelRatio.get();
 
-            canvas.width = 250 * pixelRatio;
-            canvas.height = 250 * pixelRatio;
+                canvas.width = 300 * pixelRatio;
+                canvas.height = 300 * pixelRatio;
+
+                const context = await canvas.getContext("2d");
+
+                context.startBundle();
         
-            setContext(await canvas.getContext("2d"));
-        }}/>
+                context.scale(.1, .1);
+
+                await context.executeBundle();
+            
+                setContext(context);
+            }}/>
+        </View>
     );
 };
