@@ -6,6 +6,7 @@ import { useThemeConfig } from "../../../../utils/themes";
 import { getAvatars } from "../../../../models/avatars";
 import { CaptionText } from "../../../../components/texts/caption";
 import Avatar from "../../../../components/avatar";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const avatarTypes = [
     {
@@ -74,7 +75,7 @@ export default function AvatarEditorPage() {
                 borderBottomColor: themeConfig.placeholder,
                 borderBottomWidth: 2
             }}>
-                <Avatar combination={{}}/>
+                {(combination) && (<Avatar combination={combination}/>)}
             </View>
 
             <ScrollView>
@@ -84,9 +85,9 @@ export default function AvatarEditorPage() {
                             <CaptionText>{avatarType.name}</CaptionText>
 
                             <ScrollView horizontal={true}>
-                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
+                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 80 }}>
                                     {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
-                                        <View key={avatar.id} style={{
+                                        <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: avatar })} style={{
                                             width: 140,
                                             height: 80,
 
@@ -104,7 +105,7 @@ export default function AvatarEditorPage() {
                                                 height: "100%",
                                                 resizeMode: "contain"
                                             }}/>
-                                        </View>
+                                        </TouchableOpacity>
                                     ))}
                                 </View>
                             </ScrollView>

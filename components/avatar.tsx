@@ -17,8 +17,14 @@ export default function Avatar({ combination }) {
         context.fillStyle = "green";
         context.fillRect(0, 0, 250 * pixelRatio, 250 * pixelRatio);
 
-        await renderImage(canvasWebView, context, "e5b34eee-90b6-410d-4d39-3fcddcc59a00");
-        await renderImage(canvasWebView, context, "8be37068-536a-434b-c833-456e3c741500");
+        await renderImage(canvasWebView, context, combination.head);
+        await renderImage(canvasWebView, context, combination.jersey);
+
+        if(combination.sunglass)
+            await renderImage(canvasWebView, context, combination.sunglass);
+
+        if(combination.helmet)
+            await renderImage(canvasWebView, context, combination.helmet);
 
         await context.executeBundle();
     };
@@ -38,7 +44,7 @@ export default function Avatar({ combination }) {
                 resolve();
             };
     
-            image.src = `https://imagedelivery.net/iF-n-0zUOubWqw15Yx-oAg/${avatar}/avatarspreview`;
+            image.src = `https://imagedelivery.net/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`;
         });
     };
 
