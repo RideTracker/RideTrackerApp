@@ -83,16 +83,16 @@ export default function Avatar({ combination }) {
 
     return (
         <View style={{
-            width: 275,
-            height: 275
+            width: 250,
+            height: 250
         }}>
-            <CanvasWebView ref={canvasWebViewRef} width={300} height={300} onLoad={async (canvasWebView) => {
+            <CanvasWebView ref={canvasWebViewRef} width={275} height={275} onLoad={async (canvasWebView) => {
                 const canvas = await canvasWebView.createCanvas();
 
                 const pixelRatio = PixelRatio.get();
 
-                canvas.width = 300 * pixelRatio;
-                canvas.height = 300 * pixelRatio;
+                canvas.width = 275 * pixelRatio;
+                canvas.height = 275 * pixelRatio;
 
                 const context = await canvas.getContext("2d");
 

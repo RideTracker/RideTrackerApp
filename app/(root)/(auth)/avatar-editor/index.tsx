@@ -85,7 +85,9 @@ export default function AvatarEditorPage() {
 
             <View style={{
                 alignItems: "center",
-                position: "relative"
+                position: "relative",
+
+                overflow: "hidden"
             }}>
                 {(combination?.wallpaper) && (
                     <Image source={{
