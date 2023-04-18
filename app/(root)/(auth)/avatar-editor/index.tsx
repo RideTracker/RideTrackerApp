@@ -10,43 +10,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Tabs, { TabsPage } from "../../../../components/tabs";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const avatarTypes = [
-    {
-        name: "Helmets",
-        type: "helmet",
-        tab: "appearance"
-    },
-
-    {
-        name: "Sunglasses",
-        type: "sunglass",
-        tab: "appearance"
-    },
-
-    {
-        name: "Heads",
-        type: "head",
-        tab: "appearance",
-
-        required: true
-    },
-
-    {
-        name: "Jerseys",
-        type: "jersey",
-        tab: "appearance",
-        
-        required: true
-    },
-
-    {
-        name: "Wallapers",
-        type: "wallpaper",
-        tab: "wallpapers",
-        
-        required: false
-    }
-];
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Colors } from "../../../../components/colors";
 
 export default function AvatarEditorPage() {
     const userData = useSelector((state: any) => state.userData);
@@ -54,10 +19,54 @@ export default function AvatarEditorPage() {
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
 
+    const avatarTypes = [
+        {
+            name: "Helmets",
+            type: "helmet",
+            tab: "appearance",
+            icon: (<MaterialCommunityIcons name="racing-helmet" size={24} color={themeConfig.color}/>)
+        },
+    
+        {
+            name: "Sunglasses",
+            type: "sunglass",
+            tab: "appearance",
+            icon: (<MaterialCommunityIcons name="sunglasses" size={24} color={themeConfig.color}/>)
+        },
+    
+        {
+            name: "Heads",
+            type: "head",
+            tab: "appearance",
+            icon: (<MaterialCommunityIcons name="head" size={24} color={themeConfig.color}/>),
+    
+            required: true
+        },
+    
+        {
+            name: "Jerseys",
+            type: "jersey",
+            tab: "appearance",
+            icon: (<MaterialCommunityIcons name="tshirt-crew" size={24} color={themeConfig.color}/>),
+            
+            required: true
+        },
+    
+        {
+            name: "Wallapers",
+            type: "wallpaper",
+            tab: "wallpapers",
+            icon: null,
+            
+            required: false
+        }
+    ];
+
     const router = useRouter();
 
     const [ avatars, setAvatars ] = useState(null);
     const [ combination, setCombination ] = useState(null);
+    const [ tabType, setTabType ] = useState("helmet");
 
     useEffect(() => {
         getAvatars(userData.key).then((result) => {
@@ -105,14 +114,42 @@ export default function AvatarEditorPage() {
                     }}/>
                 )}
 
-                {(combination) && (<Avatar combination={combination}/>)}
+                {(avatars && combination) && (<Avatar avatars={avatars} combination={combination}/>)}
             </View>
 
             <Tabs initialTab={"appearance"} style={{ flex: 1 }}>
                 <TabsPage id={"appearance"} title={"Appearance"}>
                     <ScrollView>
                         <View style={{ padding: 10, gap: 10 }}>
-                            {(avatarTypes).filter((avatarType) => avatarType.tab === "appearance").map((avatarType) => (
+                            <ScrollView horizontal={true}>
+                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
+                                    {(avatarTypes).filter((avatarType) => avatarType.tab === "appearance").map((avatarType) => (
+                                        <TouchableOpacity style={{
+                                            height: 40,
+
+                                            borderRadius: 6,
+                                            overflow: "hidden",
+
+                                            flexDirection: "row",
+                                            gap: 10,
+
+                                            alignItems: "baseline",
+
+                                            padding: 10,
+
+                                            backgroundColor: (tabType === avatarType.type)?(themeConfig.highlight):(themeConfig.placeholder),
+                                            borderWidth: 1,
+                                            borderColor: (tabType === avatarType.type)?(themeConfig.border):("transparent")
+                                        }} onPress={() => setTabType(avatarType.type)}>
+                                            {avatarType.icon}
+
+                                            <CaptionText>{avatarType.name}</CaptionText>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            </ScrollView>
+
+                            {(avatarTypes).filter((avatarType) => avatarType.tab === "appearance" && avatarType.type === tabType).map((avatarType) => (
                                 <React.Fragment key={avatarType.type}>
                                     <CaptionText>{avatarType.name}</CaptionText>
 
@@ -139,7 +176,7 @@ export default function AvatarEditorPage() {
                                             )}
 
                                             {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
-                                                <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: avatar })} style={{
+                                                <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: { id: avatar.id } })} style={{
                                                     width: 140,
                                                     height: 80,
 
@@ -153,7 +190,7 @@ export default function AvatarEditorPage() {
                                                     borderColor: themeConfig.border
                                                 }}>
                                                     <Image source={{
-                                                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/avatarspreview`
+                                                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.image}/avatarspreview`
                                                     }} style={{
                                                         width: "100%",
                                                         height: "100%",
@@ -163,6 +200,14 @@ export default function AvatarEditorPage() {
                                             ))}
                                         </View>
                                     </ScrollView>
+
+                                    {(combination && combination[tabType]) && (avatars.find((avatar) => avatar.id === combination[tabType].id).colors.map((color, index) => (
+                                        <React.Fragment key={index}>
+                                            <CaptionText style={{ textTransform: "capitalize" }}>{color.type}</CaptionText>
+
+                                            <Colors initialColor={color.defaultColor} type={color.type}/>
+                                        </React.Fragment>
+                                    )))}
                                 </React.Fragment>
                             ))}
                         </View>
@@ -170,35 +215,7 @@ export default function AvatarEditorPage() {
                 </TabsPage>
 
                 <TabsPage id={"wallpapers"} title={"Wallpapers"} style={{ gap: 10, padding: 10 }}>
-                    {(avatarTypes).filter((avatarType) => avatarType.tab === "wallpapers").map((avatarType) => (
-                        <React.Fragment key={avatarType.type}>
-                            <ScrollView>
-                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 90 }}>
-                                    {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
-                                        <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: avatar })} style={{
-                                            width: 140,
-                                            height: 80,
 
-                                            borderRadius: 6,
-                                            overflow: "hidden",
-
-                                            backgroundColor: (combination && combination[avatar.type]?.id === avatar.id)?(themeConfig.highlight):(themeConfig.placeholder),
-                                            borderWidth: (combination && combination[avatar.type]?.id === avatar.id)?(1):(0),
-                                            borderColor: themeConfig.border
-                                        }}>
-                                            <Image source={{
-                                                uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.id}/wallpaper`
-                                            }} style={{
-                                                width: 140,
-                                                height: 80,
-                                                resizeMode: "cover"
-                                            }}/>
-                                        </TouchableOpacity>
-                                    ))}
-                                </View>
-                            </ScrollView>
-                        </React.Fragment>
-                    ))}
                 </TabsPage>
 
                 <TabsPage id={"history"} title={"History"}>
