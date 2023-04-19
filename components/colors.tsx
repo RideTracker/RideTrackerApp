@@ -147,7 +147,8 @@ export function Colors({ initialColor, type, colorChange }) {
         <ScrollView horizontal={true}>
             <View style={{
                 flexDirection: "row",
-                gap: 10
+                gap: 10,
+                paddingBottom: 10
             }}>
                 <TouchableOpacity style={{
                     width: 40,
