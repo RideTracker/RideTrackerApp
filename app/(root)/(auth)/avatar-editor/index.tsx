@@ -79,8 +79,15 @@ export default function AvatarEditorPage() {
 
             if(!userAvatar) {
                 setCombination({
-                    head: result.avatars.find((avatar) => avatar.type === "head"),
-                    jersey: result.avatars.find((avatar) => avatar.type === "jersey")
+                    head: {
+                        id: result.avatars.find((avatar) => avatar.type === "head").id,
+                        colors: []
+                    },
+
+                    jersey: {
+                        id: result.avatars.find((avatar) => avatar.type === "jersey").id,
+                        colors: []
+                    }
                 });
             }
             else
@@ -124,7 +131,7 @@ export default function AvatarEditorPage() {
                             <ScrollView horizontal={true}>
                                 <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
                                     {(avatarTypes).filter((avatarType) => avatarType.tab === "appearance").map((avatarType) => (
-                                        <TouchableOpacity style={{
+                                        <TouchableOpacity key={avatarType.type} style={{
                                             height: 40,
 
                                             borderRadius: 6,
@@ -176,7 +183,7 @@ export default function AvatarEditorPage() {
                                             )}
 
                                             {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
-                                                <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: { id: avatar.id } })} style={{
+                                                <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: { id: avatar.id, colors: [] } })} style={{
                                                     width: 140,
                                                     height: 80,
 
@@ -205,7 +212,7 @@ export default function AvatarEditorPage() {
                                         <React.Fragment key={index}>
                                             <CaptionText style={{ textTransform: "capitalize" }}>{color.type}</CaptionText>
 
-                                            <Colors initialColor={color.defaultColor} type={color.type}/>
+                                            <Colors initialColor={color.defaultColor} type={color.type} colorChange={(hex) => setCombination({ ...combination, [tabType]: { ...combination[tabType], colors: [ ...combination[tabType].colors.filter((combinationColor) => combinationColor.index !== color.index), { color: hex, index: color.index } ] } })}/>
                                         </React.Fragment>
                                     )))}
                                 </React.Fragment>

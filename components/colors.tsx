@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { useThemeConfig } from "../utils/themes";
 
 const typeColors = [
@@ -140,7 +140,7 @@ const typeColors = [
     }
 ];
 
-export function Colors({ initialColor, type }) {
+export function Colors({ initialColor, type, colorChange }) {
     const themeConfig = useThemeConfig();
 
     return (
@@ -149,7 +149,7 @@ export function Colors({ initialColor, type }) {
                 flexDirection: "row",
                 gap: 10
             }}>
-                <View style={{
+                <TouchableOpacity style={{
                     width: 40,
                     height: 40,
 
@@ -159,10 +159,10 @@ export function Colors({ initialColor, type }) {
                     borderRadius: 50,
 
                     backgroundColor: initialColor
-                }}/>
+                }} onPress={() => colorChange(initialColor)}/>
 
                 {typeColors.find((typeColor) => typeColor.type === type)?.colors?.map((color) => (
-                    <View key={color} style={{
+                    <TouchableOpacity key={color} style={{
                         width: 40,
                         height: 40,
 
@@ -172,7 +172,7 @@ export function Colors({ initialColor, type }) {
                         borderRadius: 50,
 
                         backgroundColor: color
-                    }}/>
+                    }} onPress={() => colorChange(color)}/>
                 ))}
             </View>
         </ScrollView>
