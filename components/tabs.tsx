@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import { ParagraphText } from "./texts/paragraph";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -9,11 +9,17 @@ type TabsProps = {
     initialTab: string;
     style?: any;
     children?: any;
+    onChange?: Function;
 };
 
-export default function Tabs({ initialTab, style, children }: TabsProps) {
+export default function Tabs({ initialTab, style, children, onChange }: TabsProps) {
     const themeConfig = useThemeConfig();
     const [ tab, setTab ] = useState(initialTab);
+
+    useEffect(() => {
+        if(onChange)
+            onChange(tab);
+    }, [ tab ]);
 
     return (
         <View style={style}>
