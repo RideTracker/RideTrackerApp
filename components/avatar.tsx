@@ -83,14 +83,14 @@ export default function Avatar({ avatars, combination }) {
                                 avatar.images.sort((a, b) => a.index - b.index).forEach((avatarImage) => {
                                     const image = images.find((image) => image.id === avatarImage.image).image;
 
-                                    if(!avatarImage.colorIndex) {
+                                    if(!avatarImage.colorType) {
                                         context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
                                         return;
                                     }
 
-                                    const avatarColor = avatar.colors.find((avatarColor) => avatarColor.index === avatarImage.colorIndex);
-                                    const combinationColor = combination[type].colors.find((combinationColor) => combinationColor.index === avatarImage.colorIndex);
+                                    const avatarColor = avatar.colors.find((avatarColor) => avatarColor.type === avatarImage.colorType);
+                                    const combinationColor = combination[type].colors.find((combinationColor) => combinationColor.type === avatarImage.colorType);
                                     
                                     if(!(combinationColor?.color ?? avatarColor?.defaultColor)) {
                                         context.drawImage(image, 0, 0, canvas.width, canvas.height);

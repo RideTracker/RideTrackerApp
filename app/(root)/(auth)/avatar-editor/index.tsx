@@ -211,7 +211,7 @@ export default function AvatarEditorPage() {
                                         </View>
                                     </ScrollView>
 
-                                    {(combination && combination[tabType]) && (avatars.find((avatar) => avatar.id === combination[tabType].id).colors.filter((avatarColor) => avatarColor.defaultColor).map((color, index) => (
+                                    {(combination && combination[tabType]) && (avatars.find((avatar) => avatar.id === combination[tabType].id).colors.filter((avatarColor) => avatarColor.defaultColor).sort((a, b) => a.index - b.index).map((color) => (
                                         <React.Fragment key={combination[tabType].id + color.type}>
                                             <CaptionText style={{ textTransform: "capitalize" }}>{color.type}</CaptionText>
 
