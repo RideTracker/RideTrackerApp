@@ -64,6 +64,7 @@ export default function AvatarEditorPage() {
 
     const router = useRouter();
 
+    const [ picker, setPicker ] = useState(null);
     const [ avatars, setAvatars ] = useState(null);
     const [ combination, setCombination ] = useState(null);
     const [ tabType, setTabType ] = useState("helmet");
@@ -103,6 +104,8 @@ export default function AvatarEditorPage() {
                 alignItems: "center",
                 position: "relative",
 
+                height: 225,
+
                 overflow: "hidden"
             }}>
                 {(combination?.wallpaper) && (
@@ -127,7 +130,7 @@ export default function AvatarEditorPage() {
             <Tabs initialTab={"appearance"} style={{ flex: 1 }}>
                 <TabsPage id={"appearance"} title={"Appearance"}>
                     <ScrollView>
-                        <View style={{ padding: 10, gap: 10 }}>
+                        <View style={{ padding: 10, paddingBottom: 50, gap: 10 }}>
                             <ScrollView horizontal={true}>
                                 <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
                                     {(avatarTypes).filter((avatarType) => avatarType.tab === "appearance").map((avatarType) => (
@@ -212,7 +215,12 @@ export default function AvatarEditorPage() {
                                         <React.Fragment key={index}>
                                             <CaptionText style={{ textTransform: "capitalize" }}>{color.type}</CaptionText>
 
-                                            <Colors initialColor={color.defaultColor} type={color.type} colorChange={(hex) => setCombination({ ...combination, [tabType]: { ...combination[tabType], colors: [ ...combination[tabType].colors.filter((combinationColor) => combinationColor.index !== color.index), { color: hex, index: color.index } ] } })}/>
+                                            <Colors initialColor={color.defaultColor} type={color.type} picker={picker === color.type} showPicker={(show) => {
+                                                if(!show && color.type === picker)
+                                                    setPicker(null);
+                                                else if(show)
+                                                    setPicker(color.type)
+                                            }} colorChange={(hex) => setCombination({ ...combination, [tabType]: { ...combination[tabType], colors: [ ...combination[tabType].colors.filter((combinationColor) => combinationColor.index !== color.index), { color: hex, index: color.index } ] } })}/>
                                         </React.Fragment>
                                     )))}
                                 </React.Fragment>

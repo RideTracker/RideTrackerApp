@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import { useThemeConfig } from "../utils/themes";
+import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from "expo-linear-gradient";
+import { color } from "chroma.ts";
+import { Draggable } from "./draggable";
 
 const typeColors = [
     {
@@ -140,42 +144,187 @@ const typeColors = [
     }
 ];
 
-export function Colors({ initialColor, type, colorChange }) {
+export function Colors({ initialColor, type, colorChange, picker, showPicker }) {
     const themeConfig = useThemeConfig();
 
+    const [ currentColor, setColor ] = useState(initialColor);
+    const [ currentColorCustom, setCurrentColorCustom ] = useState(true);
+    const [ currentColorHue, setCurrentColorHue ] = useState(null);
+    const [ saturationDragging, setSaturationDragging ] = useState(false);
+    const [ hueDragging, setHueDragging ] = useState(false);
+    const [ position, setPosition ] = useState(null);
+    const [ huePosition, setHuePosition ] = useState(null);
+
+    useEffect(() => {
+        setCurrentColorHue(color(currentColor).hsl()[0]);
+
+        colorChange(currentColor);
+    }, [ currentColor ]);
+
+    useEffect(() => {
+        if(!saturationDragging && position) {
+            setColor(color([ currentColorHue, position.scale.left, (1 - position.scale.top) ], "hsv").hex());
+        }
+    }, [ saturationDragging ]);
+
+    useEffect(() => {
+        if(!hueDragging && huePosition) {
+            setCurrentColorHue(huePosition.scale.left * 360);
+
+            if(position) {
+                setColor(color([ huePosition.scale.left * 360, position.scale.left, (1 - position.scale.top) ], "hsv").hex());
+            }
+        }
+    }, [ hueDragging ]);
+
     return (
-        <ScrollView horizontal={true}>
-            <View style={{
-                flexDirection: "row",
-                gap: 10,
-                paddingBottom: 10
-            }}>
-                <TouchableOpacity style={{
-                    width: 40,
-                    height: 40,
+        <View>
 
-                    borderWidth: 2,
-                    borderColor: themeConfig.highlight,
-
-                    borderRadius: 50,
-
-                    backgroundColor: initialColor
-                }} onPress={() => colorChange(initialColor)}/>
-
-                {typeColors.find((typeColor) => typeColor.type === type)?.colors?.map((color) => (
-                    <TouchableOpacity key={color} style={{
+            <ScrollView horizontal={true}>
+                <View style={{
+                    flexDirection: "row",
+                    gap: 10,
+                    paddingBottom: 10
+                }}>
+                    <TouchableOpacity style={{
                         width: 40,
                         height: 40,
 
                         borderWidth: 2,
-                        borderColor: themeConfig.border,
+                        borderColor: (currentColorCustom)?(themeConfig.color):(themeConfig.border),
 
                         borderRadius: 50,
 
-                        backgroundColor: color
-                    }} onPress={() => colorChange(color)}/>
-                ))}
-            </View>
-        </ScrollView>
+                        backgroundColor: (currentColorCustom)?(currentColor):(initialColor)
+                    }} onPress={() => {
+                        if(!currentColorCustom)
+                            setColor(initialColor);
+
+                        setCurrentColorCustom(true);
+                            
+                        showPicker(!picker);
+                    }}>
+                        <MaterialIcons name="colorize" size={24} color={themeConfig.color} style={{
+                            position: "absolute",
+
+                            right: 0,
+                            bottom: 0
+                        }}/>
+                    </TouchableOpacity>
+
+                    {typeColors.find((typeColor) => typeColor.type === type)?.colors?.map((color) => (
+                        <TouchableOpacity key={color} style={{
+                            width: 40,
+                            height: 40,
+
+                            borderWidth: 2,
+                            borderColor: (currentColor === color)?(themeConfig.color):(themeConfig.border),
+
+                            borderRadius: 50,
+
+                            backgroundColor: color
+                        }} onPress={() => {
+                            setColor(color);
+                            showPicker(false);
+                            setCurrentColorCustom(false);
+                        }}/>
+                    ))}
+                </View>
+            </ScrollView>
+
+            {(picker) && (
+                <View style={{
+                    flexDirection: "column",
+                    gap: 10,
+                    height: 200
+                }}>
+                    <View style={{
+                        flex: 1
+                    }}>
+                        <LinearGradient colors={[ "white", `hsl(${currentColorHue}, 100%, 50%)` ]} start={[ 0, 0.5 ]} end={[ 1, 0.5 ]} style={{
+                            borderRadius: 10,
+
+                            height: "100%",
+                            width: "100%",
+
+                            position: "absolute",
+                            left: 0,
+                            top: 0
+                        }}>
+                            <LinearGradient colors={[ "transparent", "black" ]} style={{ flex: 1, height: 200 }}/>
+                        </LinearGradient>
+                        
+                        <View style={{
+                            height: "100%",
+                            width: "100%",
+
+                            position: "absolute",
+                            left: 0,
+                            top: 0
+                        }}>
+                            <Draggable draggingChange={(_dragging) => setSaturationDragging(_dragging)} positionChange={(position) => setPosition(position)}>
+                                <View style={{
+                                    width: (saturationDragging)?(80):(40),
+                                    height: (saturationDragging)?(80):(40),
+
+                                    marginLeft: -((saturationDragging)?(40):(20)),
+                                    marginTop: -((saturationDragging)?(40):(20)),
+
+                                    borderRadius: 50,
+
+                                    backgroundColor: (position)?(
+                                        color([ currentColorHue, position.scale.left, (1 - position.scale.top) ], "hsv").hex()
+                                    ):(currentColor),
+
+                                    borderWidth: 2,
+                                    borderColor: themeConfig.color
+                                }}/>
+                            </Draggable>
+                        </View>
+                    </View>
+
+                    <View style={{
+                        height: 30
+                    }}>
+                        <LinearGradient start={[ 0, 0.5 ]} end={[ 1, 0.5 ]} colors={Array(6).fill(null).map((_, index, array) => `hsl(${Math.round((360 / (array.length - 1)) * index)}, 100%, 50%)`)} style={{
+                            borderRadius: 6,
+
+                            height: "100%",
+                            width: "100%",
+
+                            position: "absolute",
+                            left: 0,
+                            top: 0
+                        }}/>
+                        
+                        <View style={{
+                            height: "100%",
+                            width: "100%",
+
+                            position: "absolute",
+                            left: 0,
+                            top: 0
+                        }}>
+                            <Draggable lockVertical={true} draggingChange={(_dragging) => setHueDragging(_dragging)} positionChange={(position) => setHuePosition(position)}>
+                                <View style={{
+                                    width: (hueDragging)?(80):(40),
+                                    height: (hueDragging)?(80):(40),
+
+                                    marginLeft: -((hueDragging)?(40):(20)),
+                                    marginTop: -((hueDragging)?(40):(20)) + 15,
+
+                                    borderRadius: 50,
+
+                                    backgroundColor: color([ (huePosition)?(huePosition.scale.left * 360):(currentColorHue), 1, 1 ], "hsv").hex(),
+
+                                    borderWidth: 2,
+                                    borderColor: themeConfig.color
+                                }}/>
+                            </Draggable>
+                        </View>
+                    </View>
+                </View>
+            )}
+        </View>
     );
 };
