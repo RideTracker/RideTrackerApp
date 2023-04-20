@@ -143,7 +143,7 @@ export default function AvatarEditorPage() {
                                             flexDirection: "row",
                                             gap: 10,
 
-                                            alignItems: "baseline",
+                                            alignItems: "center",
 
                                             padding: 10,
 
@@ -151,7 +151,9 @@ export default function AvatarEditorPage() {
                                             borderWidth: 1,
                                             borderColor: (tabType === avatarType.type)?(themeConfig.border):("transparent")
                                         }} onPress={() => setTabType(avatarType.type)}>
-                                            {avatarType.icon}
+                                            <View style={{ marginTop: -3 }}>
+                                                {avatarType.icon}
+                                            </View>
 
                                             <CaptionText>{avatarType.name}</CaptionText>
                                         </TouchableOpacity>
