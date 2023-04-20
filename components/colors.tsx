@@ -179,7 +179,6 @@ export function Colors({ initialColor, type, colorChange, picker, showPicker }) 
 
     return (
         <View>
-
             <ScrollView horizontal={true}>
                 <View style={{
                     flexDirection: "row",
@@ -262,7 +261,7 @@ export function Colors({ initialColor, type, colorChange, picker, showPicker }) 
                             left: 0,
                             top: 0
                         }}>
-                            <Draggable draggingChange={(_dragging) => setSaturationDragging(_dragging)} positionChange={(position) => setPosition(position)}>
+                            <Draggable initialLeft={color(currentColor).hsv()[1]} initialTop={1 - color(currentColor).hsv()[2]} draggingChange={(_dragging) => setSaturationDragging(_dragging)} positionChange={(position) => setPosition(position)}>
                                 <View style={{
                                     width: (saturationDragging)?(80):(40),
                                     height: (saturationDragging)?(80):(40),
@@ -305,7 +304,7 @@ export function Colors({ initialColor, type, colorChange, picker, showPicker }) 
                             left: 0,
                             top: 0
                         }}>
-                            <Draggable lockVertical={true} draggingChange={(_dragging) => setHueDragging(_dragging)} positionChange={(position) => setHuePosition(position)}>
+                            <Draggable initialLeft={color(currentColor).hsl()[0] / 360} lockVertical={true} draggingChange={(_dragging) => setHueDragging(_dragging)} positionChange={(position) => setHuePosition(position)}>
                                 <View style={{
                                     width: (hueDragging)?(80):(40),
                                     height: (hueDragging)?(80):(40),

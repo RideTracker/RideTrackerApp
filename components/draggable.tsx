@@ -1,58 +1,62 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { View, PanResponder, Animated } from "react-native";
 
-export function Draggable({ children, draggingChange, positionChange, lockVertical = false }) {
+export function Draggable({ children, draggingChange, positionChange, lockVertical = false, initialLeft = 0, initialTop = 0 }) {
     const [ dragging, setDragging ] = useState(false);
 
     const [ containerWidth, setContainerWidth ] = useState(0);
     const [ containerHeight, setContainerHeight ] = useState(0);
 
-  const panResponder = useMemo(
-    () => PanResponder.create({
-      onMoveShouldSetPanResponderCapture: () => true,
-      onPanResponderGrant: (_, gestureState) => {
-        // Disable any existing animations
-        draggableRef.current?.getLayout &&
-          draggableRef.current?.stopAnimation();
-      },
-      onPanResponderMove: (_, gestureState) => {
-        if(!dragging)
-            setDragging(true);
-
-        const location = {
-            x: Math.min(Math.max(0, _.nativeEvent.locationX), containerWidth),
-            y: (lockVertical)?(0):(Math.min(Math.max(0, _.nativeEvent.locationY), containerHeight))
-        };
-
-        // Set the position of the draggable element based on the gesture state
-        Animated.event(
-          [
-            {
-              dx: draggablePosition.current.x,
-              dy: draggablePosition.current.y,
+    const panResponder = useMemo(
+        () => PanResponder.create({
+            onMoveShouldSetPanResponderCapture: () => true,
+            onPanResponderGrant: (_, gestureState) => {
+            // Disable any existing animations
+            draggableRef.current?.getLayout &&
+                draggableRef.current?.stopAnimation();
             },
-          ],
-          {
-            useNativeDriver: false
-          }
-        )({
-            dx: location.x,
-            dy: location.y
-        });
+            onPanResponderMove: (_, gestureState) => {
+                if(!dragging)
+                    setDragging(true);
 
-        positionChange({
-            location,
-            scale: {
-                left: location.x / containerWidth,
-                top: location.y / containerHeight
-            }
-        });
-      },
+                const location = {
+                    x: Math.min(Math.max(0, _.nativeEvent.locationX), containerWidth),
+                    y: (lockVertical)?(0):(Math.min(Math.max(0, _.nativeEvent.locationY), containerHeight))
+                };
 
-      onPanResponderEnd(e, gestureState) {
-          setDragging(false);
-      },
-    }), 
+                // Set the position of the draggable element based on the gesture state
+                Animated.event(
+                    [
+                    {
+                        dx: draggablePosition.current.x,
+                        dy: draggablePosition.current.y,
+                    },
+                    ],
+                    {
+                        useNativeDriver: false
+                    }
+                )({
+                    dx: location.x,
+                    dy: location.y
+                });
+
+                positionChange({
+                    location,
+                    scale: {
+                        left: location.x / containerWidth,
+                        top: location.y / containerHeight
+                    }
+                });
+            },
+
+            onPanResponderRelease(e, gestureState) {
+                setDragging(false);
+            },
+
+            onPanResponderEnd(e, gestureState) {
+                setDragging(false);
+            },
+        }), 
     [ containerWidth, containerHeight ]
   );
 
@@ -71,6 +75,11 @@ export function Draggable({ children, draggingChange, positionChange, lockVertic
       onLayout={(event) => {
         setContainerWidth(event.nativeEvent.layout.width);
         setContainerHeight(event.nativeEvent.layout.height);
+
+        draggablePosition.current.setValue({
+            x: initialLeft * event.nativeEvent.layout.width,
+            y: initialTop * event.nativeEvent.layout.height
+        });
       }}
       {...panResponder.panHandlers}
     >
