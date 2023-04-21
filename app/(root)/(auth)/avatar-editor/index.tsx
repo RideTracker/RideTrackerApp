@@ -3,7 +3,7 @@ import { Image, ScrollView, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { useSelector } from "react-redux";
 import { useThemeConfig } from "../../../../utils/themes";
-import { getAvatars } from "../../../../models/avatars";
+import { createUserAvatar, getAvatars } from "../../../../models/avatars";
 import { CaptionText } from "../../../../components/texts/caption";
 import Avatar from "../../../../components/avatar";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -12,6 +12,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "../../../../components/colors";
+import { ParagraphText } from "../../../../components/texts/paragraph";
+import Constants from "expo-constants";
 
 export default function AvatarEditorPage() {
     const userData = useSelector((state: any) => state.userData);
@@ -64,10 +66,12 @@ export default function AvatarEditorPage() {
 
     const router = useRouter();
 
+    const [ dataUrl, setDataUrl ] = useState(null);
     const [ picker, setPicker ] = useState(null);
     const [ avatars, setAvatars ] = useState(null);
     const [ combination, setCombination ] = useState(null);
     const [ tabType, setTabType ] = useState("helmet");
+    const [ uploading, setUploading ] = useState(false);
 
     useEffect(() => {
         getAvatars(userData.key).then((result) => {
@@ -96,9 +100,28 @@ export default function AvatarEditorPage() {
         });
     }, []);
 
+    useEffect(() => {
+        if(uploading) {
+            createUserAvatar(userData.key, combination, dataUrl).then(async (result) => {
+                if(!result.success)
+                    return setUploading(false);
+
+                router.back();
+            });
+        }
+    }, [ uploading ]);
+
     return (
         <View style={{ flex: 1, backgroundColor: themeConfig.background }}>
-            <Stack.Screen options={{ title: "Avatar Editor" }}/>
+            <Stack.Screen options={{
+                title: "Avatar Editor",
+
+                headerRight: () => (
+                    <TouchableOpacity disabled={!dataUrl || uploading} onPress={() => setUploading(true)}>
+                        <ParagraphText style={{ fontSize: 21, fontWeight: 400, opacity: (uploading)?(0.5):(1) }}>Save</ParagraphText>
+                    </TouchableOpacity>
+                )
+            }}/>
 
             <View style={{
                 alignItems: "center",
@@ -110,7 +133,7 @@ export default function AvatarEditorPage() {
             }}>
                 {(combination?.wallpaper) && (
                     <Image source={{
-                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatars.find((avatar) => avatar.id === combination.wallpaper.id).image}/wallpaper`
+                        uri: `${Constants.expoConfig.extra.images}/${avatars.find((avatar) => avatar.id === combination.wallpaper.id).image}/wallpaper`
                     }} style={{
                         position: "absolute",
 
@@ -124,10 +147,13 @@ export default function AvatarEditorPage() {
                     }}/>
                 )}
 
-                {(avatars && combination) && (<Avatar avatars={avatars} combination={combination}/>)}
+                {(avatars && combination) && (<Avatar avatars={avatars} combination={combination} onDataUrl={(url) => setDataUrl(url)}/>)}
             </View>
 
-            <Tabs initialTab={"appearance"} style={{ flex: 1 }} onChange={(tab) => setTabType(avatarTypes.find((avatarType) => avatarType.tab == tab).type)}>
+            <Tabs initialTab={"appearance"} onChange={(tab) => setTabType(avatarTypes.find((avatarType) => avatarType.tab == tab).type)} style={{
+                flex: 1,
+                opacity: (uploading)?(0.5):(1)
+            }} pointerEvents={(uploading)?("none"):("auto")}>
                 <TabsPage id={"appearance"} title={"Appearance"}>
                     <ScrollView>
                         <View style={{ padding: 10, paddingBottom: 50, gap: 10 }}>
@@ -202,7 +228,7 @@ export default function AvatarEditorPage() {
                                                     borderColor: themeConfig.border
                                                 }}>
                                                     <Image source={{
-                                                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.image}/avatarspreview`
+                                                        uri: `${Constants.expoConfig.extra.images}/${avatar.image}/avatarspreview`
                                                     }} style={{
                                                         width: "100%",
                                                         height: "100%",
@@ -301,7 +327,7 @@ export default function AvatarEditorPage() {
                                                     borderColor: themeConfig.border
                                                 }}>
                                                     <Image source={{
-                                                        uri: `https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg/${avatar.image}/avatarspreview`
+                                                        uri: `${Constants.expoConfig.extra.images}/${avatar.image}/avatarspreview`
                                                     }} style={{
                                                         width: "100%",
                                                         height: "100%",

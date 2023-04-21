@@ -10,9 +10,10 @@ type TabsProps = {
     style?: any;
     children?: any;
     onChange?: Function;
+    pointerEvents?: any;
 };
 
-export default function Tabs({ initialTab, style, children, onChange }: TabsProps) {
+export default function Tabs({ initialTab, style, children, onChange, pointerEvents = "auto" }: TabsProps) {
     const themeConfig = useThemeConfig();
     const [ tab, setTab ] = useState(initialTab);
 
@@ -22,7 +23,7 @@ export default function Tabs({ initialTab, style, children, onChange }: TabsProp
     }, [ tab ]);
 
     return (
-        <View style={style}>
+        <View style={style} pointerEvents={pointerEvents}>
             <View style={{
                 flexDirection: "row",
 

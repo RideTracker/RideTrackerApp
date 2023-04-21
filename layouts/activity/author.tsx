@@ -7,6 +7,7 @@ import { useThemeConfig } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
 import { CaptionText } from "../../components/texts/caption";
 import { ParagraphText } from "../../components/texts/paragraph";
+import Constants from "expo-constants";
 
 type ActivityAuthorProps = {
     activity: ActivityResponse | null;
@@ -42,7 +43,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                     {(activity && activity.user)?(
                         <Image
                             source={{
-                                uri: activity.user.avatar
+                                uri: `${Constants.expoConfig.extra.images}/${activity.user.avatar}/Avatar`
                             }}
                             style={{
                                 width: "100%",

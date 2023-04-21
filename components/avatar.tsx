@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Image, ScrollView, View, PixelRatio } from "react-native";
 import WebView from "react-native-webview";
 
-export default function Avatar({ avatars, combination }) {
+export default function Avatar({ avatars, combination, onDataUrl }) {
     const webViewRef = useRef();
 
     const [ loaded, setLoaded ] = useState(false);
@@ -13,6 +13,8 @@ export default function Avatar({ avatars, combination }) {
 
         const webView = webViewRef.current as WebView;
 
+        onDataUrl(null);
+
         webView.injectJavaScript(`render(JSON.parse('${JSON.stringify(combination)}')); null`);
     }, [ combination ]);
 
@@ -22,8 +24,9 @@ export default function Avatar({ avatars, combination }) {
 
         const webView = webViewRef.current as WebView;
 
+        onDataUrl(null);
+
         webView.injectJavaScript(`render(JSON.parse('${JSON.stringify(combination)}')); null`);
-        
     }, [ loaded ]);
 
     return (
@@ -31,7 +34,16 @@ export default function Avatar({ avatars, combination }) {
             width: 225,
             height: 225
         }}>
-            <WebView ref={webViewRef} source={{
+            <WebView ref={webViewRef} onMessage={(event) => {
+                const data = event.nativeEvent.data;
+
+                console.log("reeived", data);
+
+                onDataUrl(data);
+            }} source={{
+                headers: {
+                    "Access-Control-Allow-Origin": "*"
+                },
                 html: `
                     <style>
                         html, body {
@@ -54,6 +66,8 @@ export default function Avatar({ avatars, combination }) {
                                     return resolve({ id, image: images[id] });
 
                                 const image = new Image();
+
+                                image.crossOrigin = "anonymous";
         
                                 image.onload = () => {
                                     images[id] = image;
@@ -127,6 +141,8 @@ export default function Avatar({ avatars, combination }) {
 
                             if(combination.helmet)
                                 await renderType("helmet");
+
+                            window.ReactNativeWebView.postMessage(canvas.toDataURL("image/png"));
                         };
                     </script>
                 `

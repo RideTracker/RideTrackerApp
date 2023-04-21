@@ -6,6 +6,7 @@ import { timeSince } from "../../utils/time";
 import { useSelector } from "react-redux";
 import { ParagraphText } from "../../components/texts/paragraph";
 import { CaptionText } from "../../components/texts/caption";
+import Constants from "expo-constants";
 
 type ActivityCommentProps = {
     style?: any;
@@ -41,7 +42,7 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                                 overflow: "hidden"
                             }}
                             source={{
-                                uri: (activity.comment?.user)?(activity.comment.user.avatar):(userData.user?.avatar)
+                                uri: `${Constants.expoConfig.extra.images}/${(activity.comment?.user)?(activity.comment.user.avatar):(userData.user?.avatar)}/Avatar`
                             }}/>
                     )}
                 </View>

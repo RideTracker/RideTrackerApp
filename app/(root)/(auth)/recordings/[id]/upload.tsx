@@ -13,6 +13,7 @@ import { RECORDINGS_PATH } from "../../(tabs)/record";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { CaptionText } from "../../../../../components/texts/caption";
 import { ParagraphText } from "../../../../../components/texts/paragraph";
+import Constants from "expo-constants";
 
 export default function UploadRecordingPage() {
     const userData = useSelector((state: any) => state.userData);
@@ -122,7 +123,7 @@ export default function UploadRecordingPage() {
                                                 overflow: "hidden"
                                             }} onPress={() => setSelectedBike((selectedBike?.id === bike.id)?(null):(bike))}>
                                                 <Image source={{
-                                                    uri: bike.image  
+                                                    uri: `${Constants.expoConfig.extra.images}/${bike.image}/Bike` 
                                                 }} style={{
                                                     height: 80,
                                                     width: "100%"

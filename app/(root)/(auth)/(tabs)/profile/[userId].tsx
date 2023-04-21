@@ -12,6 +12,7 @@ import ActivityList from "../../../../../components/activity/list";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Pagination } from "../../../../../components/pagination";
 import Bike from "../../../../../components/bike";
+import Constants from "expo-constants";
 
 export default function Profile() {
     const themeConfig = useThemeConfig();
@@ -51,7 +52,7 @@ export default function Profile() {
                     }}>
                         {(profile?.user?.avatar) && (
                             <Image source={{
-                                uri: profile.user.avatar
+                                uri: `${Constants.expoConfig.extra.images}/${profile.user.avatar}/Avatar`
                             }} style={{
                                 width: "100%",
                                 height: "100%"
