@@ -37,8 +37,6 @@ export default function Avatar({ avatars, combination, onDataUrl }) {
             <WebView ref={webViewRef} onMessage={(event) => {
                 const data = event.nativeEvent.data;
 
-                console.log("reeived", data);
-
                 onDataUrl(data);
             }} source={{
                 headers: {

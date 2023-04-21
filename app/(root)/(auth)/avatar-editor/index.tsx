@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useThemeConfig } from "../../../../utils/themes";
 import { createUserAvatar, getAvatars } from "../../../../models/avatars";
 import { CaptionText } from "../../../../components/texts/caption";
@@ -14,6 +14,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "../../../../components/colors";
 import { ParagraphText } from "../../../../components/texts/paragraph";
 import Constants from "expo-constants";
+import { authenticateUser } from "../../../../models/user";
+import { setUserData } from "../../../../utils/stores/userData";
 
 export default function AvatarEditorPage() {
     const userData = useSelector((state: any) => state.userData);
@@ -73,6 +75,8 @@ export default function AvatarEditorPage() {
     const [ tabType, setTabType ] = useState("helmet");
     const [ uploading, setUploading ] = useState(false);
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
         getAvatars(userData.key).then((result) => {
             if(!result.success)
@@ -80,7 +84,9 @@ export default function AvatarEditorPage() {
 
             setAvatars(result.avatars);
 
-            const userAvatar = result.user.avatars.find((userAvatar) => userAvatar.id === userData.user.avatar);
+            console.log(result.user);
+
+            const userAvatar = result.user.avatars.find((userAvatar) => userAvatar.image === userData.user.avatar);
 
             if(!userAvatar) {
                 setCombination({
@@ -106,7 +112,14 @@ export default function AvatarEditorPage() {
                 if(!result.success)
                     return setUploading(false);
 
-                router.back();
+                const authentication = await authenticateUser(userData.key);
+            
+                dispatch(setUserData({
+                    key: authentication.key,
+                    user: authentication.user
+                }));
+
+                router.replace("/profile/" + userData.user.id);
             });
         }
     }, [ uploading ]);
@@ -243,7 +256,7 @@ export default function AvatarEditorPage() {
                                         <React.Fragment key={combination[tabType].id + color.type}>
                                             <CaptionText style={{ textTransform: "capitalize" }}>{color.type}</CaptionText>
 
-                                            <Colors initialColor={color.defaultColor} type={color.type} picker={picker === color.type} showPicker={(show) => {
+                                            <Colors initialColor={combination[tabType].colors.find((combinationColor) => combinationColor.type === color.type)?.color ?? color.defaultColor} type={color.type} picker={picker === color.type} showPicker={(show) => {
                                                 if(!show && color.type === picker)
                                                     setPicker(null);
                                                 else if(show)
