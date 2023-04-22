@@ -148,7 +148,7 @@ export function Colors({ initialColor, type, colorChange, picker, showPicker }) 
     const themeConfig = useThemeConfig();
 
     const [ currentColor, setColor ] = useState(initialColor);
-    const [ currentColorCustom, setCurrentColorCustom ] = useState(true);
+    const [ currentColorCustom, setCurrentColorCustom ] = useState(!typeColors.find((typeColor) => typeColor.type === type)?.colors?.includes(initialColor));
     const [ currentColorHue, setCurrentColorHue ] = useState(null);
     const [ saturationDragging, setSaturationDragging ] = useState(false);
     const [ hueDragging, setHueDragging ] = useState(false);
