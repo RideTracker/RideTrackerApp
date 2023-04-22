@@ -23,6 +23,8 @@ export default function Profile() {
 
     const [ profile, setProfile ] = useState(null);
 
+    const router = useRouter();
+
     useEffect(() => {
         async function getProfile() {
             getProfileById(userData.key, userId as string).then((result) => setProfile(result.profile));
@@ -43,13 +45,13 @@ export default function Profile() {
                     alignItems: "center",
                     gap: 10
                 }}>
-                    <View style={{
+                    <TouchableOpacity disabled={profile?.user.id !== userData.user.id} style={{
                         width: 80,
                         aspectRatio: 1,
                         borderRadius: 80,
                         backgroundColor: themeConfig.placeholder,
                         overflow: "hidden"
-                    }}>
+                    }} onPress={() => router.push("/avatar-editor/")}>
                         {(profile?.user?.avatar) && (
                             <Image source={{
                                 uri: `${Constants.expoConfig.extra.images}/${profile.user.avatar}/Avatar`
@@ -58,7 +60,7 @@ export default function Profile() {
                                 height: "100%"
                             }}/>
                         )}
-                    </View>
+                    </TouchableOpacity>
 
                     
                     <CaptionText style={(!profile) && {
