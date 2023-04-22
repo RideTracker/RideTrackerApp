@@ -24,26 +24,30 @@ export default function Layout() {
                 color: themeConfig.color
             },
 
-            tabBarActiveTintColor: themeConfig.color,
+            tabBarActiveTintColor: themeConfig.color, 
 
             tabBarStyle: {
                 backgroundColor: themeConfig.background,
-                paddingTop: 5,
+                paddingTop: 10,
                 paddingBottom: 25,
                 borderTopColor: themeConfig.border
+            },
+
+            tabBarLabelStyle: {
+                fontSize: 14
             }
         }}>
             <Tabs.Screen name="index" options={{
                 title: "Feed",
                 tabBarIcon: () => (
-                    <FontAwesome name="home" color={themeConfig.color} size={22}/>
+                    <FontAwesome name="home" color={themeConfig.color} size={24}/>
                 )
             }}/>
 
             <Tabs.Screen name="routes" options={{
                 title: "Routes",
                 tabBarIcon: () => (
-                    <FontAwesome5 name="route" color={themeConfig.color} size={18}/>
+                    <FontAwesome5 name="route" color={themeConfig.color} size={20}/>
                 )
             }}/>
 
@@ -62,8 +66,8 @@ export default function Layout() {
                 unmountOnBlur: true,
                 
                 tabBarIcon: () => (
-                    <View style={{ height: 40 }}>
-                        <FontAwesome5 name="dot-circle" color={themeConfig.color} size={40}/>
+                    <View style={{ height: 42 }}>
+                        <FontAwesome5 name="dot-circle" color={themeConfig.color} size={42}/>
                     </View>
                 )
             }}/>
@@ -72,14 +76,14 @@ export default function Layout() {
                 title: "Profile",
                 href: `/profile/${userData?.user?.id}`,
                 tabBarIcon: () => (
-                    <FontAwesome5 name="user-alt" color={themeConfig.color} size={16}/>
+                    <FontAwesome5 name="user-alt" color={themeConfig.color} size={18}/>
                 )
             }}/>
 
             <Tabs.Screen name="settings" options={{
                 title: "Settings",
                 tabBarIcon: () => (
-                    <FontAwesome5 name="cog" color={themeConfig.color} size={19}/>
+                    <FontAwesome5 name="cog" color={themeConfig.color} size={21}/>
                 )
             }}/>
         </Tabs>
