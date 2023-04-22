@@ -36,7 +36,7 @@ export async function getBikeById(authorization: string, id: string) {
     return result;
 };
 
-export async function getBikes(authorization: string): Promise<BikeResponse> {
+export async function getBikes(authorization: string): Promise<any> {
     const url = new URL(`/api/bikes`, Constants.expoConfig.extra.api);
 
     const response = await fetch(url, {

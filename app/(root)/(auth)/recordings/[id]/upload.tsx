@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Alert } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Alert, Platform } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
 import { useThemeConfig } from "../../../../../utils/themes";
@@ -35,10 +35,13 @@ export default function UploadRecordingPage() {
 
     useEffect(() => {
         console.log("call get Bikes");
-        getBikes(userData.key).then((bikes) => setBikes(bikes));
+        getBikes(userData.key).then((result) => setBikes(result.bikes));
     }, []);
 
     useEffect(() => {
+        if(Platform.OS !== "android")
+            return;
+            
         if(id) {
             async function getRecording() {
                 const file = RECORDINGS_PATH + id + ".json";
@@ -138,7 +141,6 @@ export default function UploadRecordingPage() {
                                                     width: "100%",
                                                     height: "100%",
 
-                                                    backgroundColor: (selectedBike === bike.id)?("transparent"):("rgba(0, 0, 0, .5)"),
                                                     borderWidth: (selectedBike === bike.id)?(1):(0),
                                                     borderColor: themeConfig.color,
 
