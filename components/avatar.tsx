@@ -78,7 +78,7 @@ export default function Avatar({ avatars, combination, onDataUrl }) {
                         };
 
                         async function render(combination) {
-                            const canvas = document.getElementById("canvas");
+                            const canvas = document.createElement("canvas");
 
                             canvas.width = 225 * window.devicePixelRatio;
                             canvas.height = 225 * window.devicePixelRatio;
@@ -139,6 +139,16 @@ export default function Avatar({ avatars, combination, onDataUrl }) {
 
                             if(combination.helmet)
                                 await renderType("helmet");
+
+                            const destinationCanvas = document.getElementById("canvas");
+
+                            destinationCanvas.width = 225 * window.devicePixelRatio;
+                            destinationCanvas.height = 225 * window.devicePixelRatio;
+
+                            const destinationContext = destinationCanvas.getContext("2d");
+
+                            destinationContext.clearRect(0, 0, destinationCanvas.width, destinationCanvas.height);
+                            destinationContext.drawImage(canvas, 0, 0);
 
                             window.ReactNativeWebView.postMessage(canvas.toDataURL("image/png"));
                         };
