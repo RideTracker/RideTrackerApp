@@ -154,7 +154,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                             }
                         ]}>
                             <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowRadius: 2 }}>Start</ParagraphText>
-                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "500" }}>{activity.summary?.area}</CaptionText>
+                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "500" }}>{activity.summary?.startArea}</CaptionText>
                         </View>
                     </View>
                 )}
@@ -178,7 +178,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                             }
                         ]}>
                             <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowRadius: 2 }}>Finish</ParagraphText>
-                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "500" }}>Göteborg</CaptionText>
+                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "500" }}>{activity.summary?.finishArea}</CaptionText>
                         </View>
                     </View>
                 )}

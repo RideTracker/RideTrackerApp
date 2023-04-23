@@ -69,7 +69,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                         <>
                             <CaptionText>{activity.user.name}</CaptionText>
 
-                            <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary?.area) && (`in ${activity.summary.area}`)}</ParagraphText>
+                            <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary?.startArea) && (`in ${activity.summary.startArea}`)}</ParagraphText>
                         </>
                     ):(
                         <>
