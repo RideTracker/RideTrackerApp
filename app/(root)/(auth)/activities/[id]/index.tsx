@@ -66,7 +66,7 @@ export default function ActivityPage({ params }) {
                 <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)} style={{ gap: 10 }}>
                     <HeaderText>Comments {(activity?.summary) && (<Text style={{ fontWeight: "normal" }}>({activity.comments})</Text>)}</HeaderText>
 
-                    <Activity.Comment activity={activity}/>
+                    <Activity.Comment comment={activity?.comment}/>
                 </TouchableOpacity>
             </View>
         </View>

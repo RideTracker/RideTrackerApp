@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Image, Text, View } from "react-native";
 import { useThemeConfig } from "../../utils/themes";
-import { ActivityResponse } from "../../models/activity";
 import { timeSince } from "../../utils/time";
 import { useSelector } from "react-redux";
 import { ParagraphText } from "../../components/texts/paragraph";
@@ -10,10 +9,10 @@ import Constants from "expo-constants";
 
 type ActivityCommentProps = {
     style?: any;
-    activity?: ActivityResponse;
+    comment?: any;
 };
 
-export default function ActivityComment({ style, activity }: ActivityCommentProps) {
+export default function ActivityComment({ style, comment }: ActivityCommentProps) {
     const userData = useSelector((state: any) => state.userData);
 
     const themeConfig = useThemeConfig();
@@ -33,7 +32,7 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                     borderRadius: 40,
                     overflow: "hidden",
                 }}>
-                    {(activity) && (
+                    {(comment !== undefined) && (
                         <Image
                             style={{
                                 width: 40,
@@ -42,29 +41,29 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                                 overflow: "hidden"
                             }}
                             source={{
-                                uri: `${Constants.expoConfig.extra.images}/${(activity.comment?.user)?(activity.comment.user.avatar):(userData.user?.avatar)}/Avatar`
+                                uri: `${Constants.expoConfig.extra.images}/${(comment?.user)?(comment.user.avatar):(userData.user?.avatar)}/Avatar`
                             }}/>
                     )}
                 </View>
 
                 <View style={{ gap: 5, justifyContent: "center", flexGrow: 1 }}>
-                    {(!activity || activity?.comment) && (
+                    {(comment || comment === undefined) && (
                         <View style={{
                             flexDirection: "row",
                             alignItems: "baseline",
                             gap: 5
                         }}>
-                            <CaptionText style={(!activity) && {
+                            <CaptionText style={(comment === undefined) && {
                                 color: "transparent",
                                 backgroundColor: themeConfig.placeholder
                             }}>
-                                {(activity)?(
-                                    (activity.comment?.user)?(activity.comment.user.name):(userData.user?.name)
-                                ):("Firstname lastname")}
+                                {(comment)?(
+                                    (comment?.user)?(comment.user.name):(userData.user?.name)
+                                ):((comment === undefined) && ("Firstname lastname"))}
                             </CaptionText>
                             
                             <ParagraphText>
-                                {(activity?.comment) && timeSince(activity.comment.timestamp)}
+                                {(comment) && timeSince(comment.timestamp)}
                             </ParagraphText>
                         </View>
                     )}
@@ -72,13 +71,13 @@ export default function ActivityComment({ style, activity }: ActivityCommentProp
                     <ParagraphText style={{
                         paddingRight: 50,
 
-                        ...((!activity)?({
+                        ...((comment === undefined)?({
                             color: "transparent",
                             backgroundColor: themeConfig.placeholder
                         }):({}))
                     }}>
-                        {(activity)?(
-                            (activity.comment)?(activity.comment.message):("There's no comments, you can be the first one!")
+                        {(comment !== undefined)?(
+                            (comment)?(comment.message):("There's no comments, you can be the first one!")
                         ):("This is a comment!")}
                     </ParagraphText>
                 </View>
