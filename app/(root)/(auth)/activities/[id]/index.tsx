@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
-import { getActivityById, getActivitySummaryById } from "../../../../models/activity";
-import Activity from "../../../../layouts/activity";
-import Bike from "../../../../components/bike";
-import { useThemeConfig } from "../../../../utils/themes";
+import { getActivityById, getActivitySummaryById } from "../../../../../models/activity";
+import Activity from "../../../../../layouts/activity";
+import Bike from "../../../../../components/bike";
+import { useThemeConfig } from "../../../../../utils/themes";
 import { useSelector } from "react-redux";
-import { HeaderText } from "../../../../components/texts/header";
-import { ParagraphText } from "../../../../components/texts/paragraph";
+import { HeaderText } from "../../../../../components/texts/header";
+import { ParagraphText } from "../../../../../components/texts/paragraph";
 
 export default function ActivityPage({ params }) {
     const userData = useSelector((state: any) => state.userData);
@@ -64,7 +64,7 @@ export default function ActivityPage({ params }) {
                 paddingTop: 5
             }}>
                 <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)} style={{ gap: 10 }}>
-                    <HeaderText>Comments {(activity?.summary) && (<Text style={{ fontWeight: "normal" }}>({activity.summary.comments})</Text>)}</HeaderText>
+                    <HeaderText>Comments {(activity?.summary) && (<Text style={{ fontWeight: "normal" }}>({activity.comments})</Text>)}</HeaderText>
 
                     <Activity.Comment activity={activity}/>
                 </TouchableOpacity>
