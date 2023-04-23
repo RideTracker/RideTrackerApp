@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
-import { getActivityById } from "../../../../models/activity";
+import { getActivityById, getActivitySummaryById } from "../../../../models/activity";
 import Activity from "../../../../layouts/activity";
 import Bike from "../../../../components/bike";
 import { useThemeConfig } from "../../../../utils/themes";
@@ -24,6 +24,15 @@ export default function ActivityPage({ params }) {
         if(id !== null)
             getActivityById(userData.key, id as string).then((result) => setActivity(result.activity));
     }, []);
+
+    useEffect(() => {
+        if(activity && !activity.summary) {
+            getActivitySummaryById(userData.key, activity.id).then((result) => {
+                if(result.success)
+                    setActivity({ ...activity, summary: result.activitySummary })
+            });
+        }
+    }, [ activity ]);
 
     return (
         <View style={{ flex: 1, backgroundColor: themeConfig.background }}>

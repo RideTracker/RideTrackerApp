@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { ActivityResponse } from "../../models/activity";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useThemeConfig } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
@@ -10,7 +9,7 @@ import { ParagraphText } from "../../components/texts/paragraph";
 import Constants from "expo-constants";
 
 type ActivityAuthorProps = {
-    activity: ActivityResponse | null;
+    activity: any | null;
 };
 
 export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
@@ -70,7 +69,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                         <>
                             <CaptionText>{activity.user.name}</CaptionText>
 
-                            <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary) && (`in ${activity.summary.area}`)}</ParagraphText>
+                            <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary?.area) && (`in ${activity.summary.area}`)}</ParagraphText>
                         </>
                     ):(
                         <>
