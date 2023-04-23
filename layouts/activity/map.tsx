@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { useThemeConfig, useMapStyle } from "../../utils/themes";
 import { decode } from "@googlemaps/polyline-codec";
 import { CaptionText } from "../../components/texts/caption";
 import { ParagraphText } from "../../components/texts/paragraph";
 import { getDistance, getCompassDirection } from "geolib";
+import { LinearGradient } from "expo-linear-gradient";
 
 type ActivityMapProps = {
     activity: any | null;
@@ -28,6 +29,12 @@ function getStylingForHeading(position: any, heading: any, layout: any): any[] {
     }
 
     if(position.x > (layout?.width / 3 * 2)) { // it's most likely to touch the right side, anchor by right
+        horizontal = {
+            right: 0,
+            alignItems: "flex-end"
+        }
+    }
+    else if(position.x > (layout?.width / 3 * 1) && position.x < (layout?.width / 2)) { // it's most likely to touch the right side, anchor by right
         horizontal = {
             right: 0,
             alignItems: "flex-end"
@@ -83,7 +90,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
             mapView.fitToCoordinates(points, {
                 edgePadding: {
                     left: 20,
-                    top: 20,
+                    top: 40,
                     right: 20,
                     bottom: 60
                 },
@@ -119,8 +126,6 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
             }
 
             const heading = getCompassDirection(polylines[0][0], previousPoint);
-
-            console.log("start heading for", activity.summary.startArea + " - " + activity.summary.finishArea, "is", heading);
 
             setStartPositionHeading(heading);
         }
@@ -164,8 +169,6 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
             }
 
             const heading = getCompassDirection(previousPoint, reversedPolylines[0][0]);
-
-            console.log("finish heading for", activity.summary.startArea + " - " + activity.summary.finishArea, "is", heading);
 
             setFinishPositionHeading(heading);
         }
