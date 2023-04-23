@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 import { useRouter } from "expo-router";
-import { getActivityById, ActivityResponse } from "../../models/activity";
+import { getActivityById } from "../../models/activity";
 import Error from "../error";
-import Activity from "../../layouts/activity";
 import { useSelector } from "react-redux";
+import ActivityMap from "../../layouts/activity/map";
+import ActivityMapStats from "../../layouts/activity/mapStats";
+import ActivityAuthor from "../../layouts/activity/author";
 
 type ActivityCompactProps = {
     id: string | null;
@@ -17,7 +19,7 @@ export default function ActivityCompact({ id, style }: ActivityCompactProps) {
 
     const router = useRouter();
 
-    const [ activity, setActivity ]: [ ActivityResponse, any ] = useState(null);
+    const [ activity, setActivity ] = useState(null);
 
     useEffect(() => {
         if(id !== null)
@@ -27,12 +29,12 @@ export default function ActivityCompact({ id, style }: ActivityCompactProps) {
     return (
         <View style={style}>
             <TouchableOpacity disabled={activity === null} onPress={() => router.push(`/activities/${id}`)} style={{ height: 200 }}>
-                <Activity.Map activity={activity} compact={true}>
-                    <Activity.MapStats activity={activity}/>
-                </Activity.Map>
+                <ActivityMap activity={activity} compact={true}>
+                    <ActivityMapStats activity={activity}/>
+                </ActivityMap>
             </TouchableOpacity>
 
-            <Activity.Author activity={activity}/>
+            <ActivityAuthor activity={activity}/>
         </View>
     );
 };

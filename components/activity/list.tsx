@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 import { useRouter } from "expo-router";
-import { getActivityById, ActivityResponse } from "../../models/activity";
+import { getActivityById } from "../../models/activity";
 import Error from "../error";
-import Activity from "../../layouts/activity";
 import { useSelector } from "react-redux";
 import { CaptionText } from "../texts/caption";
 import { useThemeConfig } from "../../utils/themes";
 import { ParagraphText } from "../texts/paragraph";
 import { timeSince } from "../../utils/time";
 import ActivityAuthor from "../../layouts/activity/author";
+import ActivityMap from "../../layouts/activity/map";
 
 type ActivityListProps = {
     id: string | null;
@@ -23,7 +23,7 @@ export default function ActivityList({ id, style }: ActivityListProps) {
     const router = useRouter();
     const themeConfig = useThemeConfig();
 
-    const [ activity, setActivity ]: [ ActivityResponse, any ] = useState(null);
+    const [ activity, setActivity ] = useState(null);
 
     useEffect(() => {
         if(id !== null)
@@ -34,7 +34,7 @@ export default function ActivityList({ id, style }: ActivityListProps) {
         <View style={style}>
             <View style={{ flexDirection: "row", height: 80, gap: 10 }}>
                 <TouchableOpacity disabled={activity === null} onPress={() => router.push(`/activities/${id}`)} style={{ width: 140 }}>
-                    <Activity.Map activity={activity} compact={true}/>
+                    <ActivityMap activity={activity} compact={true}/>
                 </TouchableOpacity>
 
                 <View style={{

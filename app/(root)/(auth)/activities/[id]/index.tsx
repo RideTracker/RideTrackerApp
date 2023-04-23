@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
 import { getActivityById, getActivitySummaryById } from "../../../../../models/activity";
-import Activity from "../../../../../layouts/activity";
 import Bike from "../../../../../components/bike";
 import { useThemeConfig } from "../../../../../utils/themes";
 import { useSelector } from "react-redux";
 import { HeaderText } from "../../../../../components/texts/header";
 import { ParagraphText } from "../../../../../components/texts/paragraph";
+import ActivityMap from "../../../../../layouts/activity/map";
+import ActivityAuthor from "../../../../../layouts/activity/author";
+import ActivityStats from "../../../../../layouts/activity/stats";
+import ActivityComment from "../../../../../layouts/activity/comment";
 
 export default function ActivityPage({ params }) {
     const userData = useSelector((state: any) => state.userData);
@@ -40,12 +43,12 @@ export default function ActivityPage({ params }) {
 
             <ScrollView style={{ padding: 10 }}>
                 <View style={{ height: 200 }}>
-                    <Activity.Map activity={activity} compact={false}/>
+                    <ActivityMap activity={activity} compact={false}/>
                 </View>
 
-                <Activity.Author activity={activity}/>
+                <ActivityAuthor activity={activity}/>
 
-                <Activity.Stats activity={activity}/>
+                <ActivityStats activity={activity}/>
 
                 {(activity)?(
                     (activity.bike) && (
@@ -66,7 +69,7 @@ export default function ActivityPage({ params }) {
                 <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)} style={{ gap: 10 }}>
                     <HeaderText>Comments {(activity?.summary) && (<Text style={{ fontWeight: "normal" }}>({activity.comments})</Text>)}</HeaderText>
 
-                    <Activity.Comment comment={activity?.comment}/>
+                    <ActivityComment comment={activity?.comment}/>
                 </TouchableOpacity>
             </View>
         </View>
