@@ -5,6 +5,7 @@ import { useThemeConfig, useMapStyle } from "../../utils/themes";
 import { decode } from "@googlemaps/polyline-codec";
 import { CaptionText } from "../../components/texts/caption";
 import { ParagraphText } from "../../components/texts/paragraph";
+import { getDistance, getCompassDirection } from "geolib";
 
 type ActivityMapProps = {
     activity: any | null;
@@ -12,15 +13,49 @@ type ActivityMapProps = {
     compact: boolean;
 };
 
+function getStylingForHeading(position: any, heading: any, layout: any): any[] {
+    let horizontal = {}, vertical = {};
+
+    if(heading[0] === 'S' || heading[1] === 'S') { // polyline goes south, anchor by bottom
+        vertical = {
+            bottom: 0
+        };
+    }
+    else if(heading[0] === 'N' || heading[1] === 'N') { // polyline goes north, anchor by top
+        vertical = {
+            top: 0
+        };
+    }
+
+    if(position.x > (layout?.width / 3 * 2)) { // it's most likely to touch the right side, anchor by right
+        horizontal = {
+            right: 0,
+            alignItems: "flex-end"
+        }
+    }
+    
+    if(position.y > (layout?.height / 2)) { // it's most likely to touch the right side, anchor by right
+        vertical = {
+            bottom: 0
+        }
+    }
+
+    return [ horizontal, vertical ];
+};
+
 export default function ActivityMap({ activity, children, compact }: ActivityMapProps) {
     const mapStyle = useMapStyle();
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
 
-    const [ polylines, setPolylines ] = useState(null);
     const [ layout, setLayout ] = useState(null);
+    const [ polylines, setPolylines ] = useState(null);
+
     const [ startPosition, setStartPosition ] = useState(null);
+    const [ startPositionHeading, setStartPositionHeading ] = useState(null);
+
     const [ finishPosition, setFinishPosition ] = useState(null);
+    const [ finishPositionHeading, setFinishPositionHeading ] = useState(null);
 
     const mapViewRef = useRef();
 
@@ -55,7 +90,86 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                 animated: false
             });
         }
-    }, [ polylines ])
+    }, [ polylines ]);
+
+    useEffect(() => {
+        if(polylines && startPosition) {
+            let distance = 0;
+
+            let previousPoint = null;
+
+            for(let polyline of polylines) {
+                for(let point of polyline) {
+                    if(previousPoint === null) {
+                        previousPoint = point;
+
+                        continue;
+                    }
+
+                    distance += getDistance(previousPoint, point, 1);
+
+                    previousPoint = point;
+
+                    if(distance > 5000)
+                        break;
+                }
+
+                if(distance > 5000)
+                    break;
+            }
+
+            const heading = getCompassDirection(polylines[0][0], previousPoint);
+
+            console.log("start heading for", activity.summary.startArea + " - " + activity.summary.finishArea, "is", heading);
+
+            setStartPositionHeading(heading);
+        }
+    }, [ startPosition ]);
+
+    useEffect(() => {
+        if(polylines && finishPosition) {
+            let distance = 0;
+
+            let previousPoint = null;
+
+            const reversedPolylines = [];
+            
+            for(let index = polylines.length - 1; index != -1; index--) {
+                const points = [];
+
+                for(let point = polylines[index].length - 1; point != -1; point--)
+                    points.push(polylines[index][point]);
+
+                reversedPolylines.push(points);
+            }
+
+            for(let polyline of reversedPolylines) {
+                for(let point of polyline) {
+                    if(previousPoint === null) {
+                        previousPoint = point;
+
+                        continue;
+                    }
+
+                    distance += getDistance(previousPoint, point, 1);
+
+                    previousPoint = point;
+
+                    if(distance > 5000)
+                        break;
+                }
+
+                if(distance > 5000)
+                    break;
+            }
+
+            const heading = getCompassDirection(previousPoint, reversedPolylines[0][0]);
+
+            console.log("finish heading for", activity.summary.startArea + " - " + activity.summary.finishArea, "is", heading);
+
+            setFinishPositionHeading(heading);
+        }
+    }, [ finishPosition ]);
 
     if(!activity) {
         return (
@@ -135,7 +249,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                     ))}
                 </MapView>
 
-                {(startPosition) && (
+                {(startPosition && startPositionHeading) && (
                     <View style={{
                         position: "absolute",
                         top: startPosition.y,
@@ -145,13 +259,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                             {
                                 position: "absolute"
                             },
-                            (startPosition.x > (layout?.width / 2)) && {
-                                right: 0,
-                                alignItems: "flex-end"
-                            },
-                            (startPosition.y > (layout?.height / 2)) && {
-                                bottom: 0
-                            }
+                            ...getStylingForHeading(startPosition, startPositionHeading, layout)
                         ]}>
                             <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowRadius: 2 }}>Start</ParagraphText>
                             <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "500" }}>{activity.summary?.startArea}</CaptionText>
@@ -159,7 +267,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                     </View>
                 )}
 
-                {(finishPosition) && (
+                {(finishPosition && finishPositionHeading) && (
                     <View style={{
                         position: "absolute",
                         top: finishPosition.y,
@@ -169,13 +277,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                             {
                                 position: "absolute"
                             },
-                            (finishPosition.x > (layout?.width / 2)) && {
-                                right: 0,
-                                alignItems: "flex-end"
-                            },
-                            (finishPosition.y > (layout?.height / 2)) && {
-                                bottom: 0
-                            }
+                            ...getStylingForHeading(finishPosition, finishPositionHeading, layout)
                         ]}>
                             <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowRadius: 2 }}>Finish</ParagraphText>
                             <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "500" }}>{activity.summary?.finishArea}</CaptionText>
