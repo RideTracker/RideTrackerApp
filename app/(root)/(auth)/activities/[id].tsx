@@ -59,14 +59,13 @@ export default function ActivityPage({ params }) {
             </ScrollView>
 
             <View style={{
-                marginBottom: 10,
-                gap: 10,
+                marginBottom: 20,
                 padding: 10,
                 paddingTop: 5
             }}>
-                <HeaderText>Comments {(activity?.summary) && (<Text style={{ fontWeight: "normal" }}>({activity.summary.comments})</Text>)}</HeaderText>
+                <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)} style={{ gap: 10 }}>
+                    <HeaderText>Comments {(activity?.summary) && (<Text style={{ fontWeight: "normal" }}>({activity.summary.comments})</Text>)}</HeaderText>
 
-                <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)}>
                     <Activity.Comment activity={activity}/>
                 </TouchableOpacity>
             </View>
