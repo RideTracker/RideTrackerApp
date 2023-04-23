@@ -36,3 +36,20 @@ export async function getActivitySummaryById(authorization: string, id: string) 
 
     return result;
 };
+
+export async function getActivityComments(authorization: string, id: string) {
+    const url = new URL(`/api/activities/${id}/comments`, Constants.expoConfig.extra.api);
+
+    const response = await fetch(url, {
+        method: "GET",
+
+        headers: {
+            "Authorization": `Bearer ${authorization}`
+        }
+    });
+    const result = await response.json();
+
+    console.log(result);
+
+    return result;
+};
