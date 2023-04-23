@@ -15,26 +15,32 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
 
-    const [ points, setPoints ] = useState(null);
+    const [ polylines, setPolylines ] = useState(null);
 
     const mapViewRef = useRef();
 
     useEffect(() => {
-        if(activity?.polyline) {
-            setPoints(decode(activity.polyline, 5));
+        if(activity?.polylines) {
+            setPolylines(activity.polylines.map((polyline) => decode(polyline, 5)));
         }
     }, [ activity ]);
 
     useEffect(() => {
-        if(mapViewRef && points) {
+        if(mapViewRef && polylines) {
             const mapView = mapViewRef.current as MapView;
 
-            mapView.fitToCoordinates(points.map((point) => {
-                return {
-                    latitude: point[0],
-                    longitude: point[1]
-                };
-            }), {
+            const points = [];
+
+            polylines.forEach((polyline) => {
+                polyline.forEach((point) => {
+                    points.push({
+                        latitude: point[0],
+                        longitude: point[1]
+                    });
+                });
+            });
+
+            mapView.fitToCoordinates(points, {
                 edgePadding: {
                     left: 20,
                     top: 20,
@@ -44,7 +50,7 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                 animated: false
             });
         }
-    }, [ points ])
+    }, [ polylines ])
 
     if(!activity) {
         return (
@@ -85,14 +91,14 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                 pitchEnabled={false}
                 rotateEnabled={false}
                 scrollEnabled={false}>
-                {(points) && (
-                    <Polyline coordinates={points.map((point) => {
+                {(polylines) && polylines.map((polyline, index) => (
+                    <Polyline key={index} coordinates={polyline.map((point) => {
                         return {
                             latitude: point[0],
                             longitude: point[1]
                         };
                     })} strokeColor={themeConfig.brand} strokeWidth={4}/>
-                )}
+                ))}
             </MapView>
 
             {children}
