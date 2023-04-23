@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import ActivityMap from "../../layouts/activity/map";
 import ActivityMapStats from "../../layouts/activity/mapStats";
 import ActivityAuthor from "../../layouts/activity/author";
+import { ComponentType } from "../../models/componentType";
 
 type ActivityCompactProps = {
     id: string | null;
@@ -29,7 +30,7 @@ export default function ActivityCompact({ id, style }: ActivityCompactProps) {
     return (
         <View style={style}>
             <TouchableOpacity disabled={activity === null} onPress={() => router.push(`/activities/${id}`)} style={{ height: 200 }}>
-                <ActivityMap activity={activity} compact={true}>
+                <ActivityMap activity={activity} type={ComponentType.Compact}>
                     <ActivityMapStats activity={activity}/>
                 </ActivityMap>
             </TouchableOpacity>

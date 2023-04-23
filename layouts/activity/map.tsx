@@ -7,11 +7,12 @@ import { CaptionText } from "../../components/texts/caption";
 import { ParagraphText } from "../../components/texts/paragraph";
 import { getDistance, getCompassDirection } from "geolib";
 import { LinearGradient } from "expo-linear-gradient";
+import { ComponentType } from "../../models/componentType";
 
 type ActivityMapProps = {
     activity: any | null;
     children?: any;
-    compact: boolean;
+    type: ComponentType;
 };
 
 function getStylingForHeading(position: any, heading: any, layout: any): any[] {
@@ -50,7 +51,7 @@ function getStylingForHeading(position: any, heading: any, layout: any): any[] {
     return [ horizontal, vertical ];
 };
 
-export default function ActivityMap({ activity, children, compact }: ActivityMapProps) {
+export default function ActivityMap({ activity, children, type }: ActivityMapProps) {
     const mapStyle = useMapStyle();
     const themeConfig = useThemeConfig();
     useEffect(() => {}, [themeConfig]);
@@ -87,15 +88,39 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                 });
             });
 
-            mapView.fitToCoordinates(points, {
-                edgePadding: {
-                    left: 20,
-                    top: 40,
-                    right: 20,
-                    bottom: 60
-                },
-                animated: false
-            });
+            if(type === ComponentType.Default) {
+                mapView.fitToCoordinates(points, {
+                    edgePadding: {
+                        left: 20,
+                        top: 40,
+                        right: 20,
+                        bottom: 40
+                    },
+                    animated: false
+                });
+            }
+            else if(type === ComponentType.Compact) {
+                mapView.fitToCoordinates(points, {
+                    edgePadding: {
+                        left: 20,
+                        top: 40,
+                        right: 20,
+                        bottom: 60
+                    },
+                    animated: false
+                });
+            }
+            else {
+                mapView.fitToCoordinates(points, {
+                    edgePadding: {
+                        left: 10,
+                        top: 10,
+                        right: 10,
+                        bottom: 25
+                    },
+                    animated: false
+                });
+            }
         }
     }, [ polylines ]);
 
@@ -235,9 +260,9 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                         });
                     }}
                     onLayout={(event) => setLayout(event.nativeEvent.layout)}
-                    pointerEvents={(compact)?("none"):("auto")}
+                    pointerEvents={(type !== ComponentType.Default)?("none"):("auto")}
                     provider={PROVIDER_GOOGLE}
-                    customMapStyle={(compact)?(themeConfig.mapStyle.concat(mapStyle.compact as any[])):(themeConfig.mapStyle)}
+                    customMapStyle={(type !== ComponentType.Default)?(themeConfig.mapStyle.concat(mapStyle.compact as any[])):(themeConfig.mapStyle)}
                     zoomEnabled={false}
                     pitchEnabled={false}
                     rotateEnabled={false}
@@ -264,8 +289,9 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                             },
                             ...getStylingForHeading(startPosition, startPositionHeading, layout)
                         ]}>
-                            <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>Start</ParagraphText>
-                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "500" }}>{activity.summary?.startArea}</CaptionText>
+                            {(type !== ComponentType.ListItem) && (<ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>Start</ParagraphText>)}
+                            
+                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600", fontSize: (type === ComponentType.ListItem)?(12):(17) }}>{activity.summary?.startArea}</CaptionText>
                         </View>
                     </View>
                 )}
@@ -282,8 +308,9 @@ export default function ActivityMap({ activity, children, compact }: ActivityMap
                             },
                             ...getStylingForHeading(finishPosition, finishPositionHeading, layout)
                         ]}>
-                            <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>Finish</ParagraphText>
-                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "500" }}>{activity.summary?.finishArea}</CaptionText>
+                            {(type !== ComponentType.ListItem) && (<ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>Finish</ParagraphText>)}
+
+                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600", fontSize: (type === ComponentType.ListItem)?(12):(17) }}>{activity.summary?.finishArea}</CaptionText>
                         </View>
                     </View>
                 )}

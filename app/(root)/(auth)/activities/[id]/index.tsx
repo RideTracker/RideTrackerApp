@@ -11,6 +11,7 @@ import ActivityMap from "../../../../../layouts/activity/map";
 import ActivityAuthor from "../../../../../layouts/activity/author";
 import ActivityStats from "../../../../../layouts/activity/stats";
 import ActivityComment from "../../../../../layouts/activity/comment";
+import { ComponentType } from "../../../../../models/componentType";
 
 export default function ActivityPage({ params }) {
     const userData = useSelector((state: any) => state.userData);
@@ -43,7 +44,7 @@ export default function ActivityPage({ params }) {
 
             <ScrollView style={{ padding: 10 }}>
                 <View style={{ height: 200 }}>
-                    <ActivityMap activity={activity} compact={false}/>
+                    <ActivityMap activity={activity} type={ComponentType.Default}/>
                 </View>
 
                 <ActivityAuthor activity={activity}/>
