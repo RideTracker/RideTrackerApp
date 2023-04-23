@@ -7,7 +7,7 @@ import { useThemeConfig } from "../../utils/themes";
 import Button from "../../components/button";
 import { FontAwesome } from '@expo/vector-icons'; 
 import FormInput from "../../components/formInput";
-import { loginUser } from "../../models/user";
+import { authenticateRandomUser, loginUser } from "../../models/user";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../utils/stores/userData";
 
@@ -119,9 +119,21 @@ export default function Login() {
             </View>
             
             <View style={{
-                marginVertical: 10
+                marginVertical: 10,
+                gap: 10
             }}>
                 <Button primary={false} label="Register with email address" onPress={() => router.push("/register")}/>
+
+                <Button primary={false} label="Assume random user" onPress={async () => {
+                    const authentication = await authenticateRandomUser();
+                    
+                    dispatch(setUserData({
+                        key: authentication.key,
+                        user: authentication.user
+                    }));
+
+                    router.push("/");
+                }}/>
             </View>
         </View>
     );

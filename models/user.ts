@@ -157,3 +157,18 @@ export async function authenticateUser(key: string): Promise<AuthenticateUserRes
 
     return result;
 };
+
+export async function authenticateRandomUser() {
+    const url = new URL(`/staging/user`, Constants.expoConfig.extra.api);
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+
+    const result = await response.json();
+
+    return await authenticateUser(result.key);
+};
