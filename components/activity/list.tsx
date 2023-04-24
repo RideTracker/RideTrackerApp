@@ -48,22 +48,6 @@ export default function ActivityList({ id, style }: ActivityListProps) {
 
                     {(activity)?(
                         <React.Fragment>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary?.startArea) && (`in ${activity.summary.startArea}`)}</ParagraphText>
-                                
-                                <TouchableOpacity style={{
-                                    width: 30,
-                                    height: 30,
-
-                                    marginLeft: "auto",
-
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }}>
-                                    <FontAwesome name="ellipsis-v" size={24} color={themeConfig.color} />
-                                </TouchableOpacity>
-                            </View>
-
                             {(activity.summary) && (
                                 <View style={{
                                     flexDirection: "row",
@@ -85,6 +69,22 @@ export default function ActivityList({ id, style }: ActivityListProps) {
                                     </View>
                                 </View>
                             )}
+                            
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary?.startArea) && (`in ${activity.summary.startArea}`)}</ParagraphText>
+                                
+                                <TouchableOpacity style={{
+                                    width: 30,
+                                    height: 30,
+
+                                    marginLeft: "auto",
+
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}>
+                                    <FontAwesome name="ellipsis-v" size={24} color={themeConfig.color} />
+                                </TouchableOpacity>
+                            </View>
                         </React.Fragment>
                     ):(
                         <View style={{
