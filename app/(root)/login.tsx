@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert } from "react-native";
+import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert, Image } from "react-native";
 import { useRouter, Stack, Link } from "expo-router";
 import { PingResponse, ping } from "../../models/ping";
 import { useAuth } from "../../utils/auth/provider";
@@ -10,6 +10,8 @@ import FormInput from "../../components/formInput";
 import { authenticateRandomUser, loginUser } from "../../models/user";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../utils/stores/userData";
+
+const logo = require("../../assets/logos/logo.png");
 
 export default function Login() {
     const themeConfig = useThemeConfig();
@@ -54,13 +56,7 @@ export default function Login() {
         <View style={{ flex: 1, justifyContent: "center", padding: 10, backgroundColor: themeConfig.background }}>
             <Stack.Screen options={{ title: "Ping" }} />
 
-            <Text style={{
-                fontSize: 50,
-                fontWeight: "600",
-                textAlign: "center",
-                marginBottom: 40,
-                color: themeConfig.color
-            }}>Ride Tracker</Text>
+            <Image source={logo} style={{ height: 100, width: "100%", resizeMode: "contain" }}/>
 
             <SafeAreaView style={{ gap: 10, marginVertical: 10, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>
                 <FormInput placeholder="Email address" icon={(<FontAwesome name="envelope" size={24} color={themeConfig.color}/>)} props={{
