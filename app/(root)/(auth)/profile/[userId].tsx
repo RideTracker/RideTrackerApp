@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import { Stack, useRouter, useSearchParams } from "expo-router";
-import { useThemeConfig } from "../../../../../utils/themes";
-import { getProfileActivitiesById, getProfileBikesById, getProfileById } from "../../../../../models/user";
+import { useThemeConfig } from "../../../../utils/themes";
+import { getProfileActivitiesById, getProfileBikesById, getProfileById } from "../../../../models/user";
 import { useSelector } from "react-redux";
-import { CaptionText } from "../../../../../components/texts/caption";
-import { ParagraphText } from "../../../../../components/texts/paragraph";
-import Tabs, { TabsPage } from "../../../../../components/tabs";
-import ActivityCompact from "../../../../../components/activity/compact";
-import ActivityList from "../../../../../components/activity/list";
+import { CaptionText } from "../../../../components/texts/caption";
+import { ParagraphText } from "../../../../components/texts/paragraph";
+import Tabs, { TabsPage } from "../../../../components/tabs";
+import ActivityCompact from "../../../../components/activity/compact";
+import ActivityList from "../../../../components/activity/list";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Pagination } from "../../../../../components/pagination";
-import Bike from "../../../../../components/bike";
+import { Pagination } from "../../../../components/pagination";
+import Bike from "../../../../components/bike";
 import Constants from "expo-constants";
 
 export default function Profile() {

@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { RefreshControl, ScrollView, Text, TouchableOpacity, View, useColorScheme } from "react-native";
+import { useState, useEffect, useRef } from "react";
+import { RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View, useColorScheme } from "react-native";
 import { getFeed } from "../../../../models/feed";
 import Error from "../../../../components/error";
 import Empty from "../../../../components/empty";
@@ -9,15 +9,18 @@ import { useSelector } from "react-redux";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "./record";
 import { FontAwesome } from '@expo/vector-icons';
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { ParagraphText } from "../../../../components/texts/paragraph";
 import { LinkText } from "../../../../components/texts/link";
+import FormInput from "../../../../components/formInput";
 
 export default function Index() {
     const userData = useSelector((state: any) => state.userData);
     const themeConfig = useThemeConfig();
 
     const router = useRouter();
+
+    const scrollViewRef = useRef();
    
     const [ feed, setFeed ] = useState(null);
     const [ refreshing, setRefreshing ] = useState(true);
@@ -42,8 +45,13 @@ export default function Index() {
     }, []);
 
     useEffect(() => {
-        if(!refreshing)
+        if(!refreshing) {
+            const scrollView = scrollViewRef.current as ScrollView;
+
+            scrollView.scrollTo({ x: 0, y: 45 });
+
             return;
+        }
 
         getFeed(userData.key).then((result) => {
             setRefreshing(false);
@@ -53,10 +61,21 @@ export default function Index() {
 
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: themeConfig.background }}>
+            <Stack.Screen options={{
+                headerRight: () => (
+                    <View style={{ marginRight: 20 }}>
+                        <TouchableOpacity>
+                            <FontAwesome name="bell" size={24} color={themeConfig.color}/>
+                        </TouchableOpacity>
+                    </View>
+                )
+            }}/>
+
             <View style={{
                 flex: 1
             }}>
                 <ScrollView
+                    ref={scrollViewRef}
                     refreshControl={
                         <RefreshControl
                             tintColor={themeConfig.contrast}
@@ -64,7 +83,51 @@ export default function Index() {
                             onRefresh={() => !refreshing && setRefreshing(true)}
                             />
                     }
+                    contentOffset={{
+                        x: 0,
+                        y: 45
+                    }}
                 >
+                    <View style={{
+                        height: 45,
+                    
+                        paddingHorizontal: 10,
+
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 10
+                    }}>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 10,
+                            
+                            backgroundColor: themeConfig.border,
+                                
+                            height: 35,
+
+                            paddingHorizontal: 10,
+
+                            borderRadius: 10
+                        }}>
+                            <FontAwesome name="search" size={17} color={themeConfig.color}/>
+
+                            <TextInput style={{
+                                flex: 1,
+
+                                color: themeConfig.color,
+
+                                fontSize: 15,
+                                fontWeight: "500"
+                            }} placeholder="Search..." placeholderTextColor={themeConfig.color}/>
+                        </View>
+
+                        <TouchableOpacity style={{ padding: 5 }}>
+                            <FontAwesome name="filter" size={24} color={themeConfig.color}/>
+                        </TouchableOpacity>
+                    </View>
+
                     <View style={{ padding: 10 }}>
                         {(feed)?(
                             (feed.success)?(
