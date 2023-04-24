@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
 import { BikeResponse, getBikeById } from "../models/bike";
-import { useThemeConfig } from "../utils/themes";
+import { useTheme } from "../utils/themes";
 import { useSelector } from "react-redux";
 import { CaptionText } from "./texts/caption";
 import { ParagraphText } from "./texts/paragraph";
+import { useUser } from "../modules/user/useUser";
 
 type BikeProps = {
     id?: string;
@@ -14,11 +15,12 @@ type BikeProps = {
     style?: any;
 };
 
-export default function Bike({ id, style, data, buttons }: BikeProps) {
-    const userData = useSelector((state: any) => state.userData);
+export default function Bike(props: BikeProps) {
+    const { id, style, data, buttons } = props;
 
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const userData = useUser();
+
+    const theme = useTheme();
 
     const [ bike, setBike ]: [ BikeResponse, any] = useState(null);
 
@@ -48,7 +50,7 @@ export default function Bike({ id, style, data, buttons }: BikeProps) {
                             }}/>
                     ):(
                         <View style={{
-                            backgroundColor: themeConfig.placeholder,
+                            backgroundColor: theme.placeholder,
 
                             width: "100%",
                             height: "100%"  
@@ -71,7 +73,7 @@ export default function Bike({ id, style, data, buttons }: BikeProps) {
                         </View>
                     ):(
                         <CaptionText style={{
-                            backgroundColor: themeConfig.placeholder,
+                            backgroundColor: theme.placeholder,
                             color: "transparent"
                         }}>
                             Name
@@ -104,7 +106,7 @@ export default function Bike({ id, style, data, buttons }: BikeProps) {
 
                             flexGrow: 1,
 
-                            backgroundColor: themeConfig.placeholder
+                            backgroundColor: theme.placeholder
                         }}/>
                     )}
                 </View>

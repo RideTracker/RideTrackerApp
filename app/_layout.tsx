@@ -3,12 +3,11 @@ import { Stack, Tabs } from "expo-router";
 import { Provider } from "../utils/auth/provider";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "../utils/stores/store";
-import { useThemeConfig } from "../utils/themes";
+import { useTheme } from "../utils/themes";
 import { StatusBar } from "expo-status-bar";
 
 export default function Layout() {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     return (
         <ReduxProvider store={store}>

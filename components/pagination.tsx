@@ -4,9 +4,10 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { View } from "react-native";
 import { useSelector } from "react-redux";
 import { ParagraphText } from "./texts/paragraph";
+import { useUser } from "../modules/user/useUser";
 
 export function Pagination({ style, paginate, render }) {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
     const [ items, setItems ] = useState([]);
     const [ offset, setOffset ] = useState(0);

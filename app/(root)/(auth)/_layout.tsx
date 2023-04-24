@@ -1,24 +1,23 @@
 import { useEffect } from "react";
 
 import { Stack, Tabs } from "expo-router";
-import { useThemeConfig } from "../../../utils/themes";
+import { useTheme } from "../../../utils/themes";
 
 export default function Layout() {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     return (
         <Stack screenOptions={{
             headerStyle: {
-                backgroundColor: themeConfig.background
+                backgroundColor: theme.background
             },
 
-            headerTintColor: themeConfig.color,
+            headerTintColor: theme.color,
 
             headerTitleStyle: {
                 fontSize: 24,
                 fontWeight: "500",
-                color: themeConfig.color
+                color: theme.color
             }
         }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

@@ -3,7 +3,7 @@ import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollV
 import { useRouter, Stack, Link, useSearchParams } from "expo-router";
 import { PingResponse, ping } from "../../../models/ping";
 import { useAuth } from "../../../utils/auth/provider";
-import { useThemeConfig } from "../../../utils/themes";
+import { useTheme } from "../../../utils/themes";
 import Button from "../../../components/button";
 import { FontAwesome } from '@expo/vector-icons'; 
 import FormInput from "../../../components/formInput";
@@ -12,8 +12,7 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "../../../utils/stores/userData";
 
 export default function Verify() {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -48,14 +47,14 @@ export default function Verify() {
     }, [ submitting ]);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", padding: 10, backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, justifyContent: "center", padding: 10, backgroundColor: theme.background }}>
             <ScrollView style={{ paddingTop: 10 }}>
                 <View style={{ gap: 20, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>
                     <SafeAreaView style={{ gap: 10 }}>
-                        <Text style={{ color: themeConfig.color, fontSize: 20, fontWeight: "500" }}>Email address</Text>
-                        <Text style={{ color: themeConfig.color, fontSize: 16 }}>You will not receive any spam email, we just need to verify your email for spam anti-measures.</Text>
+                        <Text style={{ color: theme.color, fontSize: 20, fontWeight: "500" }}>Email address</Text>
+                        <Text style={{ color: theme.color, fontSize: 16 }}>You will not receive any spam email, we just need to verify your email for spam anti-measures.</Text>
 
-                        <FormInput inputRef={codeRef} placeholder="Verification code" icon={(<FontAwesome name="envelope" size={24} color={themeConfig.color}/>)} props={{
+                        <FormInput inputRef={codeRef} placeholder="Verification code" icon={(<FontAwesome name="envelope" size={24} color={theme.color}/>)} props={{
                             onChangeText: (text) => setCode(text),
                             autoCorrect: false,
                             enterKeyHint: "send",

@@ -1,5 +1,5 @@
 import { Text } from "react-native";
-import { useThemeConfig } from "../../utils/themes";
+import { useTheme } from "../../utils/themes";
 
 type HeaderTextProps = {
     children?: any;
@@ -7,11 +7,11 @@ type HeaderTextProps = {
 };
 
 export function HeaderText({ children, style }: HeaderTextProps) {
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
 
     return (
         <Text style={{
-            color: themeConfig.color,
+            color: theme.color,
 
             fontSize: 20,
             fontWeight: "600",

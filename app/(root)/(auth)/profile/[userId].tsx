@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import { Stack, useRouter, useSearchParams } from "expo-router";
-import { useThemeConfig } from "../../../../utils/themes";
+import { useTheme } from "../../../../utils/themes";
 import { getProfileActivitiesById, getProfileBikesById, getProfileById } from "../../../../models/user";
 import { useSelector } from "react-redux";
 import { CaptionText } from "../../../../components/texts/caption";
@@ -11,13 +11,13 @@ import ActivityCompact from "../../../../components/activity/compact";
 import ActivityList from "../../../../components/activity/list";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Pagination } from "../../../../components/pagination";
-import Bike from "../../../../components/bike";
+import Bike from "../../../../components/Bike";
 import Constants from "expo-constants";
+import { useUser } from "../../../../modules/user/useUser";
 
 export default function Profile() {
-    const themeConfig = useThemeConfig();
-    const userData = useSelector((state: any) => state.userData);
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
+    const userData = useUser();
 
     const { userId } = useSearchParams();
 
@@ -34,7 +34,7 @@ export default function Profile() {
     }, []);
     
     return (
-        <View style={{ flex: 1, justifyContent: "center", backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
             <Stack.Screen options={{ title: "Profile" }} />
 
             <View style={{
@@ -49,7 +49,7 @@ export default function Profile() {
                         width: 80,
                         aspectRatio: 1,
                         borderRadius: 80,
-                        backgroundColor: themeConfig.placeholder,
+                        backgroundColor: theme.placeholder,
                         overflow: "hidden"
                     }} onPress={() => router.push("/avatar-editor/")}>
                         {(profile?.user?.avatar) && (
@@ -64,14 +64,14 @@ export default function Profile() {
 
                     
                     <CaptionText style={(!profile) && {
-                        backgroundColor: themeConfig.placeholder,
+                        backgroundColor: theme.placeholder,
                         color: "transparent"
                     }}>
                         {(profile)?(profile.user.name):("Firstname Lastname")}
                     </CaptionText>
 
                     <ParagraphText style={(!profile) && {
-                        backgroundColor: themeConfig.placeholder,
+                        backgroundColor: theme.placeholder,
                         color: "transparent"
                     }}>
                         {(!profile || profile.stats.followers === 0)?("No followers"):(`${profile.stats.followers} followers`)}
@@ -95,7 +95,7 @@ export default function Profile() {
 };
 
 export function ProfileActivities({ profile }) {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
     const router = useRouter();
 
@@ -116,7 +116,7 @@ export function ProfileActivities({ profile }) {
 };
 
 export function ProfileBikes({ profile }) {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
     const router = useRouter();
 

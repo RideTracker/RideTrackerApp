@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity } from "react-native";
-import { useThemeConfig } from "../../utils/themes";
+import { useTheme } from "../../utils/themes";
 
 type LinkTextProps = {
     children?: any;
@@ -7,11 +7,11 @@ type LinkTextProps = {
 };
 
 export function LinkText({ children, style }: LinkTextProps) {
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
 
     return (
         <Text style={{
-            color: themeConfig.brand,
+            color: theme.brand,
 
             ...style
         }}>

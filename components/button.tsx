@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { useThemeConfig } from "../utils/themes";
+import { useTheme } from "../utils/themes";
 
 type ButtonProps = {
     label?: string;
@@ -14,15 +14,14 @@ type ButtonProps = {
 };
 
 export default function Button({ primary, label, icon, type, children, style, onPress }: ButtonProps) {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     return (
         <View style={style}>
             <TouchableOpacity style={{
                 width: "100%",
 
-                backgroundColor: (type === "danger")?("transparent"):((primary)?(themeConfig.brand):(themeConfig.border)),
+                backgroundColor: (type === "danger")?("transparent"):((primary)?(theme.brand):(theme.border)),
                 
                 padding: 10,
                 borderRadius: 6,
@@ -38,7 +37,7 @@ export default function Button({ primary, label, icon, type, children, style, on
 
             {(icon) && icon}
                 {(label) && (
-                   <Text style={{ color: (type === "danger")?("#FF0000"):((primary)?(themeConfig.brandText):(themeConfig.color)), fontSize: 20, textAlign: "center" }}>{label}</Text>
+                   <Text style={{ color: (type === "danger")?("#FF0000"):((primary)?(theme.brandText):(theme.color)), fontSize: 20, textAlign: "center" }}>{label}</Text>
                 )}
 
                 {children}

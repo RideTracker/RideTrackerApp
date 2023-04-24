@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Text, TextInput, TextInputComponent, TouchableOpacity, View } from "react-native";
-import { useThemeConfig } from "../utils/themes";
+import { useTheme } from "../utils/themes";
 
 type FormInputProps = {
     placeholder?: string;
@@ -13,8 +13,7 @@ type FormInputProps = {
 };
 
 export default function FormInput({ props, placeholder, icon, inputRef, style }: FormInputProps) {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     const [ value, setValue ] = useState("");
 
@@ -28,7 +27,7 @@ export default function FormInput({ props, placeholder, icon, inputRef, style }:
                 width: "100%",
 
                 borderWidth: 1,
-                borderColor: themeConfig.border,
+                borderColor: theme.border,
                 borderRadius: 6,
 
                 alignItems: "center",
@@ -52,7 +51,7 @@ export default function FormInput({ props, placeholder, icon, inputRef, style }:
             <TextInput
                 ref={inputRef}
                 style={{
-                    color: themeConfig.color,
+                    color: theme.color,
                     fontSize: 20,
 
                     marginVertical: 5,
@@ -63,7 +62,7 @@ export default function FormInput({ props, placeholder, icon, inputRef, style }:
                     ...style
                 }}
                 placeholder={placeholder}
-                placeholderTextColor={themeConfig.color}
+                placeholderTextColor={theme.color}
                 onChangeText={(text) => setValue(text)}
 
                 {...props}

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
 import { getActivityById, getActivitySummaryById } from "../../../../../models/activity";
-import Bike from "../../../../../components/bike";
-import { useThemeConfig } from "../../../../../utils/themes";
+import Bike from "../../../../../components/Bike";
+import { useTheme } from "../../../../../utils/themes";
 import { useSelector } from "react-redux";
 import { HeaderText } from "../../../../../components/texts/header";
 import { ParagraphText } from "../../../../../components/texts/paragraph";
@@ -12,12 +12,12 @@ import ActivityAuthor from "../../../../../layouts/activity/author";
 import ActivityStats from "../../../../../layouts/activity/stats";
 import ActivityComment from "../../../../../layouts/activity/comment";
 import { ComponentType } from "../../../../../models/componentType";
+import { useUser } from "../../../../../modules/user/useUser";
 
 export default function ActivityPage({ params }) {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
     
     const router = useRouter();
     const { id } = useSearchParams();
@@ -39,7 +39,7 @@ export default function ActivityPage({ params }) {
     }, [ activity ]);
 
     return (
-        <View style={{ flex: 1, backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{ title: "Activity" }} />
 
             <ScrollView style={{ padding: 10 }}>

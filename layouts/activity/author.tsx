@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useThemeConfig } from "../../utils/themes";
+import { useTheme } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
 import { CaptionText } from "../../components/texts/caption";
 import { ParagraphText } from "../../components/texts/paragraph";
@@ -15,8 +15,7 @@ type ActivityAuthorProps = {
 export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
     const router = useRouter();
 
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     return (
         <View style={{
@@ -34,7 +33,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                     height: 40,
                     aspectRatio: 1,
                     
-                    backgroundColor: themeConfig.placeholder,
+                    backgroundColor: theme.placeholder,
                     
                     borderRadius: 40,
                     overflow: "hidden"
@@ -50,7 +49,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                             }}/>
                     ):(
                         <View style={{
-                            backgroundColor: themeConfig.placeholder,
+                            backgroundColor: theme.placeholder,
                             
                             width: "100%",
                             height: "100%"
@@ -74,14 +73,14 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                     ):(
                         <>
                             <CaptionText style={{
-                                backgroundColor: themeConfig.placeholder,
+                                backgroundColor: theme.placeholder,
                                 color: "transparent"
                             }}>
                                 Firstname Lastname
                             </CaptionText>
                             
                             <ParagraphText style={{
-                                backgroundColor: themeConfig.placeholder,
+                                backgroundColor: theme.placeholder,
                                 color: "transparent"
                             }}>
                                 13 days ago in Vänersborg
@@ -107,7 +106,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                                 justifyContent: "center",
                                 alignItems: "center"
                             }}>
-                                <FontAwesome name={(activity.likes)?("thumbs-up"):("thumbs-o-up")} size={24} color={themeConfig.color} />
+                                <FontAwesome name={(activity.likes)?("thumbs-up"):("thumbs-o-up")} size={24} color={theme.color} />
                             </TouchableOpacity>
                         )*/}
                         
@@ -118,7 +117,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                             justifyContent: "center",
                             alignItems: "center"
                         }}>
-                            <FontAwesome name="ellipsis-v" size={24} color={themeConfig.color} />
+                            <FontAwesome name="ellipsis-v" size={24} color={theme.color} />
                         </TouchableOpacity>
                     </>
                 )}

@@ -9,6 +9,7 @@ import ActivityMap from "../../layouts/activity/map";
 import ActivityMapStats from "../../layouts/activity/mapStats";
 import ActivityAuthor from "../../layouts/activity/author";
 import { ComponentType } from "../../models/componentType";
+import { useUser } from "../../modules/user/useUser";
 
 type ActivityCompactProps = {
     id: string | null;
@@ -16,7 +17,7 @@ type ActivityCompactProps = {
 };
 
 export default function ActivityCompact({ id, style }: ActivityCompactProps) {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
     const router = useRouter();
 

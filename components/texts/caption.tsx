@@ -1,5 +1,5 @@
 import { Text } from "react-native";
-import { useThemeConfig } from "../../utils/themes";
+import { useTheme } from "../../utils/themes";
 
 type CaptionTextProps = {
     children?: any;
@@ -7,11 +7,11 @@ type CaptionTextProps = {
 };
 
 export function CaptionText({ children, style }: CaptionTextProps) {
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
 
     return (
         <Text style={{
-            color: themeConfig.color,
+            color: theme.color,
 
             fontSize: 17,
             fontWeight: "500",

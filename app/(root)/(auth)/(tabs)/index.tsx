@@ -4,7 +4,7 @@ import { getFeed } from "../../../../models/feed";
 import Error from "../../../../components/error";
 import Empty from "../../../../components/empty";
 import ActivityCompact from "../../../../components/activity/compact";
-import { useThemeConfig } from "../../../../utils/themes";
+import { useTheme } from "../../../../utils/themes";
 import { useSelector } from "react-redux";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "./record";
@@ -13,10 +13,11 @@ import { Stack, useRouter } from "expo-router";
 import { ParagraphText } from "../../../../components/texts/paragraph";
 import { LinkText } from "../../../../components/texts/link";
 import { ScrollViewFilter } from "../../../../components/scrollViewFilter";
+import { useUser } from "../../../../modules/user/useUser";
 
 export default function Index() {
-    const userData = useSelector((state: any) => state.userData);
-    const themeConfig = useThemeConfig();
+    const userData = useUser();
+    const theme = useTheme();
 
     const router = useRouter();
 
@@ -60,12 +61,12 @@ export default function Index() {
     }, [ refreshing ]);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
             <Stack.Screen options={{
                 headerRight: () => (
                     <View style={{ marginRight: 20 }}>
                         <TouchableOpacity>
-                            <FontAwesome name="bell" size={24} color={themeConfig.color}/>
+                            <FontAwesome name="bell" size={24} color={theme.color}/>
                         </TouchableOpacity>
                     </View>
                 )
@@ -78,7 +79,7 @@ export default function Index() {
                     ref={scrollViewRef}
                     refreshControl={
                         <RefreshControl
-                            tintColor={themeConfig.contrast}
+                            tintColor={theme.contrast}
                             refreshing={refreshing}
                             onRefresh={() => !refreshing && setRefreshing(true)}
                             />
@@ -122,7 +123,7 @@ export default function Index() {
                 {(recordings) && (
                     <TouchableOpacity style={{ padding: 20 }} onPress={() => router.push("/recordings")}>
                         <View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
-                            <FontAwesome name="warning" size={24} color={themeConfig.color}/>
+                            <FontAwesome name="warning" size={24} color={theme.color}/>
 
                             <ParagraphText style={{ paddingRight: 20 + 24 }}>
                                 You have {recordings.length} {(recordings.length > 1)?("recordings"):("recording")} that hasn't been uploaded. <LinkText>Take action.</LinkText>

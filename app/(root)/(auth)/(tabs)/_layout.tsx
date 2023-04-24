@@ -1,36 +1,36 @@
 import { useEffect } from "react";
 import { Tabs } from "expo-router";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
-import { useThemeConfig } from "../../../../utils/themes";
+import { useTheme } from "../../../../utils/themes";
 import { View } from "react-native";
 import { useSelector } from "react-redux";
+import { useUser } from "../../../../modules/user/useUser";
 
 export default function Layout() {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
     return (
         <Tabs screenOptions={{
             headerStyle: {
-                backgroundColor: themeConfig.background,
-                shadowColor: themeConfig.border
+                backgroundColor: theme.background,
+                shadowColor: theme.border
             },
 
             headerTitleStyle: {
                 fontSize: 24,
                 fontWeight: "500",
-                color: themeConfig.color
+                color: theme.color
             },
 
-            tabBarActiveTintColor: themeConfig.color, 
+            tabBarActiveTintColor: theme.color, 
 
             tabBarStyle: {
-                backgroundColor: themeConfig.background,
+                backgroundColor: theme.background,
                 paddingTop: 10,
                 paddingBottom: 25,
-                borderTopColor: themeConfig.border
+                borderTopColor: theme.border
             },
 
             tabBarLabelStyle: {
@@ -40,14 +40,14 @@ export default function Layout() {
             <Tabs.Screen name="index" options={{
                 title: "Feed",
                 tabBarIcon: () => (
-                    <FontAwesome name="home" color={themeConfig.color} size={24}/>
+                    <FontAwesome name="home" color={theme.color} size={24}/>
                 )
             }}/>
 
             <Tabs.Screen name="routes" options={{
                 title: "Routes",
                 tabBarIcon: () => (
-                    <FontAwesome5 name="route" color={themeConfig.color} size={20}/>
+                    <FontAwesome5 name="route" color={theme.color} size={20}/>
                 )
             }}/>
 
@@ -67,7 +67,7 @@ export default function Layout() {
                 
                 tabBarIcon: () => (
                     <View style={{ height: 42 }}>
-                        <FontAwesome5 name="dot-circle" color={themeConfig.color} size={42}/>
+                        <FontAwesome5 name="dot-circle" color={theme.color} size={42}/>
                     </View>
                 )
             }}/>
@@ -81,14 +81,14 @@ export default function Layout() {
                     }
                 },
                 tabBarIcon: () => (
-                    <FontAwesome5 name="user-alt" color={themeConfig.color} size={18}/>
+                    <FontAwesome5 name="user-alt" color={theme.color} size={18}/>
                 )
             }}/>
 
             <Tabs.Screen name="settings" options={{
                 title: "Settings",
                 tabBarIcon: () => (
-                    <FontAwesome5 name="cog" color={themeConfig.color} size={21}/>
+                    <FontAwesome5 name="cog" color={theme.color} size={21}/>
                 )
             }}/>
         </Tabs>

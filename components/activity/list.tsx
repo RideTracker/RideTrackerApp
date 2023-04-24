@@ -5,13 +5,14 @@ import { getActivityById } from "../../models/activity";
 import Error from "../error";
 import { useSelector } from "react-redux";
 import { CaptionText } from "../texts/caption";
-import { useThemeConfig } from "../../utils/themes";
+import { useTheme } from "../../utils/themes";
 import { ParagraphText } from "../texts/paragraph";
 import { timeSince } from "../../utils/time";
 import ActivityAuthor from "../../layouts/activity/author";
 import ActivityMap from "../../layouts/activity/map";
 import { ComponentType } from "../../models/componentType";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useUser } from "../../modules/user/useUser";
 
 type ActivityListProps = {
     id: string | null;
@@ -19,10 +20,10 @@ type ActivityListProps = {
 };
 
 export default function ActivityList({ id, style }: ActivityListProps) {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
     const router = useRouter();
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
 
     const [ activity, setActivity ] = useState(null);
 
@@ -82,7 +83,7 @@ export default function ActivityList({ id, style }: ActivityListProps) {
                                     justifyContent: "center",
                                     alignItems: "center"
                                 }}>
-                                    <FontAwesome name="ellipsis-v" size={24} color={themeConfig.color} />
+                                    <FontAwesome name="ellipsis-v" size={24} color={theme.color} />
                                 </TouchableOpacity>
                             </View>
                         </React.Fragment>
@@ -92,7 +93,7 @@ export default function ActivityList({ id, style }: ActivityListProps) {
 
                             flexGrow: 1,
 
-                            backgroundColor: themeConfig.placeholder
+                            backgroundColor: theme.placeholder
                         }}/>
                     )}
                 </View>

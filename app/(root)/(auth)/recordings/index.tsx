@@ -2,20 +2,20 @@ import { useEffect, useRef, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
-import { useThemeConfig } from "../../../../utils/themes";
+import { useTheme } from "../../../../utils/themes";
 import FormInput from "../../../../components/formInput";
 import { FontAwesome, Feather } from '@expo/vector-icons'; 
 import Button from "../../../../components/button";
-import Bike from "../../../../components/bike";
+import Bike from "../../../../components/Bike";
 import { getBikes } from "../../../../models/bike";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../(tabs)/record";
 import { timeSince } from "../../../../utils/time";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
+import { useUser } from "../../../../modules/user/useUser";
 
 function RecordingSummary({ recording }) {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     const router = useRouter();
 
@@ -28,23 +28,22 @@ function RecordingSummary({ recording }) {
     return (
         <TouchableOpacity style={{ height: 80, flexDirection: "row", gap: 10 }} onPress={() => router.push(`/recordings/${recording.id}/upload`)}>
             <View style={{ width: 140, height: "100%", borderRadius: 6, overflow: "hidden" }}>
-                <MapView ref={mapRef} provider={PROVIDER_GOOGLE} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={themeConfig.mapStyle} onLayout={() => {
+                <MapView ref={mapRef} provider={PROVIDER_GOOGLE} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
                     (mapRef.current as MapView).fitToCoordinates(recording.locations.map((location) => location.coords));
                 }}>
-                    <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={2} strokeColor={themeConfig.brand}/>
+                    <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={2} strokeColor={theme.brand}/>
                 </MapView>
             </View>
             
-            <Text style={{ fontSize: 16, color: themeConfig.color }}>{(recording.timestamp)?(timeSince(recording.timestamp)):("Unknown")}</Text>
+            <Text style={{ fontSize: 16, color: theme.color }}>{(recording.timestamp)?(timeSince(recording.timestamp)):("Unknown")}</Text>
         </TouchableOpacity>
     );
 };
 
 export default function RecordingsPage() {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     const router = useRouter();
 
@@ -81,7 +80,7 @@ export default function RecordingsPage() {
     }, []);
     
     return (
-        <View style={{ flex: 1, backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{ title: "Recordings" }}/>
 
             <ScrollView style={{ padding: 10 }}>

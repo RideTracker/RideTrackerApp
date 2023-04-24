@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
-import { useThemeConfig } from "../../../../utils/themes";
+import { useTheme } from "../../../../utils/themes";
 import { createUserAvatar, getAvatars } from "../../../../models/avatars";
 import { CaptionText } from "../../../../components/texts/caption";
-import Avatar from "../../../../components/avatar";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Tabs, { TabsPage } from "../../../../components/tabs";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -16,33 +15,34 @@ import { ParagraphText } from "../../../../components/texts/paragraph";
 import Constants from "expo-constants";
 import { authenticateUser } from "../../../../models/user";
 import { setUserData } from "../../../../utils/stores/userData";
+import Avatar from "../../../../components/Avatar";
+import { useUser } from "../../../../modules/user/useUser";
 
 export default function AvatarEditorPage() {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     const avatarTypes = [
         {
             name: "Helmets",
             type: "helmet",
             tab: "appearance",
-            icon: (<MaterialCommunityIcons name="racing-helmet" size={24} color={themeConfig.color}/>)
+            icon: (<MaterialCommunityIcons name="racing-helmet" size={24} color={theme.color}/>)
         },
     
         {
             name: "Sunglasses",
             type: "sunglass",
             tab: "appearance",
-            icon: (<MaterialCommunityIcons name="sunglasses" size={24} color={themeConfig.color}/>)
+            icon: (<MaterialCommunityIcons name="sunglasses" size={24} color={theme.color}/>)
         },
     
         {
             name: "Heads",
             type: "head",
             tab: "appearance",
-            icon: (<MaterialCommunityIcons name="head" size={24} color={themeConfig.color}/>),
+            icon: (<MaterialCommunityIcons name="head" size={24} color={theme.color}/>),
     
             required: true
         },
@@ -51,7 +51,7 @@ export default function AvatarEditorPage() {
             name: "Jerseys",
             type: "jersey",
             tab: "appearance",
-            icon: (<MaterialCommunityIcons name="tshirt-crew" size={24} color={themeConfig.color}/>),
+            icon: (<MaterialCommunityIcons name="tshirt-crew" size={24} color={theme.color}/>),
             
             required: true
         },
@@ -125,7 +125,7 @@ export default function AvatarEditorPage() {
     }, [ uploading ]);
 
     return (
-        <View style={{ flex: 1, backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{
                 title: "Avatar Editor",
 
@@ -186,9 +186,9 @@ export default function AvatarEditorPage() {
 
                                             padding: 10,
 
-                                            backgroundColor: (tabType === avatarType.type)?(themeConfig.highlight):(themeConfig.placeholder),
+                                            backgroundColor: (tabType === avatarType.type)?(theme.highlight):(theme.placeholder),
                                             borderWidth: 1,
-                                            borderColor: (tabType === avatarType.type)?(themeConfig.border):("transparent")
+                                            borderColor: (tabType === avatarType.type)?(theme.border):("transparent")
                                         }} onPress={() => setTabType(avatarType.type)}>
                                             <View style={{ marginTop: -3 }}>
                                                 {avatarType.icon}
@@ -220,9 +220,9 @@ export default function AvatarEditorPage() {
                                                     padding: 10,
 
                                                     borderWidth: (!combination || !combination[avatarType.type])?(1):(0),
-                                                    borderColor: themeConfig.border
+                                                    borderColor: theme.border
                                                 }}>
-                                                    <FontAwesome5 name="times-circle" size={48} color={themeConfig.placeholder}/>
+                                                    <FontAwesome5 name="times-circle" size={48} color={theme.placeholder}/>
                                                 </TouchableOpacity>
                                             )}
 
@@ -236,9 +236,9 @@ export default function AvatarEditorPage() {
 
                                                     padding: 10,
 
-                                                    backgroundColor: (combination && combination[avatar.type]?.id === avatar.id)?(themeConfig.highlight):(themeConfig.placeholder),
+                                                    backgroundColor: (combination && combination[avatar.type]?.id === avatar.id)?(theme.highlight):(theme.placeholder),
                                                     borderWidth: (combination && combination[avatar.type]?.id === avatar.id)?(1):(0),
-                                                    borderColor: themeConfig.border
+                                                    borderColor: theme.border
                                                 }}>
                                                     <Image source={{
                                                         uri: `${Constants.expoConfig.extra.images}/${avatar.image}/avatarspreview`
@@ -289,9 +289,9 @@ export default function AvatarEditorPage() {
 
                                             padding: 10,
 
-                                            backgroundColor: (tabType === avatarType.type)?(themeConfig.highlight):(themeConfig.placeholder),
+                                            backgroundColor: (tabType === avatarType.type)?(theme.highlight):(theme.placeholder),
                                             borderWidth: 1,
-                                            borderColor: (tabType === avatarType.type)?(themeConfig.border):("transparent")
+                                            borderColor: (tabType === avatarType.type)?(theme.border):("transparent")
                                         }} onPress={() => setTabType(avatarType.type)}>
                                             {avatarType.icon}
 
@@ -321,9 +321,9 @@ export default function AvatarEditorPage() {
                                                     padding: 10,
 
                                                     borderWidth: (!combination || !combination[avatarType.type])?(1):(0),
-                                                    borderColor: themeConfig.border
+                                                    borderColor: theme.border
                                                 }}>
-                                                    <FontAwesome5 name="times-circle" size={48} color={themeConfig.placeholder}/>
+                                                    <FontAwesome5 name="times-circle" size={48} color={theme.placeholder}/>
                                                 </TouchableOpacity>
                                             )}
 
@@ -335,9 +335,9 @@ export default function AvatarEditorPage() {
                                                     borderRadius: 6,
                                                     overflow: "hidden",
 
-                                                    backgroundColor: (combination && combination[avatar.type]?.id === avatar.id)?(themeConfig.highlight):(themeConfig.placeholder),
+                                                    backgroundColor: (combination && combination[avatar.type]?.id === avatar.id)?(theme.highlight):(theme.placeholder),
                                                     borderWidth: (combination && combination[avatar.type]?.id === avatar.id)?(1):(0),
-                                                    borderColor: themeConfig.border
+                                                    borderColor: theme.border
                                                 }}>
                                                     <Image source={{
                                                         uri: `${Constants.expoConfig.extra.images}/${avatar.image}/avatarspreview`

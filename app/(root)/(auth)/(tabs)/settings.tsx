@@ -2,19 +2,19 @@ import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { Stack, useRouter } from "expo-router";
-import { useThemeConfig } from "../../../../utils/themes";
+import { useTheme } from "../../../../utils/themes";
 import Button from "../../../../components/button";
 import { setUserData } from "../../../../utils/stores/userData";
 
 export default function Settings() {
     const dispatch = useDispatch();
 
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
 
     const router = useRouter();
     
     return (
-        <View style={{ flex: 1, justifyContent: "center", backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
             <Stack.Screen options={{ title: "Settings" }} />
 
             <View style={{

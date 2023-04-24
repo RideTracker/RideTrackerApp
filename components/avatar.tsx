@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Image, ScrollView, View, PixelRatio } from "react-native";
+import { View } from "react-native";
 import WebView from "react-native-webview";
 
 export default function Avatar({ avatars, combination, onDataUrl }) {

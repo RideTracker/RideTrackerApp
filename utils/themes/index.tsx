@@ -4,11 +4,11 @@ import { useColorScheme } from "react-native";
 
 import config from "./config.json";
 
-export function useThemeConfig() {
+export function useTheme() {
     const colorScheme = useColorScheme();
 
     try {
-        const userData = useSelector((state: any) => state.userData);
+        const userData = useUser();
 
         return config[userData?.theme ?? colorScheme];
     }
@@ -18,6 +18,7 @@ export function useThemeConfig() {
 };
 
 import mapStyle from "./mapStyle.json";
+import { useUser } from "../../modules/user/useUser";
 
 export function useMapStyle() {
     return mapStyle;

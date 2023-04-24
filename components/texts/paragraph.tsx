@@ -1,5 +1,5 @@
 import { Text } from "react-native";
-import { useThemeConfig } from "../../utils/themes";
+import { useTheme } from "../../utils/themes";
 
 type ParagraphTextProps = {
     children?: any;
@@ -7,11 +7,11 @@ type ParagraphTextProps = {
 };
 
 export function ParagraphText({ children, style }: ParagraphTextProps) {
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
 
     return (
         <Text style={{
-            color: themeConfig.color,
+            color: theme.color,
 
             fontSize: 15,
             fontWeight: "400",

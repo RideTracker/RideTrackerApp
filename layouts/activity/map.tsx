@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Image, Text, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
-import { useThemeConfig, useMapStyle } from "../../utils/themes";
+import { useTheme, useMapStyle } from "../../utils/themes";
 import { decode } from "@googlemaps/polyline-codec";
 import { CaptionText } from "../../components/texts/caption";
 import { ParagraphText } from "../../components/texts/paragraph";
@@ -53,8 +53,7 @@ function getStylingForHeading(position: any, heading: any, layout: any): any[] {
 
 export default function ActivityMap({ activity, children, type }: ActivityMapProps) {
     const mapStyle = useMapStyle();
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     const [ layout, setLayout ] = useState(null);
     const [ polylines, setPolylines ] = useState(null);
@@ -206,7 +205,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                 height: "100%",
                 borderRadius: 10,
 
-                backgroundColor: themeConfig.placeholder
+                backgroundColor: theme.placeholder
             }}/>
         );
     }
@@ -262,7 +261,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                     onLayout={(event) => setLayout(event.nativeEvent.layout)}
                     pointerEvents={(type !== ComponentType.Default)?("none"):("auto")}
                     provider={PROVIDER_GOOGLE}
-                    customMapStyle={(type !== ComponentType.Default)?(themeConfig.mapStyle.concat(mapStyle.compact as any[])):(themeConfig.mapStyle)}
+                    customMapStyle={(type !== ComponentType.Default)?(theme.mapStyle.concat(mapStyle.compact as any[])):(theme.mapStyle)}
                     zoomEnabled={false}
                     pitchEnabled={false}
                     rotateEnabled={false}
@@ -273,7 +272,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                                 latitude: point[0],
                                 longitude: point[1]
                             };
-                        })} strokeColor={themeConfig.brand} strokeWidth={4}/>
+                        })} strokeColor={theme.brand} strokeWidth={4}/>
                     ))}
                 </MapView>
 

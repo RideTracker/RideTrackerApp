@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity } from "react-native";
-import { useThemeConfig } from "../utils/themes";
+import { useTheme } from "../utils/themes";
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from "expo-linear-gradient";
 import { color } from "chroma.ts";
@@ -145,7 +145,7 @@ const typeColors = [
 ];
 
 export function Colors({ initialColor, type, colorChange, picker, showPicker }) {
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
 
     const [ currentColor, setColor ] = useState(initialColor);
     const [ currentColorCustom, setCurrentColorCustom ] = useState(!typeColors.find((typeColor) => typeColor.type === type)?.colors?.includes(initialColor));
@@ -190,7 +190,7 @@ export function Colors({ initialColor, type, colorChange, picker, showPicker }) 
                         height: 40,
 
                         borderWidth: 2,
-                        borderColor: (currentColorCustom)?(themeConfig.color):(themeConfig.border),
+                        borderColor: (currentColorCustom)?(theme.color):(theme.border),
 
                         borderRadius: 50,
 
@@ -203,7 +203,7 @@ export function Colors({ initialColor, type, colorChange, picker, showPicker }) 
                             
                         showPicker(!picker);
                     }}>
-                        <MaterialIcons name="colorize" size={24} color={themeConfig.color} style={{
+                        <MaterialIcons name="colorize" size={24} color={theme.color} style={{
                             position: "absolute",
 
                             right: 0,
@@ -217,7 +217,7 @@ export function Colors({ initialColor, type, colorChange, picker, showPicker }) 
                             height: 40,
 
                             borderWidth: 2,
-                            borderColor: (currentColor === color)?(themeConfig.color):(themeConfig.border),
+                            borderColor: (currentColor === color)?(theme.color):(theme.border),
 
                             borderRadius: 50,
 
@@ -276,7 +276,7 @@ export function Colors({ initialColor, type, colorChange, picker, showPicker }) 
                                     ):(currentColor),
 
                                     borderWidth: 2,
-                                    borderColor: themeConfig.color
+                                    borderColor: theme.color
                                 }}/>
                             </Draggable>
                         </View>
@@ -317,7 +317,7 @@ export function Colors({ initialColor, type, colorChange, picker, showPicker }) 
                                     backgroundColor: color([ (huePosition)?(huePosition.scale.left * 360):(currentColorHue), 1, 1 ], "hsv").hex(),
 
                                     borderWidth: 2,
-                                    borderColor: themeConfig.color
+                                    borderColor: theme.color
                                 }}/>
                             </Draggable>
                         </View>

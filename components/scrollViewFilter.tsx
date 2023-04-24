@@ -1,11 +1,11 @@
 import React from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { View } from "react-native";
-import { useThemeConfig } from "../utils/themes";
+import { useTheme } from "../utils/themes";
 import { FontAwesome } from '@expo/vector-icons';
 
 export function ScrollViewFilter() {
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
 
     return (
         <View style={{
@@ -23,7 +23,7 @@ export function ScrollViewFilter() {
                 alignItems: "center",
                 gap: 10,
                 
-                backgroundColor: themeConfig.border,
+                backgroundColor: theme.border,
                     
                 height: 35,
 
@@ -31,20 +31,20 @@ export function ScrollViewFilter() {
 
                 borderRadius: 10
             }}>
-                <FontAwesome name="search" size={17} color={themeConfig.color}/>
+                <FontAwesome name="search" size={17} color={theme.color}/>
 
                 <TextInput style={{
                     flex: 1,
 
-                    color: themeConfig.color,
+                    color: theme.color,
 
                     fontSize: 15,
                     fontWeight: "500"
-                }} placeholder="Search..." placeholderTextColor={themeConfig.color}/>
+                }} placeholder="Search..." placeholderTextColor={theme.color}/>
             </View>
 
             <TouchableOpacity style={{ padding: 5 }}>
-                <FontAwesome name="filter" size={24} color={themeConfig.color}/>
+                <FontAwesome name="filter" size={24} color={theme.color}/>
             </TouchableOpacity>
         </View>
     )

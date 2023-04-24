@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { Stack } from "expo-router";
-import { useThemeConfig } from "../../../../utils/themes";
+import { useTheme } from "../../../../utils/themes";
 
 export default function Routes() {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
     
     return (
-        <View style={{ flex: 1, justifyContent: "center", backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
             <Stack.Screen options={{ title: "Routes" }} />
 
             <View style={{

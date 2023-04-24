@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Stack, Tabs, useRouter } from "expo-router";
-import { useThemeConfig } from "../../../../../utils/themes";
+import { useTheme } from "../../../../../utils/themes";
 import MapView, { Circle, Marker, Overlay, PROVIDER_GOOGLE } from "react-native-maps";
 import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
@@ -38,8 +38,7 @@ TaskManager.defineTask(RECORD_TASK_NAME, ({ data, error }: { data: any, error: a
 });
 
 export default function Record() {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     const router = useRouter();
     const mapRef = useRef();
@@ -160,7 +159,7 @@ export default function Record() {
                     foregroundService: {
                         notificationTitle: "Ride Tracker Recording",
                         notificationBody: "Ride Tracker is tracking your position in the background while you're recording an activity.",
-                        notificationColor: themeConfig.brand
+                        notificationColor: theme.brand
                     }
                 });
             }
@@ -206,14 +205,14 @@ export default function Record() {
     }, [ location ]);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
             <Tabs.Screen options={{
                 title: (recording)?("Recording"):((recording === null)?("Not recording"):("Paused")),
 
                 headerTitleStyle: {
                     fontSize: 24,
                     fontWeight: "500",
-                    color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"),
+                    color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"),
                     textShadowColor: "rgba(0, 0, 0, .1)",
                     textShadowRadius: 1
                 },
@@ -245,7 +244,7 @@ export default function Record() {
                     width: "100%"
                 }}
                 
-                customMapStyle={themeConfig.mapStyle.concat(themeConfig.mapStyleFullscreen)}
+                customMapStyle={theme.mapStyle.concat(theme.mapStyleFullscreen)}
                 
                 provider={PROVIDER_GOOGLE}
 
@@ -323,19 +322,19 @@ export default function Record() {
                     {(recording !== null) && (
                         <>
                             <View style={{ width: "100%" }}>
-                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>TIME</Text>
-                                <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>{formatTime(time)}</Text>
+                                <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>TIME</Text>
+                                <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>{formatTime(time)}</Text>
                             </View>
                         
                             <View style={{ flexDirection: "row" }}>
                                 <View style={{ width: "50%" }}>
-                                    <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>ELEVATION</Text>
-                                    <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.round(elevation)} m</Text>
+                                    <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>ELEVATION</Text>
+                                    <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.round(elevation)} m</Text>
                                 </View>
 
                                 <View style={{ width: "50%" }}>
-                                    <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>DISTANCE</Text>
-                                    <Text style={{ textAlign: "center", color: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.floor((distance / 1000) * 10) / 10} km</Text>
+                                    <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>DISTANCE</Text>
+                                    <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.floor((distance / 1000) * 10) / 10} km</Text>
                                 </View>
                             </View>
                         </>
@@ -350,9 +349,9 @@ export default function Record() {
                             justifyContent: "center",
                             alignItems: "center",
 
-                            backgroundColor: (recording && themeConfig.contrast === "black")?("#171A23"):("#FFF")
+                            backgroundColor: (recording && theme.contrast === "black")?("#171A23"):("#FFF")
                         }}>
-                            <FontAwesome5 name={(recording)?("stop"):("play")} color={(recording && themeConfig.contrast === "black")?("#FFF"):("#000")} style={{ marginLeft: (!recording)?(4):(0) }} size={34}/>
+                            <FontAwesome5 name={(recording)?("stop"):("play")} color={(recording && theme.contrast === "black")?("#FFF"):("#000")} style={{ marginLeft: (!recording)?(4):(0) }} size={34}/>
                         </TouchableOpacity>
                     </View>
                 </LinearGradient>

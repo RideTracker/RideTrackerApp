@@ -2,11 +2,11 @@ import { useRef, useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Alert, Platform } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
-import { useThemeConfig } from "../../../../../utils/themes";
+import { useTheme } from "../../../../../utils/themes";
 import FormInput from "../../../../../components/formInput";
 import { FontAwesome, Feather } from '@expo/vector-icons'; 
 import Button from "../../../../../components/button";
-import Bike from "../../../../../components/bike";
+import Bike from "../../../../../components/Bike";
 import { getBikes } from "../../../../../models/bike";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../../(tabs)/record";
@@ -14,12 +14,12 @@ import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { CaptionText } from "../../../../../components/texts/caption";
 import { ParagraphText } from "../../../../../components/texts/paragraph";
 import Constants from "expo-constants";
+import { useUser } from "../../../../../modules/user/useUser";
 
 export default function UploadRecordingPage() {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     const mapRef = useRef();
 
@@ -61,17 +61,17 @@ export default function UploadRecordingPage() {
     }, []);
     
     return (
-        <View style={{ flex: 1, backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{ title: "Finish your activity" }} />
 
             <ScrollView>
                 <View style={{ gap: 10, padding: 10 }}>
-                    <View style={{ width: "100%", height: 200, borderRadius: 6, overflow: "hidden", backgroundColor: themeConfig.placeholder }}>
+                    <View style={{ width: "100%", height: 200, borderRadius: 6, overflow: "hidden", backgroundColor: theme.placeholder }}>
                         {(recording) && (
-                            <MapView ref={mapRef} provider={PROVIDER_GOOGLE} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={themeConfig.mapStyle} onLayout={() => {
+                            <MapView ref={mapRef} provider={PROVIDER_GOOGLE} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
                                 (mapRef.current as MapView).fitToCoordinates(recording.locations.map((location) => location.coords));
                             }}>
-                                <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={2} strokeColor={themeConfig.brand}/>
+                                <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={2} strokeColor={theme.brand}/>
                             </MapView>
                         )}
                     </View>
@@ -82,7 +82,7 @@ export default function UploadRecordingPage() {
 
                     <View>
                         <SafeAreaView style={{ gap: 10, marginVertical: 10, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>
-                            <FormInput placeholder="A short summary (optional)" icon={(<FontAwesome name="bicycle" size={24} color={themeConfig.color}/>)} props={{
+                            <FormInput placeholder="A short summary (optional)" icon={(<FontAwesome name="bicycle" size={24} color={theme.color}/>)} props={{
                                 autoCapitalize: "sentences",
                                 autoCorrect: true,
                                 enterKeyHint: "next",
@@ -93,7 +93,7 @@ export default function UploadRecordingPage() {
                         </SafeAreaView>
                         
                         <SafeAreaView style={{ gap: 10, marginVertical: 10, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>
-                            <FormInput placeholder="A longer summary (optional)" icon={(<FontAwesome name="comments" size={24} color={themeConfig.color}/>)} props={{
+                            <FormInput placeholder="A longer summary (optional)" icon={(<FontAwesome name="comments" size={24} color={theme.color}/>)} props={{
                                 autoCapitalize: "sentences",
                                 autoCorrect: true,
                                 inputMode: "text",
@@ -120,7 +120,7 @@ export default function UploadRecordingPage() {
                                                 height: 80,
                                                 width: 140,
 
-                                                backgroundColor: themeConfig.placeholder,
+                                                backgroundColor: theme.placeholder,
                                                 borderRadius: 6,
 
                                                 overflow: "hidden"
@@ -142,7 +142,7 @@ export default function UploadRecordingPage() {
                                                     height: "100%",
 
                                                     borderWidth: (selectedBike === bike.id)?(1):(0),
-                                                    borderColor: themeConfig.color,
+                                                    borderColor: theme.color,
 
                                                     borderRadius: 6,
 
@@ -150,7 +150,7 @@ export default function UploadRecordingPage() {
 
                                                     padding: 5
                                                 }}>
-                                                    <Text style={{ color: themeConfig.color, fontSize: 18, fontStyle: "italic" }}>"{bike.name}"</Text>
+                                                    <Text style={{ color: theme.color, fontSize: 18, fontStyle: "italic" }}>"{bike.name}"</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         )))}
@@ -160,7 +160,7 @@ export default function UploadRecordingPage() {
                                             width: 140,
 
                                             borderRadius: 6,
-                                            borderColor: themeConfig.border,
+                                            borderColor: theme.border,
 
                                             overflow: "hidden",
 
@@ -169,8 +169,8 @@ export default function UploadRecordingPage() {
                                             gap: 2
                                         }} onPress={() => router.push("/bike/create")}>
                                             <View style={{ position: "relative" }}>
-                                                <FontAwesome name="bicycle" size={32} color={themeConfig.color}/>
-                                                <FontAwesome name="plus" size={20} color={themeConfig.color} style={{ 
+                                                <FontAwesome name="bicycle" size={32} color={theme.color}/>
+                                                <FontAwesome name="plus" size={20} color={theme.color} style={{ 
                                                     position: "absolute",
 
                                                     right: -10,
@@ -178,7 +178,7 @@ export default function UploadRecordingPage() {
                                                 }}/>
                                             </View>
 
-                                            <Text style={{ color: themeConfig.color }}>Add a bike</Text>
+                                            <Text style={{ color: theme.color }}>Add a bike</Text>
                                         </TouchableOpacity>
                                     </>
                                 ):(
@@ -189,7 +189,7 @@ export default function UploadRecordingPage() {
                                             height: 80,
                                             width: 140,
 
-                                            backgroundColor: themeConfig.placeholder,
+                                            backgroundColor: theme.placeholder,
                                             borderRadius: 6,
 
                                             overflow: "hidden"
@@ -201,7 +201,7 @@ export default function UploadRecordingPage() {
                     ):(
                         <Bike data={selectedBike} buttons={(
                             <TouchableOpacity onPress={() => setSelectedBike(null)}>
-                                <Feather name="repeat" size={24} color={themeConfig.color}/>
+                                <Feather name="repeat" size={24} color={theme.color}/>
                             </TouchableOpacity>
                         )}/>
                     )}

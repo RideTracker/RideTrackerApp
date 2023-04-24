@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 import { ParagraphText } from "./texts/paragraph";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { CaptionText } from "./texts/caption";
-import { useThemeConfig } from "../utils/themes";
+import { useTheme } from "../utils/themes";
 
 type TabsProps = {
     initialTab: string;
@@ -14,7 +14,7 @@ type TabsProps = {
 };
 
 export default function Tabs({ initialTab, style, children, onChange, pointerEvents = "auto" }: TabsProps) {
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
     const [ tab, setTab ] = useState(initialTab);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
             <View style={{
                 flexDirection: "row",
 
-                borderBottomColor: themeConfig.placeholder,
+                borderBottomColor: theme.placeholder,
                 borderBottomWidth: 2,
 
                 paddingHorizontal: 10,
@@ -41,7 +41,7 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
 
                         marginBottom: -2,
 
-                        borderBottomColor: (tab === child.props.id)?(themeConfig.color):(themeConfig.placeholder),
+                        borderBottomColor: (tab === child.props.id)?(theme.color):(theme.placeholder),
                         borderBottomWidth: 2
                     }} onPress={() => setTab(child.props.id)}>
                         <CaptionText style={{

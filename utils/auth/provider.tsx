@@ -5,7 +5,8 @@ import store from "../stores/store";
 import { readUserData, setUserData } from "../stores/userData";
 import { authenticateUser } from "../../models/user";
 import { StatusBar } from "expo-status-bar";
-import { useThemeConfig } from "../themes";
+import { useTheme } from "../themes";
+import { useUser } from "../../modules/user/useUser";
 
 const AuthContext = React.createContext(null);
 
@@ -17,7 +18,7 @@ function useProtectedRoute(user) {
     const segments = useSegments();
     const router = useRouter();
 
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
     React.useEffect(() => {
         const inAuthGroup = segments.includes("(auth)");
@@ -32,7 +33,7 @@ function useProtectedRoute(user) {
 export function Provider({ children }) {
     const dispatch = useDispatch();
 
-    const themeConfig = useThemeConfig();
+    const theme = useTheme();
 
     const [user, setAuth] = React.useState(null);
     const [ready, setReady] = React.useState(false);
@@ -67,7 +68,7 @@ export function Provider({ children }) {
             }}>
             {children}
 
-            <StatusBar style={themeConfig.contrastStyle}/>
+            <StatusBar style={theme.contrastStyle}/>
         </AuthContext.Provider>
     );
 };

@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { Image, Text, View } from "react-native";
-import { useThemeConfig } from "../../utils/themes";
+import { useTheme } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
 import { useSelector } from "react-redux";
 import { ParagraphText } from "../../components/texts/paragraph";
 import { CaptionText } from "../../components/texts/caption";
 import Constants from "expo-constants";
+import { useUser } from "../../modules/user/useUser";
 
 type ActivityCommentProps = {
     style?: any;
@@ -13,10 +14,9 @@ type ActivityCommentProps = {
 };
 
 export default function ActivityComment({ style, comment }: ActivityCommentProps) {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useUser();
 
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
     
     return (
         <View style={style}>
@@ -26,7 +26,7 @@ export default function ActivityComment({ style, comment }: ActivityCommentProps
                 gap: 10
             }}>
                 <View style={{
-                    backgroundColor: themeConfig.placeholder,
+                    backgroundColor: theme.placeholder,
                     width: 40,
                     aspectRatio: 1,
                     borderRadius: 40,
@@ -55,7 +55,7 @@ export default function ActivityComment({ style, comment }: ActivityCommentProps
                         }}>
                             <CaptionText style={(comment === undefined) && {
                                 color: "transparent",
-                                backgroundColor: themeConfig.placeholder
+                                backgroundColor: theme.placeholder
                             }}>
                                 {(comment)?(
                                     (comment?.user)?(comment.user.name):(userData.user?.name)
@@ -73,7 +73,7 @@ export default function ActivityComment({ style, comment }: ActivityCommentProps
 
                         ...((comment === undefined)?({
                             color: "transparent",
-                            backgroundColor: themeConfig.placeholder
+                            backgroundColor: theme.placeholder
                         }):({}))
                     }}>
                         {(comment !== undefined)?(

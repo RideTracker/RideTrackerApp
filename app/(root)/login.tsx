@@ -3,7 +3,7 @@ import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, Activit
 import { useRouter, Stack, Link } from "expo-router";
 import { PingResponse, ping } from "../../models/ping";
 import { useAuth } from "../../utils/auth/provider";
-import { useThemeConfig } from "../../utils/themes";
+import { useTheme } from "../../utils/themes";
 import Button from "../../components/button";
 import { FontAwesome } from '@expo/vector-icons'; 
 import FormInput from "../../components/formInput";
@@ -14,8 +14,7 @@ import { setUserData } from "../../utils/stores/userData";
 const logo = require("../../assets/logos/logo.png");
 
 export default function Login() {
-    const themeConfig = useThemeConfig();
-    useEffect(() => {}, [themeConfig]);
+    const theme = useTheme();
 
     const dispatch = useDispatch();
 
@@ -53,13 +52,13 @@ export default function Login() {
     }, [ submitting ]);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", padding: 10, backgroundColor: themeConfig.background }}>
+        <View style={{ flex: 1, justifyContent: "center", padding: 10, backgroundColor: theme.background }}>
             <Stack.Screen options={{ title: "Ping" }} />
 
             <Image source={logo} style={{ height: 100, width: "100%", resizeMode: "contain" }}/>
 
             <SafeAreaView style={{ gap: 10, marginVertical: 10, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>
-                <FormInput placeholder="Email address" icon={(<FontAwesome name="envelope" size={24} color={themeConfig.color}/>)} props={{
+                <FormInput placeholder="Email address" icon={(<FontAwesome name="envelope" size={24} color={theme.color}/>)} props={{
                     autoCapitalize: "none",
                     autoComplete: "email",
                     autoCorrect: false,
@@ -70,7 +69,7 @@ export default function Login() {
                     onChangeText: (text) => setEmail(text)
                 }}/>
 
-                <FormInput inputRef={passwordRef} placeholder="Password" icon={(<FontAwesome name="lock" size={24} color={themeConfig.color}/>)} props={{
+                <FormInput inputRef={passwordRef} placeholder="Password" icon={(<FontAwesome name="lock" size={24} color={theme.color}/>)} props={{
                     autoCapitalize: "none",
                     autoComplete: "current-password",
                     autoCorrect: false,
@@ -81,14 +80,14 @@ export default function Login() {
                 }}/>
 
                 <Button primary={true} label={!submitting && "Sign in"} onPress={() => setSubmitting(true)}>
-                    {(submitting) && (<ActivityIndicator size={24} color={themeConfig.contrast}/>)}
+                    {(submitting) && (<ActivityIndicator size={24} color={theme.contrast}/>)}
                 </Button>
 
                 <Text style={{
                     textAlign: "center",
-                    color: themeConfig.color,
+                    color: theme.color,
                     marginTop: 10
-                }}>Forgot your credentials? <Link href="/forgotten" style={{ color: themeConfig.brand, fontWeight: "500" }}>Click here to recover</Link></Text>
+                }}>Forgot your credentials? <Link href="/forgotten" style={{ color: theme.brand, fontWeight: "500" }}>Click here to recover</Link></Text>
             </SafeAreaView>
 
             <View style={{
@@ -100,17 +99,17 @@ export default function Login() {
                 <View style={{
                     flex: 1,
                     height: 2,
-                    backgroundColor: themeConfig.border
+                    backgroundColor: theme.border
                 }}/>
 
                 <Text style={{
-                    color: themeConfig.color
+                    color: theme.color
                 }}>OR</Text>
 
                 <View style={{
                     flex: 1,
                     height: 2,
-                    backgroundColor: themeConfig.border
+                    backgroundColor: theme.border
                 }}/>
             </View>
             
