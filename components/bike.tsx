@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
-import { Image, View } from "react-native";
+import { useState, useEffect, ReactNode } from "react";
+import { Image, StyleProp, View, ViewStyle } from "react-native";
 import { BikeResponse, getBikeById } from "../models/bike";
 import { useTheme } from "../utils/themes";
-import { useSelector } from "react-redux";
 import { CaptionText } from "./texts/caption";
 import { ParagraphText } from "./texts/paragraph";
 import { useUser } from "../modules/user/useUser";
@@ -10,27 +9,26 @@ import { useUser } from "../modules/user/useUser";
 type BikeProps = {
     id?: string;
     data?: BikeResponse;
-    buttons?: any;
+    buttons?: ReactNode;
 
-    style?: any;
+    style?: ViewStyle;
 };
 
 export default function Bike(props: BikeProps) {
     const { id, style, data, buttons } = props;
 
     const userData = useUser();
-
     const theme = useTheme();
 
-    const [ bike, setBike ]: [ BikeResponse, any] = useState(null);
+    const [ bike, setBike ] = useState<any | null>(data);
 
     useEffect(() => {
-        if(data)
-            setBike(data);
-        else if(id) {
+        if(id) {
             getBikeById(userData.key, id).then((result) => {
-                if(result.success)
-                    setBike(result.bike);
+                if(!result.success)
+                    return;
+
+                setBike(result.bike);
             });
         }
     }, []);
@@ -39,23 +37,20 @@ export default function Bike(props: BikeProps) {
         <View style={style}>
             <View style={{ flexDirection: "row", height: 80, gap: 10 }}>
                 <View style={{ width: 140, borderRadius: 6, overflow: "hidden" }}>
-                    {(bike)?(
-                        <Image
-                            style={{
-                                width: "100%",
-                                height: "100%"
-                            }}
-                            source={{
-                                uri: bike.image
-                            }}/>
-                    ):(
-                        <View style={{
-                            backgroundColor: theme.placeholder,
-
-                            width: "100%",
-                            height: "100%"  
-                        }}/>
-                    )}
+                    <View style={{
+                        flex: 1,
+                        backgroundColor: theme.placeholder
+                    }}>
+                        {(bike) && (
+                            <Image
+                                style={{
+                                    flex: 1
+                                }}
+                                source={{
+                                    uri: bike.image
+                                }}/>
+                        )}
+                    </View>
                 </View>
 
                 <View style={{
@@ -65,20 +60,11 @@ export default function Bike(props: BikeProps) {
                     justifyContent: "space-around",
                     gap: 5
                 }}>
-                    {(bike)?(
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                            <CaptionText>{bike.model}</CaptionText>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                        <CaptionText placeholder={!bike}>{bike?.model}</CaptionText>
 
-                            {buttons}
-                        </View>
-                    ):(
-                        <CaptionText style={{
-                            backgroundColor: theme.placeholder,
-                            color: "transparent"
-                        }}>
-                            Name
-                        </CaptionText>
-                    )}
+                        {(bike) && (buttons)}
+                    </View>
 
                     {(bike)?(
                         <View style={{

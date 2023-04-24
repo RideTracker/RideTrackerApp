@@ -144,14 +144,24 @@ const typeColors = [
     }
 ];
 
-export function Colors({ initialColor, type, colorChange, picker, showPicker }) {
+type ColorProps = {
+    initialColor: string;
+    type: string;
+    picker: boolean;
+    showPicker: (enable: boolean) => void;
+    colorChange: (color: string) => void;
+};
+
+export function Colors(props: ColorProps) {
+    const { initialColor, type, colorChange, picker, showPicker } = props;
+
     const theme = useTheme();
 
-    const [ currentColor, setColor ] = useState(initialColor);
-    const [ currentColorCustom, setCurrentColorCustom ] = useState(!typeColors.find((typeColor) => typeColor.type === type)?.colors?.includes(initialColor));
-    const [ currentColorHue, setCurrentColorHue ] = useState(null);
-    const [ saturationDragging, setSaturationDragging ] = useState(false);
-    const [ hueDragging, setHueDragging ] = useState(false);
+    const [ currentColor, setColor ] = useState<string>(initialColor);
+    const [ currentColorCustom, setCurrentColorCustom ] = useState<boolean>(!typeColors.find((typeColor) => typeColor.type === type)?.colors?.includes(initialColor));
+    const [ currentColorHue, setCurrentColorHue ] = useState<number | null>(null);
+    const [ saturationDragging, setSaturationDragging ] = useState<boolean>(false);
+    const [ hueDragging, setHueDragging ] = useState<boolean>(false);
     const [ position, setPosition ] = useState(null);
     const [ huePosition, setHuePosition ] = useState(null);
 

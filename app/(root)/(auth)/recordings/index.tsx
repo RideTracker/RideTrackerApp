@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useTheme } from "../../../../utils/themes";
 import FormInput from "../../../../components/formInput";
 import { FontAwesome, Feather } from '@expo/vector-icons'; 
-import Button from "../../../../components/button";
+import Button from "../../../../components/Button";
 import Bike from "../../../../components/Bike";
 import { getBikes } from "../../../../models/bike";
 import * as FileSystem from "expo-file-system";

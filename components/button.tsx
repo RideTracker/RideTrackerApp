@@ -1,19 +1,21 @@
-import { useEffect } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ReactNode } from "react";
+import { GestureResponderEvent, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import { useTheme } from "../utils/themes";
 
 type ButtonProps = {
-    label?: string;
-    icon?: any;
     primary: boolean;
     type?: "danger";
+    label?: string;
+    icon?: ReactNode;
 
-    children?: any;
-    style?: any;
-    onPress?: any;
+    children?: ReactNode;
+    style?: ViewStyle;
+    onPress?: (event: GestureResponderEvent) => void;
 };
 
-export default function Button({ primary, label, icon, type, children, style, onPress }: ButtonProps) {
+export default function Button(props: ButtonProps) {
+    const { primary, label, icon, type, children, style, onPress } = props;
+
     const theme = useTheme();
 
     return (

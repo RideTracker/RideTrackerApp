@@ -4,7 +4,7 @@ import { useRouter, Stack, Link } from "expo-router";
 import { PingResponse, ping } from "../../models/ping";
 import { useAuth } from "../../utils/auth/provider";
 import { useTheme } from "../../utils/themes";
-import Button from "../../components/button";
+import Button from "../../components/Button";
 import { FontAwesome } from '@expo/vector-icons'; 
 import FormInput from "../../components/formInput";
 import { authenticateRandomUser, loginUser } from "../../models/user";

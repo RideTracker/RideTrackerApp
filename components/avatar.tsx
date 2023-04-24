@@ -2,31 +2,36 @@ import { useEffect, useState, useRef } from "react";
 import { View } from "react-native";
 import WebView from "react-native-webview";
 
-export default function Avatar({ avatars, combination, onDataUrl }) {
-    const webViewRef = useRef();
+type AvatarProps = {
+    avatars: any[];
+    combination: any;
 
-    const [ loaded, setLoaded ] = useState(false);
+    onDataUrl: (dataUrl: string | null) => void;
+};
+
+export default function Avatar(props: AvatarProps) {
+    const { avatars, combination, onDataUrl } = props;
+
+    const webViewRef = useRef<WebView>();
+
+    const [ loaded, setLoaded ] = useState<boolean>(false);
 
     useEffect(() => {
         if(!loaded || !combination)
             return;
 
-        const webView = webViewRef.current as WebView;
-
         onDataUrl(null);
 
-        webView.injectJavaScript(`render(JSON.parse('${JSON.stringify(combination)}')); null`);
+        webViewRef.current.injectJavaScript(`render(JSON.parse('${JSON.stringify(combination)}')); null`);
     }, [ combination ]);
 
     useEffect(() => {
         if(!loaded || !combination)
             return;
 
-        const webView = webViewRef.current as WebView;
-
         onDataUrl(null);
 
-        webView.injectJavaScript(`render(JSON.parse('${JSON.stringify(combination)}')); null`);
+        webViewRef.current.injectJavaScript(`render(JSON.parse('${JSON.stringify(combination)}')); null`);
     }, [ loaded ]);
 
     return (
@@ -34,11 +39,7 @@ export default function Avatar({ avatars, combination, onDataUrl }) {
             width: 225,
             height: 225
         }}>
-            <WebView ref={webViewRef} onMessage={(event) => {
-                const data = event.nativeEvent.data;
-
-                onDataUrl(data);
-            }} source={{
+            <WebView ref={webViewRef} onMessage={(event) => onDataUrl(event.nativeEvent.data)} source={{
                 headers: {
                     "Access-Control-Allow-Origin": "*"
                 },

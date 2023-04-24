@@ -10,7 +10,7 @@ import Tabs, { TabsPage } from "../../../../components/tabs";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Colors } from "../../../../components/colors";
+import { Colors } from "../../../../components/Colors";
 import { ParagraphText } from "../../../../components/texts/paragraph";
 import Constants from "expo-constants";
 import { authenticateUser } from "../../../../models/user";
