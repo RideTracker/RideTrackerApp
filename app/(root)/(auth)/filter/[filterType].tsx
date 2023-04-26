@@ -25,7 +25,7 @@ export default function FilterPage() {
     const [ timeline, setTimeline ] = useState<string>(user.filters?.[filterType]?.timeline ?? "lifetime");
 
     useEffect(() => {
-        if(JSON.stringify(user[filterType]) == JSON.stringify({ order, timeline }))
+        if(JSON.stringify(user.filters?.[filterType]) == JSON.stringify({ order, timeline }))
             return;
             
         dispatch(setUserData({

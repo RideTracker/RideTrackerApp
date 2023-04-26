@@ -54,7 +54,7 @@ export default function Index() {
             return;
         }
 
-        getFeed(userData.key).then((result) => {
+        getFeed(userData.key, userData.filters?.feed).then((result) => {
             setRefreshing(false);
             setFeed(result);
         });
