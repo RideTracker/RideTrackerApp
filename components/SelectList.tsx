@@ -1,15 +1,17 @@
-import React, { ReactNode, useState } from "react";
-import { ScrollView, View } from "react-native";
+import React, { ReactNode, useState, useEffect } from "react";
+import { ScrollView, SliderBase, View } from "react-native";
 import { ParagraphText } from "./texts/paragraph";
 import FormInput from "./formInput";
 import { useTheme } from "../utils/themes";
 import { CaptionText } from "./texts/caption";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { FontAwesome } from "@expo/vector-icons";
 
 type SelectListProps = {
     items: SelectListItem[];
     initialValue?: string;
     placeholder: string;
+    onChange: (value: string) => void;
 };
 
 type SelectListItem = {
@@ -18,12 +20,16 @@ type SelectListItem = {
 };
 
 export function SelectList(props: SelectListProps) {
-    const { items, initialValue, placeholder } = props;
+    const { items, initialValue, placeholder, onChange } = props;
 
     const theme = useTheme();
 
     const [ selectedItem, setSelectedItem ] = useState<string | null>(initialValue);
     const [ showItems, setShowItems ] = useState<boolean>(false);
+
+    useEffect(() => {
+        onChange(selectedItem);
+    }, [ selectedItem ]);
 
     return (
         <View style={{
@@ -33,10 +39,15 @@ export function SelectList(props: SelectListProps) {
                 borderWidth: 1,
                 borderColor: theme.border,
                 borderRadius: 6,
+
+                flexDirection: "row",
+                gap: 10,
                 
                 padding: 10
             }} onPress={() => setShowItems(true)}>
-                <CaptionText>{(selectedItem)?(items.find((item) => item.key === selectedItem)?.text):(placeholder)}</CaptionText>
+                <CaptionText style={{ flex: 1 }}>{(selectedItem)?(items.find((item) => item.key === selectedItem)?.text):(placeholder)}</CaptionText>
+            
+                <FontAwesome name="caret-down" size={18} color={theme.color}/>
             </TouchableOpacity>
 
             {(showItems) && (

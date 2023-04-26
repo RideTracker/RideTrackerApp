@@ -5,7 +5,13 @@ import { useTheme } from "../utils/themes";
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
 
-export function ScrollViewFilter() {
+type ScrollViewFilterProps = {
+    type: string;
+};
+
+export function ScrollViewFilter(props: ScrollViewFilterProps) {
+    const { type } = props;
+    
     const theme = useTheme();
     const router = useRouter();
 
@@ -55,7 +61,7 @@ export function ScrollViewFilter() {
                 )}
             </View>
 
-            <TouchableOpacity style={{ padding: 5 }} onPress={() => router.push("/filter")}>
+            <TouchableOpacity style={{ padding: 5 }} onPress={() => router.push(`/filter/${type}`)}>
                 <FontAwesome name="filter" size={24} color={theme.color}/>
             </TouchableOpacity>
         </View>

@@ -1,12 +1,44 @@
+import { useState } from "react";
 import { TouchableWithoutFeedback, View } from "react-native";
-import { CaptionText } from "../../../components/texts/caption";
-import { Stack, useRouter } from "expo-router";
-import { useTheme } from "../../../utils/themes";
-import { SelectList } from "../../../components/SelectList";
+import { CaptionText } from "../../../../components/texts/caption";
+import { Stack, useNavigation, useRouter, useSearchParams } from "expo-router";
+import { useTheme } from "../../../../utils/themes";
+import { SelectList } from "../../../../components/SelectList";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../../../utils/stores/userData";
+import { useEffect } from "react";
+import { useUser } from "../../../../modules/user/useUser";
+
+type FilterPageSearchParams = {
+    filterType: string;
+};
 
 export default function FilterPage() {
     const theme = useTheme();
     const router = useRouter();
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const user = useUser();
+    const { filterType } = useSearchParams<FilterPageSearchParams>();
+
+    const [ order, setOrder ] = useState<string>(user.filters?.[filterType]?.order ?? "activity");
+    const [ timeline, setTimeline ] = useState<string>(user.filters?.[filterType]?.timeline ?? "lifetime");
+
+    useEffect(() => {
+        if(JSON.stringify(user[filterType]) == JSON.stringify({ order, timeline }))
+            return;
+            
+        dispatch(setUserData({
+            filters: {
+                ...user.filters,
+                
+                [filterType]: {
+                    order,
+                    timeline
+                }
+            }
+        }));
+    }, [ order, timeline ]);
 
     return (
         <View style={{ flex: 1, flexDirection: "column" }}>
@@ -38,7 +70,7 @@ export default function FilterPage() {
             }}>
                 <CaptionText>Order activities by</CaptionText>
 
-                <SelectList placeholder="Select activity order..." initialValue="activity" items={[
+                <SelectList placeholder="Select activity order..." initialValue={order} items={[
                     {
                         key: "activity",
                         text: "Latest activity"
@@ -63,11 +95,11 @@ export default function FilterPage() {
                         key: "elevation",
                         text: "Highest elevation"
                     }
-                ]}/>
+                ]} onChange={(value) => setOrder(value)}/>
 
                 <CaptionText>Include activities</CaptionText>
 
-                <SelectList placeholder="Select activity timeline..." initialValue="lifetime" items={[
+                <SelectList placeholder="Select activity timeline..." initialValue={timeline} items={[
                     {
                         key: "week",
                         text: "Within last week"
@@ -92,7 +124,7 @@ export default function FilterPage() {
                         key: "lifetime",
                         text: "Within lifetime"
                     }
-                ]}/>
+                ]} onChange={(value) => setTimeline(value)}/>
             </View>
         </View>
     );

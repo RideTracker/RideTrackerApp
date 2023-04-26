@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View, useColorScheme } from "react-native";
+import { Alert, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View, useColorScheme } from "react-native";
 import { getFeed } from "../../../../models/feed";
 import Error from "../../../../components/error";
 import Empty from "../../../../components/empty";
@@ -21,7 +21,7 @@ export default function Index() {
 
     const router = useRouter();
 
-    const scrollViewRef = useRef();
+    const scrollViewRef = useRef<ScrollView>();
    
     const [ feed, setFeed ] = useState(null);
     const [ refreshing, setRefreshing ] = useState(true);
@@ -60,6 +60,12 @@ export default function Index() {
         });
     }, [ refreshing ]);
 
+    useEffect(() => {
+        scrollViewRef.current.scrollTo({ x: 0, y: 0 });
+
+        setRefreshing(true);
+    }, [ userData.filters?.feed ]);
+
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
             <Stack.Screen options={{
@@ -89,7 +95,7 @@ export default function Index() {
                         y: 45
                     }}
                 >
-                    <ScrollViewFilter/>
+                    <ScrollViewFilter type="feed"/>
 
                     <View style={{ padding: 10 }}>
                         {(feed)?(

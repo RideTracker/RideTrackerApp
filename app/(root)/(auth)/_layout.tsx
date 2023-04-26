@@ -23,7 +23,7 @@ export default function Layout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="profile/[userId]" options={{ presentation: "card" }} />
             <Stack.Screen name="activities/[id]/comments" options={{ presentation: "modal" }} />
-            <Stack.Screen name="filter" options={{ presentation: "modal", headerShown: false }} />
+            <Stack.Screen name="filter/[filterType]" options={{ presentation: "modal", headerShown: false }} />
             {/*<Stack.Screen name="ping" options={{ presentation: "modal" }} />*/}
         </Stack>
     );
