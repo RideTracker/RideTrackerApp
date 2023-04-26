@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import { View } from "react-native";
+import { LayoutChangeEvent, View } from "react-native";
 import { useTheme } from "../utils/themes";
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
@@ -8,10 +8,11 @@ import { useRouter } from "expo-router";
 type ScrollViewFilterProps = {
     type: string;
     onChange: (text: string) => void;
+    onLayout: (event: LayoutChangeEvent) => void;
 };
 
 export function ScrollViewFilter(props: ScrollViewFilterProps) {
-    const { type, onChange } = props;
+    const { type, onChange, onLayout } = props;
 
     const theme = useTheme();
     const router = useRouter();
@@ -29,7 +30,7 @@ export function ScrollViewFilter(props: ScrollViewFilterProps) {
             gap: 10,
 
             paddingTop: 10
-        }}>
+        }} onLayout={(event) => onLayout(event)}>
             <View style={{
                 flex: 1,
                 flexDirection: "row",

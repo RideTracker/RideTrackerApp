@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Alert, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View, useColorScheme } from "react-native";
+import { Alert, LayoutRectangle, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View, useColorScheme } from "react-native";
 import { getFeed } from "../../../../models/feed";
 import Error from "../../../../components/error";
 import Empty from "../../../../components/empty";
@@ -28,6 +28,7 @@ export default function Index() {
     const [ refreshing, setRefreshing ] = useState(true);
     const [ recordings, setRecordings ] = useState(null);
     const [ filterText, setFilterText ] = useState<string>("");
+    const [ filterLayout, setFilterLayout ] = useState<LayoutRectangle>(null);
 
     useEffect(() => {
         async function getRecordings() {
@@ -50,7 +51,7 @@ export default function Index() {
     useEffect(() => {
         if(!refreshing) {
             if(!filterText.length)
-                scrollViewRef.current.scrollTo({ x: 0, y: 45 });
+                scrollViewRef.current.scrollTo({ x: 0, y: filterLayout?.height ?? 0 });
 
             return;
         }
@@ -93,10 +94,10 @@ export default function Index() {
                     }
                     contentOffset={{
                         x: 0,
-                        y: 45
+                        y: filterLayout?.height ?? 0
                     }}
                 >
-                    <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)}/>
+                    <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
 
                     <View style={{ padding: 10 }}>
                         {(feed)?(

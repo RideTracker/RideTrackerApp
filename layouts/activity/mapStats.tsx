@@ -1,5 +1,38 @@
-import { Text, View } from "react-native";
+import React from "react";
+import { Image, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+
+function ActivityMapStatsPersonalBest() {
+    return (
+        <React.Fragment>
+            <Image source={require("../../assets/images/laurel-wreath.png")} style={{
+                position: "absolute",
+                
+                left: -28,
+                bottom: -4,
+
+                width: 50,
+                height: 50,
+            }} resizeMode="contain"/>
+
+            <Image source={require("../../assets/images/laurel-wreath.png")} style={{
+                position: "absolute",
+                
+                right: -28,
+                bottom: -4,
+
+                transform: [
+                    {
+                        rotateY: "180deg"
+                    }
+                ],
+
+                width: 50,
+                height: 50,
+            }} resizeMode="contain"/>
+        </React.Fragment>
+    );
+};
 
 export default function ActivityMapStats({ activity }) {
     if(!activity?.summary)
@@ -21,6 +54,7 @@ export default function ActivityMapStats({ activity }) {
             height: "100%",
 
             borderRadius: 10,
+            gap: 10,
 
             alignItems: "flex-end",
 
@@ -28,16 +62,22 @@ export default function ActivityMapStats({ activity }) {
             justifyContent: "space-between"
         }}>
             <View>
+                {(!!activity.summary?.distancePersonalBest) && (<ActivityMapStatsPersonalBest/>)}
+
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.distance}<Text style={{ fontSize: 18 }}> km</Text></Text>
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 }}>distance</Text>
+                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16, paddingHorizontal: 10 }}>distance</Text>
             </View>
             
             <View>
+                {(!!activity.summary?.averageSpeedPersonalBest) && (<ActivityMapStatsPersonalBest/>)}
+                
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.averageSpeed}<Text style={{ fontSize: 18 }}> km/h</Text></Text>
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 }}>average speed</Text>
+                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16, paddingHorizontal: 5 }}>average speed</Text>
             </View>
             
             <View>
+                {(!!activity.summary?.elevationPersonalBest) && (<ActivityMapStatsPersonalBest/>)}
+                
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.elevation}<Text style={{ fontSize: 18 }}> m</Text></Text>
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 }}>elevation</Text>
             </View>

@@ -77,7 +77,7 @@ export default function Layout() {
                 href: {
                     pathname: "/profile",
                     params: {
-                        userId: userData.user.id
+                        userId: userData.user?.id
                     }
                 },
                 tabBarIcon: () => (
