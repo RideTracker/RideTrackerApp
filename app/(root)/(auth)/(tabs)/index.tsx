@@ -12,7 +12,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Stack, useRouter } from "expo-router";
 import { ParagraphText } from "../../../../components/texts/paragraph";
 import { LinkText } from "../../../../components/texts/link";
-import { ScrollViewFilter } from "../../../../components/scrollViewFilter";
+import { ScrollViewFilter } from "../../../../components/ScrollViewFilter";
 import { useUser } from "../../../../modules/user/useUser";
 
 export default function Index() {

@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { View } from "react-native";
 import { useTheme } from "../utils/themes";
 import { FontAwesome } from '@expo/vector-icons';
+import { useRouter } from "expo-router";
 
 export function ScrollViewFilter() {
     const theme = useTheme();
+    const router = useRouter();
+
+    const [ text, setText ] = useState<string>("");
 
     return (
         <View style={{
@@ -15,7 +19,9 @@ export function ScrollViewFilter() {
 
             flexDirection: "row",
             alignItems: "center",
-            gap: 10
+            gap: 10,
+
+            paddingTop: 10
         }}>
             <View style={{
                 flex: 1,
@@ -40,10 +46,16 @@ export function ScrollViewFilter() {
 
                     fontSize: 15,
                     fontWeight: "500"
-                }} placeholder="Search..." placeholderTextColor={theme.color}/>
+                }} placeholder="Search..." placeholderTextColor={theme.color} value={text} onChangeText={(text) => setText(text)}/>
+
+                {(!!text.length) && (
+                    <TouchableOpacity onPress={() => setText("")}>
+                        <FontAwesome name="times" size={17} color={theme.color}/>
+                    </TouchableOpacity>
+                )}
             </View>
 
-            <TouchableOpacity style={{ padding: 5 }}>
+            <TouchableOpacity style={{ padding: 5 }} onPress={() => router.push("/filter")}>
                 <FontAwesome name="filter" size={24} color={theme.color}/>
             </TouchableOpacity>
         </View>
