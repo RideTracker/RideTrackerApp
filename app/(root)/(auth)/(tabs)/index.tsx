@@ -26,6 +26,7 @@ export default function Index() {
     const [ feed, setFeed ] = useState(null);
     const [ refreshing, setRefreshing ] = useState(true);
     const [ recordings, setRecordings ] = useState(null);
+    const [ filterText, setFilterText ] = useState<string>("");
 
     useEffect(() => {
         async function getRecordings() {
@@ -47,14 +48,13 @@ export default function Index() {
 
     useEffect(() => {
         if(!refreshing) {
-            const scrollView = scrollViewRef.current as ScrollView;
-
-            scrollView.scrollTo({ x: 0, y: 45 });
+            if(!filterText.length)
+                scrollViewRef.current.scrollTo({ x: 0, y: 45 });
 
             return;
         }
 
-        getFeed(userData.key, userData.filters?.feed).then((result) => {
+        getFeed(userData.key, { ...userData.filters?.feed, search: filterText }).then((result) => {
             setRefreshing(false);
             setFeed(result);
         });
@@ -64,7 +64,7 @@ export default function Index() {
         scrollViewRef.current.scrollTo({ x: 0, y: 0 });
 
         setRefreshing(true);
-    }, [ userData.filters?.feed ]);
+    }, [ userData.filters?.feed, filterText ]);
 
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
@@ -95,7 +95,7 @@ export default function Index() {
                         y: 45
                     }}
                 >
-                    <ScrollViewFilter type="feed"/>
+                    <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)}/>
 
                     <View style={{ padding: 10 }}>
                         {(feed)?(

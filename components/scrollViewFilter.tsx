@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { View } from "react-native";
 import { useTheme } from "../utils/themes";
@@ -7,11 +7,12 @@ import { useRouter } from "expo-router";
 
 type ScrollViewFilterProps = {
     type: string;
+    onChange: (text: string) => void;
 };
 
 export function ScrollViewFilter(props: ScrollViewFilterProps) {
-    const { type } = props;
-    
+    const { type, onChange } = props;
+
     const theme = useTheme();
     const router = useRouter();
 
@@ -52,10 +53,13 @@ export function ScrollViewFilter(props: ScrollViewFilterProps) {
 
                     fontSize: 15,
                     fontWeight: "500"
-                }} placeholder="Search..." placeholderTextColor={theme.color} value={text} onChangeText={(text) => setText(text)}/>
+                }} placeholder="Search..." placeholderTextColor={theme.color} value={text} onEndEditing={() => onChange(text)} onChangeText={(text) => setText(text)}/>
 
                 {(!!text.length) && (
-                    <TouchableOpacity onPress={() => setText("")}>
+                    <TouchableOpacity onPress={() => {
+                        setText("");
+                        onChange("");
+                    }}>
                         <FontAwesome name="times" size={17} color={theme.color}/>
                     </TouchableOpacity>
                 )}
