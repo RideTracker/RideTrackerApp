@@ -1,4 +1,5 @@
 import { Text, View } from "react-native";
+import { CaptionText } from "./texts/caption";
 
 type EmptyProps = {
     style?: any;
@@ -14,8 +15,7 @@ export default function Empty({ style, children }: EmptyProps) {
 
                 marginVertical: 20
             }}>
-                <Text style={{ fontSize: 100 }}>-</Text>
-                <Text style={{ fontSize: 20 }}>There's nothing here!</Text>
+                <CaptionText>There's nothing here!</CaptionText>
             </View>
 
             {children}

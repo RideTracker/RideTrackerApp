@@ -14,6 +14,7 @@ import { ParagraphText } from "../../../../components/texts/paragraph";
 import { LinkText } from "../../../../components/texts/link";
 import { ScrollViewFilter } from "../../../../components/ScrollViewFilter";
 import { useUser } from "../../../../modules/user/useUser";
+import { CaptionText } from "../../../../components/texts/caption";
 
 export default function Index() {
     const userData = useUser();
@@ -107,14 +108,10 @@ export default function Index() {
                                         )))}
                                     </View>
                                 ):(
-                                    <Empty>
-                                        <Text>There's no activities published, be the first one to publish an activity!</Text>
-                                    </Empty>
+                                    <CaptionText style={{ padding: 10, textAlign: "center" }}>There's nothing here!</CaptionText>
                                 )
                             ):(
-                                <Error>
-                                    <Text>Failed to refresh the feed, please try again!</Text>
-                                </Error>
+                                <CaptionText style={{ padding: 10, textAlign: "center" }}>Something went wrong!</CaptionText>
                             )
                         ):(
                             <View style={{ gap: 10 }}>
