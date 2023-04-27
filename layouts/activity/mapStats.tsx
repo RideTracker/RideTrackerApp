@@ -2,6 +2,7 @@ import React from "react";
 import { Image, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityPersonalBest } from "../../components/ActivityPersonalBest";
+import { ParagraphText } from "../../components/texts/paragraph";
 
 export default function ActivityMapStats({ activity }) {
     if(!activity?.summary)
@@ -31,21 +32,39 @@ export default function ActivityMapStats({ activity }) {
             justifyContent: "space-between"
         }}>
             <View>
-                {(!!activity.summary?.distancePersonalBest) && (<ActivityPersonalBest/>)}
+                {(!!activity.summary?.distancePersonalBest) && (
+                    <React.Fragment>
+                        <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
+
+                        <ActivityPersonalBest/>
+                    </React.Fragment>
+                )}
 
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.distance}<Text style={{ fontSize: 18 }}> km</Text></Text>
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16, paddingHorizontal: 10 }}>distance</Text>
             </View>
             
             <View>
-                {(!!activity.summary?.averageSpeedPersonalBest) && (<ActivityPersonalBest/>)}
+                {(!!activity.summary?.averageSpeedPersonalBest) && (
+                    <React.Fragment>
+                        <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
+
+                        <ActivityPersonalBest/>
+                    </React.Fragment>
+                )}
                 
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.averageSpeed}<Text style={{ fontSize: 18 }}> km/h</Text></Text>
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16, paddingHorizontal: 10 }}>{(!!activity.summary?.averageSpeedPersonalBest)?("avg.speed"):("average speed")}</Text>
             </View>
             
             <View>
-                {(!!activity.summary?.elevationPersonalBest) && (<ActivityPersonalBest/>)}
+                {(!!activity.summary?.elevationPersonalBest) && (
+                    <React.Fragment>
+                        <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
+
+                        <ActivityPersonalBest/>
+                    </React.Fragment>
+                )}
                 
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.elevation}<Text style={{ fontSize: 18 }}> m</Text></Text>
                 <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 }}>elevation</Text>
