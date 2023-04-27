@@ -42,9 +42,14 @@ function getStylingForHeading(position: any, heading: any, layout: any): any[] {
         }
     }
     
-    if(position.y > (layout?.height / 2)) { // it's most likely to touch the right side, anchor by right
+    if(position.y > (layout?.height / 2)) { // it's most likely to touch the footer, anchor by botom
         vertical = {
             bottom: 0
+        }
+    }
+    else if(position.y < (layout?.height / 3)) { // it's most likely to touch the footer, anchor by botom
+        vertical = {
+            top: 0
         }
     }
 
@@ -91,7 +96,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                 mapView.fitToCoordinates(points, {
                     edgePadding: {
                         left: 20,
-                        top: 40,
+                        top: 20,
                         right: 20,
                         bottom: 40
                     },
@@ -102,7 +107,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                 mapView.fitToCoordinates(points, {
                     edgePadding: {
                         left: 20,
-                        top: 40,
+                        top: 20,
                         right: 20,
                         bottom: 60
                     },
