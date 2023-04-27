@@ -124,6 +124,10 @@ export default function AvatarEditorPage() {
         }
     }, [ uploading ]);
 
+    useEffect(() => {
+        setPicker(null);
+    }, [ tabType ]);
+
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{
@@ -207,7 +211,10 @@ export default function AvatarEditorPage() {
                                     <ScrollView horizontal={true}>
                                         <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 90 }}>
                                             {(!avatarType.required) && (
-                                                <TouchableOpacity onPress={() => setCombination({ ...combination, [avatarType.type]: null })} style={{
+                                                <TouchableOpacity onPress={() => {
+                                                    setCombination({ ...combination, [avatarType.type]: null });
+                                                    setPicker(null);
+                                                }} style={{
                                                     width: 140,
                                                     height: 80,
 
@@ -227,7 +234,10 @@ export default function AvatarEditorPage() {
                                             )}
 
                                             {(avatars) && avatars.filter((avatar) => avatar.type === avatarType.type).map((avatar) => (
-                                                <TouchableOpacity key={avatar.id} onPress={() => setCombination({ ...combination, [avatar.type]: { id: avatar.id, colors: [] } })} style={{
+                                                <TouchableOpacity key={avatar.id} onPress={() => {
+                                                    setCombination({ ...combination, [avatar.type]: { id: avatar.id, colors: [] } });
+                                                    setPicker(null);
+                                                }} style={{
                                                     width: 140,
                                                     height: 80,
 
@@ -256,7 +266,7 @@ export default function AvatarEditorPage() {
                                         <React.Fragment key={combination[tabType].id + color.type}>
                                             <CaptionText style={{ textTransform: "capitalize" }}>{color.type}</CaptionText>
 
-                                            <Colors initialColor={combination[tabType].colors.find((combinationColor) => combinationColor.type === color.type)?.color ?? color.defaultColor} type={color.type} picker={picker === color.type} showPicker={(show) => {
+                                            <Colors key={combination[tabType].id + color.type} defaultColor={color.defaultColor} initialColor={combination[tabType].colors.find((combinationColor) => combinationColor.type === color.type)?.color ?? color.defaultColor} type={color.type} picker={picker === color.type} showPicker={(show) => {
                                                 if(!show && color.type === picker)
                                                     setPicker(null);
                                                 else if(show)
@@ -355,7 +365,7 @@ export default function AvatarEditorPage() {
                                         <React.Fragment key={combination[tabType].id + color.type}>
                                             <CaptionText style={{ textTransform: "capitalize" }}>{color.type}</CaptionText>
 
-                                            <Colors initialColor={color.defaultColor} type={color.type} picker={picker === color.type} showPicker={(show) => {
+                                            <Colors defaultColor={color.defaultColor} initialColor={color.defaultColor} type={color.type} picker={picker === color.type} showPicker={(show) => {
                                                 if(!show && color.type === picker)
                                                     setPicker(null);
                                                 else if(show)

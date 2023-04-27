@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../utils/themes";
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from "expo-linear-gradient";
@@ -146,6 +146,7 @@ const typeColors = [
 
 type ColorProps = {
     initialColor: string;
+    defaultColor: string;
     type: string;
     picker: boolean;
     showPicker: (enable: boolean) => void;
@@ -153,27 +154,33 @@ type ColorProps = {
 };
 
 export function Colors(props: ColorProps) {
-    const { initialColor, type, colorChange, picker, showPicker } = props;
+    const { initialColor, defaultColor, type, colorChange, picker, showPicker } = props;
 
     const theme = useTheme();
 
+    const [ colors ] = useState([ defaultColor ].concat([ ...typeColors.find((typeColor) => typeColor.type === type)?.colors ]));
     const [ currentColor, setColor ] = useState<string>(initialColor);
-    const [ currentColorCustom, setCurrentColorCustom ] = useState<boolean>(!typeColors.find((typeColor) => typeColor.type === type)?.colors?.includes(initialColor));
-    const [ currentColorHue, setCurrentColorHue ] = useState<number | null>(null);
+    const [ currentColorCustom, setCurrentColorCustom ] = useState<boolean>(!colors.includes(initialColor));
+    const [ currentColorHue, setCurrentColorHue ] = useState<number | null>(color(initialColor).hsv()[0]);
     const [ saturationDragging, setSaturationDragging ] = useState<boolean>(false);
     const [ hueDragging, setHueDragging ] = useState<boolean>(false);
-    const [ position, setPosition ] = useState(null);
+    const [ position, setPosition ] = useState({
+        scale: {
+            left: color(initialColor).hsv()[1],
+            top: 1 - color(initialColor).hsv()[2]
+        }
+    });
     const [ huePosition, setHuePosition ] = useState(null);
 
     useEffect(() => {
-        setCurrentColorHue(color(currentColor).hsl()[0]);
-
         colorChange(currentColor);
     }, [ currentColor ]);
 
     useEffect(() => {
         if(!saturationDragging && position) {
             setColor(color([ currentColorHue, position.scale.left, (1 - position.scale.top) ], "hsv").hex());
+
+            setCurrentColorCustom(!colors.includes(initialColor));
         }
     }, [ saturationDragging ]);
 
@@ -183,9 +190,15 @@ export function Colors(props: ColorProps) {
 
             if(position) {
                 setColor(color([ huePosition.scale.left * 360, position.scale.left, (1 - position.scale.top) ], "hsv").hex());
+
+                setCurrentColorCustom(!colors.includes(initialColor));
             }
         }
     }, [ hueDragging ]);
+
+    useEffect(() => {
+        setColor(initialColor);
+    }, []);
 
     return (
         <View>
@@ -204,15 +217,22 @@ export function Colors(props: ColorProps) {
 
                         borderRadius: 50,
 
-                        backgroundColor: (currentColorCustom)?(currentColor):(initialColor)
-                    }} onPress={() => {
-                        if(!currentColorCustom)
-                            setColor(initialColor);
+                        overflow: "hidden",
 
-                        setCurrentColorCustom(true);
-                            
+                        backgroundColor: initialColor
+                    }} onPress={() => {
+                        if(!picker && position)
+                            setColor(color([ currentColorHue, position.scale.left, (1 - position.scale.top) ], "hsv").hex());
+                    
                         showPicker(!picker);
                     }}>
+                        <Image source={require("./../assets/images/radial-gradient.png")} style={{
+                            flex: 1,
+
+                            width: 36,
+                            height: 36
+                        }}/>
+
                         <MaterialIcons name="colorize" size={24} color={theme.color} style={{
                             position: "absolute",
 
@@ -221,7 +241,7 @@ export function Colors(props: ColorProps) {
                         }}/>
                     </TouchableOpacity>
 
-                    {typeColors.find((typeColor) => typeColor.type === type)?.colors?.map((color) => (
+                    {colors.map((color) => (
                         <TouchableOpacity key={color} style={{
                             width: 40,
                             height: 40,
