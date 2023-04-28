@@ -4,6 +4,35 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ActivityPersonalBest } from "../../components/ActivityPersonalBest";
 import { ParagraphText } from "../../components/texts/paragraph";
 
+type ActivityStatProps = {
+    personalBest?: boolean;
+
+    value: string;
+    unit?: string;
+
+    type: string;
+    altType?: string;
+}
+
+export function ActivityStat(props: ActivityStatProps) {
+    const { type, altType, value, unit, personalBest } = props;
+
+    return (
+        <View style={{ marginLeft: "auto", marginRight: "auto", marginTop: "auto" }}>
+            {(!!personalBest) && (
+                <React.Fragment>
+                    <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
+
+                    <ActivityPersonalBest/>
+                </React.Fragment>
+            )}
+
+            <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{value}{(unit) && (<Text style={{ fontSize: 18 }}> {unit}</Text>)}</Text>
+            <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16, paddingHorizontal: 10 }}>{(personalBest && altType)?(altType):(type)}</Text>
+        </View>
+    );
+};
+
 export default function ActivityMapStats({ activity }) {
     if(!activity?.summary)
         return null;
@@ -31,44 +60,9 @@ export default function ActivityMapStats({ activity }) {
             flexDirection: "row",
             justifyContent: "space-between"
         }}>
-            <View>
-                {(!!activity.summary?.distancePersonalBest) && (
-                    <React.Fragment>
-                        <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
-
-                        <ActivityPersonalBest/>
-                    </React.Fragment>
-                )}
-
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.distance}<Text style={{ fontSize: 18 }}> km</Text></Text>
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16, paddingHorizontal: 10 }}>distance</Text>
-            </View>
-            
-            <View>
-                {(!!activity.summary?.averageSpeedPersonalBest) && (
-                    <React.Fragment>
-                        <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
-
-                        <ActivityPersonalBest/>
-                    </React.Fragment>
-                )}
-                
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.averageSpeed}<Text style={{ fontSize: 18 }}> km/h</Text></Text>
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16, paddingHorizontal: 10 }}>{(!!activity.summary?.averageSpeedPersonalBest)?("avg.speed"):("average speed")}</Text>
-            </View>
-            
-            <View>
-                {(!!activity.summary?.elevationPersonalBest) && (
-                    <React.Fragment>
-                        <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
-
-                        <ActivityPersonalBest/>
-                    </React.Fragment>
-                )}
-                
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.elevation}<Text style={{ fontSize: 18 }}> m</Text></Text>
-                <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 }}>elevation</Text>
-            </View>
+            <ActivityStat type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
+            <ActivityStat type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
+            <ActivityStat type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
         </LinearGradient>
     );
 };

@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { useTheme } from "../../utils/themes";
 import { ActivityPersonalBest } from "../../components/ActivityPersonalBest";
 import { ParagraphText } from "../../components/texts/paragraph";
+import { ActivityStat } from "./mapStats";
 
 type ActivityStatsProps = {
     activity: any | null;
@@ -48,69 +49,21 @@ export default function ActivityStats({ activity }: ActivityStatsProps) {
         <View style={{ gap: 20, padding: 20 }}>
             <View style={{ flexDirection: "row" }}>
                 <View style={{ width: "50%", gap: 5 }}>
-                    <View style={{ marginLeft: "auto", marginRight: "auto", marginTop: "auto", position: "relative", paddingHorizontal: 10 }}>
-                        {(!!activity.summary?.distancePersonalBest) && (
-                            <React.Fragment>
-                                <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
-
-                                <ActivityPersonalBest/>
-                            </React.Fragment>
-                        )}
-
-                        <Text style={{ color: theme.color, textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.distance} km</Text>
-                        <Text style={{ color: theme.color, textAlign: "center", fontSize: 16 }}>distance</Text>
-                    </View>
-                    
+                    <ActivityStat type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
                 </View>
                 
                 <View style={{ width: "50%", gap: 5 }}>
-                    <View style={{ marginLeft: "auto", marginRight: "auto", marginTop: "auto", position: "relative", paddingHorizontal: 10 }}>
-                        {(!!activity.summary?.averageSpeedPersonalBest) && (
-                            <React.Fragment>
-                                <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
-
-                                <ActivityPersonalBest/>
-                            </React.Fragment>
-                        )}
-
-                        <Text style={{ color: theme.color, textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.averageSpeed} km/h</Text>
-                        <Text style={{ color: theme.color, textAlign: "center", fontSize: 16 }}>{(!!activity.summary?.averageSpeedPersonalBest)?("avg.speed"):("average speed")}</Text>
-                    </View>
-                    
+                    <ActivityStat type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
                 </View>
             </View>
             
             <View style={{ flexDirection: "row" }}>
                 <View style={{ width: "50%", gap: 5 }}>
-                    <View style={{ marginLeft: "auto", marginRight: "auto", marginTop: "auto", position: "relative", paddingHorizontal: 10 }}>
-                        {(!!activity.summary?.elevationPersonalBest) && (
-                            <React.Fragment>
-                                <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
-
-                                <ActivityPersonalBest/>
-                            </React.Fragment>
-                        )}
-
-                        <Text style={{ color: theme.color, textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.elevation} m</Text>
-                        <Text style={{ color: theme.color, textAlign: "center", fontSize: 16 }}>elevation</Text>
-                    </View>
-                    
+                    <ActivityStat type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
                 </View>
                 
                 <View style={{ width: "50%", gap: 5 }}>
-                    <View style={{ marginLeft: "auto", marginRight: "auto", marginTop: "auto", position: "relative", paddingHorizontal: 10 }}>
-                        {(!!activity.summary?.maxSpeedPersonalBest) && (
-                            <React.Fragment>
-                                <ParagraphText style={{ textAlign: "center" }}>Personal Best</ParagraphText>
-
-                                <ActivityPersonalBest/>
-                            </React.Fragment>
-                        )}
-
-                        <Text style={{ color: theme.color, textAlign: "center", fontSize: 28, fontWeight: "500" }}>{activity.summary.maxSpeed} km/h</Text>
-                        <Text style={{ color: theme.color, textAlign: "center", fontSize: 16 }}>max speed</Text>
-                    </View>
-                    
+                    <ActivityStat type="max speed" unit="km/h" value={activity.summary.maxSpeed} personalBest={activity.summary.maxSpeedPersonalBest}/>
                 </View>
             </View>
         </View>
