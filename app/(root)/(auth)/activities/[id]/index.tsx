@@ -13,6 +13,7 @@ import ActivityStats from "../../../../../layouts/activity/stats";
 import ActivityComment from "../../../../../layouts/activity/comment";
 import { ComponentType } from "../../../../../models/componentType";
 import { useUser } from "../../../../../modules/user/useUser";
+import ActivityComments from "../../../../../components/ActivityComments";
 
 export default function ActivityPage({ params }) {
     const userData = useUser();
@@ -60,6 +61,8 @@ export default function ActivityPage({ params }) {
                 ):(
                     <Bike style={{ marginVertical: 10 }}/>
                 )}
+
+                <ActivityComments id={id as string}/>
             </ScrollView>
 
             <View style={{
