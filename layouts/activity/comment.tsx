@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
 import { useSelector } from "react-redux";
@@ -8,19 +8,21 @@ import { CaptionText } from "../../components/texts/caption";
 import Constants from "expo-constants";
 import { useUser } from "../../modules/user/useUser";
 import { ComponentType } from "../../models/componentType";
+import { useRouter } from "expo-router";
+import { LinkText } from "../../components/texts/link";
 
 type ActivityCommentProps = {
     style?: any;
     comment?: any;
-    type: ComponentType;
+    child?: boolean;
 };
 
 export default function ActivityComment(props: ActivityCommentProps) {
-    const { style, comment, type = ComponentType.Default } = props;
+    const { style, comment, child } = props;
 
     const userData = useUser();
-
     const theme = useTheme();
+    const router = useRouter();
     
     return (
         <View style={style}>
@@ -31,17 +33,17 @@ export default function ActivityComment(props: ActivityCommentProps) {
             }}>
                 <View style={{
                     backgroundColor: theme.placeholder,
-                    width: 40,
+                    width: (!child)?(40):(25),
                     aspectRatio: 1,
-                    borderRadius: 40,
+                    borderRadius: 100,
                     overflow: "hidden",
                 }}>
                     {(comment !== undefined) && (
                         <Image
                             style={{
-                                width: 40,
+                                width: "100%",
                                 aspectRatio: 1,
-                                borderRadius: 40,
+                                borderRadius: 100,
                                 overflow: "hidden"
                             }}
                             source={{
@@ -73,7 +75,7 @@ export default function ActivityComment(props: ActivityCommentProps) {
                     )}
 
                     <ParagraphText style={{
-                        paddingRight: 50,
+                        paddingRight: ((!child)?(40):(25)) + 10,
 
                         ...((comment === undefined)?({
                             color: "transparent",
@@ -81,13 +83,23 @@ export default function ActivityComment(props: ActivityCommentProps) {
                         }):({}))
                     }}>
                         {(comment !== undefined)?(
-                            (comment)?(
-                                (type === ComponentType.Compact)?(
-                                    comment.message.substring(0, Math.min(80, comment.message.length)) + "..."
-                                ):(comment.message)
-                            ):("There's no comments, you can be the first one!")
+                            (comment)?(comment.message):("There's no comments, you can be the first one!")
                         ):("This is a comment!")}
                     </ParagraphText>
+
+                    {(comment) && (
+                        <View style={{
+                            flexDirection: "row",
+                            alignItems: "baseline",
+                            gap: 5
+                        }}>
+                            <TouchableOpacity onPress={() => router.push(`/activities/${comment.activity}/comments/${comment.id}/reply`)}>
+                                <LinkText>Reply</LinkText>
+                            </TouchableOpacity>
+
+                            {(!!comment?.comments_count) && (<ParagraphText style={{ color: "silver" }}>{comment.comments_count} replies</ParagraphText>)}
+                        </View>
+                    )}
                 </View>
             </View>
         </View>

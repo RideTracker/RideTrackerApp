@@ -49,7 +49,7 @@ export default function ActivityMapStats({ activity }) {
             width: "100%",
             paddingRight: "5%",
             paddingLeft: "20%",
-            paddingBottom: 8,
+            paddingBottom: 6,
             height: "100%",
 
             borderRadius: 10,
@@ -60,9 +60,36 @@ export default function ActivityMapStats({ activity }) {
             flexDirection: "row",
             justifyContent: "space-between"
         }}>
-            <ActivityStat type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
-            <ActivityStat type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
-            <ActivityStat type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
+            <View style={{
+                transform: [
+                    {
+                        scale: 0.9
+                    }
+                ]
+            }}>
+                <ActivityStat type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
+            </View>
+
+            <View style={{
+                transform: [
+                    {
+                        scale: 0.9
+                    }
+                ]
+            }}>
+                <ActivityStat type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
+            </View>
+
+            <View style={{
+                transform: [
+                    {
+                        scale: 0.9
+                    }
+                ]
+            }}>
+                <ActivityStat type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
+            </View>
+        
         </LinearGradient>
     );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../utils/themes";
 import { timeSince } from "../utils/time";
 import { useSelector } from "react-redux";
@@ -8,10 +8,13 @@ import { CaptionText } from "../components/texts/caption";
 import Constants from "expo-constants";
 import { useUser } from "../modules/user/useUser";
 import { LinkText } from "./texts/link";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 
 type ActivityCommentSummaryProps = {
     style?: any;
     comment: any | null;
+    activity?: string;
 };
 
 function getCommentSummaryMessage(message: string, length: number) {
@@ -26,7 +29,7 @@ function getCommentSummaryMessage(message: string, length: number) {
 
     return (
         <React.Fragment>
-            {result}{"... "}
+            {result}{(result.length < message.length) && "... "}
 
             {(result.length < message.length) && (
                 <LinkText style={{ color: "silver" }}>view more</LinkText>
@@ -36,11 +39,10 @@ function getCommentSummaryMessage(message: string, length: number) {
 };
 
 export default function ActivityCommentSummary(props: ActivityCommentSummaryProps) {
-    const { style, comment } = props;
-
-    const userData = useUser();
+    const { activity, style, comment } = props;
 
     const theme = useTheme();
+    const router = useRouter();
     
     return (
         <View style={style}>
@@ -56,16 +58,18 @@ export default function ActivityCommentSummary(props: ActivityCommentSummaryProp
                     borderRadius: 40,
                     overflow: "hidden",
                 }}>
-                    <Image
-                        style={{
-                            width: 40,
-                            aspectRatio: 1,
-                            borderRadius: 40,
-                            overflow: "hidden"
-                        }}
-                        source={{
-                            uri: `${Constants.expoConfig.extra.images}/${(comment?.user)?(comment.user.avatar):(userData.user?.avatar)}/Avatar`
-                        }}/>
+                    {(comment?.user) && (
+                        <Image
+                            style={{
+                                width: 40,
+                                aspectRatio: 1,
+                                borderRadius: 40,
+                                overflow: "hidden"
+                            }}
+                            source={{
+                                uri: `${Constants.expoConfig.extra.images}/${comment.user.avatar}/Avatar`
+                            }}/>
+                    )}
                 </View>
 
                 <View style={{ gap: 5, justifyContent: "center", flexGrow: 1 }}>
@@ -92,9 +96,11 @@ export default function ActivityCommentSummary(props: ActivityCommentSummaryProp
                         alignItems: "baseline",
                         gap: 5
                     }}>
-                        <LinkText>Reply</LinkText>
+                        <TouchableOpacity onPress={() => router.push(`/activities/${activity}/comments/${comment.id}/reply`)}>
+                            <LinkText>Reply</LinkText>
+                        </TouchableOpacity>
 
-                        {(!!comment?.comments_count) && (<ParagraphText>{comment.comments_count} replies</ParagraphText>)}
+                        {(!!comment?.comments_count) && (<ParagraphText style={{ color: "silver" }}>{comment.comments_count} {(comment.comments_counts > 1)?("replies"):("reply")}</ParagraphText>)}
                     </View>
                 </View>
             </View>

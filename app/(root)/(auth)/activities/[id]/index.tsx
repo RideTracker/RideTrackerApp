@@ -44,7 +44,7 @@ export default function ActivityPage({ params }) {
             <Stack.Screen options={{ title: "Activity" }} />
 
             <ScrollView style={{ padding: 10 }}>
-                <View style={{ paddingBottom: 40 }}>
+                <View style={{ paddingBottom: 40}}>
                     <View style={{ height: 200 }}>
                         <ActivityMap activity={activity} type={ComponentType.Default}/>
                     </View>

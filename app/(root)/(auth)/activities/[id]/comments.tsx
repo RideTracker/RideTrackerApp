@@ -9,6 +9,7 @@ import { HeaderText } from "../../../../../components/texts/header";
 import { ParagraphText } from "../../../../../components/texts/paragraph";
 import ActivityComment from "../../../../../layouts/activity/comment";
 import { useUser } from "../../../../../modules/user/useUser";
+import { ComponentType } from "../../../../../models/componentType";
 
 export default function ActivityCommentsPage({ params }) {
     const userData = useUser();
@@ -34,23 +35,21 @@ export default function ActivityCommentsPage({ params }) {
             <Stack.Screen options={{ title: "Comments" }} />
 
             <View style={{ padding: 10 }}>
-                <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)} style={{ gap: 10 }}>
-                    <HeaderText>Comments <Text style={{ fontWeight: "normal" }}>(0)</Text></HeaderText>
-
+                <View style={{ gap: 20 }}>
                     {(comments?.length)?(comments.filter((comment) => !comment.parent).map((comment) => (
                         <React.Fragment key={comment.id}>
                             <ActivityComment comment={comment}/>
 
-                            <View style={{ paddingLeft: 10 }}>
+                            <View style={{ paddingLeft: 50, gap: 10 }}>
                                 {comments.filter((childComment) => childComment.parent === comment.id).map((childComment) => (
-                                    <ActivityComment key={childComment.id} comment={childComment}/>
+                                    <ActivityComment key={childComment.id} comment={childComment} child={true}/>
                                 ))}
                             </View>
                         </React.Fragment>
                     ))):(
                         <ActivityComment comment={null}/>
                     )}
-                </TouchableOpacity>
+                </View>
             </View>
         </View>
     );

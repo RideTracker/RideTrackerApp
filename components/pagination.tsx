@@ -7,13 +7,9 @@ import { ParagraphText } from "./texts/paragraph";
 import { useUser } from "../modules/user/useUser";
 
 export function Pagination({ style, paginate, render }) {
-    const userData = useUser();
-
     const [ items, setItems ] = useState([]);
     const [ offset, setOffset ] = useState(0);
     const [ reachedEnd, setReachedEnd ] = useState(false);
-
-    const router = useRouter();
 
     async function getItems() {
         if(reachedEnd)
@@ -33,7 +29,7 @@ export function Pagination({ style, paginate, render }) {
 
     useEffect(() => {
         getItems();
-    }, [ ]);
+    }, []);
 
     const [ isAtBottom, setIsAtBottom ] = useState(false);
 

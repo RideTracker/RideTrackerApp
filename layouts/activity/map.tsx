@@ -266,7 +266,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                     onLayout={(event) => setLayout(event.nativeEvent.layout)}
                     pointerEvents={(type !== ComponentType.Default)?("none"):("auto")}
                     provider={PROVIDER_GOOGLE}
-                    customMapStyle={(type !== ComponentType.Default)?(theme.mapStyle.concat(mapStyle.compact as any[])):(theme.mapStyle)}
+                    customMapStyle={theme.mapStyle.concat(mapStyle.compact as any[])}
                     zoomEnabled={false}
                     pitchEnabled={false}
                     rotateEnabled={false}
