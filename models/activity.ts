@@ -53,3 +53,22 @@ export async function getActivityComments(authorization: string, id: string) {
 
     return result;
 };
+
+export async function getActivityCommentsSummary(authorization: string, id: string) {
+    const url = new URL(`/api/activities/${id}/comments/summary`, Constants.expoConfig.extra.api);
+
+    console.log(url);
+
+    const response = await fetch(url, {
+        method: "GET",
+
+        headers: {
+            "Authorization": `Bearer ${authorization}`
+        }
+    });
+    const result = await response.json();
+
+    console.log(result);
+
+    return result;
+};

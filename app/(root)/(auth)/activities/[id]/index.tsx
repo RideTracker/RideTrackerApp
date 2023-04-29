@@ -13,7 +13,7 @@ import ActivityStats from "../../../../../layouts/activity/stats";
 import ActivityComment from "../../../../../layouts/activity/comment";
 import { ComponentType } from "../../../../../models/componentType";
 import { useUser } from "../../../../../modules/user/useUser";
-import ActivityComments from "../../../../../components/ActivityComments";
+import ActivityCommentsSummary from "../../../../../components/ActivityCommentsSummary";
 
 export default function ActivityPage({ params }) {
     const userData = useUser();
@@ -44,28 +44,30 @@ export default function ActivityPage({ params }) {
             <Stack.Screen options={{ title: "Activity" }} />
 
             <ScrollView style={{ padding: 10 }}>
-                <View style={{ height: 200 }}>
-                    <ActivityMap activity={activity} type={ComponentType.Default}/>
+                <View style={{ paddingBottom: 40 }}>
+                    <View style={{ height: 200 }}>
+                        <ActivityMap activity={activity} type={ComponentType.Default}/>
+                    </View>
+
+                    <ActivityAuthor activity={activity}/>
+
+                    <ActivityStats activity={activity}/>
+
+                    {(activity)?(
+                        (activity.bike) && (
+                            <TouchableOpacity onPress={() => router.push(`/bike/${activity.bike}`)}>
+                                <Bike data={activity.bike} style={{ marginVertical: 10 }}/>
+                            </TouchableOpacity>
+                        )
+                    ):(
+                        <Bike style={{ marginVertical: 10 }}/>
+                    )}
+
+                    <ActivityCommentsSummary id={id as string}/>
                 </View>
-
-                <ActivityAuthor activity={activity}/>
-
-                <ActivityStats activity={activity}/>
-
-                {(activity)?(
-                    (activity.bike) && (
-                        <TouchableOpacity onPress={() => router.push(`/bike/${activity.bike}`)}>
-                            <Bike data={activity.bike} style={{ marginVertical: 10 }}/>
-                        </TouchableOpacity>
-                    )
-                ):(
-                    <Bike style={{ marginVertical: 10 }}/>
-                )}
-
-                <ActivityComments id={id as string}/>
             </ScrollView>
 
-            <View style={{
+            {/*<View style={{
                 marginBottom: 20,
                 padding: 10,
                 paddingTop: 5
@@ -75,7 +77,7 @@ export default function ActivityPage({ params }) {
 
                     <ActivityComment comment={activity?.comment}/>
                 </TouchableOpacity>
-            </View>
+            </View>*/}
         </View>
     );
 };

@@ -7,13 +7,17 @@ import { ParagraphText } from "../../components/texts/paragraph";
 import { CaptionText } from "../../components/texts/caption";
 import Constants from "expo-constants";
 import { useUser } from "../../modules/user/useUser";
+import { ComponentType } from "../../models/componentType";
 
 type ActivityCommentProps = {
     style?: any;
     comment?: any;
+    type: ComponentType;
 };
 
-export default function ActivityComment({ style, comment }: ActivityCommentProps) {
+export default function ActivityComment(props: ActivityCommentProps) {
+    const { style, comment, type = ComponentType.Default } = props;
+
     const userData = useUser();
 
     const theme = useTheme();
@@ -77,7 +81,11 @@ export default function ActivityComment({ style, comment }: ActivityCommentProps
                         }):({}))
                     }}>
                         {(comment !== undefined)?(
-                            (comment)?(comment.message):("There's no comments, you can be the first one!")
+                            (comment)?(
+                                (type === ComponentType.Compact)?(
+                                    comment.message.substring(0, Math.min(80, comment.message.length)) + "..."
+                                ):(comment.message)
+                            ):("There's no comments, you can be the first one!")
                         ):("This is a comment!")}
                     </ParagraphText>
                 </View>
