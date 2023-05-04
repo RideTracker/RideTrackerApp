@@ -13,10 +13,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "../../../../components/Colors";
 import { ParagraphText } from "../../../../components/texts/paragraph";
 import Constants from "expo-constants";
-import { authenticateUser } from "../../../../models/user";
 import { setUserData } from "../../../../utils/stores/userData";
 import Avatar from "../../../../components/Avatar";
 import { useUser } from "../../../../modules/user/useUser";
+import { authenticateUser } from "../../../../controllers/auth/authenticateUser";
 
 export default function AvatarEditorPage() {
     const userData = useUser();

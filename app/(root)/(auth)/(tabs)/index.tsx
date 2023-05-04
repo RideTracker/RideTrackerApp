@@ -104,7 +104,7 @@ export default function Index() {
                             (feed.success)?(
                                 (feed.activities.length)?(
                                     <View style={{ gap: 10 }}>
-                                        {(feed.activities.map((activity) => (
+                                        {(feed.activities.map((activity) => activity?.id && (
                                             <ActivityCompact key={activity.id} id={activity.id}/>
                                         )))}
                                     </View>

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
-import { getProfileActivitiesById, getProfileBikesById, getProfileById } from "../../../../models/user";
 import { useSelector } from "react-redux";
 import { CaptionText } from "../../../../components/texts/caption";
 import { ParagraphText } from "../../../../components/texts/paragraph";
@@ -14,6 +13,9 @@ import { Pagination } from "../../../../components/pagination";
 import Bike from "../../../../components/Bike";
 import Constants from "expo-constants";
 import { useUser } from "../../../../modules/user/useUser";
+import { getProfileById } from "../../../../controllers/profiles/getProfileById";
+import { getProfileActivitiesById } from "../../../../controllers/profiles/activities/getProfileActivitiesById";
+import { getProfileBikesById } from "../../../../controllers/profiles/bikes/getProfileBikesById";
 
 export default function Profile() {
     const theme = useTheme();

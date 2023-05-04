@@ -3,10 +3,10 @@ import { SplashScreen, useRouter, useSegments } from "expo-router";
 import { useDispatch, Provider as ReduxProvider, useSelector } from "react-redux";
 import store from "../stores/store";
 import { readUserData, setUserData } from "../stores/userData";
-import { authenticateUser } from "../../models/user";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../themes";
 import { useUser } from "../../modules/user/useUser";
+import { authenticateUser } from "../../controllers/auth/authenticateUser";
 
 const AuthContext = React.createContext(null);
 

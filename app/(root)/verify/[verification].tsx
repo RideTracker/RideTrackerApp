@@ -7,9 +7,9 @@ import { useTheme } from "../../../utils/themes";
 import Button from "../../../components/Button";
 import { FontAwesome } from '@expo/vector-icons'; 
 import FormInput from "../../../components/formInput";
-import { registerUser, verifyUser } from "../../../models/user";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../../utils/stores/userData";
+import { verifyUser } from "../../../controllers/auth/verifyUser";
 
 export default function Verify() {
     const theme = useTheme();
