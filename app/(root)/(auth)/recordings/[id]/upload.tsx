@@ -7,7 +7,6 @@ import FormInput from "../../../../../components/formInput";
 import { FontAwesome, Feather } from '@expo/vector-icons'; 
 import Button from "../../../../../components/Button";
 import Bike from "../../../../../components/Bike";
-import { getBikes } from "../../../../../models/bike";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../../(tabs)/record";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
@@ -15,6 +14,7 @@ import { CaptionText } from "../../../../../components/texts/caption";
 import { ParagraphText } from "../../../../../components/texts/paragraph";
 import Constants from "expo-constants";
 import { useUser } from "../../../../../modules/user/useUser";
+import { getBikes } from "../../../../../controllers/bikes/getBikes";
 
 export default function UploadRecordingPage() {
     const userData = useUser();
@@ -34,7 +34,6 @@ export default function UploadRecordingPage() {
     const { id } = useSearchParams();
 
     useEffect(() => {
-        console.log("call get Bikes");
         getBikes(userData.key).then((result) => setBikes(result.bikes));
     }, []);
 

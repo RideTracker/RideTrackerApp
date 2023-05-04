@@ -1,14 +1,14 @@
 import { useState, useEffect, ReactNode } from "react";
 import { Image, StyleProp, View, ViewStyle } from "react-native";
-import { BikeResponse, getBikeById } from "../models/bike";
 import { useTheme } from "../utils/themes";
 import { CaptionText } from "./texts/caption";
 import { ParagraphText } from "./texts/paragraph";
 import { useUser } from "../modules/user/useUser";
+import { getBikeById } from "../controllers/bikes/getBikeById";
 
 type BikeProps = {
     id?: string;
-    data?: BikeResponse;
+    data?: any;
     buttons?: ReactNode;
 
     style?: ViewStyle;

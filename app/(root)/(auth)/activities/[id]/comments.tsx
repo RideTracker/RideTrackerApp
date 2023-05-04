@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
-import { getActivityById, getActivityComments, getActivitySummaryById } from "../../../../../models/activity";
-import Bike from "../../../../../components/Bike";
 import { useTheme } from "../../../../../utils/themes";
-import { useSelector } from "react-redux";
-import { HeaderText } from "../../../../../components/texts/header";
-import { ParagraphText } from "../../../../../components/texts/paragraph";
 import ActivityComment from "../../../../../layouts/activity/comment";
 import { useUser } from "../../../../../modules/user/useUser";
-import { ComponentType } from "../../../../../models/componentType";
+import { getActivityComments } from "../../../../../controllers/activities/comments/getActivityComments";
 
 export default function ActivityCommentsPage({ params }) {
     const userData = useUser();

@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
-import { getActivityById, getActivitySummaryById } from "../../../../../models/activity";
 import Bike from "../../../../../components/Bike";
 import { useTheme } from "../../../../../utils/themes";
-import { useSelector } from "react-redux";
-import { HeaderText } from "../../../../../components/texts/header";
-import { ParagraphText } from "../../../../../components/texts/paragraph";
 import ActivityMap from "../../../../../layouts/activity/map";
 import ActivityAuthor from "../../../../../layouts/activity/author";
 import ActivityStats from "../../../../../layouts/activity/stats";
-import ActivityComment from "../../../../../layouts/activity/comment";
 import { ComponentType } from "../../../../../models/componentType";
 import { useUser } from "../../../../../modules/user/useUser";
 import ActivityCommentsSummary from "../../../../../components/ActivityCommentsSummary";
+import { getActivityById } from "../../../../../controllers/activities/getActivityById";
+import { getActivitySummaryById } from "../../../../../controllers/activities/summary/getActivitySummaryById";
 
 export default function ActivityPage({ params }) {
     const userData = useUser();

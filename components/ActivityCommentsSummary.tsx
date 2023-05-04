@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
-import { getActivityComments, getActivityCommentsSummary } from "../models/activity";
 import { useUser } from "../modules/user/useUser";
 import ActivityComment from "../layouts/activity/comment";
 import { ComponentType } from "../models/componentType";
@@ -10,6 +9,7 @@ import { LinkText } from "./texts/link";
 import { ParagraphText } from "./texts/paragraph";
 import Button from "./Button";
 import { useRouter } from "expo-router";
+import { getActivityCommentsSummary } from "../controllers/activities/comments/summary/getActivityCommentsSummary";
 
 type ActivityCommentsSummaryProps = {
     id: string;

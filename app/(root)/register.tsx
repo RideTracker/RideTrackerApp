@@ -1,21 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView, ActivityIndicator, Alert } from "react-native";
-import { useRouter, Stack, Link } from "expo-router";
-import { PingResponse, ping } from "../../models/ping";
-import { useAuth } from "../../utils/auth/provider";
+import { View, Text, SafeAreaView, ScrollView, ActivityIndicator, Alert } from "react-native";
+import { useRouter } from "expo-router";
 import { useTheme } from "../../utils/themes";
 import Button from "../../components/Button";
 import { FontAwesome } from '@expo/vector-icons'; 
 import FormInput from "../../components/formInput";
-import { useDispatch } from "react-redux";
-import { setUserData } from "../../utils/stores/userData";
 import { registerUser } from "../../controllers/auth/registerUser";
 
 export default function Register() {
     const theme = useTheme();
 
     const router = useRouter();
-    const dispatch = useDispatch();
 
     const [ submitting, setSubmitting ] = useState(false);
 

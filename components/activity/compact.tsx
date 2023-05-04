@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 import { useRouter } from "expo-router";
-import { getActivityById } from "../../models/activity";
 import Error from "../error";
 import { useSelector } from "react-redux";
 import ActivityMap from "../../layouts/activity/map";
@@ -10,6 +9,7 @@ import ActivityMapStats from "../../layouts/activity/mapStats";
 import ActivityAuthor from "../../layouts/activity/author";
 import { ComponentType } from "../../models/componentType";
 import { useUser } from "../../modules/user/useUser";
+import { getActivityById } from "../../controllers/activities/getActivityById";
 
 type ActivityCompactProps = {
     id: string | null;

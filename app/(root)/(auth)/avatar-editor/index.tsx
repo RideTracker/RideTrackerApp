@@ -3,7 +3,6 @@ import { Image, ScrollView, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "../../../../utils/themes";
-import { createUserAvatar, getAvatars } from "../../../../models/avatars";
 import { CaptionText } from "../../../../components/texts/caption";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Tabs, { TabsPage } from "../../../../components/tabs";
@@ -17,6 +16,8 @@ import { setUserData } from "../../../../utils/stores/userData";
 import Avatar from "../../../../components/Avatar";
 import { useUser } from "../../../../modules/user/useUser";
 import { authenticateUser } from "../../../../controllers/auth/authenticateUser";
+import { getAvatars } from "../../../../controllers/avatars/getAvatars";
+import { createUserAvatar } from "../../../../controllers/avatars/user/createUserAvatar";
 
 export default function AvatarEditorPage() {
     const userData = useUser();

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
-import { getActivityById } from "../../models/activity";
 import Error from "../error";
 import { useSelector } from "react-redux";
 import { CaptionText } from "../texts/caption";
@@ -13,6 +12,7 @@ import ActivityMap from "../../layouts/activity/map";
 import { ComponentType } from "../../models/componentType";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useUser } from "../../modules/user/useUser";
+import { getActivityById } from "../../controllers/activities/getActivityById";
 
 type ActivityListProps = {
     id: string | null;

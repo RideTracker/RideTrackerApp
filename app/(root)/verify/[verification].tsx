@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView, ActivityIndicator, Alert } from "react-native";
 import { useRouter, Stack, Link, useSearchParams } from "expo-router";
-import { PingResponse, ping } from "../../../models/ping";
-import { useAuth } from "../../../utils/auth/provider";
 import { useTheme } from "../../../utils/themes";
 import Button from "../../../components/Button";
 import { FontAwesome } from '@expo/vector-icons'; 

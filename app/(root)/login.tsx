@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert, Image } from "react-native";
 import { useRouter, Stack, Link } from "expo-router";
-import { PingResponse, ping } from "../../models/ping";
 import { useAuth } from "../../utils/auth/provider";
 import { useTheme } from "../../utils/themes";
 import Button from "../../components/Button";

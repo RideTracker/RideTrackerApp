@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { Alert, LayoutRectangle, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View, useColorScheme } from "react-native";
-import { getFeed } from "../../../../models/feed";
-import Error from "../../../../components/error";
-import Empty from "../../../../components/empty";
 import ActivityCompact from "../../../../components/activity/compact";
 import { useTheme } from "../../../../utils/themes";
 import { useSelector } from "react-redux";
@@ -15,6 +12,7 @@ import { LinkText } from "../../../../components/texts/link";
 import { ScrollViewFilter } from "../../../../components/ScrollViewFilter";
 import { useUser } from "../../../../modules/user/useUser";
 import { CaptionText } from "../../../../components/texts/caption";
+import { getFeed } from "../../../../controllers/feed/getFeed";
 
 export default function Index() {
     const userData = useUser();

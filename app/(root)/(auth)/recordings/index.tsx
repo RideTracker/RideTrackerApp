@@ -7,7 +7,6 @@ import FormInput from "../../../../components/formInput";
 import { FontAwesome, Feather } from '@expo/vector-icons'; 
 import Button from "../../../../components/Button";
 import Bike from "../../../../components/Bike";
-import { getBikes } from "../../../../models/bike";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../(tabs)/record";
 import { timeSince } from "../../../../utils/time";
