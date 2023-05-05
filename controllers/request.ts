@@ -3,7 +3,7 @@ import Constants from "expo-constants";
 export async function request(method: string, uri: URL | string, body: any | null, key: string | null) {
     const url = new URL(uri.toString(), Constants.expoConfig.extra.api);
 
-    console.log(`Fetching ${url}...`);
+    console.log(`${method} ${uri}...`);
 
     const response = await fetch(url, {
         method: method,
@@ -15,7 +15,7 @@ export async function request(method: string, uri: URL | string, body: any | nul
         body: body && JSON.stringify(body)
     });
 
-    console.log(`Received ${url}: ` + response.status + " " + response.statusText);
+    console.log(`Received ${uri}: ` + response.status + " " + response.statusText);
 
     const result = await response.json();
     

@@ -13,6 +13,7 @@ import { ScrollViewFilter } from "../../../../components/ScrollViewFilter";
 import { useUser } from "../../../../modules/user/useUser";
 import { CaptionText } from "../../../../components/texts/caption";
 import { getFeed } from "../../../../controllers/feed/getFeed";
+import { Pagination } from "../../../../components/pagination";
 
 export default function Index() {
     const userData = useUser();
@@ -46,7 +47,7 @@ export default function Index() {
         getRecordings();
     }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(!refreshing) {
             if(!filterText.length)
                 scrollViewRef.current.scrollTo({ x: 0, y: filterLayout?.height ?? 0 });
@@ -54,16 +55,16 @@ export default function Index() {
             return;
         }
 
-        getFeed(userData.key, { ...userData.filters?.feed, search: filterText }).then((result) => {
+        getFeed(userData.key, 0, { ...userData.filters?.feed, search: filterText }).then((result) => {
             setRefreshing(false);
             setFeed(result);
         });
-    }, [ refreshing ]);
+    }, [ refreshing ]);*/
 
     useEffect(() => {
-        scrollViewRef.current.scrollTo({ x: 0, y: 0 });
+        //scrollViewRef.current.scrollTo({ x: 0, y: 0 });
 
-        setRefreshing(true);
+        //setRefreshing(true);
     }, [ userData.filters?.feed, filterText ]);
 
     return (
@@ -81,46 +82,46 @@ export default function Index() {
             <View style={{
                 flex: 1
             }}>
-                <ScrollView
-                    ref={scrollViewRef}
-                    refreshControl={
-                        <RefreshControl
-                            tintColor={theme.contrast}
-                            refreshing={refreshing}
-                            onRefresh={() => !refreshing && setRefreshing(true)}
-                            />
-                    }
-                    contentOffset={{
-                        x: 0,
-                        y: filterLayout?.height ?? 0
-                    }}
-                >
-                    <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
+                <Pagination style={{ padding: 10 }} paginate={async (offset) => {
+                    const result = await getFeed(userData.key, offset, { ...userData.filters?.feed, search: filterText });
+            
+                    if(!result.success)
+                        return false;
 
-                    <View style={{ padding: 10 }}>
-                        {(feed)?(
-                            (feed.success)?(
-                                (feed.activities.length)?(
-                                    <View style={{ gap: 10 }}>
-                                        {(feed.activities.map((activity) => activity?.id && (
-                                            <ActivityCompact key={activity.id} id={activity.id}/>
-                                        )))}
-                                    </View>
-                                ):(
-                                    <CaptionText style={{ padding: 10, textAlign: "center" }}>There's nothing here!</CaptionText>
-                                )
+                    return result.activities;
+                }} render={((activity) => activity.id && (
+                    <ActivityCompact key={activity.id} id={activity.id}/>
+                ))}
+                contentOffset={{
+                    x: 0,
+                    y: filterLayout?.height ?? 0
+                }}>
+                    <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
+                </Pagination>
+
+                <View style={{ padding: 10 }}>
+                    {/*(feed)?(
+                        (feed.success)?(
+                            (feed.activities.length)?(
+                                <View style={{ gap: 10 }}>
+                                    {(feed.activities.map((activity) => activity?.id && (
+                                        <ActivityCompact key={activity.id} id={activity.id}/>
+                                    )))}
+                                </View>
                             ):(
-                                <CaptionText style={{ padding: 10, textAlign: "center" }}>Something went wrong!</CaptionText>
+                                <CaptionText style={{ padding: 10, textAlign: "center" }}>There's nothing here!</CaptionText>
                             )
                         ):(
-                            <View style={{ gap: 10 }}>
-                                {(Array(3).fill(null).map((_, index) => (
-                                    <ActivityCompact key={index} id={null}/>
-                                )))}
-                            </View>
-                        )}
-                    </View>
-                </ScrollView>
+                            <CaptionText style={{ padding: 10, textAlign: "center" }}>Something went wrong!</CaptionText>
+                        )
+                    ):(
+                        <View style={{ gap: 10 }}>
+                            {(Array(3).fill(null).map((_, index) => (
+                                <ActivityCompact key={index} id={null}/>
+                            )))}
+                        </View>
+                    )*/}
+                </View>
 
                 {(recordings) && (
                     <TouchableOpacity style={{ padding: 20 }} onPress={() => router.push("/recordings")}>

@@ -6,7 +6,17 @@ import { useSelector } from "react-redux";
 import { ParagraphText } from "./texts/paragraph";
 import { useUser } from "../modules/user/useUser";
 
-export function Pagination({ style, paginate, render }) {
+type PaginationProps = {
+    style: any;
+    paginate: any;
+    render: any;
+    children?: any;
+    contentOffset?: any;
+};
+
+export function Pagination(props: PaginationProps) {
+    const { style, paginate, render, children, contentOffset } = props;
+
     const [ items, setItems ] = useState([]);
     const [ offset, setOffset ] = useState(0);
     const [ reachedEnd, setReachedEnd ] = useState(false);
@@ -18,6 +28,8 @@ export function Pagination({ style, paginate, render }) {
         const result = await paginate(offset);
 
         if(!result) {
+
+            console.log("reahed end");
             setReachedEnd(true);
 
             return;
@@ -38,7 +50,7 @@ export function Pagination({ style, paginate, render }) {
         const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;
         const contentHeight = event.nativeEvent.contentSize.height;
 
-        setIsAtBottom(!!(scrollPosition + scrollViewHeight >= contentHeight));
+        setIsAtBottom(!!(scrollPosition + scrollViewHeight >= contentHeight - 10));
     };
 
     useEffect(() => {
@@ -49,7 +61,9 @@ export function Pagination({ style, paginate, render }) {
     }, [ isAtBottom ]);
 
     return (
-        <ScrollView style={style} onScroll={handleScroll} scrollEventThrottle={100}>
+        <ScrollView style={style} onScroll={handleScroll} scrollEventThrottle={100} contentOffset={contentOffset}>
+            {children}
+
             <View style={{ gap: 10, height: "100%" }}>
                 {items.map((item) => render(item))}
 
