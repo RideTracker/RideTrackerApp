@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Platform, Text, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { useTheme, useMapStyle } from "../../utils/themes";
 import { decode } from "@googlemaps/polyline-codec";
@@ -57,6 +57,9 @@ function getStylingForHeading(position: any, heading: any, layout: any): any[] {
 };
 
 export default function ActivityMap({ activity, children, type }: ActivityMapProps) {
+    if(Platform.OS === "web")
+        return (<Text>Unsupported for web</Text>);
+
     const mapStyle = useMapStyle();
     const theme = useTheme();
 

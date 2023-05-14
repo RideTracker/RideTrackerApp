@@ -38,6 +38,9 @@ TaskManager.defineTask(RECORD_TASK_NAME, ({ data, error }: { data: any, error: a
 });
 
 export default function Record() {
+    if(Platform.OS === "web")
+        return (<Text>Unsupported for web</Text>);
+
     const theme = useTheme();
 
     const router = useRouter();

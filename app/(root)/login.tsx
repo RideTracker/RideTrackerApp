@@ -3,7 +3,7 @@ import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, Activit
 import { useRouter, Stack, Link } from "expo-router";
 import { useAuth } from "../../utils/auth/provider";
 import { useTheme } from "../../utils/themes";
-import Button from "../../components/Button";
+import Button from "../../components/button";
 import { FontAwesome } from '@expo/vector-icons'; 
 import FormInput from "../../components/formInput";
 import { useDispatch } from "react-redux";

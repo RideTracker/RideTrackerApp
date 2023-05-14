@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { useTheme } from "../../../../../utils/themes";
 import FormInput from "../../../../../components/formInput";
 import { FontAwesome, Feather } from '@expo/vector-icons'; 
-import Button from "../../../../../components/Button";
-import Bike from "../../../../../components/Bike";
+import Button from "../../../../../components/button";
+import Bike from "../../../../../components/bike";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../../(tabs)/record";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
@@ -17,6 +17,9 @@ import { useUser } from "../../../../../modules/user/useUser";
 import { getBikes } from "../../../../../controllers/bikes/getBikes";
 
 export default function UploadRecordingPage() {
+    if(Platform.OS === "web")
+        return (<Text>Unsupported for web</Text>);
+        
     const userData = useUser();
 
     const theme = useTheme();

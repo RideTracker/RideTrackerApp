@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView, ActivityIndicator, Alert } from "react-native";
 import { useRouter, Stack, Link, useSearchParams } from "expo-router";
 import { useTheme } from "../../../utils/themes";
-import Button from "../../../components/Button";
+import Button from "../../../components/button";
 import { FontAwesome } from '@expo/vector-icons'; 
 import FormInput from "../../../components/formInput";
 import { useDispatch } from "react-redux";

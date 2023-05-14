@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Platform } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
 import { useTheme } from "../../../../utils/themes";
@@ -14,6 +14,9 @@ import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { useUser } from "../../../../modules/user/useUser";
 
 function RecordingSummary({ recording }) {
+    if(Platform.OS === "web")
+        return (<Text>Unsupported for web</Text>);
+
     const theme = useTheme();
 
     const router = useRouter();
@@ -49,6 +52,9 @@ export default function RecordingsPage() {
     const [ recordings, setRecordings ] = useState(null);
 
     useEffect(() => {
+        if(Platform.OS === "web")
+            return;
+            
         async function getRecordings() {
             const info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
 

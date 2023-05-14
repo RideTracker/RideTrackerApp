@@ -9,11 +9,11 @@ import Tabs, { TabsPage } from "../../../../components/tabs";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Colors } from "../../../../components/Colors";
+import { Colors } from "../../../../components/colors";
 import { ParagraphText } from "../../../../components/texts/paragraph";
 import Constants from "expo-constants";
 import { setUserData } from "../../../../utils/stores/userData";
-import Avatar from "../../../../components/Avatar";
+import Avatar from "../../../../components/avatar";
 import { useUser } from "../../../../modules/user/useUser";
 import { authenticateUser } from "../../../../controllers/auth/authenticateUser";
 import { getAvatars } from "../../../../controllers/avatars/getAvatars";

@@ -10,7 +10,7 @@ import ActivityCompact from "../../../../components/activity/compact";
 import ActivityList from "../../../../components/activity/list";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Pagination } from "../../../../components/pagination";
-import Bike from "../../../../components/Bike";
+import Bike from "../../../../components/bike";
 import Constants from "expo-constants";
 import { useUser } from "../../../../modules/user/useUser";
 import { getProfileById } from "../../../../controllers/profiles/getProfileById";

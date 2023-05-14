@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Alert, LayoutRectangle, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View, useColorScheme } from "react-native";
+import { Alert, LayoutRectangle, Platform, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View, useColorScheme } from "react-native";
 import ActivityCompact from "../../../../components/activity/compact";
 import { useTheme } from "../../../../utils/themes";
 import { useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Stack, useRouter } from "expo-router";
 import { ParagraphText } from "../../../../components/texts/paragraph";
 import { LinkText } from "../../../../components/texts/link";
-import { ScrollViewFilter } from "../../../../components/ScrollViewFilter";
+import { ScrollViewFilter } from "../../../../components/scrollViewFilter";
 import { useUser } from "../../../../modules/user/useUser";
 import { CaptionText } from "../../../../components/texts/caption";
 import { getFeed } from "../../../../controllers/feed/getFeed";
@@ -30,6 +30,9 @@ export default function Index() {
     const [ filterLayout, setFilterLayout ] = useState<LayoutRectangle>(null);
 
     useEffect(() => {
+        if(Platform.OS === "web")
+            return;
+            
         async function getRecordings() {
             const info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
 
