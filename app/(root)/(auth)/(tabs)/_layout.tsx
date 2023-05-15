@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { Tabs } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
 import { useTheme } from "../../../../utils/themes";
-import { View } from "react-native";
+import { PixelRatio, Platform, View } from "react-native";
 import { useSelector } from "react-redux";
 import { useUser } from "../../../../modules/user/useUser";
+import TabBar from "../../../../components/TabBar";
 
 export default function Layout() {
     const theme = useTheme();
@@ -12,7 +13,7 @@ export default function Layout() {
     const userData = useUser();
 
     return (
-        <Tabs screenOptions={{
+        <Tabs tabBar={(props) => (<TabBar {...props}/>)} screenOptions={{
             headerStyle: {
                 backgroundColor: theme.background,
                 shadowColor: theme.border
@@ -29,7 +30,7 @@ export default function Layout() {
             tabBarStyle: {
                 backgroundColor: theme.background,
                 paddingTop: 10,
-                paddingBottom: 25,
+                paddingBottom: (Platform.OS === "ios")?(25):(10),
                 borderTopColor: theme.border
             },
 
