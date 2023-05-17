@@ -112,30 +112,6 @@ export default function Index() {
                     <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
                 </Pagination>
 
-                <View style={{ padding: 10 }}>
-                    {/*(feed)?(
-                        (feed.success)?(
-                            (feed.activities.length)?(
-                                <View style={{ gap: 10 }}>
-                                    {(feed.activities.map((activity) => activity?.id && (
-                                        <ActivityCompact key={activity.id} id={activity.id}/>
-                                    )))}
-                                </View>
-                            ):(
-                                <CaptionText style={{ padding: 10, textAlign: "center" }}>There's nothing here!</CaptionText>
-                            )
-                        ):(
-                            <CaptionText style={{ padding: 10, textAlign: "center" }}>Something went wrong!</CaptionText>
-                        )
-                    ):(
-                        <View style={{ gap: 10 }}>
-                            {(Array(3).fill(null).map((_, index) => (
-                                <ActivityCompact key={index} id={null}/>
-                            )))}
-                        </View>
-                    )*/}
-                </View>
-
                 {(recordings) && (
                     <TouchableOpacity style={{ padding: 20 }} onPress={() => router.push("/recordings")}>
                         <View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
