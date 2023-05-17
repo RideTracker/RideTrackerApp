@@ -21,13 +21,13 @@ export function ScrollViewFilter(props: ScrollViewFilterProps) {
 
     return (
         <View style={{
-            height: 45,
+            height: 55,
         
             flexDirection: "row",
             alignItems: "center",
             gap: 10,
 
-            paddingTop: 10
+            paddingBottom: 10
         }} onLayout={(event) => onLayout(event)}>
             <View style={{
                 flex: 1,

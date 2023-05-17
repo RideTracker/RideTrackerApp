@@ -21,13 +21,24 @@ export default function Index() {
 
     const router = useRouter();
 
-    const scrollViewRef = useRef<ScrollView>();
-   
-    const [ feed, setFeed ] = useState(null);
-    const [ refreshing, setRefreshing ] = useState(true);
+    const [ items, setItems ] = useState([]);
     const [ recordings, setRecordings ] = useState(null);
     const [ filterText, setFilterText ] = useState<string>("");
     const [ filterLayout, setFilterLayout ] = useState<LayoutRectangle>(null);
+
+    async function paginate(reset: boolean) {
+        const result = await getFeed(userData.key, items.length, { ...userData.filters?.feed, search: filterText });
+
+        if(!result.success)
+            return false;
+
+        if(reset)
+            setItems(result.activities);
+        else
+            setItems(items.concat(result.activities));
+
+        return (result.activities.length === 5);
+    };
 
     useEffect(() => {
         if(Platform.OS === "web")
@@ -68,6 +79,7 @@ export default function Index() {
         //scrollViewRef.current.scrollTo({ x: 0, y: 0 });
 
         //setRefreshing(true);
+        paginate(true);
     }, [ userData.filters?.feed, filterText ]);
 
     return (
@@ -85,14 +97,7 @@ export default function Index() {
             <View style={{
                 flex: 1
             }}>
-                <Pagination style={{ padding: 10 }} paginate={async (offset) => {
-                    const result = await getFeed(userData.key, offset, { ...userData.filters?.feed, search: filterText });
-            
-                    if(!result.success)
-                        return false;
-
-                    return result.activities;
-                }}
+                <Pagination style={{ padding: 10 }} paginate={paginate} items={items}
                 // TODO: some activities here are undefined, why?
                 render={((activity) => activity.id && (
                     <ActivityCompact key={activity.id} id={activity.id}/>
@@ -102,7 +107,7 @@ export default function Index() {
                 ))}
                 contentOffset={{
                     x: 0,
-                    y: filterLayout?.height ?? 0
+                    y: (filterLayout?.height ?? 0) + 10
                 }}>
                     <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
                 </Pagination>

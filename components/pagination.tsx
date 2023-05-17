@@ -10,7 +10,8 @@ import React from "react";
 
 type PaginationProps = {
     style: any;
-    paginate: any;
+    items: any[];
+    paginate: (reset: boolean) => Promise<boolean>;
     render: any;
     renderPlaceholder?: any;
     children?: any;
@@ -18,12 +19,10 @@ type PaginationProps = {
 };
 
 export function Pagination(props: PaginationProps) {
-    const { style, paginate, render, renderPlaceholder, children, contentOffset } = props;
+    const { style, items, paginate, render, renderPlaceholder, children, contentOffset } = props;
 
     const theme = useTheme();
 
-    const [ items, setItems ] = useState([]);
-    const [ offset, setOffset ] = useState(0);
     const [ reachedEnd, setReachedEnd ] = useState(false);
     const [ refreshing, setRefreshing ] = useState<boolean>(false);
     const [ loading, setLoading ] = useState<boolean>(false);
@@ -31,15 +30,15 @@ export function Pagination(props: PaginationProps) {
 
     const [ isAtBottom, setIsAtBottom ] = useState(false);
 
-    async function getItems(currentOffset = offset, currentItems = items, clearItems = false) {
+    async function getItems(reset = false) {
         if(reachedEnd || loading)
             return;
 
         setLoading(true);
 
-        const result = await paginate(currentOffset);
+        const length = await paginate(reset);
 
-        if(!result?.length) {
+        if(!length) {
             console.log("No more results to show");
 
             setLoading(false);
@@ -50,15 +49,7 @@ export function Pagination(props: PaginationProps) {
         
         console.log("Paginating with new items");
 
-        if(clearItems)
-            setItems([]);
-
         setLoading(false);
-
-        setOffset(currentOffset + result.length);
-        setItems(currentItems.concat(result));
-
-        console.log("Items cached are " + (currentItems.length + result.length) + " and offset is " + (currentOffset + result.length));
 
         if(refreshing)
             setRefreshing(false);
@@ -93,7 +84,7 @@ export function Pagination(props: PaginationProps) {
     }, [ isAtBottom ]);
 
     useEffect(() => {
-        getItems(0, [], true);        
+        getItems(true);
     }, [ refreshing ]);
 
     return (
@@ -110,7 +101,7 @@ export function Pagination(props: PaginationProps) {
                 {items.map((item) => render(item))}
 
                 {(!reachedEnd && renderPlaceholder) && (
-                    <View style={{backgroundColor:"red"}} onLayout={(event) => setPlaceholderLayout(event.nativeEvent.layout)}>
+                    <View onLayout={(event) => setPlaceholderLayout(event.nativeEvent.layout)}>
                         {Array(5).fill(null).map((_, index) => (
                             <React.Fragment key={index}>
                                 {renderPlaceholder()}
