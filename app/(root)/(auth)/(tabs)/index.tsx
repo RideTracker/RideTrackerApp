@@ -92,8 +92,13 @@ export default function Index() {
                         return false;
 
                     return result.activities;
-                }} render={((activity) => activity.id && (
+                }}
+                // TODO: some activities here are undefined, why?
+                render={((activity) => activity.id && (
                     <ActivityCompact key={activity.id} id={activity.id}/>
+                ))}
+                renderPlaceholder={(() => (
+                    <ActivityCompact id={null}/>
                 ))}
                 contentOffset={{
                     x: 0,

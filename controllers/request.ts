@@ -3,7 +3,7 @@ import Constants from "expo-constants";
 export async function request(method: string, uri: URL | string, body: any | null, key: string | null) {
     const url = new URL(uri.toString(), Constants.expoConfig.extra.api);
 
-    console.log(`${method} ${uri}...`);
+    console.log(`${method} ${url.toString()}...`);
 
     const response = await fetch(url, {
         method: method,

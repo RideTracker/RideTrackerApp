@@ -23,8 +23,6 @@ export function ScrollViewFilter(props: ScrollViewFilterProps) {
         <View style={{
             height: 45,
         
-            paddingHorizontal: 10,
-
             flexDirection: "row",
             alignItems: "center",
             gap: 10,
