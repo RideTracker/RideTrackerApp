@@ -18,8 +18,6 @@ type ActivityStatProps = {
 export function ActivityStat(props: ActivityStatProps) {
     const { type, altType, value, unit, personalBest, scale } = props;
 
-    console.log({ scale });
-
     return (
         <View style={{ paddingHorizontal: (personalBest)?(scale * 20):(0) }}>
             {(!!personalBest) && (
@@ -44,11 +42,6 @@ export default function ActivityMapStats({ activity }) {
     useEffect(() => {
         if(!containerLayout || !childLayout || scale !== null)
             return;
-
-            console.log("update", scale);
-
-        console.log("child", childLayout);
-        console.log("container", containerLayout);
 
         setScale(1 / (childLayout.width / containerLayout.width));
     }, [ containerLayout, childLayout ]);
