@@ -11,6 +11,7 @@ import { useUser } from "../../../../../modules/user/useUser";
 import ActivityCommentsSummary from "../../../../../components/ActivityCommentsSummary";
 import { getActivityById } from "../../../../../controllers/activities/getActivityById";
 import { getActivitySummaryById } from "../../../../../controllers/activities/summary/getActivitySummaryById";
+import ActivityRoute from "../../../../../components/ActivityRoute";
 
 export default function ActivityPage({ params }) {
     const userData = useUser();
@@ -49,6 +50,8 @@ export default function ActivityPage({ params }) {
                     <ActivityAuthor activity={activity}/>
 
                     <ActivityStats activity={activity}/>
+
+                    <ActivityRoute activity={activity}/>
 
                     {(activity)?(
                         (activity.bike) && (
