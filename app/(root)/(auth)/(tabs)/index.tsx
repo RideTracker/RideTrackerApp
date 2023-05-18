@@ -27,7 +27,7 @@ export default function Index() {
     const [ filterLayout, setFilterLayout ] = useState<LayoutRectangle>(null);
 
     async function paginate(reset: boolean) {
-        const result = await getFeed(userData.key, items.length, { ...userData.filters?.feed, search: filterText });
+        const result = await getFeed(userData.key, (!reset)?(items.length):(0), { ...userData.filters?.feed, search: filterText });
 
         if(!result.success)
             return false;

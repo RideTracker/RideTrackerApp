@@ -61,6 +61,9 @@ export function Pagination(props: PaginationProps) {
         getItems();
     }, []);
 
+    // TODO: add a onContentResize handler to detect placeholders visible after a pagination?
+    // or maybe not, we should check the result length...
+
     const handleScroll = (event) => {
         if(reachedEnd)
             return;
