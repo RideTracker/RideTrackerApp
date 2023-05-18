@@ -48,22 +48,30 @@ export default function ActivityStats({ activity }: ActivityStatsProps) {
     return (
         <View style={{ gap: 20, padding: 20 }}>
             <View style={{ flexDirection: "row" }}>
-                <View style={{ width: "50%", gap: 5 }}>
-                    <ActivityStat type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
+                <View style={{ width: "50%", justifyContent: "center" }}>
+                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                        <ActivityStat scale={1} type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
+                    </View>
                 </View>
                 
-                <View style={{ width: "50%", gap: 5 }}>
-                    <ActivityStat type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
+                <View style={{ width: "50%", justifyContent: "center" }}>
+                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                        <ActivityStat scale={1} type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
+                    </View>
                 </View>
             </View>
             
             <View style={{ flexDirection: "row" }}>
-                <View style={{ width: "50%", gap: 5 }}>
-                    <ActivityStat type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
+                <View style={{ width: "50%", justifyContent: "center" }}>
+                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                        <ActivityStat scale={1} type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
+                    </View>
                 </View>
                 
-                <View style={{ width: "50%", gap: 5 }}>
-                    <ActivityStat type="max speed" unit="km/h" value={activity.summary.maxSpeed} personalBest={activity.summary.maxSpeedPersonalBest}/>
+                <View style={{ width: "50%", justifyContent: "center" }}>
+                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                        <ActivityStat scale={1} type="max speed" unit="km/h" value={activity.summary.maxSpeed} personalBest={activity.summary.maxSpeedPersonalBest}/>
+                    </View>
                 </View>
             </View>
         </View>

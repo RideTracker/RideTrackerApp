@@ -19,12 +19,12 @@ export function ActivityStat(props: ActivityStatProps) {
     const { type, altType, value, unit, personalBest, scale } = props;
 
     return (
-        <View style={{ paddingHorizontal: (personalBest)?(scale * 20):(0) }}>
+        <View style={{ paddingHorizontal: (personalBest)?(scale * 25):(0) }}>
             {(!!personalBest) && (
                 <React.Fragment>
                     <ParagraphText style={{ textAlign: "center", fontSize: ParagraphTextFontSize * scale }}>Personal Best</ParagraphText>
 
-                    <ActivityPersonalBest scale={1}/>
+                    <ActivityPersonalBest scale={scale}/>
                 </React.Fragment>
             )}
 
