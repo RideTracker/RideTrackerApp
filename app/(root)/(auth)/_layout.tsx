@@ -1,6 +1,4 @@
-import { useEffect } from "react";
-
-import { Stack, Tabs } from "expo-router";
+import { Stack } from "expo-router";
 import { useTheme } from "../../../utils/themes";
 
 export default function Layout() {

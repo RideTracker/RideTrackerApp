@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useTheme } from "../../../../utils/themes";
 import { CaptionText } from "../../../../components/texts/caption";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Tabs, { TabsPage } from "../../../../components/tabs";
+import Tabs, { TabsPage } from "../../../../components/Tabs";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Colors } from "../../../../components/colors";
-import { ParagraphText } from "../../../../components/texts/paragraph";
+import { Colors } from "../../../../components/Colors";
+import { ParagraphText } from "../../../../components/texts/Paragraph";
 import Constants from "expo-constants";
 import { setUserData } from "../../../../utils/stores/userData";
-import Avatar from "../../../../components/avatar";
+import Avatar from "../../../../components/Avatar";
 import { useUser } from "../../../../modules/user/useUser";
 import { authenticateUser } from "../../../../controllers/auth/authenticateUser";
 import { getAvatars } from "../../../../controllers/avatars/getAvatars";

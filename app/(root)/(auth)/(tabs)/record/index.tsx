@@ -1,17 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Button, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { Stack, Tabs, useRouter } from "expo-router";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
+import { Tabs, useRouter } from "expo-router";
 import { useTheme } from "../../../../../utils/themes";
-import MapView, { Circle, Marker, Overlay, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
+import {  FontAwesome5 } from "@expo/vector-icons"; 
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
 import { LinearGradient } from "expo-linear-gradient";
 import EventEmitter from "EventEmitter";
 import { formatTime } from "../../../../../utils/time";
-import PagerView from 'react-native-pager-view';
 
 const RECORD_TASK_NAME = "RECORD_GEOLOCATION";
 export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";

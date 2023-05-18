@@ -1,19 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import { Alert, LayoutRectangle, Platform, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View, useColorScheme } from "react-native";
-import ActivityCompact from "../../../../components/activity/compact";
+import { LayoutRectangle, Platform, ScrollView, TouchableOpacity, View } from "react-native";
+import ActivityCompact from "../../../../components/activity/Compact";
 import { useTheme } from "../../../../utils/themes";
-import { useSelector } from "react-redux";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "./record";
 import { FontAwesome } from '@expo/vector-icons';
 import { Stack, useRouter } from "expo-router";
-import { ParagraphText } from "../../../../components/texts/paragraph";
-import { LinkText } from "../../../../components/texts/link";
-import { ScrollViewFilter } from "../../../../components/scrollViewFilter";
+import { ParagraphText } from "../../../../components/texts/Paragraph";
+import { LinkText } from "../../../../components/texts/Link";
+import { ScrollViewFilter } from "../../../../components/ScrollViewFilter";
 import { useUser } from "../../../../modules/user/useUser";
-import { CaptionText } from "../../../../components/texts/caption";
 import { getFeed } from "../../../../controllers/feed/getFeed";
-import { Pagination } from "../../../../components/pagination";
+import { Pagination } from "../../../../components/Pagination";
 
 export default function Index() {
     const userData = useUser();

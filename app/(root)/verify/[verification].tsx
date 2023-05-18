@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView, ActivityIndicator, Alert } from "react-native";
-import { useRouter, Stack, Link, useSearchParams } from "expo-router";
+import { View, Text, SafeAreaView, ScrollView, ActivityIndicator, Alert } from "react-native";
+import { useRouter, useSearchParams } from "expo-router";
 import { useTheme } from "../../../utils/themes";
-import Button from "../../../components/button";
+import Button from "../../../components/Button";
 import { FontAwesome } from '@expo/vector-icons'; 
-import FormInput from "../../../components/formInput";
+import FormInput from "../../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../../utils/stores/userData";
 import { verifyUser } from "../../../controllers/auth/verifyUser";

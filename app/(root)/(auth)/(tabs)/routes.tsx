@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { Stack } from "expo-router";
 import { useTheme } from "../../../../utils/themes";

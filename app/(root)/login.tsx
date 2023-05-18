@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Text, TouchableHighlight, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert, Image } from "react-native";
+import { View, Text, SafeAreaView, ActivityIndicator, Alert, Image } from "react-native";
 import { useRouter, Stack, Link } from "expo-router";
-import { useAuth } from "../../utils/auth/provider";
 import { useTheme } from "../../utils/themes";
-import Button from "../../components/button";
+import Button from "../../components/Button";
 import { FontAwesome } from '@expo/vector-icons'; 
-import FormInput from "../../components/formInput";
+import FormInput from "../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../utils/stores/userData";
 import { loginUser } from "../../controllers/auth/loginUser";
@@ -22,8 +21,6 @@ export default function Login() {
     const router = useRouter();
 
     const [ submitting, setSubmitting ] = useState(false);
-
-    const { signIn } = useAuth();
 
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");

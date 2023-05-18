@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { View, Text, SafeAreaView, ScrollView, ActivityIndicator, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { useTheme } from "../../utils/themes";
-import Button from "../../components/button";
+import Button from "../../components/Button";
 import { FontAwesome } from '@expo/vector-icons'; 
-import FormInput from "../../components/formInput";
+import FormInput from "../../components/FormInput";
 import { registerUser } from "../../controllers/auth/registerUser";
 
 export default function Register() {

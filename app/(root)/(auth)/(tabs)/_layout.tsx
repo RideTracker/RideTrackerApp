@@ -1,9 +1,7 @@
-import { useEffect } from "react";
-import { Stack, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
 import { useTheme } from "../../../../utils/themes";
-import { PixelRatio, Platform, View } from "react-native";
-import { useSelector } from "react-redux";
+import { Platform, View } from "react-native";
 import { useUser } from "../../../../modules/user/useUser";
 import TabBar from "../../../../components/TabBar";
 

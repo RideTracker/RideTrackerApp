@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
-import Bike from "../../../../../components/bike";
+import Bike from "../../../../../components/Bike";
 import { useTheme } from "../../../../../utils/themes";
 import ActivityMap from "../../../../../layouts/activity/map";
 import ActivityAuthor from "../../../../../layouts/activity/author";

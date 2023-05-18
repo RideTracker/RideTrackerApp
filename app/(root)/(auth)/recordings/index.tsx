@@ -1,12 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Platform } from "react-native";
-import { useRouter, Stack, useSearchParams } from "expo-router";
-import { useSelector } from "react-redux";
+import { View, Text, ScrollView, TouchableOpacity, Platform } from "react-native";
+import { useRouter, Stack } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
-import FormInput from "../../../../components/formInput";
-import { FontAwesome, Feather } from '@expo/vector-icons'; 
-import Button from "../../../../components/Button";
-import Bike from "../../../../components/Bike";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../(tabs)/record";
 import { timeSince } from "../../../../utils/time";
@@ -18,9 +13,7 @@ function RecordingSummary({ recording }) {
         return (<Text>Unsupported for web</Text>);
 
     const theme = useTheme();
-
     const router = useRouter();
-
     const mapRef = useRef();
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TouchableWithoutFeedback, View } from "react-native";
 import { CaptionText } from "../../../../components/texts/caption";
-import { Stack, useNavigation, useRouter, useSearchParams } from "expo-router";
+import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
 import { SelectList } from "../../../../components/SelectList";
 import { useDispatch } from "react-redux";
@@ -16,7 +16,6 @@ type FilterPageSearchParams = {
 export default function FilterPage() {
     const theme = useTheme();
     const router = useRouter();
-    const navigation = useNavigation();
     const dispatch = useDispatch();
     const user = useUser();
     const { filterType } = useSearchParams<FilterPageSearchParams>();

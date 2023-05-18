@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { Stack, useRouter } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
-import Button from "../../../../components/button";
+import Button from "../../../../components/Button";
 import { setUserData } from "../../../../utils/stores/userData";
 
 export default function Settings() {
