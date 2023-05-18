@@ -12,44 +12,45 @@ type ActivityStatProps = {
 
     type: string;
     altType?: string;
-    fontSizeScale: number;
+    scale: number;
 }
 
 export function ActivityStat(props: ActivityStatProps) {
-    const { type, altType, value, unit, personalBest, fontSizeScale } = props;
+    const { type, altType, value, unit, personalBest, scale } = props;
+
+    console.log({ scale });
 
     return (
-        <View style={{ marginLeft: "auto", marginRight: "auto", marginTop: "auto", paddingHorizontal: (personalBest)?(fontSizeScale * 20):(0) }}>
+        <View style={{ paddingHorizontal: (personalBest)?(scale * 20):(0) }}>
             {(!!personalBest) && (
                 <React.Fragment>
-                    <ParagraphText style={{ textAlign: "center", fontSize: ParagraphTextFontSize * fontSizeScale }}>Personal Best</ParagraphText>
+                    <ParagraphText style={{ textAlign: "center", fontSize: ParagraphTextFontSize * scale }}>Personal Best</ParagraphText>
 
-                    <ActivityPersonalBest fontSizeScale={fontSizeScale}/>
+                    <ActivityPersonalBest scale={1}/>
                 </React.Fragment>
             )}
 
-            <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28 * fontSizeScale, fontWeight: "500" }}>{value}{(unit) && (<Text style={{ fontSize: 18 * fontSizeScale }}> {unit}</Text>)}</Text>
-            <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 * fontSizeScale, paddingHorizontal: 10 }}>{(personalBest && altType)?(altType):(type)}</Text>
+            <Text style={{ color: "#FFF", textAlign: "center", fontSize: 28 * scale, fontWeight: "500" }}>{value}{(unit) && (<Text style={{ fontSize: 18 * scale }}> {unit}</Text>)}</Text>
+            <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 * scale, paddingHorizontal: 10 * scale }}>{(personalBest && altType)?(altType):(type)}</Text>
         </View>
     );
 };
 
 export default function ActivityMapStats({ activity }) {
-    const [ fontSizeScale, setFontSizeScale ] = useState<number>(null);
+    const [ scale, setScale ] = useState<number>(null);
     const [ containerLayout, setContainerLayout ] = useState<LayoutRectangle>(null);
     const [ childLayout, setChildLayout ] = useState<LayoutRectangle>(null);
 
     useEffect(() => {
-        if(!containerLayout || !childLayout || fontSizeScale !== null)
+        if(!containerLayout || !childLayout || scale !== null)
             return;
 
-            console.log("update", fontSizeScale);
+            console.log("update", scale);
 
         console.log("child", childLayout);
         console.log("container", containerLayout);
 
-        if(childLayout.width > containerLayout.width)
-            setFontSizeScale(1 / (childLayout.width / containerLayout.width));
+        setScale(1 / (childLayout.width / containerLayout.width));
     }, [ containerLayout, childLayout ]);
 
     if(!activity?.summary)
@@ -73,29 +74,23 @@ export default function ActivityMapStats({ activity }) {
                 minWidth: "100%",
                 height: "100%",
 
+                justifyContent: "flex-end",
+
                 borderRadius: 10,
 
-                alignItems: "flex-end",
-
-                flexDirection: "row",
-                justifyContent: "space-between"
             }}>
                 <View style={{
-                    opacity: (fontSizeScale === null)?(0):(1),
+                    opacity: (scale === null)?(0):(1),
 
-                    flexDirection: "row"
+
+                    flexDirection: "row",
+                    
+                    justifyContent: "space-between",
+                    alignItems: "flex-end"
                 }} onLayout={(event) => setChildLayout(event.nativeEvent.layout)}>
-                    <View>
-                        <ActivityStat fontSizeScale={fontSizeScale ?? 1} type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
-                    </View>
-
-                    <View>
-                        <ActivityStat fontSizeScale={fontSizeScale ?? 1} type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
-                    </View>
-
-                    <View>
-                        <ActivityStat fontSizeScale={fontSizeScale ?? 1} type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
-                    </View>
+                    <ActivityStat scale={scale ?? 1} type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
+                    <ActivityStat scale={scale ?? 1} type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
+                    <ActivityStat scale={scale ?? 1} type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
                 </View>
             </LinearGradient>
         </React.Fragment>

@@ -101,7 +101,7 @@ export function Pagination(props: PaginationProps) {
                 {items.map((item) => render(item))}
 
                 {(!reachedEnd && renderPlaceholder) && (
-                    <View onLayout={(event) => setPlaceholderLayout(event.nativeEvent.layout)}>
+                    <View style={{ gap: 10 }} onLayout={(event) => setPlaceholderLayout(event.nativeEvent.layout)}>
                         {Array(5).fill(null).map((_, index) => (
                             <React.Fragment key={index}>
                                 {renderPlaceholder()}
