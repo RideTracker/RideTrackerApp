@@ -21,6 +21,8 @@ export default function Index() {
 
     const router = useRouter();
 
+    const scrollViewRef = useRef<ScrollView>();
+
     const [ items, setItems ] = useState([]);
     const [ recordings, setRecordings ] = useState(null);
     const [ filterText, setFilterText ] = useState<string>("");
@@ -32,8 +34,12 @@ export default function Index() {
         if(!result.success)
             return false;
 
-        if(reset)
+        if(reset) {
+            if(!filterText.length)
+                scrollViewRef.current.scrollTo({ x: 0, y: (filterLayout?.height ?? 0) + 10 });
+            
             setItems(result.activities);
+        }
         else
             setItems(items.concat(result.activities));
 
@@ -97,7 +103,7 @@ export default function Index() {
             <View style={{
                 flex: 1
             }}>
-                <Pagination style={{ padding: 10 }} paginate={paginate} items={items}
+                <Pagination style={{ padding: 10 }} scrollViewRef={scrollViewRef} paginate={paginate} items={items}
                 // TODO: some activities here are undefined, why?
                 render={((activity) => activity.id && (
                     <ActivityCompact key={activity.id} id={activity.id}/>

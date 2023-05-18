@@ -16,10 +16,11 @@ type PaginationProps = {
     renderPlaceholder?: any;
     children?: any;
     contentOffset?: any;
+    scrollViewRef?: any;
 };
 
 export function Pagination(props: PaginationProps) {
-    const { style, items, paginate, render, renderPlaceholder, children, contentOffset } = props;
+    const { scrollViewRef, style, items, paginate, render, renderPlaceholder, children, contentOffset } = props;
 
     const theme = useTheme();
 
@@ -91,7 +92,7 @@ export function Pagination(props: PaginationProps) {
     }, [ refreshing ]);
 
     return (
-        <ScrollView style={style} onScroll={handleScroll} scrollEventThrottle={100} contentOffset={contentOffset} refreshControl={
+        <ScrollView ref={scrollViewRef} style={style} onScroll={handleScroll} scrollEventThrottle={100} contentOffset={contentOffset} refreshControl={
             <RefreshControl
                 tintColor={theme.contrast}
                 refreshing={refreshing}
