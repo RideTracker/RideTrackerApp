@@ -1,24 +1,30 @@
 import React from "react";
 import { Image } from "react-native";
 
-export function ActivityPersonalBest() {
+type ActivityPersonalBestProps = {
+    fontSizeScale: number;
+};
+
+export function ActivityPersonalBest(props: ActivityPersonalBestProps) {
+    const { fontSizeScale } = props;
+
     return (
         <React.Fragment>
             <Image source={require("../assets/images/laurel-wreath.png")} style={{
                 position: "absolute",
                 
-                left: -28,
-                bottom: -3,
+                left: -8 * fontSizeScale,
+                bottom: -3 * fontSizeScale,
 
-                width: 50,
-                height: 45,
+                width: fontSizeScale * 50,
+                height: fontSizeScale * 45,
             }} resizeMode="contain"/>
 
             <Image source={require("../assets/images/laurel-wreath.png")} style={{
                 position: "absolute",
                 
-                right: -28,
-                bottom: -3,
+                right: -8 * fontSizeScale,
+                bottom: -3 * fontSizeScale,
 
                 transform: [
                     {
@@ -26,8 +32,8 @@ export function ActivityPersonalBest() {
                     }
                 ],
 
-                width: 50,
-                height: 45,
+                width: fontSizeScale * 50,
+                height: fontSizeScale * 45,
             }} resizeMode="contain"/>
         </React.Fragment>
     );

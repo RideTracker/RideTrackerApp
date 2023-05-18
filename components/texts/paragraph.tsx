@@ -7,6 +7,8 @@ type ParagraphTextProps = {
     placeholder?: boolean;
 };
 
+export const ParagraphTextFontSize = 15;
+
 export function ParagraphText(props: ParagraphTextProps) {
     const { children, style, placeholder = false } = props;
 
@@ -17,7 +19,7 @@ export function ParagraphText(props: ParagraphTextProps) {
             {
                 color: theme.color,
 
-                fontSize: 15,
+                fontSize: ParagraphTextFontSize,
                 fontWeight: "400",
 
                 ...style

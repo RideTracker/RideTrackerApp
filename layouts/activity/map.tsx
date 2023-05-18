@@ -63,6 +63,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
     const mapStyle = useMapStyle();
     const theme = useTheme();
 
+    const [ ready, setReady ] = useState<boolean>(false);
     const [ layout, setLayout ] = useState(null);
     const [ polylines, setPolylines ] = useState(null);
 
@@ -81,7 +82,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
     }, [ activity ]);
 
     useEffect(() => {
-        if(mapViewRef && polylines) {
+        if(mapViewRef && polylines && ready) {
             const mapView = mapViewRef.current as MapView;
 
             const points = [];
@@ -129,7 +130,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                 });
             }
         }
-    }, [ polylines ]);
+    }, [ ready, polylines ]);
 
     useEffect(() => {
         if(polylines && startPosition) {
@@ -219,7 +220,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
     }
 
     return (
-        <View style={{ position: "relative", borderRadius: 10, overflow: "hidden" }}>
+        <View style={{ position: "relative", borderRadius: 10, overflow: "hidden", backgroundColor: theme.placeholder }}>
             <View style={{
                 position: "relative",
                 
@@ -230,20 +231,11 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                     ref={mapViewRef}
                     style={{
                         flex: 1,
+                        opacity: (ready)?(1):(0),
                         
                         backgroundColor: "black"
                     }}
-                    initialCamera={{
-                        center: {
-                            latitude: 58.3797265530217,
-                            longitude: 12.324476378487843
-                        },
-
-                        heading: 0,
-                        pitch: 0,
-
-                        zoom: 10
-                    }}
+                    onMapReady={() => setReady(true)}
                     onRegionChangeComplete={() => {
                         if(!polylines)
                             return;
