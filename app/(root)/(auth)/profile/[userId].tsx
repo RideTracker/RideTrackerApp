@@ -98,17 +98,20 @@ export default function Profile() {
 
 export function ProfileActivities({ profile }) {
     const userData = useUser();
-
     const router = useRouter();
 
+    const [ items, setItems ] = useState<any[]>([]);
+
     return (
-        <Pagination style={{ padding: 10, height: "100%" }} paginate={async (offset) => {
-            const result = await getProfileActivitiesById(userData.key, profile.user.id, offset);
-    
+        <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
+            const result = await getProfileActivitiesById(userData.key, profile.user.id, (reset)?(0):(items.length));
+
             if(!result.success)
                 return false;
 
-            return result.activities;
+            setItems((reset)?(result.activities):(items.concat(result.activities)));
+            
+            return (result.activities.length === 5);
         }} render={(activity) => (
             <TouchableOpacity key={activity} onPress={() => router.push(`/activities/${activity}`)}>
                 <ActivityList id={activity}/>
@@ -119,17 +122,20 @@ export function ProfileActivities({ profile }) {
 
 export function ProfileBikes({ profile }) {
     const userData = useUser();
-
     const router = useRouter();
 
+    const [ items, setItems ] = useState<any[]>([]);
+
     return (
-        <Pagination style={{ padding: 10, height: "100%" }} paginate={async (offset) => {
-            const result = await getProfileBikesById(userData.key, profile.user.id, offset);
-    
+        <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
+            const result = await getProfileBikesById(userData.key, profile.user.id, (reset)?(0):(items.length));
+
             if(!result.success)
                 return false;
 
-            return result.bikes;
+            setItems((reset)?(result.bikes):(items.concat(result.bikes)));
+            
+            return (result.bikes.length === 5);
         }} render={(bike) => (
             <TouchableOpacity key={bike} onPress={() => router.push(`/bikes/${bike}`)}>
                 <Bike id={bike}/>

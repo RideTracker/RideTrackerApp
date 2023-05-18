@@ -32,12 +32,15 @@ export function Pagination(props: PaginationProps) {
     const [ isAtBottom, setIsAtBottom ] = useState(false);
 
     async function getItems(reset = false) {
-        if(reachedEnd || loading)
+        if((!reset && reachedEnd) || loading)
             return;
 
         setLoading(true);
 
         const length = await paginate(reset);
+
+        if(refreshing)
+            setRefreshing(false);
 
         if(!length) {
             console.log("No more results to show");
@@ -51,10 +54,6 @@ export function Pagination(props: PaginationProps) {
         console.log("Paginating with new items");
 
         setLoading(false);
-
-        if(refreshing)
-            setRefreshing(false);
-        
         setIsAtBottom(false);
     };
 
