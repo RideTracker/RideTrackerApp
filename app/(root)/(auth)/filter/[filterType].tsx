@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TouchableWithoutFeedback, View } from "react-native";
-import { CaptionText } from "../../../../components/texts/caption";
+import { CaptionText } from "../../../../components/texts/Caption";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
 import { SelectList } from "../../../../components/SelectList";

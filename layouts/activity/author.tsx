@@ -1,11 +1,10 @@
-import { useEffect } from "react";
 import { useRouter } from "expo-router";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useTheme } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
-import { CaptionText } from "../../components/texts/caption";
-import { ParagraphText } from "../../components/texts/paragraph";
+import { CaptionText } from "../../components/texts/Caption";
+import { ParagraphText } from "../../components/texts/Paragraph";
 import Constants from "expo-constants";
 
 type ActivityAuthorProps = {

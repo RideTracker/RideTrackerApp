@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Image, Platform, Text, View } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
+import { Platform, Text, View } from "react-native";
+import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { useTheme, useMapStyle } from "../../utils/themes";
 import { decode } from "@googlemaps/polyline-codec";
-import { CaptionText } from "../../components/texts/caption";
-import { ParagraphText } from "../../components/texts/paragraph";
+import { CaptionText } from "../../components/texts/Caption";
+import { ParagraphText } from "../../components/texts/Paragraph";
 import { getDistance, getCompassDirection } from "geolib";
-import { LinearGradient } from "expo-linear-gradient";
 import { ComponentType } from "../../models/componentType";
 
 type ActivityMapProps = {

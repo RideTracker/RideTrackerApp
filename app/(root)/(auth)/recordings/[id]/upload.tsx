@@ -9,7 +9,7 @@ import Bike from "../../../../../components/Bike";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../../(tabs)/record";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
-import { CaptionText } from "../../../../../components/texts/caption";
+import { CaptionText } from "../../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import Constants from "expo-constants";
 import { useUser } from "../../../../../modules/user/useUser";

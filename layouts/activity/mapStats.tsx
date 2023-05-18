@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Dimensions, Image, LayoutRectangle, PixelRatio, Text, View } from "react-native";
+import { LayoutRectangle, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityPersonalBest } from "../../components/ActivityPersonalBest";
-import { ParagraphText, ParagraphTextFontSize } from "../../components/texts/paragraph";
+import { ParagraphText, ParagraphTextFontSize } from "../../components/texts/Paragraph";
 
 type ActivityStatProps = {
     personalBest?: boolean;

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
-import { CaptionText } from "../../../../components/texts/caption";
+import { CaptionText } from "../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import Tabs, { TabsPage } from "../../../../components/Tabs";
 import ActivityList from "../../../../components/activity/List";

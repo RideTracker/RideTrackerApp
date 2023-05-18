@@ -3,7 +3,7 @@ import { Image, ScrollView, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { useDispatch } from "react-redux";
 import { useTheme } from "../../../../utils/themes";
-import { CaptionText } from "../../../../components/texts/caption";
+import { CaptionText } from "../../../../components/texts/Caption";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Tabs, { TabsPage } from "../../../../components/Tabs";
 import { FontAwesome5 } from "@expo/vector-icons";

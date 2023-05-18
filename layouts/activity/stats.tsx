@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Text, View } from "react-native";
 import { useTheme } from "../../utils/themes";
-import { ActivityPersonalBest } from "../../components/ActivityPersonalBest";
-import { ParagraphText } from "../../components/texts/paragraph";
 import { ActivityStat } from "./mapStats";
 
 type ActivityStatsProps = {
