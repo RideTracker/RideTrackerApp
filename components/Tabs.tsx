@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
-import { ParagraphText } from "./texts/paragraph";
+import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { CaptionText } from "./texts/caption";
+import { CaptionText } from "./texts/Caption";
 import { useTheme } from "../utils/themes";
 
 type TabsProps = {

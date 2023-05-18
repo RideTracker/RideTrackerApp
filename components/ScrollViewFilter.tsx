@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { LayoutChangeEvent, View } from "react-native";
 import { useTheme } from "../utils/themes";

@@ -1,14 +1,11 @@
-import React, { useEffect } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Image, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../utils/themes";
 import { timeSince } from "../utils/time";
-import { useSelector } from "react-redux";
-import { ParagraphText } from "../components/texts/paragraph";
-import { CaptionText } from "../components/texts/caption";
+import { ParagraphText } from "../components/texts/Paragraph";
+import { CaptionText } from "../components/texts/Caption";
 import Constants from "expo-constants";
-import { useUser } from "../modules/user/useUser";
-import { LinkText } from "./texts/link";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import { LinkText } from "./texts/Link";
 import { useRouter } from "expo-router";
 
 type ActivityCommentSummaryProps = {

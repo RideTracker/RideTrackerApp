@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Platform } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { EdgeInsets } from "react-native-safe-area-context";
 import { useTheme } from "../utils/themes";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
-import { ParagraphText } from "./texts/paragraph";
+import { ParagraphText } from "./texts/Paragraph";
 import { useUser } from "../modules/user/useUser";
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 
 type TabBarProps = {
     state: any;

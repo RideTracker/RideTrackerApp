@@ -1,8 +1,8 @@
 import { useState, useEffect, ReactNode } from "react";
-import { Image, StyleProp, View, ViewStyle } from "react-native";
+import { Image, View, ViewStyle } from "react-native";
 import { useTheme } from "../utils/themes";
-import { CaptionText } from "./texts/caption";
-import { ParagraphText } from "./texts/paragraph";
+import { CaptionText } from "./texts/Caption";
+import { ParagraphText } from "./texts/Paragraph";
 import { useUser } from "../modules/user/useUser";
 import { getBikeById } from "../controllers/bikes/getBikeById";
 

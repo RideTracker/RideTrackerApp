@@ -1,10 +1,7 @@
-import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { LayoutRectangle, RefreshControl, View } from "react-native";
-import { useSelector } from "react-redux";
-import { ParagraphText } from "./texts/paragraph";
-import { useUser } from "../modules/user/useUser";
+import { ParagraphText } from "./texts/Paragraph";
 import { useTheme } from "../utils/themes";
 import React from "react";
 

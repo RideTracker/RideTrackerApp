@@ -1,5 +1,5 @@
-import { Text, View } from "react-native";
-import { CaptionText } from "./texts/caption";
+import { View } from "react-native";
+import { CaptionText } from "./texts/Caption";
 
 type EmptyProps = {
     style?: any;

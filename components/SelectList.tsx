@@ -1,9 +1,7 @@
-import React, { ReactNode, useState, useEffect } from "react";
-import { ScrollView, SliderBase, View } from "react-native";
-import { ParagraphText } from "./texts/paragraph";
-import FormInput from "./formInput";
+import React, { useState, useEffect } from "react";
+import { ScrollView, View } from "react-native";
 import { useTheme } from "../utils/themes";
-import { CaptionText } from "./texts/caption";
+import { CaptionText } from "./texts/Caption";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
 

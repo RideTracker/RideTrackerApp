@@ -4,7 +4,7 @@ import { useTheme } from "../utils/themes";
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from "expo-linear-gradient";
 import { color } from "chroma.ts";
-import { Draggable } from "./draggable";
+import { Draggable } from "./Draggable";
 
 const typeColors = [
     {

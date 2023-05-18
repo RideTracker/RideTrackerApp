@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
-import Error from "../error";
-import { useSelector } from "react-redux";
-import { CaptionText } from "../texts/caption";
 import { useTheme } from "../../utils/themes";
-import { ParagraphText } from "../texts/paragraph";
+import { ParagraphText } from "../texts/Paragraph";
 import { timeSince } from "../../utils/time";
-import ActivityAuthor from "../../layouts/activity/author";
 import ActivityMap from "../../layouts/activity/map";
 import { ComponentType } from "../../models/componentType";
 import FontAwesome from "@expo/vector-icons/FontAwesome";

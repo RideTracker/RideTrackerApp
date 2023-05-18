@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { useUser } from "../modules/user/useUser";
-import ActivityComment from "../layouts/activity/comment";
-import { ComponentType } from "../models/componentType";
 import ActivityCommentSummary from "./ActivityCommentSummary";
-import { HeaderText } from "./texts/header";
-import { LinkText } from "./texts/link";
-import { ParagraphText } from "./texts/paragraph";
-import Button from "./Button";
+import { HeaderText } from "./texts/Header";
+import { ParagraphText } from "./texts/Paragraph";
 import { useRouter } from "expo-router";
 import { getActivityCommentsSummary } from "../controllers/activities/comments/summary/getActivityCommentsSummary";
 

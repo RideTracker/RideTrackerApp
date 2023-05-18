@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Text, TextInput, TextInputComponent, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { TextInput, View } from "react-native";
 import { useTheme } from "../utils/themes";
 
 type FormInputProps = {
