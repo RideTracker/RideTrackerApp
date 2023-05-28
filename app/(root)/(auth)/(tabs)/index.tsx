@@ -10,11 +10,13 @@ import { ParagraphText } from "../../../../components/texts/Paragraph";
 import { LinkText } from "../../../../components/texts/Link";
 import { ScrollViewFilter } from "../../../../components/ScrollViewFilter";
 import { useUser } from "../../../../modules/user/useUser";
-import { getFeed } from "../../../../controllers/feed/getFeed";
 import { Pagination } from "../../../../components/Pagination";
+import { getFeed } from "@ridetracker/ridetrackerclient";
+import { useClient } from "../../../../modules/useClient";
 
 export default function Index() {
     const userData = useUser();
+    const client = useClient();
     const theme = useTheme();
 
     const router = useRouter();
@@ -27,7 +29,7 @@ export default function Index() {
     const [ filterLayout, setFilterLayout ] = useState<LayoutRectangle>(null);
 
     async function paginate(reset: boolean) {
-        const result = await getFeed(userData.key, (!reset)?(items.length):(0), { ...userData.filters?.feed, search: filterText });
+        const result = await getFeed(client, (!reset)?(items.length):(0), filterText, userData.filters?.feed?.order, userData.filters?.feed?.timeline);
 
         if(!result.success)
             return false;

@@ -7,13 +7,16 @@ import { FontAwesome } from '@expo/vector-icons';
 import FormInput from "../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../utils/stores/userData";
-import { loginUser } from "../../controllers/auth/loginUser";
 import { getRandomUser } from "../../controllers/auth/getRandomUser";
 import { authenticateUser } from "../../controllers/auth/authenticateUser";
+import { setClient } from "../../utils/stores/client";
+import { useClient } from "../../modules/useClient";
+import { loginUser } from "@ridetracker/ridetrackerclient";
 
 const logo = require("../../assets/logos/logo.png");
 
 export default function Login() {
+    const client = useClient();
     const theme = useTheme();
 
     const dispatch = useDispatch();
@@ -29,7 +32,7 @@ export default function Login() {
 
     useEffect(() => {
         if(submitting) {
-            loginUser(email, password).then((response) => {
+            loginUser(client, email, password).then((response) => {
                 if(!response.success) {
                     Alert.alert("An error occurred!", response.message, [
                         {
@@ -126,6 +129,8 @@ export default function Login() {
                         key: authentication.key,
                         user: authentication.user
                     }));
+
+                    dispatch(setClient(authentication.key));
 
                     router.push("/");
                 }}/>

@@ -4,6 +4,7 @@ import { Stack, useRouter } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
 import Button from "../../../../components/Button";
 import { setUserData } from "../../../../utils/stores/userData";
+import { setClient } from "../../../../utils/stores/client";
 
 export default function Settings() {
     const dispatch = useDispatch();
@@ -26,7 +27,10 @@ export default function Settings() {
                         <Button primary={true} label="Dark mode" onPress={() => dispatch(setUserData({ theme: "dark"}))}/>
                         <Button primary={true} label="Light mode" onPress={() => dispatch(setUserData({ theme: "light"}))}/>
 
-                        <Button primary={false} label="Reset key" onPress={() => dispatch(setUserData({ key: null }))}/>
+                        <Button primary={false} label="Reset key" onPress={() => {
+                            dispatch(setUserData({ key: null }));
+                            dispatch(setClient(null));
+                        }}/>
                     </View>
                 </ScrollView>
             </View>

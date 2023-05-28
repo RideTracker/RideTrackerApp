@@ -18,6 +18,7 @@ import { useUser } from "../../../../modules/user/useUser";
 import { authenticateUser } from "../../../../controllers/auth/authenticateUser";
 import { getAvatars } from "../../../../controllers/avatars/getAvatars";
 import { createUserAvatar } from "../../../../controllers/avatars/user/createUserAvatar";
+import { setClient } from "../../../../utils/stores/client";
 
 export default function AvatarEditorPage() {
     const userData = useUser();
@@ -119,6 +120,8 @@ export default function AvatarEditorPage() {
                     key: authentication.key,
                     user: authentication.user
                 }));
+
+                dispatch(setClient(authentication.key));
 
                 router.replace("/profile/" + userData.user.id);
             });

@@ -7,6 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../themes";
 import { useUser } from "../../modules/user/useUser";
 import { authenticateUser } from "../../controllers/auth/authenticateUser";
+import { setClient } from "../stores/client";
 
 const AuthContext = React.createContext(null);
 
@@ -49,6 +50,8 @@ export function Provider({ children }) {
                     key: authentication.key,
                     user: authentication.user
                 }));
+
+                dispatch(setClient(authentication.key));
             }
 
             setReady(true);

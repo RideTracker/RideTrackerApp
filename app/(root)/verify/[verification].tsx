@@ -8,8 +8,12 @@ import FormInput from "../../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../../utils/stores/userData";
 import { verifyUser } from "../../../controllers/auth/verifyUser";
+import { setClient } from "../../../utils/stores/client";
+import { useClient } from "../../../modules/useClient";
+import { verifyLogin } from "@ridetracker/ridetrackerclient";
 
 export default function Verify() {
+    const client = useClient();
     const theme = useTheme();
 
     const router = useRouter();
@@ -24,7 +28,7 @@ export default function Verify() {
     
     useEffect(() => {
         if(submitting) {
-            verifyUser(verification as string, code).then((response) => {
+            verifyLogin(client, verification as string, code).then((response) => {
                 if(!response.success) {
                     Alert.alert("An error occurred!", response.message, [
                         {
@@ -38,6 +42,8 @@ export default function Verify() {
                 }
 
                 dispatch(setUserData({ key: response.key }));
+
+                dispatch(setClient(response.key));
 
                 router.push("/");
             });
