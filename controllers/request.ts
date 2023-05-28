@@ -17,7 +17,14 @@ export async function request(method: string, uri: URL | string, body: any | nul
 
     console.log(`Received ${uri}: ` + response.status + " " + response.statusText);
 
-    const result = await response.json();
-    
-    return result;
+    const text = await response.text();
+
+    try {
+        return JSON.parse(text);
+    }
+    catch(error) {
+        console.error("Can not parse " + uri + ": " + text);
+
+        return { success: false };
+    }
 };

@@ -33,7 +33,7 @@ export default function Index() {
             return false;
 
         if(reset) {
-            if(!filterText.length)
+            if(!filterText.length && scrollViewRef.current)
                 scrollViewRef.current.scrollTo({ x: 0, y: (filterLayout?.height ?? 0) + 10 });
             
             setItems(result.activities);
