@@ -12,7 +12,7 @@ export function Draggable({ children, draggingChange, positionChange, lockVertic
             onMoveShouldSetPanResponderCapture: () => true,
             onPanResponderGrant: (_, gestureState) => {
             // Disable any existing animations
-            draggableRef.current?.getLayout &&
+                draggableRef.current?.getLayout &&
                 draggableRef.current?.stopAnimation();
             },
             onPanResponderMove: (_, gestureState) => {
@@ -27,10 +27,10 @@ export function Draggable({ children, draggingChange, positionChange, lockVertic
                 // Set the position of the draggable element based on the gesture state
                 Animated.event(
                     [
-                    {
-                        dx: draggablePosition.current.x,
-                        dy: draggablePosition.current.y,
-                    },
+                        {
+                            dx: draggablePosition.current.x,
+                            dy: draggablePosition.current.y,
+                        },
                     ],
                     {
                         useNativeDriver: false
@@ -57,46 +57,46 @@ export function Draggable({ children, draggingChange, positionChange, lockVertic
                 setDragging(false);
             },
         }), 
-    [ containerWidth, containerHeight ]
-  );
+        [ containerWidth, containerHeight ]
+    );
 
-  useEffect(() => draggingChange(dragging), [ dragging ]);
+    useEffect(() => draggingChange(dragging), [ dragging ]);
 
-  const draggablePosition = useRef(new Animated.ValueXY());
+    const draggablePosition = useRef(new Animated.ValueXY());
 
-  const draggableRef = useRef(null);
+    const draggableRef = useRef(null);
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        position: "relative"
-      }}
-      onLayout={(event) => {
-        setContainerWidth(event.nativeEvent.layout.width);
-        setContainerHeight(event.nativeEvent.layout.height);
+    return (
+        <View
+            style={{
+                flex: 1,
+                position: "relative"
+            }}
+            onLayout={(event) => {
+                setContainerWidth(event.nativeEvent.layout.width);
+                setContainerHeight(event.nativeEvent.layout.height);
 
-        draggablePosition.current.setValue({
-            x: initialLeft * event.nativeEvent.layout.width,
-            y: initialTop * event.nativeEvent.layout.height
-        });
-      }}
-      {...panResponder.panHandlers}
-    >
-      <Animated.View
-        ref={draggableRef}
-        style={[
-          {
-            position: "absolute",
-            left: 0,
-            top: 0,
-          },
-          draggablePosition.current.getLayout(),
-        ]}
-        pointerEvents={"none"}
-      >
-        {children}
-      </Animated.View>
-    </View>
-  );
+                draggablePosition.current.setValue({
+                    x: initialLeft * event.nativeEvent.layout.width,
+                    y: initialTop * event.nativeEvent.layout.height
+                });
+            }}
+            {...panResponder.panHandlers}
+        >
+            <Animated.View
+                ref={draggableRef}
+                style={[
+                    {
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
+                    },
+                    draggablePosition.current.getLayout(),
+                ]}
+                pointerEvents={"none"}
+            >
+                {children}
+            </Animated.View>
+        </View>
+    );
 }

@@ -21,4 +21,4 @@ export function HeaderText({ children, style }: HeaderTextProps) {
             {children}
         </Text>
     );
-};
+}

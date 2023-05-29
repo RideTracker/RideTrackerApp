@@ -58,7 +58,7 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
             </View>
         </View>
     );
-};
+}
 
 type TabsPageProps = {
     id: string;
@@ -73,4 +73,4 @@ export function TabsPage({ style, children }: TabsPageProps) {
             {children}
         </View>
     );
-};
+}

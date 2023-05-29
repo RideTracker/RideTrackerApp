@@ -158,4 +158,4 @@ export default function Avatar(props: AvatarProps) {
             }} style={{ flex: 1, backgroundColor: "transparent" }} onLoad={() => setLoaded(true)} injectedJavaScript={`const avatars = JSON.parse('${JSON.stringify(avatars)}')`}/>
         </View>
     );
-};
+}

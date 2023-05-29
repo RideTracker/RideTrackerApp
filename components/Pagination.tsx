@@ -52,7 +52,7 @@ export function Pagination(props: PaginationProps) {
 
         setLoading(false);
         setIsAtBottom(false);
-    };
+    }
 
     useEffect(() => {
         getItems();
@@ -93,7 +93,7 @@ export function Pagination(props: PaginationProps) {
                 tintColor={theme.contrast}
                 refreshing={refreshing}
                 onRefresh={() => !refreshing && setRefreshing(true)}
-                />
+            />
         }>
             {children}
 
@@ -118,4 +118,4 @@ export function Pagination(props: PaginationProps) {
             </View>
         </ScrollView>
     );
-};
+}

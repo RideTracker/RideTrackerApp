@@ -123,4 +123,4 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
             </View>
         </View>
     );
-};
+}

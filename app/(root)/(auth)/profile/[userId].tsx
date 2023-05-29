@@ -28,7 +28,7 @@ export default function Profile() {
     useEffect(() => {
         async function getProfile() {
             getProfileById(userData.key, userId as string).then((result) => setProfile(result.profile));
-        };
+        }
 
         getProfile();
     }, []);
@@ -92,7 +92,7 @@ export default function Profile() {
             </View>
         </View>
     );
-};
+}
 
 export function ProfileActivities({ profile }) {
     const userData = useUser();
@@ -116,7 +116,7 @@ export function ProfileActivities({ profile }) {
             </TouchableOpacity>
         )}/>
     );
-};
+}
 
 export function ProfileBikes({ profile }) {
     const userData = useUser();
@@ -140,4 +140,4 @@ export function ProfileBikes({ profile }) {
             </TouchableOpacity>
         )}/>
     );
-};
+}

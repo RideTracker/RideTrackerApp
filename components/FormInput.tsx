@@ -19,7 +19,7 @@ export default function FormInput({ props, placeholder, icon, inputRef, style }:
 
     function getValue() {
         return value;
-    };
+    }
 
     return (
         <View
@@ -66,7 +66,7 @@ export default function FormInput({ props, placeholder, icon, inputRef, style }:
                 onChangeText={(text) => setValue(text)}
 
                 {...props}
-                />
+            />
         </View>
     );
-};
+}

@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { SplashScreen, useRouter, useSegments } from "expo-router";
-import { useDispatch, Provider as ReduxProvider, useSelector } from "react-redux";
-import store from "../stores/store";
+import { useDispatch } from "react-redux";
 import { readUserData, setUserData } from "../stores/userData";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../themes";
@@ -13,9 +12,9 @@ const AuthContext = React.createContext(null);
 
 export function useAuth() {
     return React.useContext(AuthContext);
-};
+}
 
-function useProtectedRoute(user) {
+function useProtectedRoute() {
     const segments = useSegments();
     const router = useRouter();
 
@@ -29,9 +28,15 @@ function useProtectedRoute(user) {
         //else if (userData?.key && !inAuthGroup)
             //router.replace("/");
     }, [userData?.key, segments]);
+}
+
+type ProviderProps = {
+    children: ReactNode;
 };
 
-export function Provider({ children }) {
+export function Provider(props: ProviderProps) {
+    const { children } = props;
+
     const dispatch = useDispatch();
 
     const theme = useTheme();
@@ -58,20 +63,20 @@ export function Provider({ children }) {
         });
     }, []);
 
-    useProtectedRoute(user);
+    useProtectedRoute();
 
     if(!ready)
         return (<SplashScreen/>);
 
     return (
         <AuthContext.Provider value={{
-                signIn: () => setAuth({}),
-                signOut: () => setAuth(null),
-                user
-            }}>
+            signIn: () => setAuth({}),
+            signOut: () => setAuth(null),
+            user
+        }}>
             {children}
 
             <StatusBar style={theme.contrastStyle}/>
         </AuthContext.Provider>
     );
-};
+}

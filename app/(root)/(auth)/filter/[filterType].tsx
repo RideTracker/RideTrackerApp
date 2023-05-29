@@ -127,4 +127,4 @@ export default function FilterPage() {
             </View>
         </View>
     );
-};
+}

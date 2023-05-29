@@ -29,4 +29,4 @@ export default function ActivityRoute(props: ActivityRouteProps) {
             )}
         </View>
     );
-};
+}

@@ -17,12 +17,12 @@ type ActivityMapProps = {
 function getStylingForHeading(position: any, heading: any, layout: any): any[] {
     let horizontal = {}, vertical = {};
 
-    if(heading[0] === 'S' || heading[1] === 'S') { // polyline goes south, anchor by bottom
+    if(heading[0] === "S" || heading[1] === "S") { // polyline goes south, anchor by bottom
         vertical = {
             bottom: 0
         };
     }
-    else if(heading[0] === 'N' || heading[1] === 'N') { // polyline goes north, anchor by top
+    else if(heading[0] === "N" || heading[1] === "N") { // polyline goes north, anchor by top
         vertical = {
             top: 0
         };
@@ -32,28 +32,28 @@ function getStylingForHeading(position: any, heading: any, layout: any): any[] {
         horizontal = {
             right: 0,
             alignItems: "flex-end"
-        }
+        };
     }
     else if(position.x > (layout?.width / 3 * 1) && position.x < (layout?.width / 2)) { // it's most likely to touch the right side, anchor by right
         horizontal = {
             right: 0,
             alignItems: "flex-end"
-        }
+        };
     }
     
     if(position.y > (layout?.height / 2)) { // it's most likely to touch the footer, anchor by botom
         vertical = {
             bottom: 0
-        }
+        };
     }
     else if(position.y < (layout?.height / 3)) { // it's most likely to touch the footer, anchor by botom
         vertical = {
             top: 0
-        }
+        };
     }
 
     return [ horizontal, vertical ];
-};
+}
 
 export default function ActivityMap({ activity, children, type }: ActivityMapProps) {
     if(Platform.OS === "web")
@@ -137,8 +137,8 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
 
             let previousPoint = null;
 
-            for(let polyline of polylines) {
-                for(let point of polyline) {
+            for(const polyline of polylines) {
+                for(const point of polyline) {
                     if(previousPoint === null) {
                         previousPoint = point;
 
@@ -180,8 +180,8 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                 reversedPolylines.push(points);
             }
 
-            for(let polyline of reversedPolylines) {
-                for(let point of polyline) {
+            for(const polyline of reversedPolylines) {
+                for(const point of polyline) {
                     if(previousPoint === null) {
                         previousPoint = point;
 
@@ -317,4 +317,4 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
             {children}
         </View>
     );
-};
+}

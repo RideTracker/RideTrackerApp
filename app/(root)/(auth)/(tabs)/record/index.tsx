@@ -59,7 +59,7 @@ export default function Record() {
 
         if(!info.exists)
             await FileSystem.makeDirectoryAsync(RECORDINGS_PATH);
-    };
+    }
 
     async function saveSession(session) {
         await ensureDirectoryExists();
@@ -81,7 +81,7 @@ export default function Record() {
             sessions.push(session);
 
         await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify(sessions));
-    };
+    }
 
     useEffect(() => {
         if(Platform.OS !== "android")
@@ -89,7 +89,7 @@ export default function Record() {
 
         async function getLocationPermissions() {
             {
-                let { status } = await Location.requestForegroundPermissionsAsync();
+                const { status } = await Location.requestForegroundPermissionsAsync();
     
                 if(status !== "granted") {
                     router.push("/record/error");
@@ -99,7 +99,7 @@ export default function Record() {
             }
 
             {
-                let { status } = await Location.requestBackgroundPermissionsAsync();
+                const { status } = await Location.requestBackgroundPermissionsAsync();
     
                 if(status !== "granted") {
                     router.push("/record/error");
@@ -112,7 +112,7 @@ export default function Record() {
 
             if(lastLocation !== null)
                 setLocation(lastLocation);
-        };
+        }
 
         getLocationPermissions();
     }, []);
@@ -260,7 +260,7 @@ export default function Record() {
                 scrollEnabled={!recording}
                 zoomControlEnabled={false}
                 zoomTapEnabled={!recording}
-                >
+            >
             </MapView>
 
             {(overlayVisible) && (
@@ -320,7 +320,7 @@ export default function Record() {
                     paddingVertical: 40,
 
                     flexDirection: "column"
-                    }}>
+                }}>
                     {(recording !== null) && (
                         <>
                             <View style={{ width: "100%" }}>
@@ -360,4 +360,4 @@ export default function Record() {
             </View>
         </View>
     );
-};
+}

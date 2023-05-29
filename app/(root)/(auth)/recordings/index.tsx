@@ -33,7 +33,7 @@ function RecordingSummary({ recording }) {
             <Text style={{ fontSize: 16, color: theme.color }}>{(recording.timestamp)?(timeSince(recording.timestamp)):("Unknown")}</Text>
         </TouchableOpacity>
     );
-};
+}
 
 export default function RecordingsPage() {
     const userData = useUser();
@@ -72,7 +72,7 @@ export default function RecordingsPage() {
             }));
 
             setRecordings(recordings.sort((a, b) => b.timestamp - a.timestamp));
-        };
+        }
 
         getRecordings();
     }, []);
@@ -92,4 +92,4 @@ export default function RecordingsPage() {
             </ScrollView>
         </View>
     );
-};
+}

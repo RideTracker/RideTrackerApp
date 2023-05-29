@@ -4,7 +4,7 @@ import ActivityCompact from "../../../../components/activity/Compact";
 import { useTheme } from "../../../../utils/themes";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "./record";
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import { LinkText } from "../../../../components/texts/Link";
@@ -44,7 +44,7 @@ export default function Index() {
             setItems(items.concat(result.activities));
 
         return (result.activities.length === 5);
-    };
+    }
 
     useEffect(() => {
         if(Platform.OS === "web")
@@ -62,7 +62,7 @@ export default function Index() {
                 return;
 
             setRecordings(recordings);
-        };
+        }
 
         getRecordings();
     }, []);
@@ -105,16 +105,16 @@ export default function Index() {
             }}>
                 <Pagination style={{ padding: 10 }} scrollViewRef={scrollViewRef} paginate={paginate} items={items}
                 // TODO: some activities here are undefined, why?
-                render={((activity) => activity.id && (
-                    <ActivityCompact key={activity.id} id={activity.id}/>
-                ))}
-                renderPlaceholder={(() => (
-                    <ActivityCompact id={null}/>
-                ))}
-                contentOffset={{
-                    x: 0,
-                    y: (filterLayout?.height ?? 0) + 10
-                }}>
+                    render={((activity) => activity.id && (
+                        <ActivityCompact key={activity.id} id={activity.id}/>
+                    ))}
+                    renderPlaceholder={(() => (
+                        <ActivityCompact id={null}/>
+                    ))}
+                    contentOffset={{
+                        x: 0,
+                        y: (filterLayout?.height ?? 0) + 10
+                    }}>
                     <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
                 </Pagination>
 
@@ -132,4 +132,4 @@ export default function Index() {
             </View>
         </View>
     );
-};
+}

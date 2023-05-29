@@ -78,4 +78,4 @@ export function SelectList(props: SelectListProps) {
             )}
         </View>
     );
-};
+}

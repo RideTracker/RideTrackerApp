@@ -37,13 +37,13 @@ export default function Button(props: ButtonProps) {
                 alignItems: "center"
             }} onPress={onPress}>
 
-            {(icon) && icon}
+                {(icon) && icon}
                 {(label) && (
-                   <Text style={{ color: (type === "danger")?("#FF0000"):((primary)?(theme.brandText):(theme.color)), fontSize: 20, textAlign: "center" }}>{label}</Text>
+                    <Text style={{ color: (type === "danger")?("#FF0000"):((primary)?(theme.brandText):(theme.color)), fontSize: 20, textAlign: "center" }}>{label}</Text>
                 )}
 
                 {children}
             </TouchableOpacity>
         </View>
     );
-};
+}

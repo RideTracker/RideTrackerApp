@@ -25,4 +25,4 @@ export default function Layout() {
             {/*<Stack.Screen name="ping" options={{ presentation: "modal" }} />*/}
         </Stack>
     );
-};
+}

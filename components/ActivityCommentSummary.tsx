@@ -18,7 +18,7 @@ function getCommentSummaryMessage(message: string, length: number) {
     let index = Math.min(message.length, length);
 
     for(; index !== -1; index--) {
-        if(message[index] === ' ')
+        if(message[index] === " ")
             break;
     }
 
@@ -33,7 +33,7 @@ function getCommentSummaryMessage(message: string, length: number) {
             )}
         </React.Fragment>
     );
-};
+}
 
 export default function ActivityCommentSummary(props: ActivityCommentSummaryProps) {
     const { activity, style, comment } = props;
@@ -103,4 +103,4 @@ export default function ActivityCommentSummary(props: ActivityCommentSummaryProp
             </View>
         </View>
     );
-};
+}

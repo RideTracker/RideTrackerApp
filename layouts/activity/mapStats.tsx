@@ -32,7 +32,7 @@ export function ActivityStat(props: ActivityStatProps) {
             <Text style={{ color: "#FFF", textAlign: "center", fontSize: 16 * scale, paddingHorizontal: 10 * scale }}>{(personalBest && altType)?(altType):(type)}</Text>
         </View>
     );
-};
+}
 
 export default function ActivityMapStats({ activity }) {
     const [ scale, setScale ] = useState<number>(null);
@@ -57,21 +57,21 @@ export default function ActivityMapStats({ activity }) {
                 colors={[ "transparent", "rgba(20, 20, 20, .4)" ]}
                 locations={[ 0.5, 1 ]}
                 style={{
-                position: "absolute",
+                    position: "absolute",
 
-                right: 0,
+                    right: 0,
 
-                paddingLeft: "20%",
-                paddingBottom: 6,
+                    paddingLeft: "20%",
+                    paddingBottom: 6,
 
-                minWidth: "100%",
-                height: "100%",
+                    minWidth: "100%",
+                    height: "100%",
 
-                justifyContent: "flex-end",
+                    justifyContent: "flex-end",
 
-                borderRadius: 10,
+                    borderRadius: 10,
 
-            }}>
+                }}>
                 <View style={{
                     opacity: (scale === null)?(0):(1),
 
@@ -88,4 +88,4 @@ export default function ActivityMapStats({ activity }) {
             </LinearGradient>
         </React.Fragment>
     );
-};
+}

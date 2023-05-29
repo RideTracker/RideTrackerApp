@@ -36,12 +36,12 @@ export default function ActivityList({ id, style }: ActivityListProps) {
                 </TouchableOpacity>
 
                 <View style={{
-                        flex: 1,
-                        paddingVertical: 2,
-                        paddingLeft: 10,
-                        justifyContent: "space-around",
-                        gap: 5
-                    }}>
+                    flex: 1,
+                    paddingVertical: 2,
+                    paddingLeft: 10,
+                    justifyContent: "space-around",
+                    gap: 5
+                }}>
 
                     {(activity)?(
                         <React.Fragment>
@@ -96,4 +96,4 @@ export default function ActivityList({ id, style }: ActivityListProps) {
             </View>
         </View>
     );
-};
+}

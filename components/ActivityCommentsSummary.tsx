@@ -49,4 +49,4 @@ export default function ActivityCommentsSummary(props: ActivityCommentsSummaryPr
             )))}
         </View>
     );
-};
+}

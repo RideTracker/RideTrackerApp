@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../utils/themes";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { color } from "chroma.ts";
 import { Draggable } from "./Draggable";
@@ -356,4 +356,4 @@ export function Colors(props: ColorProps) {
             )}
         </View>
     );
-};
+}

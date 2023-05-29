@@ -74,4 +74,4 @@ export default function ActivityStats({ activity }: ActivityStatsProps) {
             </View>
         </View>
     );
-};
+}

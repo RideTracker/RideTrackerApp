@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from "react-native";
+import { Text } from "react-native";
 import { useTheme } from "../../utils/themes";
 
 type LinkTextProps = {
@@ -18,4 +18,4 @@ export function LinkText({ children, style }: LinkTextProps) {
             {children}
         </Text>
     );
-};
+}

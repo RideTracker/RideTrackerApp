@@ -37,4 +37,4 @@ export function ActivityPersonalBest(props: ActivityPersonalBestProps) {
             }} resizeMode="contain"/>
         </React.Fragment>
     );
-};
+}

@@ -21,4 +21,4 @@ export default function Empty({ style, children }: EmptyProps) {
             {children}
         </View>
     );
-};
+}

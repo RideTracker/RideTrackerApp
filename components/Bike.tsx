@@ -99,4 +99,4 @@ export default function Bike(props: BikeProps) {
             </View>
         </View>
     );
-};
+}

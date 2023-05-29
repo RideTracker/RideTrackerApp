@@ -26,7 +26,7 @@ export function CaptionText({ children, style, placeholder = false }: CaptionTex
                 color: "transparent"
             }
         ]}>
-            {(placeholder)?(Array(Math.ceil(Math.random() * 10) + 5).fill('A').join('')):(children)}
+            {(placeholder)?(Array(Math.ceil(Math.random() * 10) + 5).fill("A").join("")):(children)}
         </Text>
     );
-};
+}

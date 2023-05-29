@@ -16,4 +16,4 @@ export default function Layout() {
             </Provider>
         </ReduxProvider>
     );
-};
+}

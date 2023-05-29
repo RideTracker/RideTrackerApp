@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, ActivityIndicator, Alert, Image } from "react
 import { useRouter, Stack, Link } from "expo-router";
 import { useTheme } from "../../utils/themes";
 import Button from "../../components/Button";
-import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from "@expo/vector-icons"; 
 import FormInput from "../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../utils/stores/userData";
@@ -137,4 +137,4 @@ export default function Login() {
             </View>
         </View>
     );
-};
+}

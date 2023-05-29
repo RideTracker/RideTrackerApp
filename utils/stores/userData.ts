@@ -37,6 +37,6 @@ export async function readUserData() {
     console.log(data);
 
     return data;
-};
+}
 
 export const { setUserData } = userDataSlice.actions;

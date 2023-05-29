@@ -27,4 +27,4 @@ export async function request(method: string, uri: URL | string, body: any | nul
 
         return { success: false };
     }
-};
+}

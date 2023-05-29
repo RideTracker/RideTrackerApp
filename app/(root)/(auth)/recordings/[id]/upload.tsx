@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Alert, P
 import { useRouter, Stack, useSearchParams } from "expo-router";
 import { useTheme } from "../../../../../utils/themes";
 import FormInput from "../../../../../components/FormInput";
-import { FontAwesome, Feather } from '@expo/vector-icons'; 
+import { FontAwesome, Feather } from "@expo/vector-icons"; 
 import Button from "../../../../../components/Button";
 import Bike from "../../../../../components/Bike";
 import * as FileSystem from "expo-file-system";
@@ -224,15 +224,15 @@ export default function UploadRecordingPage() {
                                         const info = await FileSystem.getInfoAsync(file);
 
                                         if(info.exists)
-                                           await FileSystem.deleteAsync(file);
+                                            await FileSystem.deleteAsync(file);
                                     }
                                 },
                                 { text: "Cancel" }
-                            ])
+                            ]);
                         }}/>
                     </View>
                 </View>
             </ScrollView>
         </View>
     );
-};
+}

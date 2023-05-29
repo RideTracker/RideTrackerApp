@@ -30,7 +30,7 @@ export function ParagraphText(props: ParagraphTextProps) {
                 color: "transparent"
             }
         ]}>
-            {(placeholder)?(Array(Math.ceil(Math.random() * 10) + 5).fill('A').join('')):(children)}
+            {(placeholder)?(Array(Math.ceil(Math.random() * 10) + 5).fill("A").join("")):(children)}
         </Text>
     );
-};
+}

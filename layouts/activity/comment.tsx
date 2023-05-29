@@ -101,4 +101,4 @@ export default function ActivityComment(props: ActivityCommentProps) {
             </View>
         </View>
     );
-};
+}

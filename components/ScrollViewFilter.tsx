@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { LayoutChangeEvent, View } from "react-native";
 import { useTheme } from "../utils/themes";
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 type ScrollViewFilterProps = {
@@ -68,5 +68,5 @@ export function ScrollViewFilter(props: ScrollViewFilterProps) {
                 <FontAwesome name="filter" size={24} color={theme.color}/>
             </TouchableOpacity>
         </View>
-    )
-};
+    );
+}

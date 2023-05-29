@@ -274,7 +274,7 @@ export default function AvatarEditorPage() {
                                                 if(!show && color.type === picker)
                                                     setPicker(null);
                                                 else if(show)
-                                                    setPicker(color.type)
+                                                    setPicker(color.type);
                                             }} colorChange={(hex) => setCombination({ ...combination, [tabType]: { ...combination[tabType], colors: [ ...combination[tabType].colors.filter((combinationColor) => combinationColor.type !== color.type), { color: hex, type: color.type } ] } })}/>
                                         </React.Fragment>
                                     )))}
@@ -373,7 +373,7 @@ export default function AvatarEditorPage() {
                                                 if(!show && color.type === picker)
                                                     setPicker(null);
                                                 else if(show)
-                                                    setPicker(color.type)
+                                                    setPicker(color.type);
                                             }} colorChange={(hex) => setCombination({ ...combination, [tabType]: { ...combination[tabType], colors: [ ...combination[tabType].colors.filter((combinationColor) => combinationColor.index !== color.index), { color: hex, index: color.index } ] } })}/>
                                         </React.Fragment>
                                     )))}
@@ -389,4 +389,4 @@ export default function AvatarEditorPage() {
             </Tabs>
         </View>
     );
-};
+}

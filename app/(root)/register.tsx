@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, ScrollView, ActivityIndicator, Alert } from "
 import { useRouter } from "expo-router";
 import { useTheme } from "../../utils/themes";
 import Button from "../../components/Button";
-import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from "@expo/vector-icons"; 
 import FormInput from "../../components/FormInput";
 import { registerUser } from "../../controllers/auth/registerUser";
 
@@ -123,4 +123,4 @@ export default function Register() {
             </ScrollView>
         </View>
     );
-};
+}

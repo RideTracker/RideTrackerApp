@@ -21,4 +21,4 @@ export default function Error({ style, children }: ErrorProps) {
             {children}
         </View>
     );
-};
+}

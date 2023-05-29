@@ -37,4 +37,4 @@ export default function ActivityCompact({ id, style }: ActivityCompactProps) {
             <ActivityAuthor activity={activity}/>
         </View>
     );
-};
+}

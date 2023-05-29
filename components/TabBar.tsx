@@ -69,7 +69,7 @@ export default function TabBar(props: TabBarProps) {
             </Link>
 
             <Link asChild={true} style={{ width: "25%", textAlign: "center" }} href={{
-            pathname: "/profile",
+                pathname: "/profile",
                 params: {
                     userId: userData.user?.id
                 }
@@ -94,4 +94,4 @@ export default function TabBar(props: TabBarProps) {
             </Link>
         </View>
     );
-};
+}

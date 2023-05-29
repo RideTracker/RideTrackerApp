@@ -32,7 +32,7 @@ export default function ActivityPage({ params }) {
         if(activity && !activity.summary) {
             getActivitySummaryById(userData.key, activity.id).then((result) => {
                 if(result.success)
-                    setActivity({ ...activity, summary: result.activitySummary })
+                    setActivity({ ...activity, summary: result.activitySummary });
             });
         }
     }, [ activity ]);
@@ -80,4 +80,4 @@ export default function ActivityPage({ params }) {
             </View>*/}
         </View>
     );
-};
+}

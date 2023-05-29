@@ -3,11 +3,10 @@ import { View, Text, SafeAreaView, ScrollView, ActivityIndicator, Alert } from "
 import { useRouter, useSearchParams } from "expo-router";
 import { useTheme } from "../../../utils/themes";
 import Button from "../../../components/Button";
-import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from "@expo/vector-icons"; 
 import FormInput from "../../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../../utils/stores/userData";
-import { verifyUser } from "../../../controllers/auth/verifyUser";
 import { setClient } from "../../../utils/stores/client";
 import { useClient } from "../../../modules/useClient";
 import { verifyLogin } from "@ridetracker/ridetrackerclient";
@@ -77,4 +76,4 @@ export default function Verify() {
             </ScrollView>
         </View>
     );
-};
+}
