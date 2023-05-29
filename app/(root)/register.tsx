@@ -5,11 +5,12 @@ import { useTheme } from "../../utils/themes";
 import Button from "../../components/Button";
 import { FontAwesome } from "@expo/vector-icons"; 
 import FormInput from "../../components/FormInput";
-import { registerUser } from "../../controllers/auth/registerUser";
+import { useClient } from "../../modules/useClient";
+import { registerUser } from "@ridetracker/ridetrackerclient";
 
 export default function Register() {
+    const client = useClient();
     const theme = useTheme();
-
     const router = useRouter();
 
     const [ submitting, setSubmitting ] = useState(false);
@@ -26,7 +27,7 @@ export default function Register() {
     
     useEffect(() => {
         if(submitting) {
-            registerUser(firstname, lastname, email, password).then((response) => {
+            registerUser(client, firstname, lastname, email, password).then((response) => {
                 if(!response.success) {
                     Alert.alert("An error occurred!", response.message, [
                         {

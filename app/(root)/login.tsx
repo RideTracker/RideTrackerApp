@@ -7,11 +7,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import FormInput from "../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../utils/stores/userData";
-import { getRandomUser } from "../../controllers/auth/getRandomUser";
-import { authenticateUser } from "../../controllers/auth/authenticateUser";
 import { setClient } from "../../utils/stores/client";
 import { useClient } from "../../modules/useClient";
-import { loginUser } from "@ridetracker/ridetrackerclient";
+import { getRandomToken, loginUser } from "@ridetracker/ridetrackerclient";
 
 const logo = require("../../assets/logos/logo.png");
 
@@ -121,7 +119,7 @@ export default function Login() {
                 <Button primary={false} label="Register with email address" onPress={() => router.push("/register")}/>
 
                 <Button primary={false} label="Assume random user" onPress={async () => {
-                    const randomUser = await getRandomUser();
+                    const randomUser = await getRandomToken(client);
 
                     const authentication = await authenticateUser(randomUser.key);
                     
