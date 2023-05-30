@@ -7,7 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "npx eslint \"**/*.{ts,tsx}\" --fix"
+    "eslint": "npx eslint \"**/*.{ts,tsx}\" --fix"
   },
   "dependencies": {
     "@googlemaps/polyline-codec": "^1.0.28",
