@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+/*import React, { useEffect, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { useDispatch } from "react-redux";
@@ -15,13 +15,11 @@ import Constants from "expo-constants";
 import { setUserData } from "../../../../utils/stores/userData";
 import Avatar from "../../../../components/Avatar";
 import { useUser } from "../../../../modules/user/useUser";
-import { authenticateUser } from "../../../../controllers/auth/authenticateUser";
-import { getAvatars } from "../../../../controllers/avatars/getAvatars";
-import { createUserAvatar } from "../../../../controllers/avatars/user/createUserAvatar";
-import { setClient } from "../../../../utils/stores/client";
+import { setClient } from "../../../../utils/stores/client";*/
 
 export default function AvatarEditorPage() {
-    const userData = useUser();
+    return null;
+    /*const userData = useUser();
 
     const theme = useTheme();
 
@@ -388,5 +386,5 @@ export default function AvatarEditorPage() {
                 </TabsPage>
             </Tabs>
         </View>
-    );
+    );*/
 }

@@ -7,9 +7,9 @@ import React from "react";
 
 type PaginationProps = {
     style: ViewStyle;
-    items: unknown[];
+    items: string[];
     paginate: (reset: boolean) => Promise<boolean>;
-    render: (item: unknown) => ReactNode;
+    render: (item: string) => ReactNode;
     renderPlaceholder?: () => ReactNode;
     children?: ReactNode;
     contentOffset?: PointProp;
@@ -98,7 +98,7 @@ export function Pagination(props: PaginationProps) {
             {children}
 
             <View style={{ gap: 10, height: "100%" }}>
-                {items.map((item) => render(item))}
+                {items.map((item) => <React.Fragment key={item}>{render(item)}</React.Fragment>)}
 
                 {(!reachedEnd && renderPlaceholder) && (
                     <View style={{ gap: 10 }} onLayout={(event) => setPlaceholderLayout(event.nativeEvent.layout)}>

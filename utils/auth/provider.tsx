@@ -6,7 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../themes";
 import { useUser } from "../../modules/user/useUser";
 import Client, { authenticateUser } from "@ridetracker/ridetrackerclient";
-import * as Constants from "expo-constants";
+import Constants from "expo-constants";
 
 const AuthContext = React.createContext(null);
 
@@ -49,14 +49,21 @@ export function Provider(props: ProviderProps) {
             dispatch(setUserData(data));
 
             if(data.key) {
-                const client = new Client(Constants.default.extra.api, data.key);
+                const client = new Client(Constants.expoConfig.extra.api, data.key);
                 const authentication = await authenticateUser(client);
-                
+
                 dispatch(setUserData({
                     key: authentication.key,
                     user: authentication.user
                 }));
             }
+
+            setReady(true);
+        }).catch(() => {
+            dispatch(setUserData({
+                key: undefined,
+                user: undefined
+            }));
 
             setReady(true);
         });

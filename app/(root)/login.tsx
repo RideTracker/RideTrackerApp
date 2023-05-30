@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "../../utils/stores/userData";
 import { useClient } from "../../modules/useClient";
 import Client, { authenticateUser, getRandomToken, loginUser } from "@ridetracker/ridetrackerclient";
-import * as Constants from "expo-constants";
+import Constants from "expo-constants";
 
 const logo = require("../../assets/logos/logo.png");
 
@@ -120,17 +120,15 @@ export default function Login() {
 
                 <Button primary={false} label="Assume random user" onPress={async () => {
                     const randomUser = await getRandomToken(client);
-                    
-                    const randomUserClient = new Client(Constants.default.expoConfig.extra.api, randomUser.key);
 
+                    const randomUserClient = new Client(Constants.expoConfig.extra.api, randomUser.key);
                     const authentication = await authenticateUser(randomUserClient);
-                    
-                    dispatch(setUserData({
-                        key: authentication.key,
-                        user: authentication.user
-                    }));
 
-                    router.push("/");
+                    if(authentication.success) {
+                        dispatch(setUserData({ key: authentication.key }));
+
+                        router.push("/");
+                    }
                 }}/>
             </View>
         </View>
