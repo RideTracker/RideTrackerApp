@@ -18,7 +18,18 @@ export default function ActivityCommentsSummary(props: ActivityCommentsSummaryPr
     const router = useRouter();
 
     const [ count, setCount ] = useState<number | null>(null);
-    const [ comments, setComments ] = useState<any | null>(null);
+    const [ comments, setComments ] = useState<{
+        id: string;
+        
+        user?: {
+            avatar: string;
+            name: string;
+        };
+
+        comments_count: number;
+        message: string;
+        timestamp: number;
+    }[] | null>(null);
 
     useEffect(() => {
         getActivityCommentsSummary(client, id).then((result) => {
@@ -26,6 +37,7 @@ export default function ActivityCommentsSummary(props: ActivityCommentsSummaryPr
                 return;
 
             setComments(result.comments);
+            setCount(result.commentsCount);
         });
     }, []);
 

@@ -158,7 +158,7 @@ export function Colors(props: ColorProps) {
 
     const theme = useTheme();
 
-    const [ colors ] = useState([ defaultColor ].concat([ ...typeColors.find((typeColor) => typeColor.type === type)?.colors ]));
+    const [ colors ] = useState([ defaultColor ].concat([ ...typeColors.find((typeColor) => typeColor.type === type)?.colors ?? "" ]));
     const [ currentColor, setColor ] = useState<string>(initialColor);
     const [ currentColorCustom, setCurrentColorCustom ] = useState<boolean>(!colors.includes(initialColor));
     const [ currentColorHue, setCurrentColorHue ] = useState<number | null>(color(initialColor).hsv()[0]);

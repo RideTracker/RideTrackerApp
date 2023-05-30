@@ -4,7 +4,21 @@ import { useTheme } from "../../utils/themes";
 import { ActivityStat } from "./mapStats";
 
 type ActivityStatsProps = {
-    activity: any | null;
+    activity?: {
+        summary?: {
+            distance: string;
+            distancePersonalBest?: boolean;
+            
+            averageSpeed: string;
+            averageSpeedPersonalBest?: boolean;
+            
+            elevation: string;
+            elevationPersonalBest?: boolean;
+            
+            maxSpeed: string;
+            maxSpeedPersonalBest?: boolean;
+        };
+    } | null;
 };
 
 export default function ActivityStats({ activity }: ActivityStatsProps) {

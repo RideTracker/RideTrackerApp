@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, ViewStyle } from "react-native";
 import { useRouter } from "expo-router";
 import ActivityMap from "../../layouts/activity/map";
 import ActivityMapStats from "../../layouts/activity/mapStats";
@@ -10,7 +10,7 @@ import { useClient } from "../../modules/useClient";
 
 type ActivityCompactProps = {
     id: string | null;
-    style?: any;
+    style?: ViewStyle;
 };
 
 export default function ActivityCompact({ id, style }: ActivityCompactProps) {

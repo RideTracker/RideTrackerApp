@@ -1,8 +1,9 @@
-import { Text, View } from "react-native";
+import { ReactNode } from "react";
+import { Text, View, ViewStyle } from "react-native";
 
 type ErrorProps = {
-    style?: any;
-    children?: any;
+    style?: ViewStyle;
+    children?: ReactNode;
 };
 
 export default function Error({ style, children }: ErrorProps) {

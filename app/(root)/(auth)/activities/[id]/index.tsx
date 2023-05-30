@@ -12,7 +12,7 @@ import ActivityRoute from "../../../../../components/ActivityRoute";
 import { useClient } from "../../../../../modules/useClient";
 import { getActivityById, getActivitySummary } from "@ridetracker/ridetrackerclient";
 
-export default function ActivityPage({ params }) {
+export default function ActivityPage() {
     const client = useClient();
     const theme = useTheme();
     const router = useRouter();

@@ -3,8 +3,8 @@ import { View } from "react-native";
 import WebView from "react-native-webview";
 
 type AvatarProps = {
-    avatars: any[];
-    combination: any;
+    avatars: unknown[];
+    combination: unknown;
 
     onDataUrl: (dataUrl: string | null) => void;
 };

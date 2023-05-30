@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Platform, Text, View } from "react-native";
+import React, { useEffect, useState, useRef, ReactNode } from "react";
+import { Platform, Text, View, ViewStyle } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { useTheme, useMapStyle } from "../../utils/themes";
 import { decode } from "@googlemaps/polyline-codec";
@@ -7,15 +7,23 @@ import { CaptionText } from "../../components/texts/Caption";
 import { ParagraphText } from "../../components/texts/Paragraph";
 import { getDistance, getCompassDirection } from "geolib";
 import { ComponentType } from "../../models/componentType";
+import { Rect } from "react-native-safe-area-context";
 
 type ActivityMapProps = {
-    activity: any | null;
-    children?: any;
+    activity: {
+        polylines?: string[];
+
+        summary?: {
+            startArea?: string;
+            finishArea?: string;
+        }
+    } | null;
+    children?: ReactNode;
     type: ComponentType;
 };
 
-function getStylingForHeading(position: any, heading: any, layout: any): any[] {
-    let horizontal = {}, vertical = {};
+function getStylingForHeading(position: { x: number, y: number }, heading: string, layout: Rect): ViewStyle[] {
+    let horizontal: ViewStyle = {}, vertical: ViewStyle = {};
 
     if(heading[0] === "S" || heading[1] === "S") { // polyline goes south, anchor by bottom
         vertical = {
@@ -260,7 +268,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                     onLayout={(event) => setLayout(event.nativeEvent.layout)}
                     pointerEvents={(type !== ComponentType.Default)?("none"):("auto")}
                     provider={PROVIDER_GOOGLE}
-                    customMapStyle={theme.mapStyle.concat(mapStyle.compact as any[])}
+                    customMapStyle={theme.mapStyle.concat(mapStyle.compact)}
                     zoomEnabled={false}
                     pitchEnabled={false}
                     rotateEnabled={false}

@@ -93,11 +93,19 @@ export default function Profile() {
     );
 }
 
-export function ProfileActivities({ profile }) {
+type ProfileProp = {
+    profile: {
+        user: {
+            id: string;
+        };
+    };
+};
+
+export function ProfileActivities({ profile }: ProfileProp) {
     const client = useClient();
     const router = useRouter();
 
-    const [ items, setItems ] = useState<any[]>([]);
+    const [ items, setItems ] = useState<string[]>([]);
 
     return (
         <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
@@ -109,19 +117,19 @@ export function ProfileActivities({ profile }) {
             setItems((reset)?(result.activities):(items.concat(result.activities)));
             
             return (result.activities.length === 5);
-        }} render={(activity) => (
-            <TouchableOpacity key={activity} onPress={() => router.push(`/activities/${activity}`)}>
+        }} render={(activity: string) => (
+            <TouchableOpacity onPress={() => router.push(`/activities/${activity}`)}>
                 <ActivityList id={activity}/>
             </TouchableOpacity>
         )}/>
     );
 }
 
-export function ProfileBikes({ profile }) {
+export function ProfileBikes({ profile }: ProfileProp) {
     const client = useClient();
     const router = useRouter();
 
-    const [ items, setItems ] = useState<any[]>([]);
+    const [ items, setItems ] = useState<string[]>([]);
 
     return (
         <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
@@ -133,8 +141,8 @@ export function ProfileBikes({ profile }) {
             setItems((reset)?(result.bikes):(items.concat(result.bikes)));
             
             return (result.bikes.length === 5);
-        }} render={(bike) => (
-            <TouchableOpacity key={bike} onPress={() => router.push(`/bikes/${bike}`)}>
+        }} render={(bike: string) => (
+            <TouchableOpacity onPress={() => router.push(`/bikes/${bike}`)}>
                 <Bike id={bike}/>
             </TouchableOpacity>
         )}/>

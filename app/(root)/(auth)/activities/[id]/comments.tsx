@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
-import { useRouter, Stack, useSearchParams } from "expo-router";
+import { Stack, useSearchParams } from "expo-router";
 import { useTheme } from "../../../../../utils/themes";
 import ActivityComment from "../../../../../layouts/activity/comment";
-import { useUser } from "../../../../../modules/user/useUser";
 import { useClient } from "../../../../../modules/useClient";
 import { getActivityComments } from "@ridetracker/ridetrackerclient";
 
-export default function ActivityCommentsPage({ params }) {
+export default function ActivityCommentsPage() {
     const client = useClient();
-    const userData = useUser();
     const theme = useTheme();
-    const router = useRouter();
     const { id } = useSearchParams();
 
     const [ comments, setComments ] = useState(null);

@@ -1,25 +1,20 @@
-import React, { useState } from "react";
-import { TextInput, View } from "react-native";
+import React, { ReactNode, LegacyRef } from "react";
+import { TextInput, View, TextStyle, TextInputProps } from "react-native";
 import { useTheme } from "../utils/themes";
 
 type FormInputProps = {
     placeholder?: string;
-    icon?: any;
-    props?: any;
-
-    inputRef?: any;
-    children?: any;
-    style?: any;
+    icon?: ReactNode;
+    props?: TextInputProps & {
+        enterKeyHint?: string;
+    };
+    inputRef?: LegacyRef<TextInput>;
+    children?: ReactNode;
+    style?: TextStyle;
 };
 
 export default function FormInput({ props, placeholder, icon, inputRef, style }: FormInputProps) {
     const theme = useTheme();
-
-    const [ value, setValue ] = useState("");
-
-    function getValue() {
-        return value;
-    }
 
     return (
         <View
@@ -63,7 +58,6 @@ export default function FormInput({ props, placeholder, icon, inputRef, style }:
                 }}
                 placeholder={placeholder}
                 placeholderTextColor={theme.color}
-                onChangeText={(text) => setValue(text)}
 
                 {...props}
             />

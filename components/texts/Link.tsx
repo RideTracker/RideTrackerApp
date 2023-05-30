@@ -1,9 +1,10 @@
-import { Text } from "react-native";
+import { ReactNode } from "react";
+import { Text, TextStyle } from "react-native";
 import { useTheme } from "../../utils/themes";
 
 type LinkTextProps = {
-    children?: any;
-    style?: any;
+    children?: ReactNode;
+    style?: TextStyle;
 };
 
 export function LinkText({ children, style }: LinkTextProps) {

@@ -31,7 +31,7 @@ export default function Register() {
                 if(!response.success) {
                     Alert.alert("An error occurred!", response.message, [
                         {
-                            onPress(value) {
+                            onPress() {
                                 setSubmitting(false);
                             }
                         }
@@ -63,7 +63,7 @@ export default function Register() {
                                 <FormInput inputRef={firstnameRef} placeholder="Firstname" icon={(<FontAwesome name="user" size={24} color={theme.color}/>)} props={{
                                     autoCapitalize: "words",
                                     onChangeText: (text) => setFirstname(text),
-                                    autoComplete: "given-name",
+                                    autoComplete: "name-given",
                                     autoCorrect: true,
                                     enterKeyHint: "next",
                                     onSubmitEditing: () => lastnameRef.current.focus()
@@ -74,7 +74,7 @@ export default function Register() {
                                 <FormInput inputRef={lastnameRef} placeholder="Lastname" props={{
                                     autoCapitalize: "words",
                                     onChangeText: (text) => setLastname(text),
-                                    autoComplete: "family-name",
+                                    autoComplete: "name-family",
                                     autoCorrect: true,
                                     enterKeyHint: "next",
                                     onSubmitEditing: () => emailRef.current.focus()
@@ -107,7 +107,7 @@ export default function Register() {
                         <FormInput inputRef={passwordRef} placeholder="Password" icon={(<FontAwesome name="lock" size={24} color={theme.color}/>)} props={{
                             autoCapitalize: "none",
                             onChangeText: (text) => setPassword(text),
-                            autoComplete: "current-password",
+                            autoComplete: "password",
                             autoCorrect: false,
                             enterKeyHint: "send",
                             secureTextEntry: true,

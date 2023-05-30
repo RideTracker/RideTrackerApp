@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode, Ref } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { LayoutRectangle, RefreshControl, View } from "react-native";
+import { LayoutRectangle, RefreshControl, View, ViewStyle, PointProp } from "react-native";
 import { ParagraphText } from "./texts/Paragraph";
 import { useTheme } from "../utils/themes";
 import React from "react";
 
 type PaginationProps = {
-    style: any;
-    items: any[];
+    style: ViewStyle;
+    items: unknown[];
     paginate: (reset: boolean) => Promise<boolean>;
-    render: any;
-    renderPlaceholder?: any;
-    children?: any;
-    contentOffset?: any;
-    scrollViewRef?: any;
+    render: (item: unknown) => ReactNode;
+    renderPlaceholder?: () => ReactNode;
+    children?: ReactNode;
+    contentOffset?: PointProp;
+    scrollViewRef?: Ref<ScrollView>;
 };
 
 export function Pagination(props: PaginationProps) {

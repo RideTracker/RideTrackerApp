@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, ViewStyle } from "react-native";
 import { useRouter } from "expo-router";
 import { useTheme } from "../../utils/themes";
 import { ParagraphText } from "../texts/Paragraph";
@@ -12,7 +12,7 @@ import { useClient } from "../../modules/useClient";
 
 type ActivityListProps = {
     id: string | null;
-    style?: any;
+    style?: ViewStyle;
 };
 
 export default function ActivityList({ id, style }: ActivityListProps) {

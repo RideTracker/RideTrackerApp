@@ -8,7 +8,20 @@ import { ParagraphText } from "../../components/texts/Paragraph";
 import Constants from "expo-constants";
 
 type ActivityAuthorProps = {
-    activity: any | null;
+    activity: {
+        user: {
+            id: string;
+            avatar: string;
+            name: string;
+        };
+
+        summary?: {
+            startArea: string;
+            finishArea: string;
+        };
+
+        timestamp: number;
+    } | null;
 };
 
 export default function ActivityAuthor({ activity }: ActivityAuthorProps) {

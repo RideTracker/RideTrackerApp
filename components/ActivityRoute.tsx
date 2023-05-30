@@ -4,7 +4,9 @@ import { useTheme } from "../utils/themes";
 import Constants from "expo-constants";
 
 type ActivityRouteProps = {
-    activity: any;
+    activity: {
+        id: string;
+    };
 };
 
 export default function ActivityRoute(props: ActivityRouteProps) {

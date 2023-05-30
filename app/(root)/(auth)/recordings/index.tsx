@@ -7,7 +7,22 @@ import { RECORDINGS_PATH } from "../(tabs)/record";
 import { timeSince } from "../../../../utils/time";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 
-function RecordingSummary({ recording }) {
+type RecordingSummaryProp = {
+    recording: {
+        id: string;
+
+        locations: {
+            coords: {
+                latitude: number;
+                longitude: number;
+            };
+        }[];
+        
+        timestamp: number;
+    };
+};
+
+function RecordingSummary({ recording }: RecordingSummaryProp) {
     if(Platform.OS === "web")
         return (<Text>Unsupported for web</Text>);
 

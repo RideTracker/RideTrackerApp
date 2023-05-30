@@ -6,11 +6,10 @@ import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { ParagraphText } from "./texts/Paragraph";
 import { useUser } from "../modules/user/useUser";
 import { Link } from "expo-router";
+import { State } from "expo-router/src/fork/getPathFromState";
 
 type TabBarProps = {
-    state: any;
-    descriptors: any;
-    navigation: any;
+    state: State;
     insets: EdgeInsets;
 };
 

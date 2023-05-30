@@ -1,7 +1,27 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, ReactNode } from "react";
 import { View, PanResponder, Animated } from "react-native";
 
-export function Draggable({ children, draggingChange, positionChange, lockVertical = false, initialLeft = 0, initialTop = 0 }) {
+type DraggableProps = {
+    children?: ReactNode;
+    draggingChange: (dragging: boolean) => void;
+    positionChange: (position: {
+        location: {
+            x: number;
+            y: number;
+        };
+
+        scale: {
+            left: number;
+            top: number;
+        };
+    }) => void;
+
+    lockVertical?: boolean;
+    initialLeft?: number;
+    initialTop?: number;
+};
+
+export function Draggable({ children, draggingChange, positionChange, lockVertical = false, initialLeft = 0, initialTop = 0 }: DraggableProps) {
     const [ dragging, setDragging ] = useState(false);
 
     const [ containerWidth, setContainerWidth ] = useState(0);
@@ -10,18 +30,18 @@ export function Draggable({ children, draggingChange, positionChange, lockVertic
     const panResponder = useMemo(
         () => PanResponder.create({
             onMoveShouldSetPanResponderCapture: () => true,
-            onPanResponderGrant: (_, gestureState) => {
+            onPanResponderGrant: () => {
             // Disable any existing animations
                 draggableRef.current?.getLayout &&
                 draggableRef.current?.stopAnimation();
             },
-            onPanResponderMove: (_, gestureState) => {
+            onPanResponderMove: (event) => {
                 if(!dragging)
                     setDragging(true);
 
                 const location = {
-                    x: Math.min(Math.max(0, _.nativeEvent.locationX), containerWidth),
-                    y: (lockVertical)?(0):(Math.min(Math.max(0, _.nativeEvent.locationY), containerHeight))
+                    x: Math.min(Math.max(0, event.nativeEvent.locationX), containerWidth),
+                    y: (lockVertical)?(0):(Math.min(Math.max(0, event.nativeEvent.locationY), containerHeight))
                 };
 
                 // Set the position of the draggable element based on the gesture state
@@ -49,11 +69,11 @@ export function Draggable({ children, draggingChange, positionChange, lockVertic
                 });
             },
 
-            onPanResponderRelease(e, gestureState) {
+            onPanResponderRelease() {
                 setDragging(false);
             },
 
-            onPanResponderEnd(e, gestureState) {
+            onPanResponderEnd() {
                 setDragging(false);
             },
         }), 

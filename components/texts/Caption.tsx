@@ -1,9 +1,10 @@
-import { Text } from "react-native";
+import { ReactNode } from "react";
+import { Text, TextStyle } from "react-native";
 import { useTheme } from "../../utils/themes";
 
 type CaptionTextProps = {
-    children?: any;
-    style?: any;
+    children?: ReactNode;
+    style?: TextStyle;
     placeholder?: boolean;
 };
 

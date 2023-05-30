@@ -34,7 +34,7 @@ export default function Login() {
                 if(!response.success) {
                     Alert.alert("An error occurred!", response.message, [
                         {
-                            onPress(value) {
+                            onPress() {
                                 setSubmitting(false);
                             }
                         }
@@ -70,7 +70,7 @@ export default function Login() {
 
                 <FormInput inputRef={passwordRef} placeholder="Password" icon={(<FontAwesome name="lock" size={24} color={theme.color}/>)} props={{
                     autoCapitalize: "none",
-                    autoComplete: "current-password",
+                    autoComplete: "password",
                     autoCorrect: false,
                     enterKeyHint: "send",
                     secureTextEntry: true,

@@ -8,10 +8,21 @@ import { useClient } from "../modules/useClient";
 
 type BikeProps = {
     id?: string;
-    data?: any;
+    data?: BikeData;
     buttons?: ReactNode;
 
     style?: ViewStyle;
+};
+
+type BikeData = {
+    image: string;
+    model: string;
+
+    summary?: {
+        rides: number;
+        distance: number;
+        elevation: number;
+    };
 };
 
 export default function Bike(props: BikeProps) {
@@ -20,7 +31,7 @@ export default function Bike(props: BikeProps) {
     const client = useClient();
     const theme = useTheme();
 
-    const [ bike, setBike ] = useState<any | null>(data);
+    const [ bike, setBike ] = useState<BikeData | null>(data);
 
     useEffect(() => {
         if(id) {

@@ -22,11 +22,13 @@ setInterval(() => {
     timeEmitter.emit("INTERVAL");
 });
 
-TaskManager.defineTask(RECORD_TASK_NAME, ({ data, error }: { data: any, error: any }) => {
-    const locations = data.locations;
+TaskManager.defineTask(RECORD_TASK_NAME, (executor) => {
+    const { locations } = executor.data as {
+        locations: [];
+    };
 
-    if(error || !locations.length) {
-        console.error("Geolocation error occurred, ", error);
+    if(executor.error || !locations.length) {
+        console.error("Geolocation error occurred, ", executor.error);
 
         return;
     }
@@ -71,7 +73,9 @@ export default function Record() {
         if(!info.exists)
             await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify([]));
 
-        const sessions = JSON.parse(await FileSystem.readAsStringAsync(recordingPath)) as any[];
+        const sessions = JSON.parse(await FileSystem.readAsStringAsync(recordingPath)) as {
+            id: string;
+        }[];
 
         const existingSessionIndex = sessions.findIndex((x) => x.id === session.id);
 

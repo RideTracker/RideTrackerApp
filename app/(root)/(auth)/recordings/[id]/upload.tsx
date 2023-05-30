@@ -24,7 +24,7 @@ export default function UploadRecordingPage() {
     const mapRef = useRef();
     const router = useRouter();
 
-    const [ submitting, setSubmitting ] = useState(false);
+    const [ submitting ] = useState(false);
 
     const [ bikes, setBikes ] = useState(null);
     const [ selectedBike, setSelectedBike ] = useState(null);

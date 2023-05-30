@@ -1,4 +1,4 @@
-import { Image, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View, ViewStyle } from "react-native";
 import { useTheme } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
 import { ParagraphText } from "../../components/texts/Paragraph";
@@ -9,8 +9,19 @@ import { useRouter } from "expo-router";
 import { LinkText } from "../../components/texts/Link";
 
 type ActivityCommentProps = {
-    style?: any;
-    comment?: any;
+    style?: ViewStyle;
+    comment?: {
+        user?: {
+            avatar: string;
+            name: string;
+        };
+
+        id: string;
+        activity: string;
+        message: string;
+        comments_count: number;
+        timestamp: number;
+    };
     child?: boolean;
 };
 

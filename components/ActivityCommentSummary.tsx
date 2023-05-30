@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View, ViewStyle } from "react-native";
 import { useTheme } from "../utils/themes";
 import { timeSince } from "../utils/time";
 import { ParagraphText } from "../components/texts/Paragraph";
@@ -9,8 +9,19 @@ import { LinkText } from "./texts/Link";
 import { useRouter } from "expo-router";
 
 type ActivityCommentSummaryProps = {
-    style?: any;
-    comment: any | null;
+    style?: ViewStyle;
+    comment: {
+        id: string;
+        
+        user?: {
+            avatar: string;
+            name: string;
+        };
+
+        comments_count: number;
+        message: string;
+        timestamp: number;
+    } | null;
     activity?: string;
 };
 
@@ -97,7 +108,7 @@ export default function ActivityCommentSummary(props: ActivityCommentSummaryProp
                             <LinkText>Reply</LinkText>
                         </TouchableOpacity>
 
-                        {(!!comment?.comments_count) && (<ParagraphText style={{ color: "silver" }}>{comment.comments_count} {(comment.comments_counts > 1)?("replies"):("reply")}</ParagraphText>)}
+                        {(!!comment?.comments_count) && (<ParagraphText style={{ color: "silver" }}>{comment.comments_count} {(comment.comments_count > 1)?("replies"):("reply")}</ParagraphText>)}
                     </View>
                 </View>
             </View>

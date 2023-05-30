@@ -1,9 +1,10 @@
-import { Text } from "react-native";
+import { ReactNode } from "react";
+import { Text, TextStyle } from "react-native";
 import { useTheme } from "../../utils/themes";
 
 type HeaderTextProps = {
-    children?: any;
-    style?: any;
+    children?: ReactNode;
+    style?: TextStyle;
 };
 
 export function HeaderText({ children, style }: HeaderTextProps) {

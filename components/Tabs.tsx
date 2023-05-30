@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import React, { useState, useEffect, ReactNode, ReactElement } from "react";
+import { View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { CaptionText } from "./texts/Caption";
 import { useTheme } from "../utils/themes";
 
 type TabsProps = {
     initialTab: string;
-    style?: any;
-    children?: any;
-    onChange?: Function;
-    pointerEvents?: any;
+    style?: ViewStyle;
+    children?: ReactElement[];
+    onChange?: (string) => void;
+    pointerEvents?: "auto" | "box-none" | "none" | "box-only";
 };
 
 export default function Tabs({ initialTab, style, children, onChange, pointerEvents = "auto" }: TabsProps) {
@@ -62,9 +62,9 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
 
 type TabsPageProps = {
     id: string;
-    title: any;
-    style?: any;
-    children?: any;
+    title: string;
+    style?: ViewStyle;
+    children?: ReactNode;
 };
 
 export function TabsPage({ style, children }: TabsPageProps) {

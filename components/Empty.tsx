@@ -1,9 +1,10 @@
-import { View } from "react-native";
+import { ReactNode } from "react";
+import { View, ViewStyle } from "react-native";
 import { CaptionText } from "./texts/Caption";
 
 type EmptyProps = {
-    style?: any;
-    children?: any;
+    style?: ViewStyle;
+    children?: ReactNode;
 };
 
 export default function Empty({ style, children }: EmptyProps) {

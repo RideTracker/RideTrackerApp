@@ -15,9 +15,7 @@ type ActivityStatProps = {
     scale: number;
 }
 
-export function ActivityStat(props: ActivityStatProps) {
-    const { type, altType, value, unit, personalBest, scale } = props;
-
+export function ActivityStat({ type, altType, value, unit, personalBest, scale }: ActivityStatProps) {
     return (
         <View style={{ paddingHorizontal: (personalBest)?(scale * 25):(0) }}>
             {(!!personalBest) && (
@@ -34,7 +32,25 @@ export function ActivityStat(props: ActivityStatProps) {
     );
 }
 
-export default function ActivityMapStats({ activity }) {
+type ActivityMapStatsProps = {
+    activity?: {
+        summary?: {
+            distance: string;
+            distancePersonalBest?: boolean;
+            
+            averageSpeed: string;
+            averageSpeedPersonalBest?: boolean;
+            
+            elevation: string;
+            elevationPersonalBest?: boolean;
+            
+            maxSpeed: string;
+            maxSpeedPersonalBest?: boolean;
+        };
+    };
+};
+
+export default function ActivityMapStats({ activity }: ActivityMapStatsProps) {
     const [ scale, setScale ] = useState<number>(null);
     const [ containerLayout, setContainerLayout ] = useState<LayoutRectangle>(null);
     const [ childLayout, setChildLayout ] = useState<LayoutRectangle>(null);
