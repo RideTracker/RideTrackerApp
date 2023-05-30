@@ -1,35 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as FileSystem from "expo-file-system";
 import { Platform } from "react-native";
+import { User } from "../../models/User";
 
 const userDataPath = FileSystem.documentDirectory + "/userData.json";
 
+const initialState: User = {
+    filters: {}
+};
+
 export const userDataSlice = createSlice({
     name: "userData",
-    initialState: {},
+    initialState,
     reducers: {
         setUserData(state, action) {
-            const newData = {
+            const newUser: User = {
                 ...state,
                 ...action.payload
             };
 
             if(Platform.OS !== "web")
-                FileSystem.writeAsStringAsync(userDataPath, JSON.stringify(newData));
+                FileSystem.writeAsStringAsync(userDataPath, JSON.stringify(newUser));
 
-            return newData;
+            return newUser;
         }
     }
 });
 
-export async function readUserData() {
+export async function readUserData(): Promise<User> {
     if(Platform.OS === "web")
-        return {};
+        return initialState;
 
     const info = await FileSystem.getInfoAsync(userDataPath); 
 
     if(!info.exists)
-        return {};
+        return initialState;
 
     const content = await FileSystem.readAsStringAsync(userDataPath);
     const data = JSON.parse(content);

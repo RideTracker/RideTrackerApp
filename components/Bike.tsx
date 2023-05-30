@@ -3,8 +3,8 @@ import { Image, View, ViewStyle } from "react-native";
 import { useTheme } from "../utils/themes";
 import { CaptionText } from "./texts/Caption";
 import { ParagraphText } from "./texts/Paragraph";
-import { useUser } from "../modules/user/useUser";
-import { getBikeById } from "../controllers/bikes/getBikeById";
+import { getBike } from "@ridetracker/ridetrackerclient";
+import { useClient } from "../modules/useClient";
 
 type BikeProps = {
     id?: string;
@@ -17,14 +17,14 @@ type BikeProps = {
 export default function Bike(props: BikeProps) {
     const { id, style, data, buttons } = props;
 
-    const userData = useUser();
+    const client = useClient();
     const theme = useTheme();
 
     const [ bike, setBike ] = useState<any | null>(data);
 
     useEffect(() => {
         if(id) {
-            getBikeById(userData.key, id).then((result) => {
+            getBike(client, id).then((result) => {
                 if(!result.success)
                     return;
 

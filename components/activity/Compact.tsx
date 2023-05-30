@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { TouchableOpacity, View } from "react-native";
-
 import { useRouter } from "expo-router";
 import ActivityMap from "../../layouts/activity/map";
 import ActivityMapStats from "../../layouts/activity/mapStats";
 import ActivityAuthor from "../../layouts/activity/author";
 import { ComponentType } from "../../models/componentType";
-import { useUser } from "../../modules/user/useUser";
-import { getActivityById } from "../../controllers/activities/getActivityById";
+import { getActivityById } from "@ridetracker/ridetrackerclient";
+import { useClient } from "../../modules/useClient";
 
 type ActivityCompactProps = {
     id: string | null;
@@ -15,7 +14,7 @@ type ActivityCompactProps = {
 };
 
 export default function ActivityCompact({ id, style }: ActivityCompactProps) {
-    const userData = useUser();
+    const client = useClient();
 
     const router = useRouter();
 
@@ -23,7 +22,7 @@ export default function ActivityCompact({ id, style }: ActivityCompactProps) {
 
     useEffect(() => {
         if(id !== null)
-            getActivityById(userData.key, id).then((result) => result.success && setActivity(result.activity));
+            getActivityById(client, id).then((result) => result.success && setActivity(result.activity));
     }, []);
 
     return (

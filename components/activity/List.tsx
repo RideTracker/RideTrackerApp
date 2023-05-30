@@ -7,8 +7,8 @@ import { timeSince } from "../../utils/time";
 import ActivityMap from "../../layouts/activity/map";
 import { ComponentType } from "../../models/componentType";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useUser } from "../../modules/user/useUser";
-import { getActivityById } from "../../controllers/activities/getActivityById";
+import { getActivityById } from "@ridetracker/ridetrackerclient";
+import { useClient } from "../../modules/useClient";
 
 type ActivityListProps = {
     id: string | null;
@@ -16,8 +16,7 @@ type ActivityListProps = {
 };
 
 export default function ActivityList({ id, style }: ActivityListProps) {
-    const userData = useUser();
-
+    const client = useClient();
     const router = useRouter();
     const theme = useTheme();
 
@@ -25,7 +24,7 @@ export default function ActivityList({ id, style }: ActivityListProps) {
 
     useEffect(() => {
         if(id !== null)
-            getActivityById(userData.key, id).then((result) => result.success && setActivity(result.activity));
+            getActivityById(client, id).then((result) => result.success && setActivity(result.activity));
     }, []);
 
     return (

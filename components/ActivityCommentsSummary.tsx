@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
-import { useUser } from "../modules/user/useUser";
 import ActivityCommentSummary from "./ActivityCommentSummary";
 import { HeaderText } from "./texts/Header";
 import { ParagraphText } from "./texts/Paragraph";
 import { useRouter } from "expo-router";
-import { getActivityCommentsSummary } from "../controllers/activities/comments/summary/getActivityCommentsSummary";
+import { getActivityCommentsSummary } from "@ridetracker/ridetrackerclient";
+import { useClient } from "../modules/useClient";
 
 type ActivityCommentsSummaryProps = {
     id: string;
@@ -14,14 +14,14 @@ type ActivityCommentsSummaryProps = {
 export default function ActivityCommentsSummary(props: ActivityCommentsSummaryProps) {
     const { id } = props;
 
-    const user = useUser();
+    const client = useClient();
     const router = useRouter();
 
     const [ count, setCount ] = useState<number | null>(null);
     const [ comments, setComments ] = useState<any | null>(null);
 
     useEffect(() => {
-        getActivityCommentsSummary(user.key, id).then((result) => {
+        getActivityCommentsSummary(client, id).then((result) => {
             if(!result.success)
                 return;
 

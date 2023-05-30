@@ -11,14 +11,13 @@ import { Pagination } from "../../../../components/Pagination";
 import Bike from "../../../../components/Bike";
 import Constants from "expo-constants";
 import { useUser } from "../../../../modules/user/useUser";
-import { getProfileById } from "../../../../controllers/profiles/getProfileById";
-import { getProfileActivitiesById } from "../../../../controllers/profiles/activities/getProfileActivitiesById";
-import { getProfileBikesById } from "../../../../controllers/profiles/bikes/getProfileBikesById";
+import { useClient } from "../../../../modules/useClient";
+import { getProfileActivities, getProfileBikes, getProfileById } from "@ridetracker/ridetrackerclient";
 
 export default function Profile() {
+    const client = useClient();
     const theme = useTheme();
     const userData = useUser();
-
     const { userId } = useSearchParams();
 
     const [ profile, setProfile ] = useState(null);
@@ -27,7 +26,7 @@ export default function Profile() {
 
     useEffect(() => {
         async function getProfile() {
-            getProfileById(userData.key, userId as string).then((result) => setProfile(result.profile));
+            getProfileById(client, userId as string).then((result) => setProfile(result.profile));
         }
 
         getProfile();
@@ -95,14 +94,14 @@ export default function Profile() {
 }
 
 export function ProfileActivities({ profile }) {
-    const userData = useUser();
+    const client = useClient();
     const router = useRouter();
 
     const [ items, setItems ] = useState<any[]>([]);
 
     return (
         <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
-            const result = await getProfileActivitiesById(userData.key, profile.user.id, (reset)?(0):(items.length));
+            const result = await getProfileActivities(client, profile.user.id, (reset)?(0):(items.length));
 
             if(!result.success)
                 return false;
@@ -119,14 +118,14 @@ export function ProfileActivities({ profile }) {
 }
 
 export function ProfileBikes({ profile }) {
-    const userData = useUser();
+    const client = useClient();
     const router = useRouter();
 
     const [ items, setItems ] = useState<any[]>([]);
 
     return (
         <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
-            const result = await getProfileBikesById(userData.key, profile.user.id, (reset)?(0):(items.length));
+            const result = await getProfileBikes(client, profile.user.id, (reset)?(0):(items.length));
 
             if(!result.success)
                 return false;

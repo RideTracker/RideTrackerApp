@@ -6,7 +6,6 @@ import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../(tabs)/record";
 import { timeSince } from "../../../../utils/time";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
-import { useUser } from "../../../../modules/user/useUser";
 
 function RecordingSummary({ recording }) {
     if(Platform.OS === "web")
@@ -36,11 +35,7 @@ function RecordingSummary({ recording }) {
 }
 
 export default function RecordingsPage() {
-    const userData = useUser();
-
     const theme = useTheme();
-
-    const router = useRouter();
 
     const [ recordings, setRecordings ] = useState(null);
 

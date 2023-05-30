@@ -7,7 +7,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import FormInput from "../../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../../utils/stores/userData";
-import { setClient } from "../../../utils/stores/client";
 import { useClient } from "../../../modules/useClient";
 import { verifyLogin } from "@ridetracker/ridetrackerclient";
 
@@ -31,7 +30,7 @@ export default function Verify() {
                 if(!response.success) {
                     Alert.alert("An error occurred!", response.message, [
                         {
-                            onPress(value) {
+                            onPress() {
                                 setSubmitting(false);
                             }
                         }
@@ -41,8 +40,6 @@ export default function Verify() {
                 }
 
                 dispatch(setUserData({ key: response.key }));
-
-                dispatch(setClient(response.key));
 
                 router.push("/");
             });

@@ -7,17 +7,14 @@ import ActivityMap from "../../../../../layouts/activity/map";
 import ActivityAuthor from "../../../../../layouts/activity/author";
 import ActivityStats from "../../../../../layouts/activity/stats";
 import { ComponentType } from "../../../../../models/componentType";
-import { useUser } from "../../../../../modules/user/useUser";
 import ActivityCommentsSummary from "../../../../../components/ActivityCommentsSummary";
-import { getActivityById } from "../../../../../controllers/activities/getActivityById";
-import { getActivitySummaryById } from "../../../../../controllers/activities/summary/getActivitySummaryById";
 import ActivityRoute from "../../../../../components/ActivityRoute";
+import { useClient } from "../../../../../modules/useClient";
+import { getActivityById, getActivitySummary } from "@ridetracker/ridetrackerclient";
 
 export default function ActivityPage({ params }) {
-    const userData = useUser();
-
+    const client = useClient();
     const theme = useTheme();
-    
     const router = useRouter();
     const { id } = useSearchParams();
 
@@ -25,12 +22,12 @@ export default function ActivityPage({ params }) {
 
     useEffect(() => {
         if(id !== null)
-            getActivityById(userData.key, id as string).then((result) => setActivity(result.activity));
+            getActivityById(client, id as string).then((result) => setActivity(result.activity));
     }, []);
 
     useEffect(() => {
         if(activity && !activity.summary) {
-            getActivitySummaryById(userData.key, activity.id).then((result) => {
+            getActivitySummary(client, activity.id).then((result) => {
                 if(result.success)
                     setActivity({ ...activity, summary: result.activitySummary });
             });

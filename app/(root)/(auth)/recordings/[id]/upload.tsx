@@ -12,19 +12,16 @@ import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { CaptionText } from "../../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import Constants from "expo-constants";
-import { useUser } from "../../../../../modules/user/useUser";
-import { getBikes } from "../../../../../controllers/bikes/getBikes";
+import { useClient } from "../../../../../modules/useClient";
+import { getBikes } from "@ridetracker/ridetrackerclient";
 
 export default function UploadRecordingPage() {
     if(Platform.OS === "web")
         return (<Text>Unsupported for web</Text>);
         
-    const userData = useUser();
-
+    const client = useClient();
     const theme = useTheme();
-
     const mapRef = useRef();
-
     const router = useRouter();
 
     const [ submitting, setSubmitting ] = useState(false);
@@ -36,7 +33,7 @@ export default function UploadRecordingPage() {
     const { id } = useSearchParams();
 
     useEffect(() => {
-        getBikes(userData.key).then((result) => setBikes(result.bikes));
+        getBikes(client).then((result) => setBikes(result.bikes));
     }, []);
 
     useEffect(() => {
