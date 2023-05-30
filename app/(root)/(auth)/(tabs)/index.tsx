@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Ref } from "react";
 import { LayoutRectangle, Platform, ScrollView, TouchableOpacity, View } from "react-native";
 import ActivityCompact from "../../../../components/activity/Compact";
 import { useTheme } from "../../../../utils/themes";
@@ -23,7 +23,7 @@ export default function Index() {
 
     const scrollViewRef = useRef<ScrollView>();
 
-    const [ items, setItems ] = useState([]);
+    const [ items, setItems ] = useState<string[]>([]);
     const [ recordings, setRecordings ] = useState(null);
     const [ filterText, setFilterText ] = useState<string>("");
     const [ filterLayout, setFilterLayout ] = useState<LayoutRectangle>(null);
@@ -38,10 +38,10 @@ export default function Index() {
             if(!filterText.length && scrollViewRef.current)
                 scrollViewRef.current.scrollTo({ x: 0, y: (filterLayout?.height ?? 0) + 10 });
             
-            setItems(result.activities);
+            setItems(result.activities.map((activity) => activity.id));
         }
         else
-            setItems(items.concat(result.activities));
+            setItems(items.concat(result.activities.map((activity) => activity.id)));
 
         return (result.activities.length === 5);
     }
@@ -105,8 +105,8 @@ export default function Index() {
             }}>
                 <Pagination style={{ padding: 10 }} scrollViewRef={scrollViewRef} paginate={paginate} items={items}
                 // TODO: some activities here are undefined, why?
-                    render={((activity) => activity.id && (
-                        <ActivityCompact key={activity.id} id={activity.id}/>
+                    render={((activity) => (
+                        <ActivityCompact key={activity} id={activity}/>
                     ))}
                     renderPlaceholder={(() => (
                         <ActivityCompact id={null}/>

@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode, Ref } from "react";
+import { useState, useEffect, ReactNode, RefObject } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { LayoutRectangle, RefreshControl, View, ViewStyle, PointProp } from "react-native";
 import { ParagraphText } from "./texts/Paragraph";
@@ -13,7 +13,7 @@ type PaginationProps = {
     renderPlaceholder?: () => ReactNode;
     children?: ReactNode;
     contentOffset?: PointProp;
-    scrollViewRef?: Ref<ScrollView>;
+    scrollViewRef?: unknown;
 };
 
 export function Pagination(props: PaginationProps) {
@@ -54,9 +54,6 @@ export function Pagination(props: PaginationProps) {
         setIsAtBottom(false);
     }
 
-    useEffect(() => {
-        getItems();
-    }, []);
 
     // TODO: add a onContentResize handler to detect placeholders visible after a pagination?
     // or maybe not, we should check the result length...
@@ -88,7 +85,7 @@ export function Pagination(props: PaginationProps) {
     }, [ refreshing ]);
 
     return (
-        <ScrollView ref={scrollViewRef} style={style} onScroll={handleScroll} scrollEventThrottle={100} contentOffset={contentOffset} refreshControl={
+        <ScrollView ref={scrollViewRef as RefObject<ScrollView>} style={style} onScroll={handleScroll} scrollEventThrottle={100} contentOffset={contentOffset} refreshControl={
             <RefreshControl
                 tintColor={theme.contrast}
                 refreshing={refreshing}
