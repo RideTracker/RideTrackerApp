@@ -20,7 +20,7 @@ export function ActivityStat({ type, altType, value, unit, personalBest, scale }
         <View style={{ paddingHorizontal: (personalBest)?(scale * 25):(0) }}>
             {(!!personalBest) && (
                 <React.Fragment>
-                    <ParagraphText style={{ textAlign: "center", fontSize: ParagraphTextFontSize * scale }}>Personal Best</ParagraphText>
+                    <ParagraphText style={{ color: "#FFF", textAlign: "center", fontSize: ParagraphTextFontSize * scale }}>Personal Best</ParagraphText>
 
                     <ActivityPersonalBest scale={scale}/>
                 </React.Fragment>
