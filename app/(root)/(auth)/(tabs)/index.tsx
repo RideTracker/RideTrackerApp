@@ -38,7 +38,7 @@ export default function Index() {
             return false;
 
         if(reset) {
-            if(!filterText.length && scrollViewRef.current)
+            if(!filterText.length && !userData.filters?.feed?.length && scrollViewRef.current)
                 scrollViewRef.current.scrollTo({ x: 0, y: (filterLayout?.height ?? 0) + 10 });
             
             setItems(result.activities.map((activity) => activity.id));
@@ -116,7 +116,7 @@ export default function Index() {
                     ))}
                     contentOffset={{
                         x: 0,
-                        y: (filterLayout?.height ?? 0) + 10
+                        y: (!filterText.length && !userData.filters?.feed?.length)?((filterLayout?.height ?? 0) + 10):(0)
                     }}>
                     <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
                 </Pagination>

@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "../../../../utils/stores/userData";
 import { useEffect } from "react";
 import { useUser } from "../../../../modules/user/useUser";
+import Button from "../../../../components/Button";
 
 type FilterPageSearchParams = {
     filterType: string;
@@ -93,7 +94,7 @@ export default function FilterPage() {
                         key: "elevation",
                         text: "Highest elevation"
                     }
-                ]} onChange={(value) => setFilter([ ...filter, { key: "order", value } ])}/>
+                ]} onChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "order"), { key: "order", value } ])}/>
 
                 <CaptionText>Include activities</CaptionText>
 
@@ -122,7 +123,11 @@ export default function FilterPage() {
                         key: "lifetime",
                         text: "Within lifetime"
                     }
-                ]} onChange={(value) => setFilter([ ...filter, { key: "timeline", value } ])}/>
+                ]} onChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "timeline"), { key: "timeline", value } ])}/>
+
+                <Button primary={false} type="danger" label="Reset all filters" onPress={() => {
+                    setFilter([]);
+                }}/>
             </View>
         </View>
     );
