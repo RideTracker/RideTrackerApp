@@ -29,7 +29,10 @@ export default function Index() {
     const [ filterLayout, setFilterLayout ] = useState<LayoutRectangle>(null);
 
     async function paginate(reset: boolean) {
-        const result = await getFeed(client, (!reset)?(items.length):(0), filterText, userData.filters?.feed?.order, userData.filters?.feed?.timeline);
+        const order = userData.filters?.feed?.find((item) => item.key === "order")?.value;
+        const timeline = userData.filters?.feed?.find((item) => item.key === "timeline")?.value;
+
+        const result = await getFeed(client, (!reset)?(items.length):(0), filterText, order, timeline);
 
         if(!result.success)
             return false;

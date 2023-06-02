@@ -10,7 +10,8 @@ export type User = {
 
     filters: {
         [filterType: string]: {
-            [key: string]: string;
-        }
+            key: string;
+            value: string;
+        }[];
     }
 };

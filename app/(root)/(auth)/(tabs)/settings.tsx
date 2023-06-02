@@ -31,6 +31,11 @@ export default function Settings() {
                             dispatch(setUserData({ key: null }));
                             dispatch(setClient(null));
                         }}/>
+
+                        <Button primary={false} label="Reset data" onPress={() => {
+                            dispatch(setUserData({ key: undefined, filters: undefined, user: undefined }));
+                            dispatch(setClient(null));
+                        }}/>
                     </View>
                 </ScrollView>
             </View>

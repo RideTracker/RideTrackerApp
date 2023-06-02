@@ -20,24 +20,23 @@ export default function FilterPage() {
     const user = useUser();
     const { filterType } = useSearchParams<FilterPageSearchParams>();
 
-    const [ order, setOrder ] = useState<string>(user.filters?.[filterType]?.order ?? "activity");
-    const [ timeline, setTimeline ] = useState<string>(user.filters?.[filterType]?.timeline ?? "lifetime");
+    const [ filter, setFilter ] = useState<{
+        key: string;
+        value: string;
+    }[]>(user.filters?.[filterType] ?? [])
 
     useEffect(() => {
-        if(JSON.stringify(user.filters?.[filterType]) == JSON.stringify({ order, timeline }))
+        if(JSON.stringify(user.filters?.[filterType]) == JSON.stringify(filter))
             return;
             
         dispatch(setUserData({
             filters: {
                 ...user.filters,
                 
-                [filterType]: {
-                    order,
-                    timeline
-                }
+                [filterType]: filter
             }
         }));
-    }, [ order, timeline ]);
+    }, [ filter ]);
 
     return (
         <View style={{ flex: 1, flexDirection: "column" }}>
@@ -69,7 +68,7 @@ export default function FilterPage() {
             }}>
                 <CaptionText>Order activities by</CaptionText>
 
-                <SelectList placeholder="Select activity order..." initialValue={order} items={[
+                <SelectList placeholder="Select activity order..." initialValue={filter.find((item) => item.key === "order")?.value ?? "activity"} items={[
                     {
                         key: "activity",
                         text: "Latest activity"
@@ -94,11 +93,11 @@ export default function FilterPage() {
                         key: "elevation",
                         text: "Highest elevation"
                     }
-                ]} onChange={(value) => setOrder(value)}/>
+                ]} onChange={(value) => setFilter([ ...filter, { key: "order", value } ])}/>
 
                 <CaptionText>Include activities</CaptionText>
 
-                <SelectList placeholder="Select activity timeline..." initialValue={timeline} items={[
+                <SelectList placeholder="Select activity timeline..." initialValue={filter.find((item) => item.key === "timeline")?.value ?? "lifetime"} items={[
                     {
                         key: "week",
                         text: "Within last week"
@@ -123,7 +122,7 @@ export default function FilterPage() {
                         key: "lifetime",
                         text: "Within lifetime"
                     }
-                ]} onChange={(value) => setTimeline(value)}/>
+                ]} onChange={(value) => setFilter([ ...filter, { key: "timeline", value } ])}/>
             </View>
         </View>
     );
