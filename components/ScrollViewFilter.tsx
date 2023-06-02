@@ -80,8 +80,13 @@ export function ScrollViewFilter(props: ScrollViewFilterProps) {
                         <View style={{
                             position: "absolute",
 
-                            right: 0,
-                            bottom: 0,
+                            top: -4,
+
+                            alignSelf: "center",
+
+                            backgroundColor: theme.background,
+                            borderRadius: 16,
+
 
                             width: 16,
                             height: 16,
