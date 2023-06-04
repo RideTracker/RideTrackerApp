@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import { useTheme } from "../../utils/themes";
 import { ActivityStat } from "./mapStats";
 
@@ -58,34 +58,24 @@ export default function ActivityStats({ activity }: ActivityStatsProps) {
         return null;
     
     return (
-        <View style={{ gap: 20, padding: 20 }}>
-            <View style={{ flexDirection: "row" }}>
-                <View style={{ width: "50%", justifyContent: "center" }}>
-                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                        <ActivityStat scale={1} type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
-                    </View>
+        <ScrollView horizontal={true} style={{ paddingTop: 10, paddingBottom: 20 }}>
+            <View style={{ gap: 10, flexDirection: "row", justifyContent: "center", alignItems: "flex-end" }}>
+                <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                    <ActivityStat scale={1} type="distance" unit="km" value={activity.summary.distance} personalBest={activity.summary.distancePersonalBest}/>
                 </View>
-                
-                <View style={{ width: "50%", justifyContent: "center" }}>
-                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                        <ActivityStat scale={1} type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
-                    </View>
+
+                <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                    <ActivityStat scale={1} type="average speed" altType="avg.speed" unit="km/h" value={activity.summary.averageSpeed} personalBest={activity.summary.averageSpeedPersonalBest}/>
                 </View>
-            </View>
-            
-            <View style={{ flexDirection: "row" }}>
-                <View style={{ width: "50%", justifyContent: "center" }}>
-                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                        <ActivityStat scale={1} type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
-                    </View>
+
+                <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                    <ActivityStat scale={1} type="elevation" unit="m" value={activity.summary.elevation} personalBest={activity.summary.elevationPersonalBest}/>
                 </View>
-                
-                <View style={{ width: "50%", justifyContent: "center" }}>
-                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                        <ActivityStat scale={1} type="max speed" unit="km/h" value={activity.summary.maxSpeed} personalBest={activity.summary.maxSpeedPersonalBest}/>
-                    </View>
+
+                <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                    <ActivityStat scale={1} type="max speed" unit="km/h" value={activity.summary.maxSpeed} personalBest={activity.summary.maxSpeedPersonalBest}/>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }

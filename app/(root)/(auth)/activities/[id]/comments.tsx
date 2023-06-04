@@ -32,10 +32,12 @@ export default function ActivityCommentsPage() {
                         <React.Fragment key={comment.id}>
                             <ActivityComment comment={comment}/>
 
-                            <View style={{ paddingLeft: 50, gap: 10 }}>
-                                {comments.filter((childComment) => childComment.parent === comment.id).map((childComment) => (
-                                    <ActivityComment key={childComment.id} comment={childComment} child={true}/>
-                                ))}
+                            <View style={{ marginLeft: 10, borderLeftWidth: 1, borderLeftColor: theme.border }}>
+                                <View style={{ paddingLeft: 10, gap: 10 }}>
+                                    {comments.filter((childComment) => childComment.parent === comment.id).map((childComment) => (
+                                        <ActivityComment key={childComment.id} comment={childComment} child={true}/>
+                                    ))}
+                                </View>
                             </View>
                         </React.Fragment>
                     ))):(

@@ -39,34 +39,34 @@ export default function ActivityComment(props: ActivityCommentProps) {
                 paddingHorizontal: 10,
                 gap: 10
             }}>
-                <View style={{
-                    backgroundColor: theme.placeholder,
-                    width: (!child)?(40):(25),
-                    aspectRatio: 1,
-                    borderRadius: 100,
-                    overflow: "hidden",
-                }}>
-                    {(comment !== undefined) && (
-                        <Image
-                            style={{
-                                width: "100%",
-                                aspectRatio: 1,
-                                borderRadius: 100,
-                                overflow: "hidden"
-                            }}
-                            source={{
-                                uri: `${Constants.expoConfig.extra.images}/${(comment?.user)?(comment.user.avatar):(userData.user?.avatar)}/Avatar`
-                            }}/>
-                    )}
-                </View>
-
                 <View style={{ gap: 5, justifyContent: "center", flexGrow: 1 }}>
                     {(comment || comment === undefined) && (
                         <View style={{
                             flexDirection: "row",
-                            alignItems: "baseline",
-                            gap: 5
+                            alignItems: "center",
+                            gap: 10
                         }}>
+                            <View style={{
+                                backgroundColor: theme.placeholder,
+                                width: (!child)?(30):(25),
+                                aspectRatio: 1,
+                                borderRadius: 100,
+                                overflow: "hidden",
+                            }}>
+                                {(comment !== undefined) && (
+                                    <Image
+                                        style={{
+                                            width: "100%",
+                                            aspectRatio: 1,
+                                            borderRadius: 100,
+                                            overflow: "hidden"
+                                        }}
+                                        source={{
+                                            uri: `${Constants.expoConfig.extra.images}/${(comment?.user)?(comment.user.avatar):(userData.user?.avatar)}/Avatar`
+                                        }}/>
+                                )}
+                            </View>
+
                             <CaptionText style={(comment === undefined) && {
                                 color: "transparent",
                                 backgroundColor: theme.placeholder
@@ -83,8 +83,6 @@ export default function ActivityComment(props: ActivityCommentProps) {
                     )}
 
                     <ParagraphText style={{
-                        paddingRight: ((!child)?(40):(25)) + 10,
-
                         ...((comment === undefined)?({
                             color: "transparent",
                             backgroundColor: theme.placeholder

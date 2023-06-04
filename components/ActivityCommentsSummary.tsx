@@ -42,7 +42,7 @@ export default function ActivityCommentsSummary(props: ActivityCommentsSummaryPr
     }, []);
 
     return (
-        <View style={{ gap: 20 }}>
+        <View style={{ gap: 10 }}>
             <HeaderText>Comments</HeaderText>
 
             {(comments)?(
