@@ -11,9 +11,10 @@ type FormInputProps = {
     inputRef?: LegacyRef<TextInput>;
     children?: ReactNode;
     style?: TextStyle;
+    borderRadius?: number;
 };
 
-export default function FormInput({ props, placeholder, icon, inputRef, style }: FormInputProps) {
+export default function FormInput({ props, placeholder, icon, inputRef, style, borderRadius }: FormInputProps) {
     const theme = useTheme();
 
     return (
@@ -23,7 +24,9 @@ export default function FormInput({ props, placeholder, icon, inputRef, style }:
 
                 borderWidth: 1,
                 borderColor: theme.border,
-                borderRadius: 6,
+                borderRadius: borderRadius ?? 6,
+
+                backgroundColor: theme.background,
 
                 alignItems: "center",
 

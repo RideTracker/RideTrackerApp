@@ -30,6 +30,49 @@
 
         "mapStyle": [
 			{
+			  "elementType": "labels.text.fill",
+			  "stylers": [
+				{
+				  "color": "#FFFFFF"
+				}
+			  ]
+			},
+			{
+			  "elementType": "labels.text.stroke",
+			  "stylers": [
+				{
+				  "color": "#000000"
+				}
+			  ]
+			},
+			{
+			  "featureType": "administrative.land_parcel",
+			  "elementType": "labels",
+			  "stylers": [
+				{
+				  "visibility": "off"
+				}
+			  ]
+			},
+			{
+			  "featureType": "poi",
+			  "elementType": "labels.text",
+			  "stylers": [
+				{
+				  "visibility": "off"
+				}
+			  ]
+			},
+			{
+			  "featureType": "road.local",
+			  "elementType": "labels",
+			  "stylers": [
+				{
+				  "visibility": "off"
+				}
+			  ]
+			},
+			{
 				"featureType": "landscape.natural",
 				"elementType": "geometry.fill",
 				"stylers": [
