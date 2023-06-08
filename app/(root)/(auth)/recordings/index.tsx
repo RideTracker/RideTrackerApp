@@ -6,6 +6,7 @@ import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "../(tabs)/record";
 import { timeSince } from "../../../../utils/time";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
+import { useUser } from "../../../../modules/user/useUser";
 
 type RecordingSummaryProp = {
     recording: {
@@ -29,6 +30,7 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
     const theme = useTheme();
     const router = useRouter();
     const mapRef = useRef();
+    const userData = useUser();
 
     useEffect(() => {
         (mapRef.current as MapView).fitToCoordinates(recording.locations.map((location) => location.coords));
@@ -37,7 +39,7 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
     return (
         <TouchableOpacity style={{ height: 80, flexDirection: "row", gap: 10 }} onPress={() => router.push(`/recordings/${recording.id}/upload`)}>
             <View style={{ width: 140, height: "100%", borderRadius: 6, overflow: "hidden" }}>
-                <MapView ref={mapRef} provider={PROVIDER_GOOGLE} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
+                <MapView ref={mapRef} provider={userData.mapProvider} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
                     (mapRef.current as MapView).fitToCoordinates(recording.locations.map((location) => location.coords));
                 }}>
                     <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={2} strokeColor={theme.brand}/>

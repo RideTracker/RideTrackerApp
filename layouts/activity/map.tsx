@@ -8,6 +8,7 @@ import { ParagraphText } from "../../components/texts/Paragraph";
 import { getDistance, getCompassDirection } from "geolib";
 import { ComponentType } from "../../models/componentType";
 import { Rect } from "react-native-safe-area-context";
+import { useUser } from "../../modules/user/useUser";
 
 type ActivityMapProps = {
     activity: {
@@ -69,6 +70,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
 
     const mapStyle = useMapStyle();
     const theme = useTheme();
+    const userData = useUser();
 
     const [ ready, setReady ] = useState<boolean>(false);
     const [ layout, setLayout ] = useState(null);
@@ -267,7 +269,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                     }}
                     onLayout={(event) => setLayout(event.nativeEvent.layout)}
                     pointerEvents={(type !== ComponentType.Default)?("none"):("auto")}
-                    provider={PROVIDER_GOOGLE}
+                    provider={userData.mapProvider}
                     customMapStyle={theme.mapStyle.concat(mapStyle.compact)}
                     zoomEnabled={false}
                     pitchEnabled={false}

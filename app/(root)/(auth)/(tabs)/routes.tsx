@@ -12,11 +12,13 @@ import { useClient } from "../../../../modules/useClient";
 import { CaptionText } from "../../../../components/texts/Caption";
 import { PlaceAutocompletePrediction } from "@ridetracker/ridetrackerclient/dist/models/PlaceAutocompletePrediction";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
+import { useUser } from "../../../../modules/user/useUser";
 
 export default function Routes() {
     const client = useClient();
     const theme = useTheme();
     const router = useRouter();
+    const userData = useUser();
 
     const mapRef = useRef<MapView>();
     const searchRef = useRef<TextInput>();
@@ -82,7 +84,8 @@ export default function Routes() {
     useEffect(() => {
         if(searchPlace) {
             mapRef.current.setCamera({
-                center: searchPlace.location
+                center: searchPlace.location,
+                zoom: 13
             });
         }
     }, [ searchPlace ]);
@@ -110,12 +113,19 @@ export default function Routes() {
         <View style={{ flex: 1, position: "relative", backgroundColor: theme.background }}>
             <Stack.Screen options={{
                 title: "Routes",
-                headerTransparent: true
+                headerTransparent: true,
+                headerRight: () => (
+                    <View style={{ marginRight: 20 }}>
+                        <TouchableOpacity>
+                            <FontAwesome name="plus" size={24} color={theme.color}/>
+                        </TouchableOpacity>
+                    </View>
+                )
             }} />
 
             <MapView
                 ref={mapRef}
-                provider={PROVIDER_GOOGLE}
+                provider={userData.mapProvider}
                 showsUserLocation={true}
                 style={{
                     position: "absolute",
@@ -218,7 +228,7 @@ export default function Routes() {
                 </View>
             )}
 
-            {/*<View style={{
+            <View style={{
                 backgroundColor: theme.background,
 
                 width: "100%",
@@ -229,19 +239,13 @@ export default function Routes() {
                 bottom: 0,
                 left: 0,
 
+                padding: 10,
+
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10
             }}>
-                <Tabs initialTab="routes">
-                    <TabsPage id="routes" title="Your routes">
-
-                    </TabsPage>
-                    
-                    <TabsPage id="routes2" title=" ">
-
-                    </TabsPage>
-                </Tabs>
-            </View>*/}
+                <HeaderText>Segments</HeaderText>
+            </View>
         </View>
     );
 }

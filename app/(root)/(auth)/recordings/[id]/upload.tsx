@@ -14,6 +14,7 @@ import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import Constants from "expo-constants";
 import { useClient } from "../../../../../modules/useClient";
 import { getBikes } from "@ridetracker/ridetrackerclient";
+import { useUser } from "../../../../../modules/user/useUser";
 
 export default function UploadRecordingPage() {
     if(Platform.OS === "web")
@@ -23,6 +24,7 @@ export default function UploadRecordingPage() {
     const theme = useTheme();
     const mapRef = useRef();
     const router = useRouter();
+    const userData = useUser();
 
     const [ submitting ] = useState(false);
 
@@ -66,7 +68,7 @@ export default function UploadRecordingPage() {
                 <View style={{ gap: 10, padding: 10 }}>
                     <View style={{ width: "100%", height: 200, borderRadius: 6, overflow: "hidden", backgroundColor: theme.placeholder }}>
                         {(recording) && (
-                            <MapView ref={mapRef} provider={PROVIDER_GOOGLE} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
+                            <MapView ref={mapRef} provider={userData.mapProvider} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
                                 (mapRef.current as MapView).fitToCoordinates(recording.locations.map((location) => location.coords));
                             }}>
                                 <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={2} strokeColor={theme.brand}/>

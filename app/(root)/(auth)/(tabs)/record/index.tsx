@@ -11,6 +11,7 @@ import * as FileSystem from "expo-file-system";
 import { LinearGradient } from "expo-linear-gradient";
 import EventEmitter from "EventEmitter";
 import { formatTime } from "../../../../../utils/time";
+import { useUser } from "../../../../../modules/user/useUser";
 
 const RECORD_TASK_NAME = "RECORD_GEOLOCATION";
 export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
@@ -43,9 +44,9 @@ export default function Record() {
         return (<Text>Unsupported for web</Text>);
 
     const theme = useTheme();
-
     const router = useRouter();
     const mapRef = useRef();
+    const userData = useUser();
 
     const [ id ] = useState(uuid.v4());
     const [ location, setLocation ] = useState(null);
@@ -252,7 +253,7 @@ export default function Record() {
                 
                 customMapStyle={theme.mapStyle.concat(theme.mapStyleFullscreen)}
                 
-                provider={PROVIDER_GOOGLE}
+                provider={userData.mapProvider}
 
                 showsCompass={false}
                 showsUserLocation={true}

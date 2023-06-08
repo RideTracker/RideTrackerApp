@@ -6,7 +6,8 @@ import { User } from "../../models/User";
 const userDataPath = FileSystem.documentDirectory + "/userData.json";
 
 const initialState: User = {
-    filters: {}
+    filters: {},
+    mapProvider: "google"
 };
 
 export const userDataSlice = createSlice({
