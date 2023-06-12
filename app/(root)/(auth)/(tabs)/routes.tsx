@@ -2,10 +2,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Alert, ScrollView, TextInput, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { HeaderText } from "../../../../components/texts/Header";
 import * as Location from "expo-location";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5, Entypo } from "@expo/vector-icons";
 import FormInput from "../../../../components/FormInput";
 import { getMapsGeocode, getMapsSearchPredictions } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
@@ -24,17 +24,22 @@ export default function Routes() {
     const searchRef = useRef<TextInput>();
 
     const [ initialLocation, setInitialLocation ] = useState(null);
+    
     const [ searchFocus, setSearchFocus ] = useState<boolean>(false);
     const [ searchText, setSearchText ] = useState<string>("");
     const [ searchTimeout, setSearchTimeout ] = useState<NodeJS.Timeout>(null);
     const [ searchPredictions, setSearchPredictions ] = useState<PlaceAutocompletePrediction[]>([]);
-    const [ searchPlace, setSearchPlace ] = useState<{
-        address: string;
+
+    const [ waypoints, setWaypoints ] = useState<{
         location: {
             latitude: number;
             longitude: number;
-        }
-    } | null>(null);
+        };
+
+        description?: string;
+    }[]>([]);
+
+    const [ sorting, setSorting ] = useState<boolean>(false);
 
     useEffect(() => {
         Location.getForegroundPermissionsAsync().then(async (permissions) => {
@@ -81,15 +86,6 @@ export default function Routes() {
         }, 500));
     }, [ searchText ]);
 
-    useEffect(() => {
-        if(searchPlace) {
-            mapRef.current.setCamera({
-                center: searchPlace.location,
-                zoom: 13
-            });
-        }
-    }, [ searchPlace ]);
-
     const handleSearchPlace = useCallback((placeId: string) => {
         getMapsGeocode(client, placeId).then((result) => {
             console.log(result);
@@ -99,15 +95,42 @@ export default function Routes() {
 
             searchRef.current.blur();
 
-            if(!result.places.length) {
-                setSearchPlace(null);
-
+            if(!result.places.length)
                 return;
+
+            let newWaypoints = waypoints;
+
+            if(newWaypoints.length === 0) {
+                newWaypoints = [
+                    {
+                        location: initialLocation.coords,
+                        description: "Your location"
+                    }
+                ];
             }
 
-            setSearchPlace(result.places[0]);
+            newWaypoints.push({
+                location: result.places[0].location,
+                description: result.places[0].address
+            });
+
+            setWaypoints(newWaypoints);
         });
     }, [ client, searchRef ]);
+
+    useEffect(() => {
+        if(waypoints.length) {
+            mapRef.current.fitToElements({
+                animated: true,
+                edgePadding: {
+                    left: 10,
+                    top: 10,
+                    right: 10,
+                    bottom: 10
+                }
+            });
+        }
+    }, [ waypoints ]);
     
     return (
         <View style={{ flex: 1, position: "relative", backgroundColor: theme.background }}>
@@ -139,9 +162,13 @@ export default function Routes() {
                 onPanDrag={() => {}}
                 customMapStyle={theme.mapStyle}
                 >
-                {(searchPlace) && (
-                    <Marker coordinate={searchPlace.location}/>
+                {(!!waypoints.length) && (
+                    <Polyline coordinates={waypoints.map((waypoint) => waypoint.location)} fillColor={theme.color} strokeWidth={2}/>                    
                 )}
+
+                {waypoints.map((waypoint, index) => (
+                    <Marker key={index} coordinate={waypoint.location}/>
+                ))}
             </MapView>
 
             {(searchFocus) && (
@@ -228,24 +255,68 @@ export default function Routes() {
                 </View>
             )}
 
-            <View style={{
-                backgroundColor: theme.background,
+            {(!!waypoints.length) && (
+                <View style={{
+                    backgroundColor: theme.background,
 
-                width: "100%",
-                height: 50,
+                    width: "100%",
 
-                position: "absolute",
+                    position: "absolute",
 
-                bottom: 0,
-                left: 0,
+                    bottom: 0,
+                    left: 0,
 
-                padding: 10,
+                    padding: 10,
+                    gap: 10,
 
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10
-            }}>
-                <HeaderText>Segments</HeaderText>
-            </View>
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10
+                }}>
+                    <HeaderText>Segments</HeaderText>
+
+                    <View style={{ gap: 10, position: "relative" }}>
+                        {waypoints.map((waypoint, index) => (
+                            <TouchableWithoutFeedback key={index} onLongPress={() => {
+                                setSorting(true);
+                            }}>
+                                <View style={{ flexDirection: "row", gap: 10 }}>
+                                    <View style={{
+                                        justifyContent: "center",
+                                        alignItems: "center",
+
+                                        width: 32,
+
+                                        position: "relative"
+                                    }}>
+                                        <FontAwesome5 name={(index === waypoints.length - 1)?("flag-checkered"):("map-marker-alt")} size={24} color={theme.color}/>
+
+                                        {(index !== waypoints.length - 1) && (
+                                            <Entypo name="dots-three-vertical" size={20} color={theme.color} style={{ marginBottom: -25, marginTop: 5 }}/>
+                                        )}
+                                    </View>
+
+                                    <View style={{ flexGrow: 1 }}>
+                                        <FormInput value={waypoint.description ?? `Lat: ${waypoint.location.latitude} Lng: ${waypoint.location.longitude}`} iconRight={(
+                                            <TouchableOpacity style={{
+                                                flexGrow: 1,
+
+                                                justifyContent: "center",
+                                                alignItems: "center"
+                                            }} onPress={() => {
+                                                setWaypoints(waypoints.filter((_, itemIndex) => itemIndex !== index));
+                                            }}>
+                                                <FontAwesome5 name={"times"} size={24} color={theme.color}/>
+                                            </TouchableOpacity>
+                                        )} props={{
+                                            editable: false
+                                        }}/>
+                                    </View>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        ))}
+                    </View>
+                </View>
+            )}
         </View>
     );
 }

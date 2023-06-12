@@ -5,16 +5,18 @@ import { useTheme } from "../utils/themes";
 type FormInputProps = {
     placeholder?: string;
     icon?: ReactNode;
+    iconRight?: ReactNode;
     props?: TextInputProps & {
         enterKeyHint?: string;
     };
     inputRef?: LegacyRef<TextInput>;
     children?: ReactNode;
     style?: TextStyle;
+    value?: string;
     borderRadius?: number;
 };
 
-export default function FormInput({ props, placeholder, icon, inputRef, style, borderRadius }: FormInputProps) {
+export default function FormInput({ value, props, placeholder, icon, iconRight, inputRef, style, borderRadius }: FormInputProps) {
     const theme = useTheme();
 
     return (
@@ -59,11 +61,23 @@ export default function FormInput({ props, placeholder, icon, inputRef, style, b
 
                     ...style
                 }}
+                value={value}
                 placeholder={placeholder}
                 placeholderTextColor={theme.color}
 
                 {...props}
             />
+            
+            {(iconRight) && (
+                <View style={{
+                    marginVertical: 10,
+                    width: 32,
+                    alignItems: "center",
+                    alignSelf: "flex-end"
+                }}>
+                    {iconRight}
+                </View>
+            )}
         </View>
     );
 }
