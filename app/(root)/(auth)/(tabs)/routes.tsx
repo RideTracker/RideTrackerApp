@@ -13,12 +13,18 @@ import { CaptionText } from "../../../../components/texts/Caption";
 import { PlaceAutocompletePrediction } from "@ridetracker/ridetrackerclient/dist/models/PlaceAutocompletePrediction";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import { useUser } from "../../../../modules/user/useUser";
+import { useDispatch } from "react-redux";
+import { useSearchPredictions } from "../../../../modules/usePlacesHistory";
+import { addSearchPrediction } from "../../../../utils/stores/searchPredictions";
+import { SearchPrediction } from "../../../../models/SearchPrediction";
 
 export default function Routes() {
     const client = useClient();
     const theme = useTheme();
     const router = useRouter();
     const userData = useUser();
+    const searchPredictionsHistory = useSearchPredictions();
+    const dispatch = useDispatch();
 
     const mapRef = useRef<MapView>();
     const searchRef = useRef<TextInput>();
@@ -28,16 +34,9 @@ export default function Routes() {
     const [ searchFocus, setSearchFocus ] = useState<boolean>(false);
     const [ searchText, setSearchText ] = useState<string>("");
     const [ searchTimeout, setSearchTimeout ] = useState<NodeJS.Timeout>(null);
-    const [ searchPredictions, setSearchPredictions ] = useState<PlaceAutocompletePrediction[]>([]);
+    const [ searchPredictions, setSearchPredictions ] = useState<SearchPrediction[]>([]);
 
-    const [ waypoints, setWaypoints ] = useState<{
-        location: {
-            latitude: number;
-            longitude: number;
-        };
-
-        description?: string;
-    }[]>([]);
+    const [ waypoints, setWaypoints ] = useState<SearchPrediction[]>([]);
 
     const [ sorting, setSorting ] = useState<boolean>(false);
 
@@ -80,42 +79,77 @@ export default function Routes() {
     
                 if(!result.success)
                     return;
+
+                if(!result.predictions.length)
+                    return;
     
-                setSearchPredictions(result.predictions);
+                setSearchPredictions(result.predictions.map((prediction) => {
+                    return {
+                        name: prediction.structured_formatting.main_text,
+                        description: prediction.structured_formatting.secondary_text,
+                        placeId: prediction.place_id
+                    };
+                }));
             });
         }, 500));
     }, [ searchText ]);
 
-    const handleSearchPlace = useCallback((placeId: string) => {
-        getMapsGeocode(client, placeId).then((result) => {
-            console.log(result);
+    const handleSearchPlace = useCallback((searchPrediction: SearchPrediction) => {
+        if(!searchPrediction.location && searchPrediction.placeId) {
+            getMapsGeocode(client, searchPrediction.placeId).then((result) => {
+                if(!result.success)
+                    return;
 
-            if(!result.success)
-                return;
+                searchRef.current.blur();
 
+                if(!result.places.length)
+                    return;
+
+                let newWaypoints = waypoints;
+
+                if(newWaypoints.length === 0) {
+                    newWaypoints = [
+                        {
+                            name: "Your location",
+                            location: initialLocation.coords
+                        }
+                    ];
+                }
+
+                searchPrediction.location = result.places[0].location;
+
+                newWaypoints.push(searchPrediction);
+
+                console.log("shoild add");
+                dispatch(addSearchPrediction(searchPrediction));
+
+                setWaypoints(newWaypoints);
+                
+                setSearchPredictions([]);
+                searchRef.current.clear();
+            });
+        }
+        else if(searchPrediction.location) {
             searchRef.current.blur();
-
-            if(!result.places.length)
-                return;
 
             let newWaypoints = waypoints;
 
             if(newWaypoints.length === 0) {
                 newWaypoints = [
                     {
-                        location: initialLocation.coords,
-                        description: "Your location"
+                        name: "Your location",
+                        location: initialLocation.coords
                     }
                 ];
             }
-
-            newWaypoints.push({
-                location: result.places[0].location,
-                description: result.places[0].address
-            });
+            
+            newWaypoints.push(searchPrediction);
 
             setWaypoints(newWaypoints);
-        });
+            
+            setSearchPredictions([]);
+            searchRef.current.clear();
+        }
     }, [ client, searchRef ]);
 
     useEffect(() => {
@@ -162,7 +196,7 @@ export default function Routes() {
                 onPanDrag={() => {}}
                 customMapStyle={theme.mapStyle}
                 >
-                {(!!waypoints.length) && (
+                {(waypoints.length >= 2) && (
                     <Polyline coordinates={waypoints.map((waypoint) => waypoint.location)} fillColor={theme.color} strokeWidth={2}/>                    
                 )}
 
@@ -203,9 +237,9 @@ export default function Routes() {
                 {(searchFocus) && (
                     <View style={{ paddingVertical: 10 }}>
                         <View style={{ gap: 10 }}>
-                            {searchPredictions.map((prediction) => (
-                                <TouchableOpacity key={prediction.place_id} onPress={() => {
-                                    handleSearchPlace(prediction.place_id);
+                            {((searchPredictions.concat(searchPredictionsHistory.slice(0, Math.max(Math.min(5 - searchPredictions.length, searchPredictionsHistory.length), 0))))).map((prediction, index) => (
+                                <TouchableOpacity key={index} onPress={() => {
+                                    handleSearchPlace(prediction);
                                 }}>
                                     <View style={{ flexDirection: "row", gap: 10 }}>
                                         <View style={{
@@ -218,14 +252,14 @@ export default function Routes() {
                                             justifyContent: "center",
                                             alignItems: "center"
                                         }}>
-                                            <FontAwesome5 name="map-marker-alt" size={24} color={theme.color}/>
+                                            <FontAwesome5 name={(prediction.location)?("history"):("map-marker-alt")} size={(prediction.location)?(22):(24)} color={theme.color}/>
                                         </View>
 
                                         <View style={{ justifyContent: "space-evenly" }}>
-                                            <CaptionText>{prediction.structured_formatting.main_text}</CaptionText>
+                                            <CaptionText>{prediction.name}</CaptionText>
 
-                                            {(prediction.structured_formatting.secondary_text) && (
-                                                <ParagraphText>{prediction.structured_formatting.secondary_text}</ParagraphText>
+                                            {(prediction.description) && (
+                                                <ParagraphText>{prediction.description}</ParagraphText>
                                             )}
                                         </View>
                                     </View>
@@ -272,8 +306,6 @@ export default function Routes() {
                     borderTopLeftRadius: 10,
                     borderTopRightRadius: 10
                 }}>
-                    <HeaderText>Segments</HeaderText>
-
                     <View style={{ gap: 10, position: "relative" }}>
                         {waypoints.map((waypoint, index) => (
                             <TouchableWithoutFeedback key={index} onLongPress={() => {
@@ -288,7 +320,7 @@ export default function Routes() {
 
                                         position: "relative"
                                     }}>
-                                        <FontAwesome5 name={(index === waypoints.length - 1)?("flag-checkered"):("map-marker-alt")} size={24} color={theme.color}/>
+                                        <FontAwesome5 name={(index === (waypoints.length - 1) && index !== 0)?("flag-checkered"):("map-marker-alt")} size={24} color={theme.color}/>
 
                                         {(index !== waypoints.length - 1) && (
                                             <Entypo name="dots-three-vertical" size={20} color={theme.color} style={{ marginBottom: -25, marginTop: 5 }}/>
@@ -296,7 +328,7 @@ export default function Routes() {
                                     </View>
 
                                     <View style={{ flexGrow: 1 }}>
-                                        <FormInput value={waypoint.description ?? `Lat: ${waypoint.location.latitude} Lng: ${waypoint.location.longitude}`} iconRight={(
+                                        <FormInput value={waypoint.name} iconRight={(
                                             <TouchableOpacity style={{
                                                 flexGrow: 1,
 

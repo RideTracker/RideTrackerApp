@@ -7,6 +7,7 @@ import { useTheme } from "../themes";
 import { useUser } from "../../modules/user/useUser";
 import Client, { authenticateUser } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
+import { readSearchPredictions, setSearchPredictions } from "../stores/searchPredictions";
 
 const AuthContext = React.createContext(null);
 
@@ -67,6 +68,12 @@ export function Provider(props: ProviderProps) {
 
             setReady(true);
         });
+
+        readSearchPredictions().then(async (data) => {
+            console.log({ data });
+
+            dispatch(setSearchPredictions(data));
+        })
     }, []);
 
     useProtectedRoute();
