@@ -7,7 +7,7 @@ import { HeaderText } from "../../../../components/texts/Header";
 import * as Location from "expo-location";
 import { FontAwesome, FontAwesome5, Entypo } from "@expo/vector-icons";
 import FormInput from "../../../../components/FormInput";
-import { getMapsGeocode, getMapsSearchPredictions } from "@ridetracker/ridetrackerclient";
+import { getMapsGeocode, getMapsRoutes, getMapsSearchPredictions } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 import { CaptionText } from "../../../../components/texts/Caption";
 import { PlaceAutocompletePrediction } from "@ridetracker/ridetrackerclient/dist/models/PlaceAutocompletePrediction";
@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { useSearchPredictions } from "../../../../modules/usePlacesHistory";
 import { addSearchPrediction } from "../../../../utils/stores/searchPredictions";
 import { SearchPrediction } from "../../../../models/SearchPrediction";
+import { decode } from "@googlemaps/polyline-codec";
 
 export default function Routes() {
     const client = useClient();
@@ -37,6 +38,7 @@ export default function Routes() {
     const [ searchPredictions, setSearchPredictions ] = useState<SearchPrediction[]>([]);
 
     const [ waypoints, setWaypoints ] = useState<SearchPrediction[]>([]);
+    const [ polylines, setPolylines ] = useState<{ latitude: number; longitude: number; }[][]>([]);
 
     const [ sorting, setSorting ] = useState<boolean>(false);
 
@@ -111,7 +113,10 @@ export default function Routes() {
                     newWaypoints = [
                         {
                             name: "Your location",
-                            location: initialLocation.coords
+                            location: {
+                                latitude: initialLocation.coords.latitude,
+                                longitude: initialLocation.coords.longitude
+                            }
                         }
                     ];
                 }
@@ -138,7 +143,10 @@ export default function Routes() {
                 newWaypoints = [
                     {
                         name: "Your location",
-                        location: initialLocation.coords
+                        location: {
+                            latitude: initialLocation.coords.latitude,
+                            longitude: initialLocation.coords.longitude
+                        }
                     }
                 ];
             }
@@ -157,14 +165,23 @@ export default function Routes() {
             mapRef.current.fitToElements({
                 animated: true,
                 edgePadding: {
-                    left: 10,
-                    top: 10,
-                    right: 10,
-                    bottom: 10
+                    left: 100,
+                    top: 200,
+                    right: 100,
+                    bottom: 200
                 }
             });
+
+            getMapsRoutes(client, waypoints.map((waypoint) => waypoint.location)).then((result) => {
+                setPolylines(result.polylines.map((polyline) => decode(polyline, 5).map((coordinate) => {
+                    return {
+                        latitude: coordinate[0],
+                        longitude: coordinate[1]
+                    };
+                })));
+            })
         }
-    }, [ waypoints ]);
+    }, [ waypoints.length ]);
     
     return (
         <View style={{ flex: 1, position: "relative", backgroundColor: theme.background }}>
@@ -196,12 +213,12 @@ export default function Routes() {
                 onPanDrag={() => {}}
                 customMapStyle={theme.mapStyle}
                 >
-                {(waypoints.length >= 2) && (
-                    <Polyline coordinates={waypoints.map((waypoint) => waypoint.location)} fillColor={theme.color} strokeWidth={2}/>                    
-                )}
+                {polylines.map((polyline, index) => (
+                    <Polyline key={index} coordinates={polyline} fillColor={theme.color} strokeWidth={4}/>                    
+                ))}
 
                 {waypoints.map((waypoint, index) => (
-                    <Marker key={index} coordinate={waypoint.location}/>
+                    <Marker key={index} coordinate={waypoint.location} pinColor="blue"/>
                 ))}
             </MapView>
 
