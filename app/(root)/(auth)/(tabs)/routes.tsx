@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Alert, ScrollView, TextInput, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
-import { useTheme } from "../../../../utils/themes";
-import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
+import { useMapStyle, useTheme } from "../../../../utils/themes";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import { HeaderText } from "../../../../components/texts/Header";
 import * as Location from "expo-location";
 import { FontAwesome, FontAwesome5, Entypo } from "@expo/vector-icons";
@@ -10,7 +10,6 @@ import FormInput from "../../../../components/FormInput";
 import { getMapsGeocode, getMapsRoutes, getMapsSearchPredictions } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 import { CaptionText } from "../../../../components/texts/Caption";
-import { PlaceAutocompletePrediction } from "@ridetracker/ridetrackerclient/dist/models/PlaceAutocompletePrediction";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import { useUser } from "../../../../modules/user/useUser";
 import { useDispatch } from "react-redux";
@@ -18,10 +17,18 @@ import { useSearchPredictions } from "../../../../modules/usePlacesHistory";
 import { addSearchPrediction } from "../../../../utils/stores/searchPredictions";
 import { SearchPrediction } from "../../../../models/SearchPrediction";
 import { decode } from "@googlemaps/polyline-codec";
+import GoogleMapsLogo from "../../../../components/maps/GoogleMapsLogo";
+import MapRouteMarkers from "../../../../components/maps/MapRouteMarkers";
+import getFormattedDuration from "../../../../controllers/getFormattedDuration";
+import getDurationAsNumber from "../../../../controllers/getDurationAsNumber";
+import Button from "../../../../components/Button";
+import * as Linking from "expo-linking";
+import getGoogleMapsDirectionsUrl from "../../../../controllers/getGoogleMapsDirectionsUrl";
 
 export default function Routes() {
     const client = useClient();
     const theme = useTheme();
+    const mapStyle = useMapStyle();
     const router = useRouter();
     const userData = useUser();
     const searchPredictionsHistory = useSearchPredictions();
@@ -38,40 +45,54 @@ export default function Routes() {
     const [ searchPredictions, setSearchPredictions ] = useState<SearchPrediction[]>([]);
 
     const [ waypoints, setWaypoints ] = useState<SearchPrediction[]>([]);
-    const [ polylines, setPolylines ] = useState<{ latitude: number; longitude: number; }[][]>([]);
+    const [ routes, setRoutes ] = useState<{
+        polyline: { latitude: number; longitude: number; }[];
+        distance: number;
+        duration: string;
+    }[]>([]);
 
     const [ sorting, setSorting ] = useState<boolean>(false);
 
     useEffect(() => {
-        Location.getForegroundPermissionsAsync().then(async (permissions) => {
-            if(!permissions.granted) {
-                const result = await Location.requestForegroundPermissionsAsync();
+        if(!initialLocation) {
+            Location.getForegroundPermissionsAsync().then(async (permissions) => {
+                if(!permissions.granted) {
+                    const result = await Location.requestForegroundPermissionsAsync();
 
-                if(!result.granted) {
-                    router.back();
+                    if(!result.granted) {
+                        router.back();
 
-                    return;
-                }
-            }
-
-            Location.getCurrentPositionAsync().then((location) => {
-                setInitialLocation(location);
-    
-                mapRef.current.setCamera({
-                    zoom: 12,
-                    
-                    center: {
-                        latitude: location.coords.latitude,
-                        longitude: location.coords.longitude
+                        return;
                     }
+                }
+
+                Location.getCurrentPositionAsync().then((location) => {
+                    setInitialLocation(location);
+        
+                    mapRef.current.setCamera({
+                        zoom: 12,
+                        
+                        center: {
+                            latitude: location.coords.latitude,
+                            longitude: location.coords.longitude
+                        }
+                    });
                 });
             });
-        })
+        }
     }, []);
 
     useEffect(() => {
         if(searchTimeout)
             clearInterval(searchTimeout);
+
+        
+        if(!searchText.length) {
+            setSearchTimeout(null);
+            setSearchPredictions([]);
+
+            return;
+        }
 
         setSearchTimeout(setTimeout(() => {
             setSearchTimeout(null);
@@ -162,7 +183,7 @@ export default function Routes() {
 
     useEffect(() => {
         if(waypoints.length) {
-            mapRef.current.fitToElements({
+            mapRef.current.fitToCoordinates(waypoints.flatMap((waypoint) => waypoint.location), {
                 animated: true,
                 edgePadding: {
                     left: 100,
@@ -173,12 +194,18 @@ export default function Routes() {
             });
 
             getMapsRoutes(client, waypoints.map((waypoint) => waypoint.location)).then((result) => {
-                setPolylines(result.polylines.map((polyline) => decode(polyline, 5).map((coordinate) => {
+                setRoutes(result.routes.map((route) => {
                     return {
-                        latitude: coordinate[0],
-                        longitude: coordinate[1]
+                        polyline: decode(route.polyline, 5).map((coordinate) => {
+                            return {
+                                latitude: coordinate[0],
+                                longitude: coordinate[1]
+                            };
+                        }),
+                        duration: route.duration,
+                        distance: route.distance
                     };
-                })));
+                }));
             })
         }
     }, [ waypoints.length ]);
@@ -188,13 +215,13 @@ export default function Routes() {
             <Stack.Screen options={{
                 title: "Routes",
                 headerTransparent: true,
-                headerRight: () => (
+                /*headerRight: () => (
                     <View style={{ marginRight: 20 }}>
                         <TouchableOpacity>
                             <FontAwesome name="plus" size={24} color={theme.color}/>
                         </TouchableOpacity>
                     </View>
-                )
+                )*/
             }} />
 
             <MapView
@@ -211,15 +238,17 @@ export default function Routes() {
                     bottom: 0
                 }}
                 onPanDrag={() => {}}
-                customMapStyle={theme.mapStyle}
+                customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
                 >
-                {polylines.map((polyline, index) => (
-                    <Polyline key={index} coordinates={polyline} fillColor={theme.color} strokeWidth={4}/>                    
+                {routes.map((route, index) => (
+                    <Polyline key={index} coordinates={route.polyline} fillColor={theme.color} strokeWidth={4}/>                    
                 ))}
 
-                {waypoints.map((waypoint, index) => (
-                    <Marker key={index} coordinate={waypoint.location} pinColor="blue"/>
-                ))}
+                <MapRouteMarkers waypoints={waypoints}/>
+
+                {/*waypoints.map((waypoint, index) => (
+                    <Marker key={index} coordinate={waypoint.location} pinColor={getWaypointColor(index, waypoints.length)}/>
+                ))*/}
             </MapView>
 
             {(searchFocus) && (
@@ -254,6 +283,37 @@ export default function Routes() {
                 {(searchFocus) && (
                     <View style={{ paddingVertical: 10 }}>
                         <View style={{ gap: 10 }}>
+                            {(!searchPredictions.length) && (
+                                <TouchableOpacity onPress={() => {
+                                    handleSearchPlace({
+                                        location: {
+                                            latitude: initialLocation.coords.latitude,
+                                            longitude: initialLocation.coords.longitude
+                                        },
+                                        name: "Your location"
+                                    });
+                                }}>
+                                    <View style={{ flexDirection: "row", gap: 10 }}>
+                                        <View style={{
+                                            backgroundColor: "rgba(255, 255, 255, .2)",
+                                            borderRadius: 24,
+
+                                            width: 38,
+                                            height: 38,
+
+                                            justifyContent: "center",
+                                            alignItems: "center"
+                                        }}>
+                                            <FontAwesome5 name={"map-marker-alt"} size={22} color={theme.color}/>
+                                        </View>
+
+                                        <View style={{ justifyContent: "space-evenly" }}>
+                                            <CaptionText>Your location</CaptionText>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            )}
+                            
                             {((searchPredictions.concat(searchPredictionsHistory.slice(0, Math.max(Math.min(5 - searchPredictions.length, searchPredictionsHistory.length), 0))))).map((prediction, index) => (
                                 <TouchableOpacity key={index} onPress={() => {
                                     handleSearchPlace(prediction);
@@ -323,6 +383,19 @@ export default function Routes() {
                     borderTopLeftRadius: 10,
                     borderTopRightRadius: 10
                 }}>
+                    <GoogleMapsLogo style={{
+                        position: "absolute",
+                        top: -25
+                    }}/>
+
+                    {(!!routes.length) && (
+                        <View style={{ flexDirection: "row" }}>
+                            <HeaderText>Est. {getFormattedDuration(getDurationAsNumber(routes.flatMap((route) => route.duration)))}</HeaderText>
+
+                            <HeaderText style={{ color: "grey" }}> ({routes.flatMap((route) => Math.round(route.distance / 1000) + "km").join(', ')})</HeaderText>
+                        </View>
+                    )}
+
                     <View style={{ gap: 10, position: "relative" }}>
                         {waypoints.map((waypoint, index) => (
                             <TouchableWithoutFeedback key={index} onLongPress={() => {
@@ -364,6 +437,10 @@ export default function Routes() {
                             </TouchableWithoutFeedback>
                         ))}
                     </View>
+
+                    <Button primary={true} label="Open in Google Maps" onPress={() => {
+                        Linking.openURL(getGoogleMapsDirectionsUrl(waypoints));
+                    }}/>
                 </View>
             )}
         </View>

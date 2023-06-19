@@ -8,6 +8,7 @@ import { setClient } from "../../../../utils/stores/client";
 import { SelectList } from "../../../../components/SelectList";
 import { useUser } from "../../../../modules/user/useUser";
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
+import { setSearchPredictions } from "../../../../utils/stores/searchPredictions";
 
 export default function Settings() {
     const dispatch = useDispatch();
@@ -51,6 +52,10 @@ export default function Settings() {
                         <Button primary={false} label="Reset data" onPress={() => {
                             dispatch(setUserData({ key: undefined, filters: undefined, user: undefined }));
                             dispatch(setClient(null));
+                        }}/>
+
+                        <Button primary={false} label="Reset search predictions" onPress={() => {
+                            dispatch(setSearchPredictions([]));
                         }}/>
                     </View>
                 </ScrollView>

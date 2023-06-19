@@ -32,6 +32,10 @@ export default function TabBar(props: TabBarProps) {
             paddingHorizontal: 10,
             paddingVertical: 10,
             paddingBottom: Math.max(5, insets.bottom),
+            paddingTop: 12,
+
+            borderTopColor: theme.border,
+            borderTopWidth: 1,
 
             justifyContent: "space-evenly",
 

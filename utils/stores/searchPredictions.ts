@@ -16,8 +16,6 @@ export const searchPredictionsSlice = createSlice({
 
             newSearchPredictions.push(action.payload);
 
-            console.log({  newSearchPredictions });
-
             if(Platform.OS !== "web")
                 FileSystem.writeAsStringAsync(searchPredictionsPath, JSON.stringify(newSearchPredictions));
 
@@ -41,11 +39,7 @@ export async function readSearchPredictions(): Promise<SearchPrediction[]> {
     const info = await FileSystem.getInfoAsync(searchPredictionsPath); 
 
     if(!info.exists)
-        return [
-            {
-                name: "hey"
-            }
-        ];
+        return [];
 
     const content = await FileSystem.readAsStringAsync(searchPredictionsPath);
     const data = JSON.parse(content);
