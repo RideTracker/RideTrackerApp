@@ -34,7 +34,9 @@ export default function Layout() {
 
             tabBarLabelStyle: {
                 fontSize: 14
-            }
+            },
+
+            unmountOnBlur: true
         }}>
             <Tabs.Screen name="index" options={{
                 title: "Feed",

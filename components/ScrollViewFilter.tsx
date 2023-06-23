@@ -80,23 +80,25 @@ export function ScrollViewFilter(props: ScrollViewFilterProps) {
                         <View style={{
                             position: "absolute",
 
-                            top: -4,
+                            top: 3,
+                            right: 0,
 
                             alignSelf: "center",
 
-                            backgroundColor: theme.background,
-                            borderRadius: 16,
+                            backgroundColor: theme.brand,
+                            
+                            borderWidth: 1,
+                            borderColor: theme.background,
+                            borderRadius: 10,
 
 
-                            width: 16,
-                            height: 16,
+                            width: 10,
+                            height: 10,
 
                             justifyContent: "center",
                             alignItems: "center",
 
-                        }}>
-                            <ParagraphText>{count}</ParagraphText>
-                        </View>
+                        }}/>
                     </React.Fragment>
                 ):(
                     <Feather name="filter" size={24} color={theme.color}/>
