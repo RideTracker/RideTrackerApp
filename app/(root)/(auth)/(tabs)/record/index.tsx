@@ -219,7 +219,7 @@ export default function Record() {
                 headerTitleStyle: {
                     fontSize: 24,
                     fontWeight: "500",
-                    color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"),
+                    color: "white",
                     textShadowColor: "rgba(0, 0, 0, .1)",
                     textShadowRadius: 1
                 },
@@ -329,19 +329,19 @@ export default function Record() {
                     {(recording !== null) && (
                         <>
                             <View style={{ width: "100%" }}>
-                                <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>TIME</Text>
-                                <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 60, fontWeight: "600" }}>{formatTime(time)}</Text>
+                                <Text style={{ textAlign: "center", color: "white", fontSize: 16 }}>TIME</Text>
+                                <Text style={{ textAlign: "center", color: "white", fontSize: 60, fontWeight: "600" }}>{formatTime(time)}</Text>
                             </View>
                         
                             <View style={{ flexDirection: "row" }}>
                                 <View style={{ width: "50%" }}>
-                                    <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>ELEVATION</Text>
-                                    <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.round(elevation)} m</Text>
+                                    <Text style={{ textAlign: "center", color: "white", fontSize: 16 }}>ELEVATION</Text>
+                                    <Text style={{ textAlign: "center", color: "white", fontSize: 34, fontWeight: "600" }}>{Math.round(elevation)} m</Text>
                                 </View>
 
                                 <View style={{ width: "50%" }}>
-                                    <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 16 }}>DISTANCE</Text>
-                                    <Text style={{ textAlign: "center", color: (recording && theme.contrast === "black")?("#171A23"):("#FFF"), fontSize: 34, fontWeight: "600" }}>{Math.floor((distance / 1000) * 10) / 10} km</Text>
+                                    <Text style={{ textAlign: "center", color: "white", fontSize: 16 }}>DISTANCE</Text>
+                                    <Text style={{ textAlign: "center", color: "white", fontSize: 34, fontWeight: "600" }}>{Math.floor((distance / 1000) * 10) / 10} km</Text>
                                 </View>
                             </View>
                         </>
@@ -356,9 +356,9 @@ export default function Record() {
                             justifyContent: "center",
                             alignItems: "center",
 
-                            backgroundColor: (recording && theme.contrast === "black")?("#171A23"):("#FFF")
+                            backgroundColor: "white"
                         }}>
-                            <FontAwesome5 name={(recording)?("stop"):("play")} color={(recording && theme.contrast === "black")?("#FFF"):("#000")} style={{ marginLeft: (!recording)?(4):(0) }} size={34}/>
+                            <FontAwesome5 name={(recording)?("stop"):("play")} color={"black"} style={{ marginLeft: (!recording)?(4):(0) }} size={34}/>
                         </TouchableOpacity>
                     </View>
                 </LinearGradient>

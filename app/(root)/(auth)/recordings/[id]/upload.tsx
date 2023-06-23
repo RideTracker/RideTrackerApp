@@ -13,7 +13,7 @@ import { CaptionText } from "../../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import Constants from "expo-constants";
 import { useClient } from "../../../../../modules/useClient";
-import { getBikes } from "@ridetracker/ridetrackerclient";
+import { createActivity, getBikes } from "@ridetracker/ridetrackerclient";
 import { useUser } from "../../../../../modules/user/useUser";
 
 export default function UploadRecordingPage() {
@@ -28,9 +28,12 @@ export default function UploadRecordingPage() {
 
     const [ submitting ] = useState(false);
 
+    const [ title, setTitle ] = useState<string>("");
+    const [ description, setDescription ] = useState<string>("");
     const [ bikes, setBikes ] = useState(null);
     const [ selectedBike, setSelectedBike ] = useState(null);
     const [ recording, setRecording ] = useState(null);
+    const [ sessions, setSessions ] = useState(null);
 
     const { id } = useSearchParams();
 
@@ -49,6 +52,8 @@ export default function UploadRecordingPage() {
                 const sessions = JSON.parse(await FileSystem.readAsStringAsync(file));
 
                 console.log(JSON.stringify(sessions));
+
+                setSessions(sessions);
 
                 setRecording({
                     id: file.substring(0, file.length - ".json".length),
@@ -88,7 +93,7 @@ export default function UploadRecordingPage() {
                                 enterKeyHint: "next",
                                 inputMode: "text",
                                 //onSubmitEditing: () => passwordRef.current.focus(),
-                                //onChangeText: (text) => setEmail(text)
+                                onChangeText: (text) => setTitle(text)
                             }}/>
                         </SafeAreaView>
                         
@@ -99,7 +104,7 @@ export default function UploadRecordingPage() {
                                 inputMode: "text",
                                 multiline: true,
                                 //onSubmitEditing: () => passwordRef.current.focus(),
-                                //onChangeText: (text) => setEmail(text)
+                                onChangeText: (text) => setDescription(text)
                             }}
                             style={{
                                 textAlignVertical: "top",
@@ -207,7 +212,15 @@ export default function UploadRecordingPage() {
                     )}
 
                     <View style={{ marginTop: 20, gap: 10 }}>
-                        <Button primary={true} label="Publish activity"/>
+                        <Button primary={true} label="Publish activity" onPress={() => {
+                            createActivity(client, sessions, (title.length)?(title):(null), (description.length)?(title):(null), selectedBike).then((result) => {
+                                if(result.success) {
+                                    router.replace("/index");
+
+                                    router.push(`/activities/${result.activity.id}`);
+                                }
+                            });
+                        }}/>
 
                         <Button primary={false} label="Save as draft" onPress={() => router.push("/")}/>
 

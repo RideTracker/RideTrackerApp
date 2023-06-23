@@ -63,7 +63,7 @@ export default function TabBar(props: TabBarProps) {
                 </TouchableOpacity>
             </Link>
             
-            <Link asChild={true} style={{ width: "25%", textAlign: "center", alignItems: "center" }} href={("/record")}>
+            <Link asChild={true} style={{ width: "25%", textAlign: "center", alignItems: "center" }} href={("/record")} replace={true}>
                 <TouchableOpacity>
                     <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <FontAwesome5 name="dot-circle" color={(current == "record")?(theme.brand):(theme.color)} size={44} style={{ marginTop: -5 }}/>
