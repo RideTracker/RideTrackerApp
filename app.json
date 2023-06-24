@@ -3,7 +3,7 @@
     "name": "ridetrackerapp",
     "slug": "ridetrackerapp",
     "scheme": "ridetrackerapp",
-    "version": "0.9.4",
+    "version": "0.9.9",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,7 +19,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 4,
+      "versionCode": 9,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -27,9 +27,15 @@
       "package": "com.norasoderlund.ridetrackerapp",
       "config": {
         "googleMaps": {
-            "apiKey": "AIzaSyDE-CDELSTqUz03usy2AEgNKJEE5B9CAYI"
+            "apiKey": "AIzaSyCUghPPolh8DClj-EFCzXx35K7pH1Qn128"
         }
-      }
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",

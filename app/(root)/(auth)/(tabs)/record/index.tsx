@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
-import { Tabs, useRouter } from "expo-router";
+import { Tabs, useFocusEffect, useRouter } from "expo-router";
 import { useTheme } from "../../../../../utils/themes";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import * as TaskManager from "expo-task-manager";
@@ -12,32 +12,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import EventEmitter from "EventEmitter";
 import { formatTime } from "../../../../../utils/time";
 import { useUser } from "../../../../../modules/user/useUser";
+import Recorder from "../../../../../utils/Recorder";
 
-const RECORD_TASK_NAME = "RECORD_GEOLOCATION";
 export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
-
-const locationEmitter = new EventEmitter();
-const timeEmitter = new EventEmitter();
-
-setInterval(() => {
-    timeEmitter.emit("INTERVAL");
-});
-
-TaskManager.defineTask(RECORD_TASK_NAME, (executor) => {
-    const { locations } = executor.data as {
-        locations: [];
-    };
-
-    if(executor.error || !locations.length) {
-        console.error("Geolocation error occurred, ", executor.error);
-
-        return;
-    }
-
-    console.log("Geolocation received new locations", locations);
-
-    locationEmitter.emit("LOCATION_UPDATE", locations);
-});
 
 export default function Record() {
     if(Platform.OS === "web")
@@ -48,14 +25,18 @@ export default function Record() {
     const mapRef = useRef();
     const userData = useUser();
 
+    const [ locationPermissionStatus, requestLocationPermission] = Location.useBackgroundPermissions();
+
     const [ id ] = useState(uuid.v4());
     const [ location, setLocation ] = useState(null);
+    const [ recorder ] = useState(new Recorder());
     const [ recording, setRecording ] = useState(null);
-    const [ session, setSession ] = useState(null);
+    const [ overlayVisible, setOverlayVisible ] = useState(true);
     const [ distance, setDistance ] = useState(0);
     const [ elevation, setElevation ] = useState(0);
     const [ time, setTime ] = useState(0);
-    const [ overlayVisible, setOverlayVisible ] = useState(true);
+    const [ timer, setTimer ] = useState<NodeJS.Timer>(null);
+    const [ focus, setFocus ] = useState<boolean>(true);
 
     async function ensureDirectoryExists() {
         const info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
@@ -88,63 +69,40 @@ export default function Record() {
         await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify(sessions));
     }
 
+    useFocusEffect(() => {
+        setFocus(true);
+
+        return () => {
+            setFocus(false);
+        };
+    });
+
     useEffect(() => {
         if(Platform.OS !== "android")
             return;
 
-        async function getLocationPermissions() {
-            {
-                const { status } = await Location.requestForegroundPermissionsAsync();
-    
-                if(status !== "granted") {
-                    router.push("/record/error");
-    
-                    return;
-                }
-            }
+        requestLocationPermission().then(async (result) => {
+            if(!result.granted) {
+                router.push("/record/error");
 
-            {
-                const { status } = await Location.requestBackgroundPermissionsAsync();
-    
-                if(status !== "granted") {
-                    router.push("/record/error");
-    
-                    return;
-                }
+                return;
             }
 
             const lastLocation = await Location.getLastKnownPositionAsync();
 
             if(lastLocation !== null)
                 setLocation(lastLocation);
-        }
-
-        getLocationPermissions();
-    }, []);
-
-    useEffect(() => {
-        locationEmitter.on("LOCATION_UPDATE", (locations) => {
-            setLocation(locations[locations.length - 1]);
         });
-
-        return () => {
-            locationEmitter.off("LOCATION_UPDATE");
-        };
     }, []);
 
-    useEffect(() => {
-        timeEmitter.on("INTERVAL", () => {
-            if(recording)
-                setTime(time + 1);
-        });
-
-        return () => {
-            timeEmitter.off("INTERVAL");
+    /*useEffect(() => {
+        recorder.onLocation = (location) => {
+            setLocation(location);
         };
-    }, []);
+    }, []);*/
 
-    useEffect(() => {
-        if(location && mapRef.current) {
+    /*useEffect(() => {
+        if(location && mapRef.current && focus) {
             const map: MapView = mapRef.current;
 
             map.setCamera({
@@ -152,44 +110,40 @@ export default function Record() {
                 zoom: 16
             });
         }
-    }, [ location, mapRef.current ]);
+    }, [ location, mapRef.current, focus ]);*/
 
     useEffect(() => {
-        if(recording && !session) {
-            if(Platform.OS === "android") {
-                Location.startLocationUpdatesAsync(RECORD_TASK_NAME, {
-                    accuracy: Location.Accuracy.BestForNavigation,
-                    activityType: Location.ActivityType.Fitness,
-    
-                    showsBackgroundLocationIndicator: true,
-    
-                    foregroundService: {
-                        notificationTitle: "Ride Tracker Recording",
-                        notificationBody: "Ride Tracker is tracking your position in the background while you're recording an activity.",
-                        notificationColor: theme.brand
-                    }
-                });
-            }
+        if(recording && !recorder.active) {
+            recorder.start();
 
             setOverlayVisible(true);
 
-            setSession({
-                id: uuid.v4(),
-                locations: []
-            });
+            setTimer(setInterval(() => {
+                if(focus)
+                    setTime(recorder.getElapsedTime());
+            }, 1000));
         }
-        else if(!recording && session) {
-            if(Platform.OS === "android")
-                Location.stopLocationUpdatesAsync(RECORD_TASK_NAME);
+        else if(!recording && recorder.active) {
+            recorder.stop();
 
-            saveSession(session);
-            setSession(null);
+            if(timer) {
+                clearInterval(timer);
+
+                setTimer(null);
+            }
+
+            const session = recorder.getLastSession();
+
+            if(session)
+                saveSession(session);
         }
     }, [ recording ]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(recording) {
-            const previousLocation = session.locations[session.locations.length - 1];
+            const lastSession = recorder.getLastSession();
+            
+            const previousLocation = lastSession.locations[lastSession.locations.length - 1];
 
             if(previousLocation) {
                 const altitude = (location.coords.altitude - previousLocation.coords.altitude);
@@ -202,14 +156,19 @@ export default function Record() {
                 }
             }
 
-            setSession({
-                ...session,
-                locations: [ ...session.locations, location ]
-            });
+            const firstTimestamp = recorder.getFirstSession().locations[0].timestamp;
+            const lastTimestamp = lastSession.locations[lastSession.locations.length - 1].timestamp;
 
-            setTime(time + 1);
+            //setTime(Math.round((lastTimestamp - firstTimestamp) / 1000));
         }
-    }, [ location ]);
+    }, [ location ]);*/
+
+    const handleSubmitPress = useCallback(() => {
+        if(recording === null) 
+            return router.back();
+
+        router.push(`/recordings/${id}/upload`);
+    }, [ recording ]);
 
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
@@ -227,12 +186,7 @@ export default function Record() {
                 headerTransparent: true,
 
                 headerRight: () => (recording !== true) && (
-                    <TouchableOpacity style={{ paddingHorizontal: 20 }} onPress={() => {
-                        if(recording === null) 
-                            return router.back();
-
-                        router.push(`/recordings/${id}/upload`);
-                    }}>
+                    <TouchableOpacity style={{ paddingHorizontal: 20 }} onPress={handleSubmitPress}>
                         <Text style={{ color: "#FFF", fontSize: 18, textShadowColor: "rgba(0, 0, 0, .1)", textShadowRadius: 2 }}>
                             {(recording === null)?("Close"):("Finish")}
                         </Text>
@@ -240,33 +194,35 @@ export default function Record() {
                 )
             }}/>
 
-            <MapView
-                ref={mapRef}
-                
-                style={{
-                    flex: 1,
-                    position: "absolute",
+            {(focus) && (
+                <MapView
+                    ref={mapRef}
+                    
+                    style={{
+                        flex: 1,
+                        position: "absolute",
 
-                    height: "100%",
-                    width: "100%"
-                }}
-                
-                customMapStyle={theme.mapStyle.concat(theme.mapStyleFullscreen)}
-                
-                provider={userData.mapProvider}
+                        height: "100%",
+                        width: "100%"
+                    }}
+                    
+                    customMapStyle={theme.mapStyle.concat(theme.mapStyleFullscreen)}
+                    
+                    provider={userData.mapProvider}
 
-                showsCompass={false}
-                showsUserLocation={true}
-                showsMyLocationButton={false}
+                    showsCompass={false}
+                    showsUserLocation={true}
+                    showsMyLocationButton={false}
 
-                zoomEnabled={!recording}
-                pitchEnabled={!recording}
-                rotateEnabled={!recording}
-                scrollEnabled={!recording}
-                zoomControlEnabled={false}
-                zoomTapEnabled={!recording}
-            >
-            </MapView>
+                    zoomEnabled={!recording}
+                    pitchEnabled={!recording}
+                    rotateEnabled={!recording}
+                    scrollEnabled={!recording}
+                    zoomControlEnabled={false}
+                    zoomTapEnabled={!recording}
+                >
+                </MapView>
+            )}
 
             {(overlayVisible) && (
                 <View onTouchStart={() => !recording && setOverlayVisible(false)} style={{
