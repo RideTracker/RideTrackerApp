@@ -6,6 +6,9 @@
 		"highlight": "#DDD",
         "border": "#EEE",
 
+        "red": "#DD0055",
+        "orange": "#F29900",
+
 		"brand": "#BB87FC",
 		"brandText": "#FFF",
 
@@ -21,6 +24,9 @@
         "placeholder": "#222633",
 		"highlight": "#313749",
         "border": "#242730",
+
+        "red": "#DD0055",
+        "orange": "#F29900",
 
 		"brand": "#BB87FC",
 		"brandText": "#FFF",

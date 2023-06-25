@@ -2,6 +2,7 @@ import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
 import { Platform } from "react-native"; 
 import uuid from "react-native-uuid";
+import * as Battery from 'expo-battery';
 
 const RECORDER_TASK_NAME = "RECORDER";
 
@@ -23,10 +24,12 @@ export default class Recorder {
     static instance: Recorder = null;
 
     active: boolean = false;
+    timer: NodeJS.Timer = null;
 
     sessions: {
         id: string;
         locations: Location.LocationObject[];
+        battery: Battery.PowerState[]
     }[] = [];
 
     onLocation?: (location: Location.LocationObject) => void;
@@ -46,23 +49,33 @@ export default class Recorder {
                 showsBackgroundLocationIndicator: true
             });
 
+            this.timer = setInterval(() => Recorder.handleTimer(Recorder.instance), 60 * 1000);
+
             this.sessions.push({
                 id: uuid.v4() as string,
-                locations: []
+                locations: [],
+                battery: []
             });
 
             this.active = true;
 
             Recorder.instance = this;
+
+            Recorder.handleTimer(Recorder.instance);
         }
         catch(error) {
-            if(Platform.OS !== "ios")
-                console.error(error);
+            console.error(error);
         }
     };
 
     stop() {
         Location.stopLocationUpdatesAsync(RECORDER_TASK_NAME);
+
+        if(this.timer) {
+            clearInterval(this.timer);
+            
+            this.timer = null;
+        }
 
         this.active = false;
     };
@@ -74,7 +87,7 @@ export default class Recorder {
     getLastSession() {
         if(!this.sessions.length)
             return null;
-            
+
         return this.sessions[this.sessions.length - 1];
     };
 
@@ -85,6 +98,15 @@ export default class Recorder {
             return null;
 
         return lastSession.locations[lastSession.locations.length - 1];
+    };
+
+    getLastSessionLastBattery() {
+        const lastSession = this.getLastSession();
+
+        if(!lastSession || !lastSession.battery.length)
+            return null;
+
+        return lastSession.battery[lastSession.battery.length - 1];
     };
 
     getElapsedTime() {
@@ -99,7 +121,7 @@ export default class Recorder {
             }
         });
 
-        return Math.round(time / 1000);
+        return Math.floor(time / 1000);
     };
 
     static handleLocations(instance: Recorder, locations: Location.LocationObject[]) {
@@ -111,6 +133,32 @@ export default class Recorder {
             
             if(instance.onLocation)
                 instance.onLocation(location);
+        });
+    };
+
+    static handleTimer(instance: Recorder) {
+        Battery.getPowerStateAsync().then((batteryState) => {
+            if(batteryState.batteryLevel === -1)
+                return;
+
+            const batteryLevel = Math.round(batteryState.batteryLevel * 100);
+
+            const newBatteryState: Battery.PowerState = {
+                ...batteryState,
+                batteryLevel
+            };
+
+            const previousBatteryState = instance.getLastSessionLastBattery();
+
+            if(!previousBatteryState ||
+                previousBatteryState.batteryLevel !== newBatteryState.batteryLevel ||
+                previousBatteryState.batteryState !== newBatteryState.batteryState ||
+                previousBatteryState.lowPowerMode !== newBatteryState.lowPowerMode) {
+                console.log("Received battery state: " + JSON.stringify(newBatteryState));
+    
+                if(instance.active)
+                    instance.sessions[instance.sessions.length - 1].battery.push(newBatteryState);
+            }
         });
     };
 };

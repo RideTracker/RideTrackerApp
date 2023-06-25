@@ -23,6 +23,8 @@ import { compareUrlSearchParams } from "expo-router/src/LocationProvider";
 import * as NavigationBar from "expo-navigation-bar";
 import { NavigationBarVisibility } from "expo-navigation-bar";
 import { NavigationBarBehavior } from "expo-navigation-bar";
+import { BatteryState } from "expo-battery";
+import { CaptionText } from "../../../../../components/texts/Caption";
 
 export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
 
@@ -35,7 +37,7 @@ export default function Record() {
     const mapRef = useRef<MapView>();
     const userData = useUser();
 
-    const [ locationPermissionStatus, requestLocationPermission] = Location.useBackgroundPermissions();
+    const [ locationPermissionStatus, requestLocationPermission ] = Location.useBackgroundPermissions();
 
     const [ id ] = useState(uuid.v4());
     const [ recorder ] = useState(new Recorder());
@@ -125,13 +127,7 @@ export default function Record() {
         if(Platform.OS !== "android")
             return;
 
-        requestLocationPermission().then(async (result) => {
-            if(!result.granted) {
-                router.push("/record/error");
-
-                return;
-            }
-
+        async function getLastPosition() {
             if(mapRef.current) {
                 const lastLocation = await Location.getLastKnownPositionAsync();
 
@@ -146,25 +142,22 @@ export default function Record() {
                     });
                 }
             }
-        });
-    }, []);
-
-    /*useEffect(() => {
-        recorder.onLocation = (location) => {
-            setLocation(location);
         };
-    }, []);*/
 
-    /*useEffect(() => {
-        if(location && mapRef.current && focus) {
-            const map: MapView = mapRef.current;
+        if(!locationPermissionStatus?.granted) {
+            requestLocationPermission().then(async (result) => {
+                if(!result.granted) {
+                    router.push("/record/error");
 
-            map.setCamera({
-                center: location.coords,
-                zoom: 16
+                    return;
+                }
+
+                await getLastPosition();
             });
         }
-    }, [ location, mapRef.current, focus ]);*/
+        else
+            getLastPosition();
+    }, []);
 
     useEffect(() => {
         if(recording && !recorder.active) {
@@ -288,6 +281,7 @@ export default function Record() {
     }, [ keepAwake ]);
 
     const lastLocation = recorder.getLastSessionLastLocation();
+    const lastBattery = recorder.getLastSessionLastBattery();
 
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
@@ -434,11 +428,37 @@ export default function Record() {
 
                     alignItems: "center",
 
+                    paddingHorizontal: 10,
+
                     paddingTop: 100,
                     paddingBottom: 40,
     
                     flexDirection: "column"
                 }}>
+                    {(lastBattery) && (lastBattery.batteryLevel <= 20 && lastBattery.batteryState !== BatteryState.CHARGING) && (
+                        <View style={{
+                            width: "100%",
+
+                            flexDirection: "row",
+                            gap: 10,
+
+                            alignContent: "center",
+                            justifyContent: "center"
+                        }}>
+                            <Ionicons name="md-battery-charging-outline" size={40} color={(lastBattery.batteryLevel <= 10)?(theme.red):(theme.orange)} style={{
+                                alignSelf: "center",
+                                width: 40
+                            }}/>
+                        
+                            <View style={{ flex: 1, paddingRight: 40 }}>
+                                <CaptionText style={{ color: "white" }}>{(lastBattery.batteryLevel <= 10)?("Critical"):("Low")} battery level</CaptionText>
+                                <ParagraphText style={{ color: "white" }}>
+                                    {(lastBattery.lowPowerMode)?("Consider connecting your phone to a powerbank if you have one!"):(`Consider enabling ${(Platform.OS === "android")?("power saver mode"):((Platform.OS === "ios")?("low power mode"):("battery saving mode"))} to save your battery!`)}
+                                </ParagraphText>
+                            </View>
+                        </View>
+                    )}
+
                     {(notices.length > 0) && (
                         <View style={{ width: "100%" }}>
                             {notices.map((notice) => (
