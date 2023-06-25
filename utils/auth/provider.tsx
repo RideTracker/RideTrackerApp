@@ -9,6 +9,7 @@ import Client, { authenticateUser } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
 import { readSearchPredictions, setSearchPredictions } from "../stores/searchPredictions";
 import * as NavigationBar from "expo-navigation-bar";
+import { Platform } from "react-native";
 
 const AuthContext = React.createContext(null);
 
@@ -77,9 +78,11 @@ export function Provider(props: ProviderProps) {
         })
     }, []);
 
-    useEffect(() => {
-        NavigationBar.setBackgroundColorAsync(theme.background);
-    }, [ theme ]);
+    if(Platform.OS === "android") {
+        useEffect(() => {
+            NavigationBar.setBackgroundColorAsync(theme.background);
+        }, [ theme ]);
+    }
 
     useProtectedRoute();
 

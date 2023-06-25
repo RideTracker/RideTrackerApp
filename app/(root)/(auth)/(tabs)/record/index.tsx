@@ -90,34 +90,40 @@ export default function Record() {
         };
     });
 
+    if(Platform.OS === "android") {
+        useEffect(() => {
+            let originalBehavior: NavigationBarBehavior = null;
+
+            NavigationBar.getBehaviorAsync().then((behavior) => {
+                if(behavior !== "overlay-swipe") {
+                    originalBehavior = behavior;
+
+                    NavigationBar.setBehaviorAsync("overlay-swipe");
+                }
+            });
+
+            let originalVisibility: NavigationBarVisibility = null;
+
+            NavigationBar.getVisibilityAsync().then((visibility) => {
+                if(visibility !== "hidden") {
+                    originalVisibility = visibility;
+
+                    NavigationBar.setVisibilityAsync("hidden");
+                }
+            });
+
+            return () => {
+                if(originalVisibility)
+                    NavigationBar.setVisibilityAsync(originalVisibility);
+                    
+                if(originalBehavior)
+                    NavigationBar.setBehaviorAsync(originalBehavior);
+            };
+        }, []);
+    }
+
     useEffect(() => {
-        let originalBehavior: NavigationBarBehavior = null;
-
-        NavigationBar.getBehaviorAsync().then((behavior) => {
-            if(behavior !== "overlay-swipe") {
-                originalBehavior = behavior;
-
-                NavigationBar.setBehaviorAsync("overlay-swipe");
-            }
-        });
-
-        let originalVisibility: NavigationBarVisibility = null;
-
-        NavigationBar.getVisibilityAsync().then((visibility) => {
-            if(visibility !== "hidden") {
-                originalVisibility = visibility;
-
-                NavigationBar.setVisibilityAsync("hidden");
-            }
-        });
-
         return () => {
-            if(originalVisibility)
-                NavigationBar.setVisibilityAsync(originalVisibility);
-                
-            if(originalBehavior)
-                NavigationBar.setBehaviorAsync(originalBehavior);
-
             if(keepAwake)
                 KeepAwake.deactivateKeepAwake("RideTrackerAppKeepAwake");
         };
