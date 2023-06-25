@@ -8,6 +8,7 @@ import { useUser } from "../../modules/user/useUser";
 import Client, { authenticateUser } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
 import { readSearchPredictions, setSearchPredictions } from "../stores/searchPredictions";
+import * as NavigationBar from "expo-navigation-bar";
 
 const AuthContext = React.createContext(null);
 
@@ -75,6 +76,10 @@ export function Provider(props: ProviderProps) {
             dispatch(setSearchPredictions(data));
         })
     }, []);
+
+    useEffect(() => {
+        NavigationBar.setBackgroundColorAsync(theme.background);
+    }, [ theme ]);
 
     useProtectedRoute();
 
