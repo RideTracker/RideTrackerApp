@@ -72,7 +72,19 @@ export default class Recorder {
     };
 
     getLastSession() {
+        if(!this.sessions.length)
+            return null;
+            
         return this.sessions[this.sessions.length - 1];
+    };
+
+    getLastSessionLastLocation() {
+        const lastSession = this.getLastSession();
+
+        if(!lastSession || !lastSession.locations.length)
+            return null;
+
+        return lastSession.locations[lastSession.locations.length - 1];
     };
 
     getElapsedTime() {

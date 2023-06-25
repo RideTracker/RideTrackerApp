@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 import { Tabs, useFocusEffect, useRouter } from "expo-router";
 import { useTheme } from "../../../../../utils/themes";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
-import {  FontAwesome5 } from "@expo/vector-icons"; 
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons"; 
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
 import { LinearGradient } from "expo-linear-gradient";
@@ -13,6 +13,16 @@ import EventEmitter from "EventEmitter";
 import { formatTime } from "../../../../../utils/time";
 import { useUser } from "../../../../../modules/user/useUser";
 import Recorder from "../../../../../utils/Recorder";
+import { ParagraphText } from "../../../../../components/texts/Paragraph";
+import MapFinishMarker from "../../../../../components/maps/MapFinishMarker";
+import MapStartMarker from "../../../../../components/maps/MapStartMarker";
+import MapIntermediateMarker from "../../../../../components/maps/MapIntermediateMarker";
+import MapLocationMarker from "../../../../../components/maps/MapLocationMarker";
+import * as KeepAwake from "expo-keep-awake";
+import { compareUrlSearchParams } from "expo-router/src/LocationProvider";
+import * as NavigationBar from "expo-navigation-bar";
+import { NavigationBarVisibility } from "expo-navigation-bar";
+import { NavigationBarBehavior } from "expo-navigation-bar";
 
 export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
 
@@ -22,13 +32,12 @@ export default function Record() {
 
     const theme = useTheme();
     const router = useRouter();
-    const mapRef = useRef();
+    const mapRef = useRef<MapView>();
     const userData = useUser();
 
     const [ locationPermissionStatus, requestLocationPermission] = Location.useBackgroundPermissions();
 
     const [ id ] = useState(uuid.v4());
-    const [ location, setLocation ] = useState(null);
     const [ recorder ] = useState(new Recorder());
     const [ recording, setRecording ] = useState(null);
     const [ overlayVisible, setOverlayVisible ] = useState(true);
@@ -37,6 +46,8 @@ export default function Record() {
     const [ time, setTime ] = useState(0);
     const [ timer, setTimer ] = useState<NodeJS.Timer>(null);
     const [ focus, setFocus ] = useState<boolean>(true);
+    const [ notices, setNotices ] = useState<string[]>([]);
+    const [ keepAwake, setKeepAwake ] = useState<boolean>(false);
 
     async function ensureDirectoryExists() {
         const info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
@@ -78,6 +89,39 @@ export default function Record() {
     });
 
     useEffect(() => {
+        let originalBehavior: NavigationBarBehavior = null;
+
+        NavigationBar.getBehaviorAsync().then((behavior) => {
+            if(behavior !== "overlay-swipe") {
+                originalBehavior = behavior;
+
+                NavigationBar.setBehaviorAsync("overlay-swipe");
+            }
+        });
+
+        let originalVisibility: NavigationBarVisibility = null;
+
+        NavigationBar.getVisibilityAsync().then((visibility) => {
+            if(visibility !== "hidden") {
+                originalVisibility = visibility;
+
+                NavigationBar.setVisibilityAsync("hidden");
+            }
+        });
+
+        return () => {
+            if(originalVisibility)
+                NavigationBar.setVisibilityAsync(originalVisibility);
+                
+            if(originalBehavior)
+                NavigationBar.setBehaviorAsync(originalBehavior);
+
+            if(keepAwake)
+                KeepAwake.deactivateKeepAwake("RideTrackerAppKeepAwake");
+        };
+    }, []);
+
+    useEffect(() => {
         if(Platform.OS !== "android")
             return;
 
@@ -88,10 +132,20 @@ export default function Record() {
                 return;
             }
 
-            const lastLocation = await Location.getLastKnownPositionAsync();
+            if(mapRef.current) {
+                const lastLocation = await Location.getLastKnownPositionAsync();
 
-            if(lastLocation !== null)
-                setLocation(lastLocation);
+                if(lastLocation !== null) {
+                    mapRef.current.animateCamera({
+                        center: {
+                            latitude: lastLocation.coords.latitude,
+                            longitude: lastLocation.coords.longitude
+                        },
+
+                        zoom: 12
+                    });
+                }
+            }
         });
     }, []);
 
@@ -114,16 +168,47 @@ export default function Record() {
 
     useEffect(() => {
         if(recording && !recorder.active) {
+            // enable recording
+            setNotices(notices.concat("Waiting for location information..."));
+
+            recorder.onLocation = () => {
+                setNotices(notices.filter((notice) => notice !== "Waiting for location information..."));
+
+                recorder.onLocation = undefined;
+            };
+
             recorder.start();
 
             setOverlayVisible(true);
 
             setTimer(setInterval(() => {
-                if(focus)
+                if(focus) {
                     setTime(recorder.getElapsedTime());
+
+                    if(mapRef.current) {
+                        const lastSessionLocation = recorder.getLastSessionLastLocation();
+
+                        if(lastSessionLocation) {
+                            mapRef.current.animateCamera({
+                                center: {
+                                    latitude: lastSessionLocation.coords.latitude,
+                                    longitude: lastSessionLocation.coords.longitude
+                                }
+                            });
+                        }
+                    }
+                }
             }, 1000));
+
+            if(keepAwake)
+                KeepAwake.activateKeepAwakeAsync("RideTrackerAppKeepAwake");
         }
         else if(!recording && recorder.active) {
+            // disable recording
+            setNotices(notices.filter((notice) => notice !== "Waiting for location information..."));
+
+            recorder.onLocation = undefined;
+
             recorder.stop();
 
             if(timer) {
@@ -136,6 +221,9 @@ export default function Record() {
 
             if(session)
                 saveSession(session);
+
+            if(keepAwake)
+                KeepAwake.deactivateKeepAwake("RideTrackerAppKeepAwake");
         }
     }, [ recording ]);
 
@@ -163,12 +251,43 @@ export default function Record() {
         }
     }, [ location ]);*/
 
+    useEffect(() => {
+        if(notices.length) {
+            const timeout = setTimeout(() => {
+                setNotices(notices.filter((notice) => notice === "Waiting for location information..."));
+            }, 4000);
+
+            return () => {
+                clearInterval(timeout);
+            };
+        }
+    }, [ notices ]);
+
     const handleSubmitPress = useCallback(() => {
         if(recording === null) 
             return router.back();
 
         router.push(`/recordings/${id}/upload`);
     }, [ recording ]);
+
+    const handleKeepAwakePress = useCallback(() => {
+        if(keepAwake) {
+            KeepAwake.deactivateKeepAwake("RideTrackerAppKeepAwake");
+
+            setKeepAwake(false);
+
+            setNotices(notices.filter((notice) => notice !== "Warning, using the keep awake function may drain your battery quicker."));
+        }
+        else {
+            KeepAwake.activateKeepAwakeAsync("RideTrackerAppKeepAwake");
+
+            setKeepAwake(true);
+            
+            setNotices(notices.concat("Warning, using the keep awake function may drain your battery quicker."));
+        }
+    }, [ keepAwake ]);
+
+    const lastLocation = recorder.getLastSessionLastLocation();
 
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
@@ -185,10 +304,16 @@ export default function Record() {
 
                 headerTransparent: true,
 
-                headerRight: () => (recording !== true) && (
+                headerRight: () => (recording !== true)?(
                     <TouchableOpacity style={{ paddingHorizontal: 20 }} onPress={handleSubmitPress}>
                         <Text style={{ color: "#FFF", fontSize: 18, textShadowColor: "rgba(0, 0, 0, .1)", textShadowRadius: 2 }}>
                             {(recording === null)?("Close"):("Finish")}
+                        </Text>
+                    </TouchableOpacity>
+                ):(
+                    <TouchableOpacity style={{ paddingHorizontal: 20 }} onPress={handleKeepAwakePress}>
+                        <Text style={{ color: "#FFF", fontSize: 18, textShadowColor: "rgba(0, 0, 0, .1)", textShadowRadius: 2 }}>
+                            <Ionicons name={(keepAwake)?("ios-sunny"):("ios-sunny-outline")} size={24} color={theme.color}/>
                         </Text>
                     </TouchableOpacity>
                 )
@@ -211,7 +336,7 @@ export default function Record() {
                     provider={userData.mapProvider}
 
                     showsCompass={false}
-                    showsUserLocation={true}
+                    showsUserLocation={false}
                     showsMyLocationButton={false}
 
                     zoomEnabled={!recording}
@@ -221,11 +346,60 @@ export default function Record() {
                     zoomControlEnabled={false}
                     zoomTapEnabled={!recording}
                 >
+                    {recorder.sessions.map((session, index) => (
+                        <React.Fragment key={session.id}>
+                            <Polyline coordinates={session.locations.map((location) => {
+                                return {
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude
+                                };
+                            })} strokeWidth={4} fillColor={"white"} strokeColor={"white"}/>
+
+                            {(session.locations.length > 0) && (
+                                (index === 0)?(
+                                    <MapStartMarker coordinate={session.locations[0].coords} style={{
+                                        zIndex: (index * 10)  
+                                    }}/>
+                                ):(
+                                    <MapIntermediateMarker coordinate={session.locations[0].coords} style={{
+                                        zIndex: (index * 10)  
+                                    }}/>
+                                )
+                            )}
+
+                            {(session.locations.length > 1) && (
+                                (index !== recorder.sessions.length - 1)?(
+                                    <MapIntermediateMarker coordinate={session.locations[session.locations.length - 1].coords} style={{
+                                        zIndex: (index * 10) + 1  
+                                    }}/>
+                                ):((!recorder.active) && (
+                                    <MapFinishMarker coordinate={session.locations[session.locations.length - 1].coords} style={{
+                                        zIndex: (index * 10) + 1
+                                    }}/>
+                                ))
+                            )}
+                        </React.Fragment>
+                    ))}
+
+                    {(lastLocation) && (
+                        <MapLocationMarker coordinate={lastLocation.coords} style={{
+                            zIndex: recorder.sessions.length * 10  
+                        }}/>
+                    )}
                 </MapView>
             )}
 
             {(overlayVisible) && (
-                <View onTouchStart={() => !recording && setOverlayVisible(false)} style={{
+                <View
+                    onTouchStart={() => {
+                        if(!recording) {
+                            setOverlayVisible(false);
+                        }
+                        else if(!notices.includes("Screen functions are disabled during recording.")) {
+                            setNotices(notices.concat("Screen functions are disabled during recording."));
+                        }
+                    }}
+                    style={{
                     backgroundColor: (recording)?("rgba(0, 0, 0, .25)"):("rgba(0, 0, 0, .7)"),
                     
                     width: "100%",
@@ -254,7 +428,7 @@ export default function Record() {
                 left: 0,
                 width: "100%"
             }}>
-                <LinearGradient colors={[ "rgba(0, 0, 0, .5)", "transparent" ]} locations={[ 0.5, 1.0 ]} style={{
+                <LinearGradient colors={[ (recording && !keepAwake)?("rgba(0, 0, 0, .5)"):("transparent"), "transparent" ]} locations={[ 0.5, 1.0 ]} style={{
                     gap: 10,
                     width: "100%",
 
@@ -265,6 +439,13 @@ export default function Record() {
     
                     flexDirection: "column"
                 }}>
+                    {(notices.length > 0) && (
+                        <View style={{ width: "100%" }}>
+                            {notices.map((notice) => (
+                                <ParagraphText key={notice} style={{ textAlign: "center", color: "white" }}>{notice}</ParagraphText>
+                            ))}
+                        </View>
+                    )}
                 </LinearGradient>
             </View>
 
@@ -274,7 +455,7 @@ export default function Record() {
 
                 width: "100%"
             }}>
-                <LinearGradient colors={[ "transparent", "rgba(0, 0, 0, .6)" ]} style={{
+                <LinearGradient colors={[ "transparent", (recording && !keepAwake)?("rgba(0, 0, 0, .6)"):("transparent") ]} style={{
                     alignItems: "center",
 
                     gap: 10,
