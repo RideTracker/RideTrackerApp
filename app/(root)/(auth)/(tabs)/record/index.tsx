@@ -468,7 +468,7 @@ export default function Record() {
                     {(notices.length > 0) && (
                         <View style={{ width: "100%" }}>
                             {notices.map((notice) => (
-                                <ParagraphText key={notice} style={{ textAlign: "center", color: "white" }}>{notice}</ParagraphText>
+                                <ParagraphText key={notice} style={{ textAlign: "center", color: "white", textShadowColor: "black", textShadowRadius: 2 }}>{notice}</ParagraphText>
                             ))}
                         </View>
                     )}
@@ -490,7 +490,12 @@ export default function Record() {
                     flexDirection: "column"
                 }}>
                     {(recording !== null) && (
-                        <>
+                        <View style={{
+                            gap: 10,
+
+                            alignItems: "center",
+                            flexDirection: "column"
+                        }} pointerEvents="none">
                             <View style={{ width: "100%" }}>
                                 <Text style={{ textAlign: "center", color: "white", fontSize: 16 }}>TIME</Text>
                                 <Text style={{ textAlign: "center", color: "white", fontSize: 60, fontWeight: "600" }}>{formatTime(time)}</Text>
@@ -507,7 +512,7 @@ export default function Record() {
                                     <Text style={{ textAlign: "center", color: "white", fontSize: 34, fontWeight: "600" }}>{Math.floor((distance / 1000) * 10) / 10} km</Text>
                                 </View>
                             </View>
-                        </>
+                        </View>
                     )}
 
                     <View>

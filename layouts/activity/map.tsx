@@ -86,7 +86,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
 
     useEffect(() => {
         if(activity?.polylines) {
-            setPolylines(activity.polylines.map((polyline) => decode(polyline, 5)));
+            setPolylines(activity.polylines.map((polyline) => decode(polyline)));
         }
     }, [ activity ]);
 
@@ -281,7 +281,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                                 latitude: point[0],
                                 longitude: point[1]
                             };
-                        })} strokeColor={theme.brand} strokeWidth={4}/>
+                        })} strokeColor={theme.brand} fillColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
                     ))}
                 </MapView>
 

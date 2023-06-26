@@ -24,6 +24,9 @@ import getDurationAsNumber from "../../../../controllers/getDurationAsNumber";
 import Button from "../../../../components/Button";
 import * as Linking from "expo-linking";
 import getGoogleMapsDirectionsUrl from "../../../../controllers/getGoogleMapsDirectionsUrl";
+import MapStartMarker from "../../../../components/maps/MapStartMarker";
+import MapFinishMarker from "../../../../components/maps/MapFinishMarker";
+import MapIntermediateMarker from "../../../../components/maps/MapIntermediateMarker";
 
 export default function Routes() {
     const client = useClient();
@@ -260,7 +263,7 @@ export default function Routes() {
                     <MapView
                         ref={mapRef}
                         provider={userData.mapProvider}
-                        showsUserLocation={true}
+                        showsUserLocation={false}
                         style={{
                             position: "absolute",
 
@@ -285,10 +288,10 @@ export default function Routes() {
                         customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
                         >
                         {(waypoints.length > 1) && routes.map((route, index) => (
-                            <Polyline key={index} coordinates={route.polyline} fillColor={"white"} strokeWidth={4}/>                    
+                            <Polyline key={index} coordinates={route.polyline} fillColor={"white"} strokeColor={"white"} strokeWidth={4}/>                    
                         ))}
 
-                        <Polyline coordinates={drawingCoordinates} fillColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
+                        <Polyline coordinates={drawingCoordinates} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
 
                         <MapRouteMarkers waypoints={waypoints}/>
 
@@ -441,7 +444,7 @@ export default function Routes() {
                         top: -25
                     }}/>
 
-                    {(routes.length > 1) && (
+                    {(routes.length > 0) && (
                         <View style={{ flexDirection: "row" }}>
                             <HeaderText>Est. {getFormattedDuration(getDurationAsNumber(routes.flatMap((route) => route.duration)))}</HeaderText>
 

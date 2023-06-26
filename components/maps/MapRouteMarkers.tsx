@@ -6,6 +6,10 @@ import { ParagraphText } from "../texts/Paragraph";
 import { CaptionText } from "../texts/Caption";
 import uuid from "react-native-uuid";
 import getFormattedWords from "../../controllers/getFormattedWords";
+import MapStartFinishMarker from "./MapStartFinishMarker";
+import MapStartMarker from "./MapStartMarker";
+import MapFinishMarker from "./MapFinishMarker";
+import MapIntermediateMarker from "./MapIntermediateMarker";
 
 type MapRouteMarker = {
     id: string;
@@ -59,19 +63,33 @@ export default function MapRouteMarkers({ waypoints }: MapRouteMarkersProps) {
                 const type = getFormattedWords(marker.types);
 
                 return (
-                    <Marker key={marker.id} coordinate={marker.location} style={{ flexDirection: "row" }}>
-                        <View style={{ opacity: 0, paddingRight: 30 }}>
-                            <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>{type}</ParagraphText>
+                    <React.Fragment key={marker.id}>
+                        <Marker coordinate={marker.location} style={{ flexDirection: "row" }}>
+                            <View style={{ opacity: 0, paddingRight: 30 }}>
+                                <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>{type}</ParagraphText>
 
-                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600" }}>{marker.name}</CaptionText>
-                        </View>
+                                <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600" }}>{marker.name}</CaptionText>
+                            </View>
 
-                        <View>
-                            <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>{type}</ParagraphText>
+                            <View>
+                                <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>{type}</ParagraphText>
 
-                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600" }}>{marker.name}</CaptionText>
-                        </View>
-                    </Marker>
+                                <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600" }}>{marker.name}</CaptionText>
+                            </View>
+                        </Marker>
+
+                        {(marker.types.includes("Start"))?(
+                            (marker.types.includes("Finish"))?(
+                                <MapStartFinishMarker coordinate={marker.location}/>
+                            ):(
+                                <MapStartMarker coordinate={marker.location}/>
+                            )
+                        ):((marker.types.includes("Finish"))?(
+                            <MapFinishMarker coordinate={marker.location}/>
+                        ):(
+                            <MapIntermediateMarker coordinate={marker.location}/>
+                        ))}
+                    </React.Fragment>
                 );
             })}
         </React.Fragment>
