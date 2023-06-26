@@ -3,7 +3,7 @@
     "name": "ridetrackerapp",
     "slug": "ridetrackerapp",
     "scheme": "ridetrackerapp",
-    "version": "0.9.9",
+    "version": "0.9.10",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,7 +19,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 9,
+      "versionCode": 10,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#191923"
@@ -51,7 +51,7 @@
     ],
     "extra": {
       "api": "https://staging.service.ridetracker.app",
-      "apiUserAgent": "RideTrackerApp-0.9.9",
+      "apiUserAgent": "RideTrackerApp-0.9.10",
 
       "route": "https://staging.route-service.ridetracker.app",
       

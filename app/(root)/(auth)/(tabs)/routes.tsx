@@ -28,6 +28,8 @@ import MapStartMarker from "../../../../components/maps/MapStartMarker";
 import MapFinishMarker from "../../../../components/maps/MapFinishMarker";
 import MapIntermediateMarker from "../../../../components/maps/MapIntermediateMarker";
 
+global.coordinates = [];
+
 export default function Routes() {
     const client = useClient();
     const theme = useTheme();
@@ -43,7 +45,6 @@ export default function Routes() {
     const [ focus, setFocus ] = useState<boolean>(false);
 
     const [ initialLocation, setInitialLocation ] = useState(null);
-    
     const [ searchFocus, setSearchFocus ] = useState<boolean>(false);
     const [ searchText, setSearchText ] = useState<string>("");
     const [ searchTimeout, setSearchTimeout ] = useState<NodeJS.Timeout>(null);
@@ -231,6 +232,18 @@ export default function Routes() {
         }
     }, [ waypointsLayout?.height, waypoints.length ]);
 
+    useEffect(() => {
+        if(drawing) {
+            const timer = setInterval(() => {
+                setDrawingTimestamp(Date.now());
+            }, 30);
+
+            return () => {
+                clearInterval(timer);
+            };
+        }
+    }, [ drawing ]);
+
     return (
         <View style={{ flex: 1, position: "relative", backgroundColor: theme.background }}>
             <Stack.Screen options={{
@@ -256,7 +269,8 @@ export default function Routes() {
                     bottom: 0
                 }} onPressIn={() => {
                     setDrawing(true);
-                    setDrawingCoordinates([]);
+
+                    global.coordinates = [];
                 }} onPressOut={() => {
                     setDrawing(false);
                 }}>
@@ -276,13 +290,15 @@ export default function Routes() {
                         scrollEnabled={false}
                         onPanDrag={(event) => {
                             if(drawing) {
-                                const timestamp = performance.now();
+                                //const timestamp = performance.now();
 
-                                if(timestamp - drawingTimestamp < 30)
-                                    return;
+                                //if(timestamp - drawingTimestamp < 30)
+                                //    return;
 
-                                setDrawingTimestamp(timestamp);
-                                setDrawingCoordinates(drawingCoordinates.concat(event.nativeEvent.coordinate));
+                                //setDrawingTimestamp(timestamp);
+                                //setDrawingCoordinates(drawingCoordinates.concat(event.nativeEvent.coordinate));
+
+                                global.coordinates = global.coordinates.concat(event.nativeEvent.coordinate);
                             }
                         }}
                         customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
@@ -291,7 +307,7 @@ export default function Routes() {
                             <Polyline key={index} coordinates={route.polyline} fillColor={"white"} strokeColor={"white"} strokeWidth={4}/>                    
                         ))}
 
-                        <Polyline coordinates={drawingCoordinates} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
+                        <Polyline coordinates={[...global.coordinates]} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
 
                         <MapRouteMarkers waypoints={waypoints}/>
 
