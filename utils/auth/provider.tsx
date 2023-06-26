@@ -10,7 +10,6 @@ import Constants from "expo-constants";
 import { readSearchPredictions, setSearchPredictions } from "../stores/searchPredictions";
 import * as NavigationBar from "expo-navigation-bar";
 import { Platform } from "react-native";
-import * as Application from "expo-application";
 
 const AuthContext = React.createContext(null);
 
@@ -53,7 +52,7 @@ export function Provider(props: ProviderProps) {
             dispatch(setUserData(data));
 
             if(data.key) {
-                const client = new Client(`RideTrackerApp-${Application.nativeApplicationVersion}`, Constants.expoConfig.extra.api, data.key);
+                const client = new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, data.key);
                 const authentication = await authenticateUser(client);
 
                 dispatch(setUserData({

@@ -6,5 +6,5 @@ import * as Application from "expo-application";
 export function useClient() {
     const userData = useUser();
 
-    return new Client(`RideTrackerApp-${Application.nativeApplicationVersion}`, Constants.expoConfig.extra.api, userData.key);
+    return new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, userData.key);
 }

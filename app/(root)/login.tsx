@@ -122,7 +122,7 @@ export default function Login() {
                 <Button primary={false} label="Assume random user" onPress={async () => {
                     const randomUser = await getRandomToken(client);
 
-                    const randomUserClient = new Client(`RideTrackerApp-${Application.nativeApplicationVersion}`, Constants.expoConfig.extra.api, randomUser.key);
+                    const randomUserClient = new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, randomUser.key);
                     const authentication = await authenticateUser(randomUserClient);
 
                     if(authentication.success) {
