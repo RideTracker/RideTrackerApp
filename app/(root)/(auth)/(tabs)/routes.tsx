@@ -43,14 +43,12 @@ export default function Routes() {
     const searchRef = useRef<TextInput>();
 
     const [ focus, setFocus ] = useState<boolean>(false);
-
     const [ initialLocation, setInitialLocation ] = useState(null);
     const [ searchFocus, setSearchFocus ] = useState<boolean>(false);
     const [ searchText, setSearchText ] = useState<string>("");
     const [ searchTimeout, setSearchTimeout ] = useState<NodeJS.Timeout>(null);
     const [ searchPredictions, setSearchPredictions ] = useState<SearchPrediction[]>([]);
     const [ searchLayout, setSearchLayout ] = useState<LayoutRectangle>(null);
-
     const [ waypoints, setWaypoints ] = useState<SearchPrediction[]>([]);
     const [ waypointsLayout, setWaypointsLayout ] = useState<LayoutRectangle>(null);
     const [ routes, setRoutes ] = useState<{
@@ -58,14 +56,9 @@ export default function Routes() {
         distance: number;
         duration: string;
     }[]>([]);
-
     const [ sorting, setSorting ] = useState<boolean>(false);
     const [ drawing, setDrawing ] = useState<boolean>(false);
     const [ drawingTimestamp, setDrawingTimestamp ] = useState<number>(0);
-    const [ drawingCoordinates, setDrawingCoordinates ] = useState<{
-        latitude: number;
-        longitude: number;
-    }[]>([]);
 
     useFocusEffect(() => {
         setFocus(true);
@@ -268,11 +261,11 @@ export default function Routes() {
                     left: 0,
                     bottom: 0
                 }} onPressIn={() => {
-                    setDrawing(true);
+                    //setDrawing(true);
 
-                    global.coordinates = [];
+                    //global.coordinates = [];
                 }} onPressOut={() => {
-                    setDrawing(false);
+                    //setDrawing(false);
                 }}>
                     <MapView
                         ref={mapRef}
@@ -287,17 +280,9 @@ export default function Routes() {
                             left: 0,
                             bottom: 0
                         }}
-                        scrollEnabled={false}
+                        scrollEnabled={!drawing}
                         onPanDrag={(event) => {
                             if(drawing) {
-                                //const timestamp = performance.now();
-
-                                //if(timestamp - drawingTimestamp < 30)
-                                //    return;
-
-                                //setDrawingTimestamp(timestamp);
-                                //setDrawingCoordinates(drawingCoordinates.concat(event.nativeEvent.coordinate));
-
                                 global.coordinates = global.coordinates.concat(event.nativeEvent.coordinate);
                             }
                         }}

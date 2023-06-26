@@ -1,11 +1,11 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { SplashScreen, useRouter, useSegments } from "expo-router";
 import { useDispatch } from "react-redux";
 import { readUserData, setUserData } from "../stores/userData";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../themes";
 import { useUser } from "../../modules/user/useUser";
-import Client, { authenticateUser } from "@ridetracker/ridetrackerclient";
+import Client, { StatusResponse, authenticateUser, getStatus } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
 import { readSearchPredictions, setSearchPredictions } from "../stores/searchPredictions";
 import * as NavigationBar from "expo-navigation-bar";
@@ -15,22 +15,6 @@ const AuthContext = React.createContext(null);
 
 export function useAuth() {
     return React.useContext(AuthContext);
-}
-
-function useProtectedRoute() {
-    const segments = useSegments();
-    const router = useRouter();
-
-    const userData = useUser();
-
-    React.useEffect(() => {
-        const inAuthGroup = segments.includes("(auth)");
-
-        if(!userData?.key && inAuthGroup)
-            router.replace("/login");
-        //else if (userData?.key && !inAuthGroup)
-            //router.replace("/");
-    }, [userData?.key, segments]);
 }
 
 type ProviderProps = {
@@ -43,32 +27,40 @@ export function Provider(props: ProviderProps) {
     const dispatch = useDispatch();
 
     const theme = useTheme();
+    const router = useRouter();
+    const segments = useSegments();
+    const userData = useUser();
 
-    const [user, setAuth] = React.useState(null);
-    const [ready, setReady] = React.useState(false);
+    const [ user, setAuth ] = useState(null);
+    const [ ready, setReady ] = useState<boolean>(false);
+    const [ status, setStatus ] = useState<StatusResponse>(null);
 
     useEffect(() => {
-        readUserData().then(async (data) => {
-            dispatch(setUserData(data));
+        const client = new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api);
+        
+        getStatus(client, Platform.OS).then((result) => {
+            setStatus(result);
 
-            if(data.key) {
-                const client = new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, data.key);
-                const authentication = await authenticateUser(client);
-
+            readUserData().then(async (data) => {
+                if(data.key) {
+                    const client = new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, data.key);
+                    const authentication = await authenticateUser(client);
+    
+                    dispatch(setUserData({
+                        key: authentication.key,
+                        user: authentication.user
+                    }));
+                }
+    
+                setReady(true);
+            }).catch(() => {
                 dispatch(setUserData({
-                    key: authentication.key,
-                    user: authentication.user
+                    key: undefined,
+                    user: undefined
                 }));
-            }
-
-            setReady(true);
-        }).catch(() => {
-            dispatch(setUserData({
-                key: undefined,
-                user: undefined
-            }));
-
-            setReady(true);
+    
+                setReady(true);
+            });
         });
 
         readSearchPredictions().then(async (data) => {
@@ -84,7 +76,14 @@ export function Provider(props: ProviderProps) {
         }, [ theme ]);
     }
 
-    useProtectedRoute();
+    useEffect(() => {
+        const inAuthGroup = segments.includes("(auth)");
+
+        if(!userData?.key && inAuthGroup)
+            router.replace("/login");
+        else if (userData?.key && !inAuthGroup)
+            router.replace("/");
+    }, [ userData?.key, segments ]);
 
     if(!ready)
         return (<SplashScreen/>);
