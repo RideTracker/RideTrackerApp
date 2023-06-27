@@ -4,7 +4,7 @@ import ActivityCompact from "../../../../components/activity/Compact";
 import { useTheme } from "../../../../utils/themes";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "./record";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import { LinkText } from "../../../../components/texts/Link";
@@ -119,13 +119,7 @@ export default function Index() {
                     contentOffset={{
                         x: 0,
                         y: (!filterText.length && !userData.filters?.feed?.length)?((filterLayout?.height ?? 0) + 10):(0)
-                    }}
-                    footer={(internetConnection === "OFFLINE") && (
-                        <View>
-                            <CaptionText>Internet connection required</CaptionText>
-                            <ParagraphText>You are currently offline!</ParagraphText>
-                        </View>
-                    )}>
+                    }}>
                     <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
                 </Pagination>
 
@@ -141,6 +135,31 @@ export default function Index() {
                     </TouchableOpacity>
                 )}
             </View>
+
+            
+            {(internetConnection === "OFFLINE") && (
+                <View style={{
+                    position: "absolute",
+
+                    left: 0,
+                    top: 0,
+
+                    width: "100%",
+                    height: "100%",
+
+                    backgroundColor: `rgba(${(theme.contrast === "black")?("255, 255, 255"):("0, 0, 0")}, .3)`,
+
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                    gap: 10
+                }}>
+                    <MaterialIcons name="wifi-off" size={72} color={theme.contrast}/>
+
+                    <CaptionText style={{ color: theme.contrast }}>You are currently offline!</CaptionText>
+                    <ParagraphText style={{ color: theme.contrast }}>Internet connection is required for this page.</ParagraphText>
+                </View>
+            )}
         </View>
     );
 }

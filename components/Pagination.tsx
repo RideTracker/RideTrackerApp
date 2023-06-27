@@ -35,25 +35,29 @@ export function Pagination(props: PaginationProps) {
 
         setLoading(true);
 
-        const length = await paginate(reset);
+        paginate(reset).then((length) => {
 
-        if(refreshing)
-            setRefreshing(false);
+            if(refreshing)
+                setRefreshing(false);
 
-        if(!length) {
-            console.log("No more results to show");
+            if(!length) {
+                console.log("No more results to show");
+
+                setLoading(false);
+                setReachedEnd(true);
+
+                return;
+            }
+            
+            console.log("Paginating with new items");
 
             setLoading(false);
-            setReachedEnd(true);
-
-            return;
-        }
-        
-        console.log("Paginating with new items");
-
-        setLoading(false);
-        setIsAtBottom(false);
-    }
+            setIsAtBottom(false);
+        }).catch(() => {
+            setLoading(false);
+            setIsAtBottom(false);
+        });
+    };
 
 
     // TODO: add a onContentResize handler to detect placeholders visible after a pagination?

@@ -2,11 +2,13 @@ import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { EdgeInsets } from "react-native-safe-area-context";
 import { useTheme } from "../utils/themes";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
+import { MaterialIcons, FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
 import { ParagraphText } from "./texts/Paragraph";
 import { useUser } from "../modules/user/useUser";
 import { Link } from "expo-router";
 import { State } from "expo-router/src/fork/getPathFromState";
+import useInternetConnection from "../modules/useInternetConnection";
+import TabBarDisabledIcon from "./TabBarDisabledIcon";
 
 type TabBarProps = {
     state: State;
@@ -18,6 +20,7 @@ export default function TabBar(props: TabBarProps) {
 
     const theme = useTheme();
     const userData = useUser();
+    const internetConnection = useInternetConnection();
 
     const current = state.routes[state.index].name;
 
@@ -44,21 +47,33 @@ export default function TabBar(props: TabBarProps) {
             backgroundColor: theme.background
         }}>
             <Link asChild={true} style={{ width: "25%", textAlign: "center" }} href="/">
-                <TouchableOpacity>
+                <TouchableOpacity disabled={internetConnection === "OFFLINE"}>
                     <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <FontAwesome style={{ height: 24 }} name="home" color={(current == "index")?(theme.brand):(theme.color)} size={24}/>
+                        <View style={{ position: "relative" }}>
+                            <FontAwesome style={{ height: 24 }} name="home" color={(internetConnection !== "OFFLINE")?((current == "index")?(theme.brand):(theme.color)):("grey")} size={24}/>
 
-                        <ParagraphText style={{ fontSize: 14, color: (current == "index")?(theme.brand):(theme.color) }}>Feed</ParagraphText>
+                            {(internetConnection === "OFFLINE") && (
+                                <TabBarDisabledIcon/>
+                            )}
+                        </View>
+
+                        <ParagraphText style={{ fontSize: 14, color: (internetConnection !== "OFFLINE")?((current == "index")?(theme.brand):(theme.color)):("grey") }}>Feed</ParagraphText>
                     </View>
                 </TouchableOpacity>
             </Link>
             
             <Link asChild={true} style={{ width: "25%", textAlign: "center" }} href={("/routes")}>
-                <TouchableOpacity>
+                <TouchableOpacity disabled={internetConnection === "OFFLINE"}>
                     <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <FontAwesome5 style={{ height: 24 }} name="route" color={(current == "routes")?(theme.brand):(theme.color)} size={20}/>
+                        <View style={{ position: "relative" }}>
+                            <FontAwesome5 style={{ height: 24 }} name="route" color={(internetConnection !== "OFFLINE")?((current == "routes")?(theme.brand):(theme.color)):("grey")} size={20}/>
+                            
+                            {(internetConnection === "OFFLINE") && (
+                                <TabBarDisabledIcon/>
+                            )}
+                        </View>
 
-                        <ParagraphText style={{ fontSize: 14, color: (current == "routes")?(theme.brand):(theme.color) }}>Routes</ParagraphText>
+                        <ParagraphText style={{ fontSize: 14, color: (internetConnection !== "OFFLINE")?((current == "routes")?(theme.brand):(theme.color)):("grey") }}>Routes</ParagraphText>
                     </View>
                 </TouchableOpacity>
             </Link>
@@ -77,11 +92,17 @@ export default function TabBar(props: TabBarProps) {
                     userId: userData.user?.id
                 }
             }}>
-                <TouchableOpacity>
+                <TouchableOpacity disabled={internetConnection === "OFFLINE"}>
                     <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <FontAwesome5 style={{ height: 24 }} name="user-alt" color={(current == "profile")?(theme.brand):(theme.color)} size={18}/>
+                        <View style={{ position: "relative" }}>
+                            <FontAwesome5 style={{ height: 24 }} name="user-alt" color={(internetConnection !== "OFFLINE")?((current == "profile")?(theme.brand):(theme.color)):("grey")} size={18}/>
+                            
+                            {(internetConnection === "OFFLINE") && (
+                                <TabBarDisabledIcon/>
+                            )}
+                        </View>
 
-                        <ParagraphText style={{ fontSize: 14, color: (current == "profile")?(theme.brand):(theme.color) }}>Profile</ParagraphText>
+                        <ParagraphText style={{ fontSize: 14, color: (internetConnection !== "OFFLINE")?((current == "profile")?(theme.brand):(theme.color)):("grey") }}>Profile</ParagraphText>
                     </View>
                 </TouchableOpacity>
             </Link>
