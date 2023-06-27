@@ -515,7 +515,7 @@ export default function Record() {
                         </View>
                     )}
 
-                    <View>
+                    <View pointerEvents="auto">
                         <TouchableOpacity onPress={() => setRecording(!recording)} style={{
                             width: 66,
                             borderRadius: 100,

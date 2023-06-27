@@ -77,6 +77,9 @@ export function Provider(props: ProviderProps) {
     }
 
     useEffect(() => {
+        if(!ready)
+            return;
+            
         const inAuthGroup = segments.includes("(auth)");
 
         if(!userData?.key && inAuthGroup)
