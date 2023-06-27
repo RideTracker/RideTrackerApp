@@ -8,9 +8,10 @@ import FormInput from "../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../utils/stores/userData";
 import { useClient } from "../../modules/useClient";
-import Client, { authenticateUser, getRandomToken, loginUser } from "@ridetracker/ridetrackerclient";
+import Client, { authenticateUser, createClient, getRandomToken, loginUser } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
 import * as Application from 'expo-application';
+import { setClient } from "../../utils/stores/client";
 
 const logo = require("../../assets/logos/logo.png");
 
@@ -122,10 +123,11 @@ export default function Login() {
                 <Button primary={false} label="Assume random user" onPress={async () => {
                     const randomUser = await getRandomToken(client);
 
-                    const randomUserClient = new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, randomUser.key);
+                    const randomUserClient = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, randomUser.key);
                     const authentication = await authenticateUser(randomUserClient);
 
                     if(authentication.success) {
+                        dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, authentication.key)));
                         dispatch(setUserData({ key: authentication.key }));
 
                         router.push("/");

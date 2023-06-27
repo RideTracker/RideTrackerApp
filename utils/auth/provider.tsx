@@ -5,11 +5,12 @@ import { readUserData, setUserData } from "../stores/userData";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../themes";
 import { useUser } from "../../modules/user/useUser";
-import Client, { StatusResponse, authenticateUser, getStatus } from "@ridetracker/ridetrackerclient";
+import Client, { StatusResponse, authenticateUser, createClient, getStatus } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
 import { readSearchPredictions, setSearchPredictions } from "../stores/searchPredictions";
 import * as NavigationBar from "expo-navigation-bar";
 import { Platform } from "react-native";
+import { setClient } from "../stores/client";
 
 const AuthContext = React.createContext(null);
 
@@ -36,16 +37,18 @@ export function Provider(props: ProviderProps) {
     const [ status, setStatus ] = useState<StatusResponse>(null);
 
     useEffect(() => {
-        const client = new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api);
+        const client = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api);
         
         getStatus(client, Platform.OS).then((result) => {
             setStatus(result);
 
             readUserData().then(async (data) => {
                 if(data.key) {
-                    const client = new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, data.key);
+                    const client = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, data.key);
                     const authentication = await authenticateUser(client);
     
+                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, authentication.key)));
+
                     dispatch(setUserData({
                         key: authentication.key,
                         user: authentication.user

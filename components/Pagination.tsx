@@ -14,10 +14,11 @@ type PaginationProps = {
     children?: ReactNode;
     contentOffset?: PointProp;
     scrollViewRef?: unknown;
+    footer?: ReactNode;
 };
 
 export function Pagination(props: PaginationProps) {
-    const { scrollViewRef, style, items, paginate, render, renderPlaceholder, children, contentOffset } = props;
+    const { scrollViewRef, style, items, paginate, render, renderPlaceholder, children, contentOffset, footer } = props;
 
     const theme = useTheme();
 
@@ -113,6 +114,8 @@ export function Pagination(props: PaginationProps) {
                     </View>
                 )}
             </View>
+
+            {footer}
         </ScrollView>
     );
 }

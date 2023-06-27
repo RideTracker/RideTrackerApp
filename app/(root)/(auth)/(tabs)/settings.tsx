@@ -9,6 +9,8 @@ import { SelectList } from "../../../../components/SelectList";
 import { useUser } from "../../../../modules/user/useUser";
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 import { setSearchPredictions } from "../../../../utils/stores/searchPredictions";
+import { createClient } from "@ridetracker/ridetrackerclient";
+import Constants from "expo-constants";
 
 export default function Settings() {
     const dispatch = useDispatch();
@@ -46,12 +48,12 @@ export default function Settings() {
 
                         <Button primary={false} label="Reset key" onPress={() => {
                             dispatch(setUserData({ key: null }));
-                            dispatch(setClient(null));
+                            dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
                         }}/>
 
                         <Button primary={false} label="Reset data" onPress={() => {
                             dispatch(setUserData({ key: undefined, filters: undefined, user: undefined }));
-                            dispatch(setClient(null));
+                            dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
                         }}/>
 
                         <Button primary={false} label="Reset search predictions" onPress={() => {

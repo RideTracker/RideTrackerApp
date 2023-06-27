@@ -13,13 +13,15 @@ import { useUser } from "../../../../modules/user/useUser";
 import { Pagination } from "../../../../components/Pagination";
 import { getFeed } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
+import useInternetConnection from "../../../../modules/useInternetConnection";
+import { CaptionText } from "../../../../components/texts/Caption";
 
 export default function Index() {
     const userData = useUser();
     const client = useClient();
     const theme = useTheme();
-
     const router = useRouter();
+    const internetConnection = useInternetConnection();
 
     const scrollViewRef = useRef<ScrollView>();
 
@@ -27,27 +29,6 @@ export default function Index() {
     const [ recordings, setRecordings ] = useState(null);
     const [ filterText, setFilterText ] = useState<string>("");
     const [ filterLayout, setFilterLayout ] = useState<LayoutRectangle>(null);
-
-    async function paginate(reset: boolean) {
-        const order = userData.filters?.feed?.find((item) => item.key === "order")?.value;
-        const timeline = userData.filters?.feed?.find((item) => item.key === "timeline")?.value;
-
-        const result = await getFeed(client, (!reset)?(items.length):(0), filterText, order, timeline);
-
-        if(!result.success)
-            return false;
-
-        if(reset) {
-            if(!filterText.length && !userData.filters?.feed?.length && scrollViewRef.current)
-                scrollViewRef.current.scrollTo({ x: 0, y: (filterLayout?.height ?? 0) + 10 });
-            
-            setItems(result.activities.map((activity) => activity.id));
-        }
-        else
-            setItems(items.concat(result.activities.map((activity) => activity.id)));
-
-        return (result.activities.length === 5);
-    }
 
     useEffect(() => {
         if(Platform.OS === "web")
@@ -88,8 +69,29 @@ export default function Index() {
         //scrollViewRef.current.scrollTo({ x: 0, y: 0 });
 
         //setRefreshing(true);
-        paginate(true);
+        handlePagination(true);
     }, [ userData.filters?.feed, filterText ]);
+
+    const handlePagination = async (reset: boolean) => {
+        const order = userData.filters?.feed?.find((item) => item.key === "order")?.value;
+        const timeline = userData.filters?.feed?.find((item) => item.key === "timeline")?.value;
+
+        const result = await getFeed(client, (!reset)?(items.length):(0), filterText, order, timeline);
+
+        if(!result.success)
+            return false;
+
+        if(reset) {
+            if(!filterText.length && !userData.filters?.feed?.length && scrollViewRef.current)
+                scrollViewRef.current.scrollTo({ x: 0, y: (filterLayout?.height ?? 0) + 10 });
+            
+            setItems(result.activities.map((activity) => activity.id));
+        }
+        else
+            setItems(items.concat(result.activities.map((activity) => activity.id)));
+
+        return (result.activities.length === 5);
+    };
 
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
@@ -106,7 +108,7 @@ export default function Index() {
             <View style={{
                 flex: 1
             }}>
-                <Pagination style={{ padding: 10 }} scrollViewRef={scrollViewRef} paginate={paginate} items={items}
+                <Pagination style={{ padding: 10 }} scrollViewRef={scrollViewRef} paginate={handlePagination} items={items}
                 // TODO: some activities here are undefined, why?
                     render={((activity) => (
                         <ActivityCompact key={activity} id={activity}/>
@@ -117,7 +119,13 @@ export default function Index() {
                     contentOffset={{
                         x: 0,
                         y: (!filterText.length && !userData.filters?.feed?.length)?((filterLayout?.height ?? 0) + 10):(0)
-                    }}>
+                    }}
+                    footer={(internetConnection === "OFFLINE") && (
+                        <View>
+                            <CaptionText>Internet connection required</CaptionText>
+                            <ParagraphText>You are currently offline!</ParagraphText>
+                        </View>
+                    )}>
                     <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
                 </Pagination>
 

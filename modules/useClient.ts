@@ -1,10 +1,9 @@
-import { useUser } from "./user/useUser";
-import Client from "@ridetracker/ridetrackerclient";
+import Client, { createClient } from "@ridetracker/ridetrackerclient";
+import { useSelector } from "react-redux";
 import Constants from "expo-constants";
-import * as Application from "expo-application";
 
 export function useClient() {
-    const userData = useUser();
-
-    return new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, userData.key);
+    const client: Client = useSelector<{ client: Client }, Client>((state) => state.client) ?? createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api);
+    
+    return client;
 }
