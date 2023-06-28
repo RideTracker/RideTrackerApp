@@ -92,16 +92,6 @@ export default function Record() {
 
     if(Platform.OS === "android") {
         useEffect(() => {
-            let originalBehavior: NavigationBarBehavior = null;
-
-            NavigationBar.getBehaviorAsync().then((behavior) => {
-                if(behavior !== "overlay-swipe") {
-                    originalBehavior = behavior;
-
-                    NavigationBar.setBehaviorAsync("overlay-swipe");
-                }
-            });
-
             let originalVisibility: NavigationBarVisibility = null;
 
             NavigationBar.getVisibilityAsync().then((visibility) => {
@@ -115,9 +105,6 @@ export default function Record() {
             return () => {
                 if(originalVisibility)
                     NavigationBar.setVisibilityAsync(originalVisibility);
-                    
-                if(originalBehavior)
-                    NavigationBar.setBehaviorAsync(originalBehavior);
             };
         }, []);
     }

@@ -215,9 +215,7 @@ export default function UploadRecordingPage() {
                         <Button primary={true} label="Publish activity" onPress={() => {
                             createActivity(client, sessions, (title.length)?(title):(null), (description.length)?(title):(null), selectedBike).then((result) => {
                                 if(result.success) {
-                                    router.replace("/index");
-
-                                    router.push(`/activities/${result.activity.id}`);
+                                    router.push("/index");
                                 }
                             });
                         }}/>
