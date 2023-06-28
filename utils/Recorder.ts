@@ -3,6 +3,7 @@ import * as Location from "expo-location";
 import { Platform } from "react-native"; 
 import uuid from "react-native-uuid";
 import * as Battery from 'expo-battery';
+import { RecordingSession } from "../models/RecordingSession";
 
 const RECORDER_TASK_NAME = "RECORDER";
 
@@ -26,11 +27,7 @@ export default class Recorder {
     active: boolean = false;
     timer: NodeJS.Timer = null;
 
-    sessions: {
-        id: string;
-        locations: Location.LocationObject[];
-        battery: Battery.PowerState[]
-    }[] = [];
+    sessions: RecordingSession[] = [];
 
     onLocation?: (location: Location.LocationObject) => void;
 
@@ -156,8 +153,12 @@ export default class Recorder {
                 previousBatteryState.lowPowerMode !== newBatteryState.lowPowerMode) {
                 console.log("Received battery state: " + JSON.stringify(newBatteryState));
     
-                if(instance.active)
-                    instance.sessions[instance.sessions.length - 1].battery.push(newBatteryState);
+                if(instance.active) {
+                    instance.sessions[instance.sessions.length - 1].battery.push({
+                        ...newBatteryState,
+                        timestamp: Date.now()
+                    });
+                }
             }
         });
     };

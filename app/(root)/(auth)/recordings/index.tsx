@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Platform } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Platform, Alert } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
 import * as FileSystem from "expo-file-system";
@@ -7,20 +7,19 @@ import { RECORDINGS_PATH } from "../(tabs)/record";
 import { timeSince } from "../../../../utils/time";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { useUser } from "../../../../modules/user/useUser";
+import { RecordingSession } from "../../../../models/RecordingSession";
+import { FontAwesome, Entypo } from "@expo/vector-icons";
+import { ParagraphText } from "../../../../components/texts/Paragraph";
+import { LinkText } from "../../../../components/texts/Link";
+
+type RecordingSessionMetadata = {
+    id: string;
+    sessions: RecordingSession[];
+    timestamp: number;
+};
 
 type RecordingSummaryProp = {
-    recording: {
-        id: string;
-
-        locations: {
-            coords: {
-                latitude: number;
-                longitude: number;
-            };
-        }[];
-        
-        timestamp: number;
-    };
+    recording: RecordingSessionMetadata;
 };
 
 function RecordingSummary({ recording }: RecordingSummaryProp) {
@@ -29,20 +28,24 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
 
     const theme = useTheme();
     const router = useRouter();
-    const mapRef = useRef();
+    const mapRef = useRef<MapView>();
     const userData = useUser();
 
     useEffect(() => {
-        (mapRef.current as MapView).fitToCoordinates(recording.locations.map((location) => location.coords));
-    }, []);
+        if(mapRef.current) {
+            mapRef.current.fitToCoordinates(recording.sessions.flatMap((session) => session.locations.map((location) => location.coords)));
+        }
+    }, [ ]);
 
     return (
         <TouchableOpacity style={{ height: 80, flexDirection: "row", gap: 10 }} onPress={() => router.push(`/recordings/${recording.id}/upload`)}>
             <View style={{ width: 140, height: "100%", borderRadius: 6, overflow: "hidden" }}>
                 <MapView ref={mapRef} provider={userData.mapProvider} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
-                    (mapRef.current as MapView).fitToCoordinates(recording.locations.map((location) => location.coords));
+                    mapRef.current.fitToCoordinates(recording.sessions.flatMap((session) => session.locations.map((location) => location.coords)));
                 }}>
-                    <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={2} strokeColor={theme.brand}/>
+                    {recording.sessions.filter((session) => session).map((session) => (
+                        <Polyline key={session.id} coordinates={session.locations.map((location) => location.coords)} strokeWidth={4} fillColor={theme.brand} strokeColor={theme.brand}/>
+                    ))}
                 </MapView>
             </View>
             
@@ -54,7 +57,8 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
 export default function RecordingsPage() {
     const theme = useTheme();
 
-    const [ recordings, setRecordings ] = useState(null);
+    const [ recordings, setRecordings ] = useState<RecordingSessionMetadata[]>(null);
+    const [ corruptedRecordings, setCorruptedRecordings ] = useState<string[]>([]);
 
     useEffect(() => {
         if(Platform.OS === "web")
@@ -68,22 +72,36 @@ export default function RecordingsPage() {
 
             const files = await FileSystem.readDirectoryAsync(RECORDINGS_PATH);
 
-            if(!files.length)
-                return;
+            const recordings: RecordingSessionMetadata[] = [];
+            const corruptedRecordings: string[] = [];
 
-            const recordings = await Promise.all(files.map(async (file) => {
-                const sessions = JSON.parse(await FileSystem.readAsStringAsync(RECORDINGS_PATH + file));
+            await Promise.all(files.map(async (file) => {
+                const id = file.replace(".json", "");
+                const sessions: RecordingSession[] = JSON.parse(await FileSystem.readAsStringAsync(RECORDINGS_PATH + file));
 
-                const lastSession = sessions[sessions.length - 1];
+                if(sessions.filter((session) => session).length === 0) {
+                    corruptedRecordings.push(id);
+                
+                    return;
+                }
 
-                return {
-                    id: file.substring(0, file.length - ".json".length),
-                    locations: sessions.reduce((accumulator, currentValue) => accumulator.concat(currentValue.locations), []),
-                    timestamp: (lastSession?.locations?.length)?(lastSession.locations[lastSession.locations.length - 1].timestamp):(0)
-                };
+                const locations = sessions.filter((session) => session).flatMap((session) => session.locations);
+
+                if(locations.length === 0) {
+                    corruptedRecordings.push(id);
+                
+                    return;
+                }
+
+                recordings.push({
+                    id,
+                    sessions,
+                    timestamp: locations[locations.length - 1].timestamp
+                });
             }));
 
             setRecordings(recordings.sort((a, b) => b.timestamp - a.timestamp));
+            setCorruptedRecordings(corruptedRecordings);
         }
 
         getRecordings();
@@ -91,7 +109,15 @@ export default function RecordingsPage() {
     
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
-            <Stack.Screen options={{ title: "Recordings" }}/>
+            <Stack.Screen options={{
+                title: "Recordings",
+
+                headerRight: () => (
+                    <TouchableOpacity>
+                        <Entypo name="dots-three-vertical" size={24} color={theme.color}/>
+                    </TouchableOpacity>
+                )
+            }}/>
 
             <ScrollView style={{ padding: 10 }}>
                 {(recordings) && (
@@ -102,6 +128,39 @@ export default function RecordingsPage() {
                     </View>
                 )}
             </ScrollView>
+
+            {(corruptedRecordings.length > 0) && (
+                <TouchableOpacity style={{ padding: 20 }} onPress={() => {
+                    Alert.alert("Are you sure?", `Are you sure you want to permanently delete these ${corruptedRecordings.length} corrupted ${(corruptedRecordings.length > 1)?("recordings"):("recording")}?\n\nThis cannot be undone.`, [
+                        {
+                            text: "I am sure",
+                            onPress: async () => {
+                                await Promise.allSettled(corruptedRecordings.map((id) => {
+                                    return FileSystem.deleteAsync(RECORDINGS_PATH + id + ".json");
+                                }));
+
+                                setCorruptedRecordings([]);
+                            }
+                        },
+
+                        {
+                            text: "Cancel"
+                        }
+                    ])
+                }}>
+                    <View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
+                        <FontAwesome name="warning" size={24} color={theme.color}/>
+
+                        <View>
+                            <ParagraphText style={{ paddingRight: 20 + 24 }}>
+                                You have {corruptedRecordings.length} corrupted {(corruptedRecordings.length > 1)?("recordings"):("recording")} that currently cannot be salvaged.
+                            </ParagraphText>
+
+                            <LinkText>Click here to delete them permanently.</LinkText>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            )}
         </View>
     );
 }
