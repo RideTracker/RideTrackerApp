@@ -5,11 +5,14 @@ import { useTheme } from "../../../../../utils/themes";
 import ActivityComment from "../../../../../layouts/activity/comment";
 import { useClient } from "../../../../../modules/useClient";
 import { getActivityComments } from "@ridetracker/ridetrackerclient";
+import useInternetConnection from "../../../../../modules/useInternetConnection";
+import OfflinePageOverlay from "../../../../../components/OfflinePageOverlay";
 
 export default function ActivityCommentsPage() {
     const client = useClient();
     const theme = useTheme();
     const { id } = useSearchParams();
+    const internetConnection = useInternetConnection();
 
     const [ comments, setComments ] = useState(null);
 
@@ -45,6 +48,10 @@ export default function ActivityCommentsPage() {
                     )}
                 </View>
             </View>
+
+            {(internetConnection === "OFFLINE") && (
+                <OfflinePageOverlay/>
+            )}
         </View>
     );
 }

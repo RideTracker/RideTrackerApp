@@ -13,12 +13,15 @@ import Constants from "expo-constants";
 import { useUser } from "../../../../modules/user/useUser";
 import { useClient } from "../../../../modules/useClient";
 import { getProfileActivities, getProfileBikes, getProfileById } from "@ridetracker/ridetrackerclient";
+import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
+import useInternetConnection from "../../../../modules/useInternetConnection";
 
 export default function Profile() {
     const client = useClient();
     const theme = useTheme();
     const userData = useUser();
     const { userId } = useSearchParams();
+    const internetConnection = useInternetConnection();
 
     const [ profile, setProfile ] = useState(null);
 
@@ -89,6 +92,10 @@ export default function Profile() {
                     </TabsPage>
                 </Tabs>
             </View>
+
+            {(internetConnection === "OFFLINE") && (
+                <OfflinePageOverlay/>
+            )}
         </View>
     );
 }

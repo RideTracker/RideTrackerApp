@@ -15,6 +15,8 @@ type TabBarProps = {
     insets: EdgeInsets;
 };
 
+// TODO: self-explanatory, create components, use an array.
+
 export default function TabBar(props: TabBarProps) {
     const { state, insets } = props;
 

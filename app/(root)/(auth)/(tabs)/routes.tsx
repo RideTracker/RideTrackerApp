@@ -27,6 +27,8 @@ import getGoogleMapsDirectionsUrl from "../../../../controllers/getGoogleMapsDir
 import MapStartMarker from "../../../../components/maps/MapStartMarker";
 import MapFinishMarker from "../../../../components/maps/MapFinishMarker";
 import MapIntermediateMarker from "../../../../components/maps/MapIntermediateMarker";
+import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
+import useInternetConnection from "../../../../modules/useInternetConnection";
 
 global.coordinates = [];
 
@@ -38,6 +40,7 @@ export default function Routes() {
     const userData = useUser();
     const searchPredictionsHistory = useSearchPredictions();
     const dispatch = useDispatch();
+    const internetConnection = useInternetConnection();
 
     const mapRef = useRef<MapView>();
     const searchRef = useRef<TextInput>();
@@ -142,7 +145,7 @@ export default function Routes() {
 
                 let newWaypoints = waypoints;
 
-                if(newWaypoints.length === 0) {
+                if(newWaypoints.length === 0 && initialLocation) {
                     newWaypoints = [
                         {
                             name: "Your location",
@@ -171,7 +174,7 @@ export default function Routes() {
 
             let newWaypoints = waypoints;
 
-            if(newWaypoints.length === 0) {
+            if(newWaypoints.length === 0 && initialLocation) {
                 newWaypoints = [
                     {
                         name: "Your location",
@@ -193,7 +196,7 @@ export default function Routes() {
     }, [ client, searchRef ]);
 
     useEffect(() => {
-        if(waypoints.length) {
+        if(waypoints.length >= 2) {
             getMapsRoutes(client, waypoints.map((waypoint) => waypoint.location)).then((result) => {
                 setRoutes(result.routes.map((route) => {
                     return {
@@ -338,7 +341,7 @@ export default function Routes() {
                 {(searchFocus) && (
                     <View style={{ paddingVertical: 10 }}>
                         <View style={{ gap: 10 }}>
-                            {(!searchPredictions.length) && (
+                            {(!searchPredictions.length && initialLocation) && (
                                 <TouchableOpacity onPress={() => {
                                     handleSearchPlace({
                                         location: {
@@ -501,6 +504,10 @@ export default function Routes() {
                         Linking.openURL(getGoogleMapsDirectionsUrl(waypoints));
                     }}/>
                 </View>
+            )}
+
+            {(internetConnection === "OFFLINE") && (
+                <OfflinePageOverlay/>
             )}
         </View>
     );

@@ -15,6 +15,7 @@ import { getFeed } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 import useInternetConnection from "../../../../modules/useInternetConnection";
 import { CaptionText } from "../../../../components/texts/Caption";
+import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 
 export default function Index() {
     const userData = useUser();
@@ -136,29 +137,8 @@ export default function Index() {
                 )}
             </View>
 
-            
             {(internetConnection === "OFFLINE") && (
-                <View style={{
-                    position: "absolute",
-
-                    left: 0,
-                    top: 0,
-
-                    width: "100%",
-                    height: "100%",
-
-                    backgroundColor: `rgba(${(theme.contrast === "black")?("255, 255, 255"):("0, 0, 0")}, .3)`,
-
-                    justifyContent: "center",
-                    alignItems: "center",
-
-                    gap: 10
-                }}>
-                    <MaterialIcons name="wifi-off" size={72} color={theme.contrast}/>
-
-                    <CaptionText style={{ color: theme.contrast }}>You are currently offline!</CaptionText>
-                    <ParagraphText style={{ color: theme.contrast }}>Internet connection is required for this page.</ParagraphText>
-                </View>
+                <OfflinePageOverlay/>
             )}
         </View>
     );

@@ -11,12 +11,15 @@ import ActivityCommentsSummary from "../../../../../components/ActivityCommentsS
 import ActivityRoute from "../../../../../components/ActivityRoute";
 import { useClient } from "../../../../../modules/useClient";
 import { getActivityById, getActivitySummary } from "@ridetracker/ridetrackerclient";
+import OfflinePageOverlay from "../../../../../components/OfflinePageOverlay";
+import useInternetConnection from "../../../../../modules/useInternetConnection";
 
 export default function ActivityPage() {
     const client = useClient();
     const theme = useTheme();
     const router = useRouter();
     const { id } = useSearchParams();
+    const internetConnection = useInternetConnection();
 
     const [ activity, setActivity ] = useState(null);
 
@@ -75,6 +78,10 @@ export default function ActivityPage() {
                     <ActivityComment comment={activity?.comment}/>
                 </TouchableOpacity>
             </View>*/}
+
+            {(internetConnection === "OFFLINE") && (
+                <OfflinePageOverlay/>
+            )}
         </View>
     );
 }
