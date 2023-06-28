@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { EdgeInsets } from "react-native-safe-area-context";
 import { useTheme } from "../utils/themes";
@@ -15,7 +15,75 @@ type TabBarProps = {
     insets: EdgeInsets;
 };
 
-// TODO: self-explanatory, create components, use an array.
+export const pages: {
+    key: string;
+    title?: string;
+    href: string | ((userData: any) => any);
+    replace: boolean;
+    icon: (current: string, color: string) => ReactNode;
+    requiresInternetConnection: boolean;
+}[] = [
+    {
+        key: "index",
+        title: "Feed",
+        href: "/",
+        replace: false,
+        icon: (current, color) => (
+            <FontAwesome style={{ height: 24 }} name="home" color={color} size={24}/>
+        ),
+        requiresInternetConnection: true
+    },
+
+    {
+        key: "routes",
+        title: "Routes",
+        href: "/routes",
+        replace: false,
+        icon: (current, color) => (
+            <FontAwesome5 style={{ height: 24 }} name="route" color={color} size={20}/>
+        ),
+        requiresInternetConnection: true
+    },
+
+    {
+        key: "record",
+        href: "/record",
+        replace: true,
+        icon: (current, color) => (
+            <FontAwesome5 name="dot-circle" color={color} size={44} style={{ marginTop: -5 }}/>
+        ),
+        requiresInternetConnection: false
+    },
+
+    {
+        key: "profile",
+        title: "Profile",
+        href: (userData) => {
+            return {
+                pathname: "/profile",
+                params: {
+                    userId: userData?.user?.id ?? null
+                }
+            };
+        },
+        replace: false,
+        icon: (current, color) => (
+            <FontAwesome5 style={{ height: 24 }} name="user-alt" color={color} size={18}/>
+        ),
+        requiresInternetConnection: true
+    },
+
+    {
+        key: "settings",
+        title: "Settings",
+        href: "/settings",
+        replace: false,
+        icon: (current, color) => (
+            <FontAwesome5 style={{ height: 24 }} name="cog" color={color} size={21}/>
+        ),
+        requiresInternetConnection: false
+    }
+];
 
 export default function TabBar(props: TabBarProps) {
     const { state, insets } = props;
@@ -48,76 +116,25 @@ export default function TabBar(props: TabBarProps) {
 
             backgroundColor: theme.background
         }}>
-            <Link asChild={true} style={{ width: "25%", textAlign: "center" }} href="/">
-                <TouchableOpacity disabled={internetConnection === "OFFLINE"}>
-                    <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <View style={{ position: "relative" }}>
-                            <FontAwesome style={{ height: 24 }} name="home" color={(internetConnection !== "OFFLINE")?((current == "index")?(theme.brand):(theme.color)):("grey")} size={24}/>
+            {pages.map((page) => (
+                <Link key={page.key} asChild={true} style={{ width: "25%", textAlign: "center" }} href={(typeof page.href === "string")?(page.href):(page.href(userData))}>
+                    <TouchableOpacity disabled={(page.requiresInternetConnection && internetConnection === "OFFLINE")}>
+                        <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                            <View style={{ position: "relative" }}>
+                                {page.icon(current, (!page.requiresInternetConnection || internetConnection !== "OFFLINE")?((current == page.key)?(theme.brand):(theme.color)):("grey"))}
 
-                            {(internetConnection === "OFFLINE") && (
-                                <TabBarDisabledIcon/>
+                                {(page.requiresInternetConnection && internetConnection === "OFFLINE") && (
+                                    <TabBarDisabledIcon/>
+                                )}
+                            </View>
+
+                            {(page.title) && (
+                                <ParagraphText style={{ fontSize: 14, color: (!page.requiresInternetConnection || internetConnection !== "OFFLINE")?((current == page.key)?(theme.brand):(theme.color)):("grey") }}>{page.title}</ParagraphText>
                             )}
                         </View>
-
-                        <ParagraphText style={{ fontSize: 14, color: (internetConnection !== "OFFLINE")?((current == "index")?(theme.brand):(theme.color)):("grey") }}>Feed</ParagraphText>
-                    </View>
-                </TouchableOpacity>
-            </Link>
-            
-            <Link asChild={true} style={{ width: "25%", textAlign: "center" }} href={("/routes")}>
-                <TouchableOpacity disabled={internetConnection === "OFFLINE"}>
-                    <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <View style={{ position: "relative" }}>
-                            <FontAwesome5 style={{ height: 24 }} name="route" color={(internetConnection !== "OFFLINE")?((current == "routes")?(theme.brand):(theme.color)):("grey")} size={20}/>
-                            
-                            {(internetConnection === "OFFLINE") && (
-                                <TabBarDisabledIcon/>
-                            )}
-                        </View>
-
-                        <ParagraphText style={{ fontSize: 14, color: (internetConnection !== "OFFLINE")?((current == "routes")?(theme.brand):(theme.color)):("grey") }}>Routes</ParagraphText>
-                    </View>
-                </TouchableOpacity>
-            </Link>
-            
-            <Link asChild={true} style={{ width: "25%", textAlign: "center", alignItems: "center" }} href={("/record")} replace={true}>
-                <TouchableOpacity>
-                    <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <FontAwesome5 name="dot-circle" color={(current == "record")?(theme.brand):(theme.color)} size={44} style={{ marginTop: -5 }}/>
-                    </View>
-                </TouchableOpacity>
-            </Link>
-
-            <Link asChild={true} style={{ width: "25%", textAlign: "center" }} href={{
-                pathname: "/profile",
-                params: {
-                    userId: userData.user?.id
-                }
-            }}>
-                <TouchableOpacity disabled={internetConnection === "OFFLINE"}>
-                    <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <View style={{ position: "relative" }}>
-                            <FontAwesome5 style={{ height: 24 }} name="user-alt" color={(internetConnection !== "OFFLINE")?((current == "profile")?(theme.brand):(theme.color)):("grey")} size={18}/>
-                            
-                            {(internetConnection === "OFFLINE") && (
-                                <TabBarDisabledIcon/>
-                            )}
-                        </View>
-
-                        <ParagraphText style={{ fontSize: 14, color: (internetConnection !== "OFFLINE")?((current == "profile")?(theme.brand):(theme.color)):("grey") }}>Profile</ParagraphText>
-                    </View>
-                </TouchableOpacity>
-            </Link>
-            
-            <Link asChild={true} style={{ width: "25%", textAlign: "center" }} href={("/settings")}>
-                <TouchableOpacity>
-                    <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <FontAwesome5 style={{ height: 24 }} name="cog" color={(current == "settings")?(theme.brand):(theme.color)} size={21}/>
-
-                        <ParagraphText style={{ fontSize: 14, color: (current == "settings")?(theme.brand):(theme.color) }}>Settings</ParagraphText>
-                    </View>
-                </TouchableOpacity>
-            </Link>
+                    </TouchableOpacity>
+                </Link>
+            ))}
         </View>
     );
 }
