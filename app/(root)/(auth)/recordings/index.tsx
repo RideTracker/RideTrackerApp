@@ -56,6 +56,7 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
 
 export default function RecordingsPage() {
     const theme = useTheme();
+    const router = useRouter();
 
     const [ recordings, setRecordings ] = useState<RecordingSessionMetadata[]>(null);
     const [ corruptedRecordings, setCorruptedRecordings ] = useState<string[]>([]);
@@ -113,7 +114,7 @@ export default function RecordingsPage() {
                 title: "Recordings",
 
                 headerRight: () => (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push("/recordings/(index)/dropdown")}>
                         <Entypo name="dots-three-vertical" size={24} color={theme.color}/>
                     </TouchableOpacity>
                 )
