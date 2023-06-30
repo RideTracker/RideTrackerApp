@@ -9,6 +9,8 @@ import Constants from "expo-constants";
 
 type ActivityAuthorProps = {
     activity: {
+        id: string;
+
         user: {
             id: string;
             avatar: string;
@@ -128,7 +130,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
 
                             justifyContent: "center",
                             alignItems: "center"
-                        }}>
+                        }} onPress={() => router.push(`/activities/${activity.id}/(index)/dropdown`)}>
                             <FontAwesome name="ellipsis-v" size={24} color={theme.color} />
                         </TouchableOpacity>
                     </>
