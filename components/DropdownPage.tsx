@@ -10,6 +10,7 @@ type DropdownPageProps = {
     items: {
         text: string;
         icon: ReactNode;
+        disabled?: boolean;
 
         onPress: () => void;
     }[];
@@ -49,10 +50,11 @@ export default function DropdownPage({ items }: DropdownPageProps) {
                     gap: 10
                 }}>
                     {items.map((item) => (
-                        <TouchableOpacity key={item.text} onPress={() => item.onPress()} style={{
+                        <TouchableOpacity key={item.text} disabled={item.disabled} onPress={() => item.onPress()} style={{
                             gap: 10,
 
                             flexDirection: "row",
+                            opacity: (item.disabled)?(0.5):(1),
 
                             alignItems: "center"
                         }}>
