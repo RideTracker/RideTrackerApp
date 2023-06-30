@@ -22,12 +22,7 @@ export default function DropdownPage({ items }: DropdownPageProps) {
     
     return (
         <View style={{ flex: 1, flexDirection: "column" }}>
-            <Stack.Screen options={{
-                title: "Dropdown",
-
-                presentation: "transparentModal",
-                headerShown: false
-            }}/>
+            <Stack.Screen options={{ title: "Dropdown" }}/>
 
             <TouchableWithoutFeedback style={{
                 flex: 1
