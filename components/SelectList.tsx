@@ -25,9 +25,16 @@ export function SelectList(props: SelectListProps) {
     const theme = useTheme();
 
     const [ selectedItem, setSelectedItem ] = useState<string | null>(initialValue);
+    const [ hasChanged, setHasChanged ] = useState<boolean>(false);
 
     useEffect(() => {
-        onChange(selectedItem);
+        if(hasChanged)
+            onChange(selectedItem);
+        else if(!hasChanged && initialValue !== selectedItem) {
+            setHasChanged(true);
+            
+            onChange(selectedItem);
+        }
     }, [ selectedItem ]);
 
     return (
