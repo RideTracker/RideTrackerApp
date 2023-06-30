@@ -33,7 +33,9 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
 
     useEffect(() => {
         if(mapRef.current) {
-            mapRef.current.fitToCoordinates(recording.sessions.flatMap((session) => session.locations.map((location) => location.coords)));
+            mapRef.current.fitToCoordinates(recording.sessions.flatMap((session) => session.locations.map((location) => location.coords)), {
+                animated: false
+            });
         }
     }, [ ]);
 
@@ -41,7 +43,9 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
         <TouchableOpacity style={{ height: 80, flexDirection: "row", gap: 10 }} onPress={() => router.push(`/recordings/${recording.id}/upload`)}>
             <View style={{ width: 140, height: "100%", borderRadius: 6, overflow: "hidden" }}>
                 <MapView ref={mapRef} provider={userData.mapProvider} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
-                    mapRef.current.fitToCoordinates(recording.sessions.flatMap((session) => session.locations.map((location) => location.coords)));
+                    mapRef.current.fitToCoordinates(recording.sessions.flatMap((session) => session.locations.map((location) => location.coords)), {
+                        animated: false
+                    });
                 }}>
                     {recording.sessions.filter((session) => session).map((session) => (
                         <Polyline key={session.id} coordinates={session.locations.map((location) => location.coords)} strokeWidth={4} fillColor={theme.brand} strokeColor={theme.brand}/>
