@@ -6,10 +6,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
 
 type SelectListProps = {
+    active: boolean;
     items: SelectListItem[];
     initialValue?: string;
     placeholder: string;
     onChange: (value: string) => void;
+    onState: (active: boolean) => void;
 };
 
 type SelectListItem = {
@@ -18,12 +20,11 @@ type SelectListItem = {
 };
 
 export function SelectList(props: SelectListProps) {
-    const { items, initialValue, placeholder, onChange } = props;
+    const { active, items, initialValue, placeholder, onChange, onState } = props;
 
     const theme = useTheme();
 
     const [ selectedItem, setSelectedItem ] = useState<string | null>(initialValue);
-    const [ showItems, setShowItems ] = useState<boolean>(false);
 
     useEffect(() => {
         onChange(selectedItem);
@@ -42,13 +43,15 @@ export function SelectList(props: SelectListProps) {
                 gap: 10,
                 
                 padding: 10
-            }} onPress={() => setShowItems(true)}>
+            }} onPress={() => {
+                onState(true);
+            }}>
                 <CaptionText style={{ flex: 1 }}>{(selectedItem)?(items.find((item) => item.key === selectedItem)?.text):(placeholder)}</CaptionText>
             
                 <FontAwesome name="caret-down" size={18} color={theme.color}/>
             </TouchableOpacity>
 
-            {(showItems) && (
+            {(active) && (
                 <ScrollView style={{
                     position: "absolute",
 
@@ -57,7 +60,7 @@ export function SelectList(props: SelectListProps) {
 
                     width: "100%",
                     minHeight: "100%",
-                   
+                
                     backgroundColor: theme.background,
                     
                     borderWidth: 1,
@@ -65,14 +68,33 @@ export function SelectList(props: SelectListProps) {
                     borderRadius: 6
                 }}>
                     <View style={{ gap: 10 }}>
-                        {items.map((item) => (
+                        {items.filter((item) => item.key !== selectedItem).map((item) => (
                             <TouchableOpacity key={item.key} style={{ padding: 10 }} onPress={() => {
                                 setSelectedItem(item.key);
-                                setShowItems(false);
+                                onState(false);
                             }}>
                                 <CaptionText>{item.text}</CaptionText>
                             </TouchableOpacity>
                         ))}
+
+                        {(selectedItem) && (
+                            <TouchableOpacity key={selectedItem} style={{
+                                padding: 10,
+                                
+                                borderTopColor: theme.border,
+                                borderTopWidth: 1,
+
+                                flexDirection: "row",
+                                gap: 10,
+                            }} onPress={() => {
+                                setSelectedItem(selectedItem);
+                                onState(false);
+                            }}>
+                                <CaptionText style={{ flex: 1 }}>{items.find((item) => item.key === selectedItem).text}</CaptionText>
+                
+                                <FontAwesome name="caret-up" size={18} color={theme.color}/>
+                            </TouchableOpacity>
+                        )}
                     </View>
                 </ScrollView>
             )}
