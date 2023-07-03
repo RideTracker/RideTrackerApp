@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Platform, ScrollView, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { Stack, useRouter } from "expo-router";
@@ -11,12 +12,16 @@ import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 import { setSearchPredictions } from "../../../../utils/stores/searchPredictions";
 import { createClient } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
+import { ParagraphText } from "../../../../components/texts/Paragraph";
+import { CaptionText } from "../../../../components/texts/Caption";
 
 export default function Settings() {
     const dispatch = useDispatch();
     const theme = useTheme();
     const router = useRouter();
     const userData = useUser();
+
+    const [ selectList, setSelectList ] = useState<string>(null);
     
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
@@ -33,7 +38,7 @@ export default function Settings() {
                         <Button primary={true} label="Light mode" onPress={() => dispatch(setUserData({ theme: "light"}))}/>
 
                         {(Platform.OS === "ios") && (
-                            <SelectList placeholder="Select map provider..." initialValue={userData.mapProvider} items={[
+                            <SelectList active={selectList === "map"} onState={(active) => setSelectList((active)?("map"):(null))} placeholder="Select map provider..." initialValue={userData.mapProvider} items={[
                                 {
                                     key: "default",
                                     text: "Operating system default"
@@ -59,6 +64,8 @@ export default function Settings() {
                         <Button primary={false} label="Reset search predictions" onPress={() => {
                             dispatch(setSearchPredictions([]));
                         }}/>
+
+                        <ParagraphText style={{ color: "grey", textAlign: "center" }}>{Constants.expoConfig.extra.apiUserAgent}</ParagraphText>
                     </View>
                 </ScrollView>
             </View>
