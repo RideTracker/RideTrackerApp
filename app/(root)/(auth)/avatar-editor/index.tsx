@@ -17,10 +17,13 @@ import Avatar from "../../../../components/Avatar";
 import { useUser } from "../../../../modules/user/useUser";
 import { setClient } from "../../../../utils/stores/client";
 import { useAvatarClient } from "../../../../modules/useAvatarClient";
-import { getAvatars } from "@ridetracker/avatarclient";
+import { createUserAvatar, getAvatars } from "@ridetracker/avatarclient";
+import { authenticateUser, createClient, uploadUserAvatar } from "@ridetracker/ridetrackerclient";
+import { useClient } from "../../../../modules/useClient";
 
 export default function AvatarEditorPage() {
     const userData = useUser();
+    const client = useClient();
     const avatarClient = useAvatarClient();
 
     const theme = useTheme();
@@ -108,21 +111,29 @@ export default function AvatarEditorPage() {
 
     useEffect(() => {
         if(uploading) {
-            /*createUserAvatar(userData.key, combination, dataUrl).then(async (result) => {
-                if(!result.success)
-                    return setUploading(false);
+            Promise.all([
+                uploadUserAvatar(client, dataUrl).then(async (result) => {
+                    if(!result.success)
+                        return setUploading(false);
 
-                const authentication = await authenticateUser(userData.key);
-            
-                dispatch(setUserData({
-                    key: authentication.key,
-                    user: authentication.user
-                }));
+                    const authentication = await authenticateUser(client);
 
-                dispatch(setClient(authentication.key));
+                    if(authentication.success) {
+                        dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                            email: userData.email,
+                            key: authentication.token.key
+                        })));
 
-                router.replace("/profile/" + userData.user.id);
-            });*/
+                        dispatch(setUserData({
+                            email: userData.email,
+                            token: authentication.token
+                        }));
+                    }
+                }),
+                //createUserAvatar(avatarClient, combination)
+            ]).then(() => {
+                router.back();
+            });
         }
     }, [ uploading ]);
 
