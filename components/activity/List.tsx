@@ -44,7 +44,7 @@ export default function ActivityList({ id, style }: ActivityListProps) {
 
                     {(activity)?(
                         <React.Fragment>
-                            {(activity.summary) && (
+                            {/*(activity.summary) && (
                                 <View style={{
                                     flexDirection: "row",
                                     justifyContent: "space-between"
@@ -64,7 +64,7 @@ export default function ActivityList({ id, style }: ActivityListProps) {
                                         <ParagraphText style={{ textAlign: "center" }}>elevation</ParagraphText>
                                     </View>
                                 </View>
-                            )}
+                            )*/}
                             
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary?.startArea) && (`in ${activity.summary.startArea}`)}</ParagraphText>

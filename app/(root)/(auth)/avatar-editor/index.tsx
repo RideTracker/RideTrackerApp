@@ -1,4 +1,4 @@
-/*import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { useDispatch } from "react-redux";
@@ -15,11 +15,13 @@ import Constants from "expo-constants";
 import { setUserData } from "../../../../utils/stores/userData";
 import Avatar from "../../../../components/Avatar";
 import { useUser } from "../../../../modules/user/useUser";
-import { setClient } from "../../../../utils/stores/client";*/
+import { setClient } from "../../../../utils/stores/client";
+import { useAvatarClient } from "../../../../modules/useAvatarClient";
+import { getAvatars } from "@ridetracker/avatarclient";
 
 export default function AvatarEditorPage() {
-    return null;
-    /*const userData = useUser();
+    const userData = useUser();
+    const avatarClient = useAvatarClient();
 
     const theme = useTheme();
 
@@ -78,17 +80,15 @@ export default function AvatarEditorPage() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        getAvatars(userData.key).then((result) => {
+        getAvatars(avatarClient).then((result) => {
             if(!result.success)
                 return;
 
             setAvatars(result.avatars);
 
-            console.log(result.user);
+            /*const userAvatar = result.user.avatars.find((userAvatar) => userAvatar.image === userData.user.avatar);
 
-            const userAvatar = result.user.avatars.find((userAvatar) => userAvatar.image === userData.user.avatar);
-
-            if(!userAvatar) {
+            if(!userAvatar) {*/
                 setCombination({
                     head: {
                         id: result.avatars.find((avatar) => avatar.type === "head").id,
@@ -100,15 +100,15 @@ export default function AvatarEditorPage() {
                         colors: []
                     }
                 });
-            }
-            else
-                setCombination(userAvatar.combination);
+            //}
+            //else
+            //    setCombination(userAvatar.combination);
         });
     }, []);
 
     useEffect(() => {
         if(uploading) {
-            createUserAvatar(userData.key, combination, dataUrl).then(async (result) => {
+            /*createUserAvatar(userData.key, combination, dataUrl).then(async (result) => {
                 if(!result.success)
                     return setUploading(false);
 
@@ -122,7 +122,7 @@ export default function AvatarEditorPage() {
                 dispatch(setClient(authentication.key));
 
                 router.replace("/profile/" + userData.user.id);
-            });
+            });*/
         }
     }, [ uploading ]);
 
@@ -137,7 +137,7 @@ export default function AvatarEditorPage() {
 
                 headerRight: () => (
                     <TouchableOpacity disabled={!dataUrl || uploading} onPress={() => setUploading(true)}>
-                        <ParagraphText style={{ fontSize: 21, fontWeight: 400, opacity: (uploading)?(0.5):(1) }}>Save</ParagraphText>
+                        <ParagraphText style={{ fontSize: 21, fontWeight: "400", opacity: (uploading)?(0.5):(1) }}>Save</ParagraphText>
                     </TouchableOpacity>
                 )
             }}/>
@@ -386,5 +386,5 @@ export default function AvatarEditorPage() {
                 </TabsPage>
             </Tabs>
         </View>
-    );*/
+    );
 }

@@ -1,16 +1,23 @@
 import React from "react";
 import { Image } from "react-native";
 
-type ActivityPersonalBestProps = {
-    scale: number;
+const laurelWreathImages = {
+    "white": require("../assets/images/laurel-wreath-white.png"),
+    "black": require("../assets/images/laurel-wreath-black.png")
 };
 
-export function ActivityPersonalBest(props: ActivityPersonalBestProps) {
-    const { scale } = props;
+type ActivityPersonalBestProps = {
+    scale: number;
+    color?: "white" | "black";
+};
+
+export function ActivityPersonalBest({ scale, color }: ActivityPersonalBestProps) {
+    if(!color)
+        color = "white";
 
     return (
         <React.Fragment>
-            <Image source={require("../assets/images/laurel-wreath.png")} style={{
+            <Image source={laurelWreathImages[color]} style={{
                 position: "absolute",
                 
                 left: -8 * scale,
@@ -20,7 +27,7 @@ export function ActivityPersonalBest(props: ActivityPersonalBestProps) {
                 height: scale * 45,
             }} resizeMode="contain"/>
 
-            <Image source={require("../assets/images/laurel-wreath.png")} style={{
+            <Image source={laurelWreathImages[color]} style={{
                 position: "absolute",
                 
                 right: -8 * scale,

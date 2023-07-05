@@ -10,16 +10,13 @@ import Constants from "expo-constants";
 type ActivityAuthorProps = {
     activity: {
         id: string;
+        startArea: string;
+        finishArea: string;
 
         user: {
             id: string;
             avatar: string;
             name: string;
-        };
-
-        summary?: {
-            startArea: string;
-            finishArea: string;
         };
 
         timestamp: number;
@@ -82,7 +79,7 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
                         <>
                             <CaptionText>{activity.user.name}</CaptionText>
 
-                            <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary?.startArea) && (`in ${activity.summary.startArea}`)}</ParagraphText>
+                            <ParagraphText>{timeSince(activity.timestamp)} {(activity.finishArea) && (`in ${activity.finishArea}`)}</ParagraphText>
                         </>
                     ):(
                         <>
