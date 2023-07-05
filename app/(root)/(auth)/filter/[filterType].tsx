@@ -11,6 +11,7 @@ import { useUser } from "../../../../modules/user/useUser";
 import Button from "../../../../components/Button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SelectListOverlay from "../../../../components/SelectListOverlay";
+import ModalPage from "../../../../components/ModalPage";
 
 type FilterPageSearchParams = {
     filterType: string;
@@ -43,104 +44,85 @@ export default function FilterPage() {
     }, [ filter ]);
 
     return (
-        <View style={{ flex: 1, flexDirection: "column" }}>
-            <Stack.Screen options={{
-                title: "Filter"
-            }}/>
-
-            <TouchableWithoutFeedback style={{
-                flex: 1
-            }} onPress={() => router.back()}>
-                <View style={{ flex: 1 }}/>
-            </TouchableWithoutFeedback>
-            
+        <ModalPage midlays={(
             <SelectListOverlay active={selectListActive !== null} onCancel={() => {
                 setSelectListActive(null);
             }}/>
-            
-            <SafeAreaView edges={[ "bottom" ]}>
-                <View style={{
-                    height: "auto",
-                    marginTop: "auto",
+        )}>
+            <View style={{
+                padding: 10,
+                paddingBottom: 0,
 
-                    backgroundColor: theme.background,
-                    padding: 10,
-                    paddingBottom: 0,
+                gap: 10
+            }}>
+                <CaptionText>Order activities by</CaptionText>
 
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
+                <SelectList active={selectListActive === "order"} placeholder="Select activity order..." initialValue={filter.find((item) => item.key === "order")?.value ?? "activity"} items={[
+                    {
+                        key: "activity",
+                        text: "Latest activity"
+                    },
 
-                    gap: 10
-                }}>
-                    <CaptionText>Order activities by</CaptionText>
+                    {
+                        key: "distance",
+                        text: "Longest distance"
+                    },
 
-                    <SelectList active={selectListActive === "order"} placeholder="Select activity order..." initialValue={filter.find((item) => item.key === "order")?.value ?? "activity"} items={[
-                        {
-                            key: "activity",
-                            text: "Latest activity"
-                        },
+                    {
+                        key: "average_speed",
+                        text: "Average speed"
+                    },
 
-                        {
-                            key: "distance",
-                            text: "Longest distance"
-                        },
+                    {
+                        key: "highest_speed",
+                        text: "Highest speed"
+                    },
 
-                        {
-                            key: "average_speed",
-                            text: "Average speed"
-                        },
+                    {
+                        key: "elevation",
+                        text: "Highest elevation"
+                    }
+                ]}
+                onChange={(value) => {
+                    setFilter([ ...filter.filter((item) => item.key !== "order"), { key: "order", value } ]);
+                }}
+                onState={(active) => setSelectListActive((active)?("order"):(null))}
+                />
 
-                        {
-                            key: "highest_speed",
-                            text: "Highest speed"
-                        },
+                <CaptionText>Include activities</CaptionText>
 
-                        {
-                            key: "elevation",
-                            text: "Highest elevation"
-                        }
-                    ]}
-                    onChange={(value) => {
-                        setFilter([ ...filter.filter((item) => item.key !== "order"), { key: "order", value } ]);
-                    }}
-                    onState={(active) => setSelectListActive((active)?("order"):(null))}
-                    />
+                <SelectList active={selectListActive === "timeline"} placeholder="Select activity timeline..." initialValue={filter.find((item) => item.key === "timeline")?.value ?? "lifetime"} items={[
+                    {
+                        key: "week",
+                        text: "Within last week"
+                    },
 
-                    <CaptionText>Include activities</CaptionText>
+                    {
+                        key: "month",
+                        text: "Within last month"
+                    },
 
-                    <SelectList active={selectListActive === "timeline"} placeholder="Select activity timeline..." initialValue={filter.find((item) => item.key === "timeline")?.value ?? "lifetime"} items={[
-                        {
-                            key: "week",
-                            text: "Within last week"
-                        },
+                    {
+                        key: "half_year",
+                        text: "Within last half year"
+                    },
 
-                        {
-                            key: "month",
-                            text: "Within last month"
-                        },
+                    {
+                        key: "year",
+                        text: "Within last year"
+                    },
 
-                        {
-                            key: "half_year",
-                            text: "Within last half year"
-                        },
+                    {
+                        key: "lifetime",
+                        text: "Within lifetime"
+                    }
+                ]} onChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "timeline"), { key: "timeline", value } ])}
+                onState={(active) => setSelectListActive((active)?("timeline"):(null))}/>
 
-                        {
-                            key: "year",
-                            text: "Within last year"
-                        },
-
-                        {
-                            key: "lifetime",
-                            text: "Within lifetime"
-                        }
-                    ]} onChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "timeline"), { key: "timeline", value } ])}
-                    onState={(active) => setSelectListActive((active)?("timeline"):(null))}/>
-
-                    <Button primary={false} type="danger" label="Reset all filters" onPress={() => {
-                        setFilter([]);
-                    }}/>
-                </View>
-            </SafeAreaView>
-        </View>
+                <Button primary={false} type="danger" label="Reset all filters" onPress={() => {
+                    setFilter([]);
+                }}/>
+            </View>
+        </ModalPage>
     );
 }

@@ -5,6 +5,7 @@ import { useTheme } from "../utils/themes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ReactNode } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import ModalPage from "./ModalPage";
 
 type DropdownPageProps = {
     items: {
@@ -21,53 +22,36 @@ export default function DropdownPage({ items }: DropdownPageProps) {
     const theme = useTheme();
     
     return (
-        <View style={{ flex: 1, flexDirection: "column" }}>
-            <Stack.Screen options={{ title: "Dropdown" }}/>
+        <ModalPage>
+            <View style={{
+                gap: 10,
+                
+                padding: 10,
+                paddingBottom: 0
+            }}>
+                {items.map((item) => (
+                    <TouchableOpacity key={item.text} disabled={item.disabled} onPress={() => item.onPress()} style={{
+                        gap: 10,
 
-            <TouchableWithoutFeedback style={{
-                flex: 1
-            }} onPress={() => router.back()}>
-                <View style={{ flex: 1 }}/>
-            </TouchableWithoutFeedback>
-        
-            <SafeAreaView edges={[ "bottom" ]}>
-                <View style={{
-                    height: "auto",
-                    marginTop: "auto",
+                        flexDirection: "row",
+                        opacity: (item.disabled)?(0.5):(1),
 
-                    backgroundColor: theme.background,
-                    padding: 10,
-                    paddingBottom: 0,
+                        alignItems: "center"
+                    }}>
+                        <View style={{
+                            width: 40,
+                            height: 40,
 
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
-
-                    gap: 10
-                }}>
-                    {items.map((item) => (
-                        <TouchableOpacity key={item.text} disabled={item.disabled} onPress={() => item.onPress()} style={{
-                            gap: 10,
-
-                            flexDirection: "row",
-                            opacity: (item.disabled)?(0.5):(1),
-
+                            justifyContent: "center",
                             alignItems: "center"
                         }}>
-                            <View style={{
-                                width: 40,
-                                height: 40,
+                            {item.icon}
+                        </View>
 
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}>
-                                {item.icon}
-                            </View>
-
-                            <CaptionText style={{ paddingRight: 40 }}>{item.text}</CaptionText>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </SafeAreaView>
-        </View>
+                        <CaptionText style={{ paddingRight: 40 }}>{item.text}</CaptionText>
+                    </TouchableOpacity>
+                ))}
+            </View>
+        </ModalPage>
     );
 };
