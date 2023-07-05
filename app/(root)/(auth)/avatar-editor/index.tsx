@@ -17,7 +17,7 @@ import Avatar from "../../../../components/Avatar";
 import { useUser } from "../../../../modules/user/useUser";
 import { setClient } from "../../../../utils/stores/client";
 import { useAvatarClient } from "../../../../modules/useAvatarClient";
-import { createUserAvatar, getAvatars } from "@ridetracker/avatarclient";
+import { createUserAvatar, getAvatars, getUserAvatars } from "@ridetracker/avatarclient";
 import { authenticateUser, createClient, uploadUserAvatar } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 
@@ -79,6 +79,7 @@ export default function AvatarEditorPage() {
     const [ combination, setCombination ] = useState(null);
     const [ tabType, setTabType ] = useState("helmet");
     const [ uploading, setUploading ] = useState(false);
+    const [ userAvatars, setUserAvatars ] = useState(null);
 
     const dispatch = useDispatch();
 
@@ -89,23 +90,26 @@ export default function AvatarEditorPage() {
 
             setAvatars(result.avatars);
 
-            /*const userAvatar = result.user.avatars.find((userAvatar) => userAvatar.image === userData.user.avatar);
+            getUserAvatars(avatarClient).then((userResult) => {
+                setUserAvatars(userResult.avatars);
 
-            if(!userAvatar) {*/
-                setCombination({
-                    head: {
-                        id: result.avatars.find((avatar) => avatar.type === "head").id,
-                        colors: []
-                    },
-
-                    jersey: {
-                        id: result.avatars.find((avatar) => avatar.type === "jersey").id,
-                        colors: []
-                    }
-                });
-            //}
-            //else
-            //    setCombination(userAvatar.combination);
+                if(!userResult.avatars.length) {
+                    setCombination({
+                        head: {
+                            id: result.avatars.find((avatar) => avatar.type === "head").id,
+                            colors: []
+                        },
+    
+                        jersey: {
+                            id: result.avatars.find((avatar) => avatar.type === "jersey").id,
+                            colors: []
+                        }
+                    });
+                }
+                else {
+                    setCombination(JSON.parse(userResult.avatars[0].combination));
+                }
+            });
         });
     }, []);
 
@@ -130,7 +134,7 @@ export default function AvatarEditorPage() {
                         }));
                     }
                 }),
-                //createUserAvatar(avatarClient, combination)
+                createUserAvatar(avatarClient, combination)
             ]).then(() => {
                 router.back();
             });

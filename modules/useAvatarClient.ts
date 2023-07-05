@@ -5,7 +5,7 @@ import { useUser } from "./user/useUser";
 export function useAvatarClient() {
     const userData = useUser();
 
-    return new Client(Constants.expoConfig.extra.avatarApi, {
+    return new Client(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.avatarApi, {
         email: userData.email,
         key: userData.token.key
     });

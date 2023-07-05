@@ -22,7 +22,7 @@ export default function Avatar(props: AvatarProps) {
 
         onDataUrl(null);
 
-        webViewRef.current.injectJavaScript(`render(JSON.parse('${JSON.stringify(combination)}')); null`);
+        webViewRef.current.injectJavaScript(`render(JSON.parse(\`${JSON.stringify(combination)}\`)); null`);
     }, [ combination ]);
 
     useEffect(() => {
@@ -31,7 +31,9 @@ export default function Avatar(props: AvatarProps) {
 
         onDataUrl(null);
 
-        webViewRef.current.injectJavaScript(`render(JSON.parse('${JSON.stringify(combination)}')); null`);
+        console.log(JSON.parse(JSON.stringify(combination)));
+
+        webViewRef.current.injectJavaScript(`render(JSON.parse(\`${JSON.stringify(combination)}\`)); null`);
     }, [ loaded ]);
 
     const handleWebViewEvent = useCallback((message) => {
