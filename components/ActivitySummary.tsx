@@ -11,9 +11,10 @@ type ActivitySummaryProps = {
     value: number;
     scale: number;
     color?: string;
+    contrast?: "white" | "black";
 };
 
-export function ActivitySummary({ type, value, personalBest, scale, color }: ActivitySummaryProps) {
+export function ActivitySummary({ type, value, personalBest, scale, color, contrast }: ActivitySummaryProps) {
     const [ stat ] = useState(getFormattedActivitySummary(type, value));
 
     if(!stat)
@@ -22,13 +23,16 @@ export function ActivitySummary({ type, value, personalBest, scale, color }: Act
     if(!color)
         color = "white";
 
+    if(!contrast)
+        contrast = "white";
+
     return (
         <View style={{ paddingHorizontal: (personalBest)?(scale * 25):(0) }}>
             {(!!personalBest) && (
                 <React.Fragment>
                     <ParagraphText style={{ color, textAlign: "center", fontSize: ParagraphTextFontSize * scale }}>Personal Best</ParagraphText>
 
-                    <ActivityPersonalBest scale={scale} color={(color === "white")?("white"):("black")}/>
+                    <ActivityPersonalBest scale={scale} color={contrast}/>
                 </React.Fragment>
             )}
 

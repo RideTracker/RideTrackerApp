@@ -59,7 +59,7 @@ export default function ActivityStats({ activity }: ActivityStatsProps) {
             {activity.summary.map((activitySummary) => (
                 <View key={activitySummary.key} style={{ width: "50%", marginVertical: 10 }}>
                     <View style={{ alignSelf: "center" }}>
-                       <ActivitySummary color={theme.color} scale={1} type={activitySummary.key} value={activitySummary.value} personalBest={activitySummary.personalBest}/>
+                       <ActivitySummary color={theme.color} contrast={theme.contrast} scale={1} type={activitySummary.key} value={activitySummary.value} personalBest={activitySummary.personalBest}/>
                     </View>
                 </View>
             ))}

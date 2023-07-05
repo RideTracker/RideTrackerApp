@@ -9,6 +9,8 @@ import { getDistance, getCompassDirection } from "geolib";
 import { ComponentType } from "../../models/componentType";
 import { Rect } from "react-native-safe-area-context";
 import { useUser } from "../../modules/user/useUser";
+import MapStartMarker from "../../components/maps/MapStartMarker";
+import MapFinishMarker from "../../components/maps/MapFinishMarker";
 
 type ActivityMapProps = {
     activity: {
