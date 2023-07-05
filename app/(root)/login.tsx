@@ -123,12 +123,23 @@ export default function Login() {
                 <Button primary={false} label="Assume random user" onPress={async () => {
                     const randomUser = await getRandomToken(client);
 
-                    const randomUserClient = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, randomUser.key);
+                    const randomUserClient = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        email: randomUser.email,
+                        key: randomUser.token.key
+                    });
+
                     const authentication = await authenticateUser(randomUserClient);
 
                     if(authentication.success) {
-                        dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, authentication.key)));
-                        dispatch(setUserData({ key: authentication.key }));
+                        dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                            email: randomUser.email,
+                            key: authentication.token.key
+                        })));
+
+                        dispatch(setUserData({
+                            email: randomUser.email,
+                            token: authentication.token
+                        }));
 
                         router.push("/");
                     }

@@ -8,12 +8,15 @@ import FormInput from "../../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../../utils/stores/userData";
 import { useClient } from "../../../modules/useClient";
-import { verifyLogin } from "@ridetracker/ridetrackerclient";
+import { createClient, verifyLogin } from "@ridetracker/ridetrackerclient";
+import { useUser } from "../../../modules/user/useUser";
+import { setClient } from "../../../utils/stores/client";
+import Constants from "expo-constants";
 
 export default function Verify() {
     const client = useClient();
     const theme = useTheme();
-
+    const userData = useUser();
     const router = useRouter();
     const dispatch = useDispatch();
     const { verification } = useSearchParams();
@@ -39,7 +42,14 @@ export default function Verify() {
                     return;
                 }
 
-                dispatch(setUserData({ key: response.key }));
+                dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                    email: userData.email,
+                    key: response.token.key
+                })));
+
+                dispatch(setUserData({
+                    token: response.token
+                }));
 
                 router.push("/");
             });

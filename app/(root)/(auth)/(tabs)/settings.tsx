@@ -52,7 +52,7 @@ export default function Settings() {
                         )}
 
                         <Button primary={false} label="Reset key" onPress={() => {
-                            dispatch(setUserData({ key: null }));
+                            dispatch(setUserData({ email: null, token: null }));
                             dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
                         }}/>
 

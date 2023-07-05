@@ -9,7 +9,11 @@ export type User = {
 
     mapProvider: Provider;
 
-    key?: string;
+    email?: string;
+    token?: {
+        key: string;
+    };
+
     theme?: string;
 
     filters: {

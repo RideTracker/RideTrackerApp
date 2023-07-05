@@ -43,14 +43,22 @@ export function Provider(props: ProviderProps) {
             setStatus(result);
 
             readUserData().then(async (data) => {
-                if(data.key) {
-                    const client = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, data.key);
+                if(data.email && data.token) {
+                    const client = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        email: data.email,
+                        key: data.token.key
+                    });
+
                     const authentication = await authenticateUser(client);
     
-                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, authentication.key)));
+                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        email: data.email,
+                        key: authentication.token.key
+                    })));
 
                     dispatch(setUserData({
-                        key: authentication.key,
+                        email: data.email,
+                        token: authentication.token,
                         user: authentication.user
                     }));
                 }
@@ -85,11 +93,11 @@ export function Provider(props: ProviderProps) {
             
         const inAuthGroup = segments.includes("(auth)");
 
-        if(!userData?.key && inAuthGroup)
+        if(!userData?.token && inAuthGroup)
             router.replace("/login");
-        else if (userData?.key && !inAuthGroup)
+        else if (userData?.token && !inAuthGroup)
             router.replace("/");
-    }, [ userData?.key, segments ]);
+    }, [ userData?.token, segments ]);
 
     if(!ready)
         return (<SplashScreen/>);
