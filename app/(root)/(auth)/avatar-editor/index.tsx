@@ -192,9 +192,9 @@ export default function AvatarEditorPage() {
             }} pointerEvents={(uploading)?("none"):("auto")}>
                 <TabsPage id={"appearance"} title={"Appearance"}>
                     <ScrollView>
-                        <View style={{ padding: 10, paddingBottom: 50, gap: 10 }}>
+                        <View style={{ paddingVertical: 10, paddingBottom: 50, gap: 10 }}>
                             <ScrollView horizontal={true}>
-                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
+                                <View style={{ flexDirection: "row", gap: 10, paddingHorizontal: 10, paddingBottom: 10 }}>
                                     {(avatarTypes).filter((avatarType) => avatarType.tab === "appearance").map((avatarType) => (
                                         <TouchableOpacity key={avatarType.type} style={{
                                             height: 40,
@@ -225,10 +225,10 @@ export default function AvatarEditorPage() {
 
                             {(avatarTypes).filter((avatarType) => avatarType.tab === "appearance" && avatarType.type === tabType).map((avatarType) => (
                                 <React.Fragment key={avatarType.type}>
-                                    <CaptionText>{avatarType.name}</CaptionText>
+                                    <CaptionText style={{ paddingHorizontal: 10 }}>{avatarType.name}</CaptionText>
 
                                     <ScrollView horizontal={true}>
-                                        <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 90 }}>
+                                        <View style={{ flexDirection: "row", gap: 10, paddingHorizontal: 10, paddingBottom: 10, height: 90 }}>
                                             {(!avatarType.required) && (
                                                 <TouchableOpacity onPress={() => {
                                                     setCombination({ ...combination, [avatarType.type]: null });
@@ -283,7 +283,7 @@ export default function AvatarEditorPage() {
 
                                     {(combination && combination[tabType]) && (avatars.find((avatar) => avatar.id === combination[tabType].id).colors.filter((avatarColor) => avatarColor.defaultColor).sort((a, b) => a.index - b.index).map((color) => (
                                         <React.Fragment key={combination[tabType].id + color.type}>
-                                            <CaptionText style={{ textTransform: "capitalize" }}>{color.type}</CaptionText>
+                                            <CaptionText style={{ textTransform: "capitalize", paddingHorizontal: 10 }}>{color.type}</CaptionText>
 
                                             <Colors key={combination[tabType].id + color.type} defaultColor={color.defaultColor} initialColor={combination[tabType].colors.find((combinationColor) => combinationColor.type === color.type)?.color ?? color.defaultColor} type={color.type} picker={picker === color.type} showPicker={(show) => {
                                                 if(!show && color.type === picker)
@@ -301,13 +301,13 @@ export default function AvatarEditorPage() {
 
                 <TabsPage id={"wallpaper"} title={"Wallpapers"} style={{ gap: 10 }}>
                     <ScrollView>
-                        <View style={{ padding: 10, paddingBottom: 50, gap: 10 }}>
+                        <View style={{ paddingVertical: 10, paddingBottom: 50, gap: 10 }}>
                             {(avatarTypes).filter((avatarType) => avatarType.tab === "wallpaper" && avatarType.type === tabType).map((avatarType) => (
                                 <React.Fragment key={avatarType.type}>
-                                    <CaptionText>{avatarType.name}</CaptionText>
+                                    <CaptionText style={{ paddingHorizontal: 10 }}>{avatarType.name}</CaptionText>
 
                                     <ScrollView horizontal={true}>
-                                        <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10, height: 90 }}>
+                                        <View style={{ flexDirection: "row", gap: 10, paddingHorizontal: 10, paddingBottom: 10, height: 90 }}>
                                             {(!avatarType.required) && (
                                                 <TouchableOpacity onPress={() => setCombination({ ...combination, [avatarType.type]: null })} style={{
                                                     width: 140,
@@ -371,18 +371,20 @@ export default function AvatarEditorPage() {
                 </TabsPage>
 
                 <TabsPage id={"history"} title={"History"}>
-                    <View style={{
-                        flexDirection: "row",
-                        flexWrap: "wrap"                        
-                    }}>
-                        {userAvatars?.map((userAvatar) => (
-                            <View key={userAvatar.id} style={{ width: "50%", padding: 10 }}>
-                                <TouchableOpacity style={{ aspectRatio: 1, padding: 10 }} onPress={() => setCombination(JSON.parse(userAvatar.combination))}>
-                                   <Avatar combination={JSON.parse(userAvatar.combination)} avatars={avatars} onDataUrl={() => {}}/>
-                                </TouchableOpacity>
-                            </View>
-                        ))}
-                    </View>
+                    <ScrollView>
+                        <View style={{
+                            flexDirection: "row",
+                            flexWrap: "wrap"                        
+                        }}>
+                            {userAvatars?.map((userAvatar) => (
+                                <View key={userAvatar.id} style={{ width: "50%", padding: 10 }}>
+                                    <TouchableOpacity style={{ aspectRatio: 1, padding: 10 }} onPress={() => setCombination(JSON.parse(userAvatar.combination))}>
+                                        <Avatar combination={JSON.parse(userAvatar.combination)} avatars={avatars} onDataUrl={() => {}}/>
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
+                        </View>
+                    </ScrollView>
                 </TabsPage>
             </Tabs>
         </View>

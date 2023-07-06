@@ -206,6 +206,7 @@ export function Colors(props: ColorProps) {
                 <View style={{
                     flexDirection: "row",
                     gap: 10,
+                    paddingHorizontal: 10,
                     paddingBottom: 10
                 }}>
                     <TouchableOpacity style={{
