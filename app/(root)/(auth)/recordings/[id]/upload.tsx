@@ -16,6 +16,9 @@ import { useClient } from "../../../../../modules/useClient";
 import { createActivity, getBikes } from "@ridetracker/ridetrackerclient";
 import { useUser } from "../../../../../modules/user/useUser";
 import PageOverlay from "../../../../../components/PageOverlay";
+import { SmallText } from "../../../../../components/texts/Small";
+import { RecordingSession } from "../../../../../models/RecordingSession";
+import { getDistance } from "geolib";
 
 export default function UploadRecordingPage() {
     if(Platform.OS === "web")
@@ -35,8 +38,13 @@ export default function UploadRecordingPage() {
     const [ bikes, setBikes ] = useState(null);
     const [ selectedBike, setSelectedBike ] = useState(null);
     const [ recording, setRecording ] = useState(null);
-    const [ sessions, setSessions ] = useState(null);
+    const [ sessions, setSessions ] = useState<RecordingSession[]>(null);
     const [ uploading, setUploading ] = useState<boolean>(false);
+    const [ stats, setStats ] = useState<{
+        distance: number;
+        maxSpeed: number;
+        averageSpeed: number;
+    }>(null);
 
     const { id } = useSearchParams();
 
@@ -72,6 +80,34 @@ export default function UploadRecordingPage() {
         }
     }, []);
 
+    useEffect(() => {
+        if(sessions) {
+            let distance = 0;
+            let maxSpeed = 0;
+            const speeds = [];
+
+            sessions.forEach((session) => {
+                for(let index = 1; index < session.locations.length; index++) {
+                    distance += getDistance(session.locations[index - 1].coords, session.locations[index].coords);
+                    
+                    speeds.push(session.locations[index].coords.speed);
+
+                    if(session.locations[index].coords.speed > maxSpeed)
+                        maxSpeed = session.locations[index].coords.speed;
+                }
+            });
+
+            const speedSum = speeds.reduce((a, b) => a + b, 0);
+            const averageSpeed = (speedSum / speeds.length) || 0;
+
+            setStats({
+                distance,
+                averageSpeed,
+                maxSpeed
+            });
+        }
+    }, [ sessions ]);
+
     console.log(bikes);
 
     return (
@@ -92,7 +128,7 @@ export default function UploadRecordingPage() {
 
                     <CaptionText style={{ fontSize: 40, textAlign: "center" }}>Great job, Nora!</CaptionText>
 
-                    <ParagraphText>You reached 28.3 km at an average of 32.7 km/h, at which you topped off at 45.2 km/h!</ParagraphText>
+                    <ParagraphText placeholder={!stats}>You reached {Math.round((stats?.distance / 1000) * 10) / 10} km at an average of {Math.round((stats?.averageSpeed * 3.6) * 10) / 10} km/h, at which you topped off at {Math.round((stats?.maxSpeed * 3.6) * 10) / 10} km/h! *</ParagraphText>
 
                     <View>
                         <SafeAreaView style={{ gap: 10, marginVertical: 10, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>
@@ -117,7 +153,7 @@ export default function UploadRecordingPage() {
                             }}
                             style={{
                                 textAlignVertical: "top",
-                                height: 100
+                                height: 60
                             }}/>
                         </SafeAreaView>
                     </View>
@@ -206,6 +242,8 @@ export default function UploadRecordingPage() {
                     )}
 
                     <View style={{ marginTop: 20, gap: 10 }}>
+                        <SmallText>* preliminary data has not been proccesed yet</SmallText>
+                        
                         <Button primary={true} label="Publish activity" onPress={() => {
                             setUploading(true);
                             
