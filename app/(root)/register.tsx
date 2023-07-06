@@ -6,12 +6,17 @@ import Button from "../../components/Button";
 import { FontAwesome } from "@expo/vector-icons"; 
 import FormInput from "../../components/FormInput";
 import { useClient } from "../../modules/useClient";
-import { registerUser } from "@ridetracker/ridetrackerclient";
+import { createClient, registerUser } from "@ridetracker/ridetrackerclient";
+import { setClient } from "../../utils/stores/client";
+import { setUserData } from "../../utils/stores/userData";
+import { useDispatch } from "react-redux";
+import Constants from "expo-constants";
 
 export default function Register() {
     const client = useClient();
     const theme = useTheme();
     const router = useRouter();
+    const dispatch = useDispatch();
 
     const [ submitting, setSubmitting ] = useState(false);
 
@@ -40,9 +45,30 @@ export default function Register() {
                     return;
                 }
 
+                
+                if(response.token) {
+                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        email,
+                        key: response.token.key
+                    })));
+    
+                    dispatch(setUserData({
+                        email,
+                        token: response.token
+                    }));
+    
+                    router.push("/");
+                }
+                else if(response.verification) {
+                    dispatch(setUserData({
+                        email
+                    }));
+
+                    router.push(`/verify/${response.verification}`);
+                }
+
                 //dispatch(setUserData({ key: response.key }));
 
-                router.push(`/verify/${response.verification}`);
             });
         }
     }, [ submitting ]);

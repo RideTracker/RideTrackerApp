@@ -12,9 +12,13 @@ import Bike from "../../../../components/Bike";
 import Constants from "expo-constants";
 import { useUser } from "../../../../modules/user/useUser";
 import { useClient } from "../../../../modules/useClient";
-import { getProfileActivities, getProfileBikes, getProfileById } from "@ridetracker/ridetrackerclient";
+import { createClient, getProfileActivities, getProfileBikes, getProfileById } from "@ridetracker/ridetrackerclient";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 import useInternetConnection from "../../../../modules/useInternetConnection";
+import { FontAwesome } from "@expo/vector-icons";
+import { setUserData } from "../../../../utils/stores/userData";
+import { setClient } from "../../../../utils/stores/client";
+import { useDispatch } from "react-redux";
 
 export default function Profile() {
     const client = useClient();
@@ -22,6 +26,7 @@ export default function Profile() {
     const userData = useUser();
     const { userId } = useSearchParams();
     const internetConnection = useInternetConnection();
+    const dispatch = useDispatch();
 
     const [ profile, setProfile ] = useState(null);
 
@@ -37,7 +42,19 @@ export default function Profile() {
     
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
-            <Stack.Screen options={{ title: "Profile" }} />
+            <Stack.Screen options={{
+                title: "Profile",
+                headerRight: (profile?.user?.id === userData.user?.id)?(() => (
+                    <View style={{ marginRight: 20 }}>
+                        <TouchableOpacity onPress={() => {
+                            dispatch(setUserData({ email: null, token: null }));
+                            dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
+                        }}>
+                            <FontAwesome name="sign-out" size={24} color={theme.color}/>
+                        </TouchableOpacity>
+                    </View>
+                )):(undefined)
+            }}/>
 
             <View style={{
                 flex: 1,
@@ -47,7 +64,7 @@ export default function Profile() {
                     alignItems: "center",
                     gap: 10
                 }}>
-                    <TouchableOpacity disabled={profile?.user.id !== userData.user.id} style={{
+                    <TouchableOpacity disabled={profile?.user?.id !== userData.user?.id} style={{
                         width: 80,
                         aspectRatio: 1,
                         borderRadius: 80,
@@ -116,7 +133,7 @@ export function ProfileActivities({ profile }: ProfileProp) {
 
     return (
         <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
-            const result = await getProfileActivities(client, profile.user.id, (reset)?(0):(items.length));
+            const result = await getProfileActivities(client, profile.user?.id, (reset)?(0):(items.length));
 
             if(!result.success)
                 return false;
@@ -140,7 +157,7 @@ export function ProfileBikes({ profile }: ProfileProp) {
 
     return (
         <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
-            const result = await getProfileBikes(client, profile.user.id, (reset)?(0):(items.length));
+            const result = await getProfileBikes(client, profile.user?.id, (reset)?(0):(items.length));
 
             if(!result.success)
                 return false;

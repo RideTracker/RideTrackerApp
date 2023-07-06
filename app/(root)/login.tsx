@@ -45,9 +45,27 @@ export default function Login() {
                     return;
                 }
 
-                //dispatch(setUserData({ key: response.key }));
+                if(response.token) {
+                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        email,
+                        key: response.token.key
+                    })));
+    
+                    dispatch(setUserData({
+                        email,
+                        token: response.token
+                    }));
+    
+                    router.push("/");
+                }
+                else if(response.verification) {
+                    dispatch(setUserData({
+                        email
+                    }));
 
-                router.push(`/verify/${response.verification}`);
+                    router.push(`/verify/${response.verification}`);
+                }
+                //dispatch(setUserData({ key: response.key }));
             });
         }
     }, [ submitting ]);
@@ -120,30 +138,32 @@ export default function Login() {
             }}>
                 <Button primary={false} label="Register with email address" onPress={() => router.push("/register")}/>
 
-                <Button primary={false} label="Assume random user" onPress={async () => {
-                    const randomUser = await getRandomToken(client);
+                {(Constants.expoConfig.extra.environment !== "production") && (
+                    <Button primary={false} label="Assume random user" onPress={async () => {
+                        const randomUser = await getRandomToken(client);
 
-                    const randomUserClient = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                        email: randomUser.email,
-                        key: randomUser.token.key
-                    });
-
-                    const authentication = await authenticateUser(randomUserClient);
-
-                    if(authentication.success) {
-                        dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        const randomUserClient = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
                             email: randomUser.email,
-                            key: authentication.token.key
-                        })));
+                            key: randomUser.token.key
+                        });
 
-                        dispatch(setUserData({
-                            email: randomUser.email,
-                            token: authentication.token
-                        }));
+                        const authentication = await authenticateUser(randomUserClient);
 
-                        router.push("/");
-                    }
-                }}/>
+                        if(authentication.success) {
+                            dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                                email: randomUser.email,
+                                key: authentication.token.key
+                            })));
+
+                            dispatch(setUserData({
+                                email: randomUser.email,
+                                token: authentication.token
+                            }));
+
+                            router.push("/");
+                        }
+                    }}/>
+                )}
             </View>
         </View>
     );

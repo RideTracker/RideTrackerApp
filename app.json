@@ -66,6 +66,7 @@
             ]
         ],
         "extra": {
+            "environment": "production",
             "apiUserAgent": "RideTrackerApp-0.9.0",
             "api": "https://staging.service.ridetracker.app",
             "avatarApi": "https://staging.avatar-service.ridetracker.app",
