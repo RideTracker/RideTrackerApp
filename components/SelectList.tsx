@@ -69,7 +69,7 @@ export function SelectList(props: SelectListProps) {
                     minHeight: "100%",
                 
                     backgroundColor: theme.background,
-                    
+
                     borderWidth: 1,
                     borderColor: theme.border,
                     borderRadius: 6

@@ -35,16 +35,18 @@ export default function ModalPage({ midlays, children }: ModalPageProps) {
 
                 backgroundColor: "rgba(0, 0, 0, .25)"
             }}>
-                <ScrollView style={{
+                <View style={{
                     backgroundColor: theme.background,
                     
                     borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10
+                    borderTopRightRadius: 10,
+
+                    overflow: "visible"
                 }}>
                     <SafeAreaView edges={[ "bottom" ]}>
                         {children}
                     </SafeAreaView>
-                </ScrollView>
+                </View>
             </View>
         </View>
     );
