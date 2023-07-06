@@ -97,13 +97,13 @@ export default function Index() {
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
             <Stack.Screen options={{
-                headerRight: () => (
+                /*headerRight: () => (
                     <View style={{ marginRight: 20 }}>
                         <TouchableOpacity>
                             <FontAwesome name="bell" size={24} color={theme.color}/>
                         </TouchableOpacity>
                     </View>
-                )
+                )*/
             }}/>
 
             <View style={{
