@@ -193,7 +193,7 @@ export default function Routes() {
             setSearchPredictions([]);
             searchRef.current.clear();
         }
-    }, [ client, searchRef ]);
+    }, [ client, searchRef, initialLocation ]);
 
     useEffect(() => {
         if(waypoints.length >= 2) {

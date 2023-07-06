@@ -8,13 +8,13 @@ export default function getFormattedDuration(seconds: number) {
     let result = [];
 
     if(hours)
-        result.push(`${hours} hour${((hours !== 1)?('s'):(''))}`);
+        result.push(`${hours} hr${((hours !== 1)?('s'):(''))}`);
 
     if(minutes)
-        result.push(`${minutes} minute${((minutes !== 1)?('s'):(''))}`);
+        result.push(`${minutes} min${((minutes !== 1)?('s'):(''))}`);
 
     if(!hours && remainingSeconds)
-        result.push(`${remainingSeconds} second${((remainingSeconds !== 1)?('s'):(''))}`);
+        result.push(`${remainingSeconds} sec${((remainingSeconds !== 1)?('s'):(''))}`);
 
     return getFormattedWords(result);
 };
