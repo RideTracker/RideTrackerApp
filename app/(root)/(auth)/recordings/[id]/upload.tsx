@@ -261,7 +261,7 @@ export default function UploadRecordingPage() {
                                 {
                                     text: "I am sure",
                                     onPress: async () => {
-                                        router.push("/");
+                                        router.push("/index");
 
                                         const file = RECORDINGS_PATH + id + ".json";
 
