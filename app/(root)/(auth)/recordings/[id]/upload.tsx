@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Alert, Platform } from "react-native";
-import { useRouter, Stack, useSearchParams } from "expo-router";
+import { useRouter, Stack, useSearchParams, useNavigation } from "expo-router";
 import { useTheme } from "../../../../../utils/themes";
 import FormInput from "../../../../../components/FormInput";
 import { FontAwesome, Feather } from "@expo/vector-icons"; 
@@ -25,6 +25,7 @@ export default function UploadRecordingPage() {
     const mapRef = useRef();
     const router = useRouter();
     const userData = useUser();
+    const navigation = useNavigation();
 
     const [ submitting ] = useState(false);
 
@@ -39,6 +40,10 @@ export default function UploadRecordingPage() {
 
     useEffect(() => {
         getBikes(client).then((result) => setBikes(result.bikes));
+
+        navigation.addListener("focus", () => {
+            getBikes(client).then((result) => setBikes(result.bikes));
+        });
     }, []);
 
     useEffect(() => {
@@ -64,7 +69,9 @@ export default function UploadRecordingPage() {
             getRecording();
         }
     }, []);
-    
+
+    console.log(bikes);
+
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{ title: "Finish your activity" }} />
@@ -130,33 +137,18 @@ export default function UploadRecordingPage() {
 
                                                 overflow: "hidden"
                                             }} onPress={() => setSelectedBike((selectedBike?.id === bike.id)?(null):(bike))}>
-                                                <Image source={{
-                                                    uri: `${Constants.expoConfig.extra.images}/${bike.image}/Bike` 
-                                                }} style={{
-                                                    height: 80,
-                                                    width: "100%"
-                                                }}/>
-
-                                                <View style={{
-                                                    position: "absolute",
-
-                                                    left: 0,
-                                                    top: 0,
-
-                                                    width: "100%",
-                                                    height: "100%",
-
-                                                    borderWidth: (selectedBike === bike.id)?(1):(0),
-                                                    borderColor: theme.color,
-
-                                                    borderRadius: 6,
-
-                                                    justifyContent: "flex-end",
-
-                                                    padding: 5
-                                                }}>
-                                                    <Text style={{ color: theme.color, fontSize: 18, fontStyle: "italic" }}>"{bike.name}"</Text>
-                                                </View>
+                                                {(bike.image)?(
+                                                    <Image source={{
+                                                        uri: `${Constants.expoConfig.extra.images}/${bike.image}/RideTrackerBike`
+                                                    }} style={{
+                                                        height: 80,
+                                                        width: "100%"
+                                                    }}/>
+                                                ):(
+                                                    <View style={{ flex: 1, justifyContent: "center" }}>
+                                                        <CaptionText style={{ textAlign: "center" }}>{bike.name}</CaptionText>
+                                                    </View>
+                                                )}
                                             </TouchableOpacity>
                                         )))}
 
@@ -204,7 +196,7 @@ export default function UploadRecordingPage() {
                             </View>
                         </ScrollView>
                     ):(
-                        <Bike data={selectedBike} buttons={(
+                        <Bike id={selectedBike.id} buttons={(
                             <TouchableOpacity onPress={() => setSelectedBike(null)}>
                                 <Feather name="repeat" size={24} color={theme.color}/>
                             </TouchableOpacity>

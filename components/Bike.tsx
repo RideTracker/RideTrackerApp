@@ -5,39 +5,42 @@ import { CaptionText } from "./texts/Caption";
 import { ParagraphText } from "./texts/Paragraph";
 import { getBike } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../modules/useClient";
+import Constants from "expo-constants";
 
 type BikeProps = {
     id?: string;
-    data?: BikeData;
     buttons?: ReactNode;
 
     style?: ViewStyle;
 };
 
 type BikeData = {
+    name: string;
+    model?: string;
     image: string;
-    model: string;
+    activities: number;
 
-    summary?: {
-        rides: number;
-        distance: number;
-        elevation: number;
-    };
+    summary: {
+        key: string;
+        value: number;
+    }[];
 };
 
 export default function Bike(props: BikeProps) {
-    const { id, style, data, buttons } = props;
+    const { id, style, buttons } = props;
 
     const client = useClient();
     const theme = useTheme();
 
-    const [ bike, setBike ] = useState<BikeData | null>(data);
+    const [ bike, setBike ] = useState<BikeData | null>(null);
 
     useEffect(() => {
         if(id) {
             getBike(client, id).then((result) => {
                 if(!result.success)
                     return;
+
+                console.log(result.bike);
 
                 setBike(result.bike);
             });
@@ -58,7 +61,7 @@ export default function Bike(props: BikeProps) {
                                     flex: 1
                                 }}
                                 source={{
-                                    uri: bike.image
+                                    uri: `${Constants.expoConfig.extra.images}/${bike.image}/RideTrackerBike`
                                 }}/>
                         )}
                     </View>
@@ -72,7 +75,7 @@ export default function Bike(props: BikeProps) {
                     gap: 5
                 }}>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                        <CaptionText placeholder={!bike}>{bike?.model}</CaptionText>
+                        <CaptionText placeholder={!bike}>{bike?.name}</CaptionText>
 
                         {(bike) && (buttons)}
                     </View>
@@ -83,18 +86,8 @@ export default function Bike(props: BikeProps) {
                             justifyContent: "space-between"
                         }}>
                             <View>
-                                <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{bike?.summary?.rides}</ParagraphText>
+                                <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{bike?.activities}</ParagraphText>
                                 <ParagraphText style={{ textAlign: "center" }}>rides</ParagraphText>
-                            </View>
-
-                            <View>
-                                <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{bike?.summary?.distance} km</ParagraphText>
-                                <ParagraphText style={{ textAlign: "center" }}>distance</ParagraphText>
-                            </View>
-
-                            <View>
-                                <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{bike?.summary?.elevation} m</ParagraphText>
-                                <ParagraphText style={{ textAlign: "center" }}>elevation</ParagraphText>
                             </View>
                         </View>
                     ):(

@@ -24,6 +24,7 @@ export default function Layout() {
             <Stack.Screen name="filter/[filterType]" options={{ presentation: "transparentModal", animation: "fade", headerShown: false }} />
             <Stack.Screen name="recordings/(index)/dropdown" options={{ presentation: "transparentModal", animation: "fade", headerShown: false }} />
             <Stack.Screen name="activities/[id]/(index)/dropdown" options={{ presentation: "transparentModal", animation: "fade", headerShown: false }} />
+            <Stack.Screen name="bike/create" options={{ presentation: "transparentModal", animation: "fade", headerShown: false }} />
             {/*<Stack.Screen name="ping" options={{ presentation: "modal" }} />*/}
         </Stack>
     );

@@ -1,5 +1,5 @@
 import { Stack, useRouter } from "expo-router";
-import { View, TouchableWithoutFeedback } from "react-native";
+import { View, TouchableWithoutFeedback, ScrollView } from "react-native";
 import { useTheme } from "../utils/themes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ReactNode } from "react";
@@ -35,14 +35,16 @@ export default function ModalPage({ midlays, children }: ModalPageProps) {
 
                 backgroundColor: "rgba(0, 0, 0, .25)"
             }}>
-                <SafeAreaView edges={[ "bottom" ]} style={{
+                <ScrollView style={{
+                    backgroundColor: theme.background,
+                    
                     borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
-
-                    backgroundColor: theme.background
+                    borderTopRightRadius: 10
                 }}>
-                    {children}
-                </SafeAreaView>
+                    <SafeAreaView edges={[ "bottom" ]}>
+                        {children}
+                    </SafeAreaView>
+                </ScrollView>
             </View>
         </View>
     );
