@@ -88,7 +88,7 @@ export default function Bike(props: BikeProps) {
                             flexDirection: "row",
                             justifyContent: "space-between"
                         }}>
-                            {bike.summary.slice(0, 3).map((summary) => (
+                            {bike.summary.filter((summary) => summary.key === "activities" || summary.key === "distance" || summary.key === "elevation").slice(0, 3).map((summary) => (
                                 <BikeActivitySummary key={summary.key} type={summary.key} value={summary.value} color={theme.color}/>
                             ))}
                         </View>

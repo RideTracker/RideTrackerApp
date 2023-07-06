@@ -25,7 +25,7 @@ export function BikeActivitySummary({ type, value, color, contrast }: ActivitySu
     return (
         <View>
             <CaptionText style={{ color, textAlign: "center", fontSize: 16 }}>{stat.value}</CaptionText>
-            <ParagraphText style={{ color, textAlign: "center", fontSize: 14 }}>{stat.name}</ParagraphText>
+            <ParagraphText style={{ color, textAlign: "center", fontSize: 12 }}>{stat.altName ?? stat.name}</ParagraphText>
         </View>
     );
 };
