@@ -1,5 +1,13 @@
 export function getFormattedActivitySummary(key: string, value: number): { name: string, altName?: string, value: number, unit: string } {
     switch(key) {
+        case "activities": {
+            return {
+                name: "activities",
+                value,
+                unit: "activities"
+            };
+        }
+        
         case "distance": {
             return {
                 name: "distance",

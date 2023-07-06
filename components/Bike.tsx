@@ -6,11 +6,12 @@ import { ParagraphText } from "./texts/Paragraph";
 import { getBike } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../modules/useClient";
 import Constants from "expo-constants";
+import { ActivitySummary } from "./ActivitySummary";
+import { BikeActivitySummary } from "./BikeActivitySummary";
 
 type BikeProps = {
     id?: string;
     buttons?: ReactNode;
-
     style?: ViewStyle;
 };
 
@@ -18,8 +19,6 @@ type BikeData = {
     name: string;
     model?: string;
     image: string;
-    activities: number;
-
     summary: {
         key: string;
         value: number;
@@ -74,10 +73,14 @@ export default function Bike(props: BikeProps) {
                     justifyContent: "space-around",
                     gap: 5
                 }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                    <View style={{ flexDirection: "row", gap: 10 }}>
                         <CaptionText placeholder={!bike}>{bike?.name}</CaptionText>
 
-                        {(bike) && (buttons)}
+                        {(bike) && (
+                            <View style={{ flexDirection: "row", gap: 10, marginLeft: "auto" }}>
+                                {buttons}
+                            </View>
+                        )}
                     </View>
 
                     {(bike)?(
@@ -85,10 +88,9 @@ export default function Bike(props: BikeProps) {
                             flexDirection: "row",
                             justifyContent: "space-between"
                         }}>
-                            <View>
-                                <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{bike?.activities}</ParagraphText>
-                                <ParagraphText style={{ textAlign: "center" }}>rides</ParagraphText>
-                            </View>
+                            {bike.summary.slice(0, 3).map((summary) => (
+                                <BikeActivitySummary key={summary.key} type={summary.key} value={summary.value} color={theme.color}/>
+                            ))}
                         </View>
                     ):(
                         <View style={{

@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Alert, P
 import { useRouter, Stack, useSearchParams, useNavigation } from "expo-router";
 import { useTheme } from "../../../../../utils/themes";
 import FormInput from "../../../../../components/FormInput";
-import { FontAwesome, Feather } from "@expo/vector-icons"; 
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons"; 
 import Button from "../../../../../components/Button";
 import Bike from "../../../../../components/Bike";
 import * as FileSystem from "expo-file-system";
@@ -15,6 +15,7 @@ import Constants from "expo-constants";
 import { useClient } from "../../../../../modules/useClient";
 import { createActivity, getBikes } from "@ridetracker/ridetrackerclient";
 import { useUser } from "../../../../../modules/user/useUser";
+import PageOverlay from "../../../../../components/PageOverlay";
 
 export default function UploadRecordingPage() {
     if(Platform.OS === "web")
@@ -35,6 +36,7 @@ export default function UploadRecordingPage() {
     const [ selectedBike, setSelectedBike ] = useState(null);
     const [ recording, setRecording ] = useState(null);
     const [ sessions, setSessions ] = useState(null);
+    const [ uploading, setUploading ] = useState<boolean>(false);
 
     const { id } = useSearchParams();
 
@@ -146,7 +148,7 @@ export default function UploadRecordingPage() {
                                                     }}/>
                                                 ):(
                                                     <View style={{ flex: 1, justifyContent: "center" }}>
-                                                        <CaptionText style={{ textAlign: "center" }}>{bike.name}</CaptionText>
+                                                        <ParagraphText style={{ textAlign: "center" }}>{bike.name}</ParagraphText>
                                                     </View>
                                                 )}
                                             </TouchableOpacity>
@@ -198,13 +200,15 @@ export default function UploadRecordingPage() {
                     ):(
                         <Bike id={selectedBike.id} buttons={(
                             <TouchableOpacity onPress={() => setSelectedBike(null)}>
-                                <Feather name="repeat" size={24} color={theme.color}/>
+                                <FontAwesome5 name="times" size={24} color={theme.color}/>
                             </TouchableOpacity>
                         )}/>
                     )}
 
                     <View style={{ marginTop: 20, gap: 10 }}>
                         <Button primary={true} label="Publish activity" onPress={() => {
+                            setUploading(true);
+                            
                             createActivity(client, sessions, (title.length)?(title):(null), (description.length)?(title):(null), selectedBike).then((result) => {
                                 if(result.success) {
                                     router.push("/index");
@@ -235,6 +239,8 @@ export default function UploadRecordingPage() {
                     </View>
                 </View>
             </ScrollView>
+
+            {(uploading) && (<PageOverlay/>)}
         </View>
     );
 }

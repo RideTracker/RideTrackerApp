@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import uuid from "react-native-uuid";
 import { createBike } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
+import PageOverlay from "../../../../components/PageOverlay";
 
 type ImageAsset = {
     id: string;
@@ -29,6 +30,7 @@ export default function BikeCreatePage() {
     const [ name, setName ] = useState<string>("");
     const [ model, setModel ] = useState<CategorySelectorItem>(null);
     const [ images, setImages ] = useState<ImageAsset[]>([]);
+    const [ uploading, setUploading ] = useState<boolean>(false);
 
     return (
         <ModalPage>
@@ -184,15 +186,21 @@ export default function BikeCreatePage() {
                             return;
                         }
 
+                        setUploading(true);
+
                         createBike(client, name, model?.type, images.map((image) => image.base64)).then((result) => {
                             if(result.success)
                                 router.back();
-                        })
+                        });
                     }}/>
 
                     <Button primary={false} type="danger" label="Cancel" onPress={() => router.back()}/>
                 </View>
             </View>
+
+            {(uploading) && (
+                <PageOverlay/>
+            )}
         </ModalPage>
     );
 };
