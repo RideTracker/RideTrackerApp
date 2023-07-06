@@ -420,7 +420,7 @@ export default function Routes() {
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <HeaderText>Getting your location...</HeaderText>
+                    <HeaderText style={{ color: "white" }}>Getting your location...</HeaderText>
                 </View>
             )}
 
