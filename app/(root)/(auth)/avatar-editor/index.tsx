@@ -17,7 +17,7 @@ import Avatar from "../../../../components/Avatar";
 import { useUser } from "../../../../modules/user/useUser";
 import { setClient } from "../../../../utils/stores/client";
 import { useAvatarClient } from "../../../../modules/useAvatarClient";
-import { createUserAvatar, getAvatars, getUserAvatars } from "@ridetracker/avatarclient";
+import { GetUserAvatarsResponse, createUserAvatar, getAvatars, getUserAvatars } from "@ridetracker/avatarclient";
 import { authenticateUser, createClient, uploadUserAvatar } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 
@@ -79,7 +79,7 @@ export default function AvatarEditorPage() {
     const [ combination, setCombination ] = useState(null);
     const [ tabType, setTabType ] = useState("helmet");
     const [ uploading, setUploading ] = useState(false);
-    const [ userAvatars, setUserAvatars ] = useState(null);
+    const [ userAvatars, setUserAvatars ] = useState<GetUserAvatarsResponse["avatars"]>(null);
 
     const dispatch = useDispatch();
 
@@ -181,10 +181,12 @@ export default function AvatarEditorPage() {
                     }}/>
                 )}
 
-                {(avatars && combination) && (<Avatar avatars={avatars} combination={combination} onDataUrl={(url) => setDataUrl(url)}/>)}
+                <View style={{ aspectRatio: 1 }}>
+                    {(avatars && combination) && (<Avatar avatars={avatars} combination={combination} onDataUrl={(url) => setDataUrl(url)}/>)}
+                </View>
             </View>
 
-            <Tabs initialTab={"appearance"} onChange={(tab) => setTabType(avatarTypes.find((avatarType) => avatarType.tab == tab).type)} style={{
+            <Tabs initialTab={"appearance"} onChange={(tab) => setTabType(avatarTypes.find((avatarType) => avatarType.tab == tab)?.type)} style={{
                 flex: 1,
                 opacity: (uploading)?(0.5):(1)
             }} pointerEvents={(uploading)?("none"):("auto")}>
@@ -300,34 +302,6 @@ export default function AvatarEditorPage() {
                 <TabsPage id={"wallpaper"} title={"Wallpapers"} style={{ gap: 10 }}>
                     <ScrollView>
                         <View style={{ padding: 10, paddingBottom: 50, gap: 10 }}>
-                            <ScrollView horizontal={true}>
-                                <View style={{ flexDirection: "row", gap: 10, paddingBottom: 10 }}>
-                                    {(avatarTypes).filter((avatarType) => avatarType.tab === "wallpaper").map((avatarType) => (
-                                        <TouchableOpacity key={avatarType.type} style={{
-                                            height: 40,
-
-                                            borderRadius: 6,
-                                            overflow: "hidden",
-
-                                            flexDirection: "row",
-                                            gap: 10,
-
-                                            alignItems: "baseline",
-
-                                            padding: 10,
-
-                                            backgroundColor: (tabType === avatarType.type)?(theme.highlight):(theme.placeholder),
-                                            borderWidth: 1,
-                                            borderColor: (tabType === avatarType.type)?(theme.border):("transparent")
-                                        }} onPress={() => setTabType(avatarType.type)}>
-                                            {avatarType.icon}
-
-                                            <CaptionText>{avatarType.name}</CaptionText>
-                                        </TouchableOpacity>
-                                    ))}
-                                </View>
-                            </ScrollView>
-
                             {(avatarTypes).filter((avatarType) => avatarType.tab === "wallpaper" && avatarType.type === tabType).map((avatarType) => (
                                 <React.Fragment key={avatarType.type}>
                                     <CaptionText>{avatarType.name}</CaptionText>
@@ -397,7 +371,18 @@ export default function AvatarEditorPage() {
                 </TabsPage>
 
                 <TabsPage id={"history"} title={"History"}>
-
+                    <View style={{
+                        flexDirection: "row",
+                        flexWrap: "wrap"                        
+                    }}>
+                        {userAvatars?.map((userAvatar) => (
+                            <View key={userAvatar.id} style={{ width: "50%", padding: 10 }}>
+                                <TouchableOpacity style={{ aspectRatio: 1, padding: 10 }} onPress={() => setCombination(JSON.parse(userAvatar.combination))}>
+                                   <Avatar combination={JSON.parse(userAvatar.combination)} avatars={avatars} onDataUrl={() => {}}/>
+                                </TouchableOpacity>
+                            </View>
+                        ))}
+                    </View>
                 </TabsPage>
             </Tabs>
         </View>

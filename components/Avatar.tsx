@@ -60,9 +60,8 @@ export default function Avatar(props: AvatarProps) {
     
     return (
         <View style={{
-            width: 225,
-            height: 225
-        }}>
+            flex: 1
+        }} pointerEvents="none">
             <WebView ref={webViewRef} onMessage={(event) => handleWebViewEvent(event.nativeEvent.data)} source={{
                 headers: {
                     "Access-Control-Allow-Origin": "*"
