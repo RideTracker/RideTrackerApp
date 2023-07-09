@@ -32,13 +32,15 @@ export default function Profile() {
 
     const router = useRouter();
 
+    console.log({ userId, user: userData.user });
+
     useEffect(() => {
         async function getProfile() {
             getProfileById(client, userId as string).then((result) => setProfile(result.profile));
         }
 
         getProfile();
-    }, []);
+    }, [ userId ]);
     
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>

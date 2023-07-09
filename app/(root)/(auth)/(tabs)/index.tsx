@@ -74,6 +74,9 @@ export default function Index() {
     }, [ userData.filters?.feed, filterText ]);
 
     const handlePagination = async (reset: boolean) => {
+        if(!client.token)
+            return false;
+            
         const order = userData.filters?.feed?.find((item) => item.key === "order")?.value;
         const timeline = userData.filters?.feed?.find((item) => item.key === "timeline")?.value;
 

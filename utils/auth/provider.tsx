@@ -11,6 +11,7 @@ import { readSearchPredictions, setSearchPredictions } from "../stores/searchPre
 import * as NavigationBar from "expo-navigation-bar";
 import { Platform } from "react-native";
 import { setClient } from "../stores/client";
+import { useClient } from "../../modules/useClient";
 
 const AuthContext = React.createContext(null);
 
@@ -31,6 +32,7 @@ export function Provider(props: ProviderProps) {
     const router = useRouter();
     const segments = useSegments();
     const userData = useUser();
+    const client = useClient();
 
     const [ user, setAuth ] = useState(null);
     const [ ready, setReady ] = useState<boolean>(false);
@@ -93,11 +95,11 @@ export function Provider(props: ProviderProps) {
             
         const inAuthGroup = segments.includes("(auth)");
 
-        if(!userData?.token && inAuthGroup)
+        if((!userData?.token || !client.token) && inAuthGroup)
             router.replace("/login");
-        else if (userData?.token && !inAuthGroup)
+        else if ((userData?.token && client.token) && !inAuthGroup)
             router.replace("/");
-    }, [ userData?.token, segments ]);
+    }, [ userData?.token, segments, client.token ]);
 
     if(!ready)
         return (<SplashScreen/>);

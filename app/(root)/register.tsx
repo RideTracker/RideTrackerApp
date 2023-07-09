@@ -54,7 +54,8 @@ export default function Register() {
     
                     dispatch(setUserData({
                         email,
-                        token: response.token
+                        token: response.token,
+                        user: response.user
                     }));
     
                     router.push("/");

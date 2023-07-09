@@ -53,7 +53,8 @@ export default function Login() {
     
                     dispatch(setUserData({
                         email,
-                        token: response.token
+                        token: response.token,
+                        user: response.user
                     }));
     
                     router.push("/");
@@ -157,7 +158,8 @@ export default function Login() {
 
                             dispatch(setUserData({
                                 email: randomUser.email,
-                                token: authentication.token
+                                token: authentication.token,
+                                user: authentication.user
                             }));
 
                             router.push("/");
