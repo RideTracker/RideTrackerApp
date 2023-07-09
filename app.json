@@ -3,7 +3,7 @@
         "name": "ridetrackerapp",
         "slug": "ridetrackerapp",
         "scheme": "ridetrackerapp",
-        "version": "0.9.12",
+        "version": "0.9.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "light",
@@ -22,7 +22,7 @@
             ]
         },
         "android": {
-            "versionCode": 12,
+            "versionCode": 15,
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#191923"

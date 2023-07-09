@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Alert, Platform, ScrollView, View, TextInput } from "react-native";
+import { Alert, Platform, ScrollView, View, TextInput, Linking } from "react-native";
 import { useDispatch } from "react-redux";
 import { Stack, useRouter } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
@@ -10,7 +10,7 @@ import { SelectList } from "../../../../components/SelectList";
 import { useUser } from "../../../../modules/user/useUser";
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 import { setSearchPredictions } from "../../../../utils/stores/searchPredictions";
-import { createClient, createMessage } from "@ridetracker/ridetrackerclient";
+import { createClient, createMessage, deleteUser } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import { CaptionText } from "../../../../components/texts/Caption";
@@ -133,6 +133,66 @@ export default function Settings() {
 
                                 setUploading(false);
                             });
+                        }}/>
+
+                        <View style={{
+                            marginVertical: 10,
+                            
+                            height: 2,
+
+                            backgroundColor: theme.border
+                        }}/>
+
+                        <Button primary={false} label="View Privacy Policy" onPress={async () => {
+                            if(!(await Linking.canOpenURL("https://ridetracker.app/privacy-policy"))) {
+                                Alert.alert("Something went wrong!", "We were not able to open a browser for you. Please visit this link:\n\nhttps://ridetracker.app/privacy-policy");
+
+                                return;
+                            }
+
+                            await Linking.openURL("https://ridetracker.app/privacy-policy");
+                        }}/>
+
+                        <Button primary={false} type="danger" label="Delete my account" onPress={() => {
+                            Alert.alert("Information", "Deleting your account does not delete all of your content. You must do so manually or contact us within 30 days of your account deletion request at privacy@ridetracker.app\n\nAfter the 30 day period, we are no longer able to identify you with your previous content.", [
+                                {
+                                    text: "Next",
+                                    style: "default",
+                                    onPress: () => {
+                                        Alert.alert("Are you sure?", "Are you sure you want to delete your account? This action is destructive and cannot be undone!\n\nWe reserve the right to process your account deletion up to 30 days.", [
+                                            {
+                                                text: "I am sure",
+                                                style: "destructive",
+                                                onPress: () => {
+                                                    setUploading(true);
+
+                                                    deleteUser(client).then((result) => {
+                                                        if(!result.success) {
+                                                            Alert.alert("Something went wrong!", "Something went wrong when deleting your account. Please contact us at privacy@ridetracker.app");
+
+                                                            return;
+                                                        }
+
+                                                        Alert.alert("Account deleted", "Your account has now been set up for deletion. We reserve the right to process your account deletion up to 30 days.\n\nYour content will not be deleted. If you wish to have your content deleted, please contact us within 30 days at privacy@ridetracker.app");
+                                                        
+                                                        dispatch(setUserData({ email: null, token: null }));
+                                                        dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
+                                                    });
+
+                                                }
+                                            },
+                                            {
+                                                text: "Cancel",
+                                                style: "cancel"
+                                            }
+                                        ]);
+                                    }
+                                },
+                                {
+                                    text: "Cancel",
+                                    style: "cancel"
+                                }
+                            ]);
                         }}/>
                     </View>
                 </ScrollView>
