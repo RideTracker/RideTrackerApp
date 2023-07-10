@@ -6,10 +6,15 @@ type CaptionTextProps = {
     children?: ReactNode;
     style?: TextStyle;
     placeholder?: boolean;
+    placeholderWidth?: number;
+    placeholderColor?: string;
 };
 
-export function CaptionText({ children, style, placeholder = false }: CaptionTextProps) {
+export function CaptionText({ children, style, placeholder = false, placeholderWidth, placeholderColor }: CaptionTextProps) {
     const theme = useTheme();
+
+    if(!placeholderWidth)
+        placeholderWidth = Math.ceil(Math.random() * 10) + 5;
 
     return (
         <Text style={[
@@ -23,11 +28,11 @@ export function CaptionText({ children, style, placeholder = false }: CaptionTex
             },
 
             (placeholder) && {
-                backgroundColor: theme.placeholder,
+                backgroundColor: placeholderColor ?? theme.placeholder,
                 color: "transparent"
             }
         ]}>
-            {(placeholder)?(Array(Math.ceil(Math.random() * 10) + 5).fill("A").join("")):(children)}
+            {(placeholder)?(Array(placeholderWidth).fill("A").join("")):(children)}
         </Text>
     );
 }

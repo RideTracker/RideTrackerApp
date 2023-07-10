@@ -5,9 +5,10 @@ import { CaptionText } from "./texts/Caption";
 import { ParagraphText } from "./texts/Paragraph";
 import Button from "./Button";
 import FormDivider from "./FormDivider";
+import { useRouter } from "expo-router";
 
 export default function SubscriptionPageOverlay() {
-    const theme = useTheme();
+    const router = useRouter();
 
     return (
         <View style={{
@@ -40,7 +41,9 @@ export default function SubscriptionPageOverlay() {
 
                 padding: 10
             }}>
-                <Button primary={true} label="Show subscriptions"/>
+                <Button primary={true} label="Show subscriptions" onPress={() => {
+                    router.push("/subscriptions/list");
+                }}/>
             </View>
         </View>
     );

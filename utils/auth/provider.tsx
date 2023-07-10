@@ -23,6 +23,8 @@ type ProviderProps = {
     children: ReactNode;
 };
 
+SplashScreen.preventAutoHideAsync();
+
 export function Provider(props: ProviderProps) {
     const { children } = props;
 
@@ -66,6 +68,8 @@ export function Provider(props: ProviderProps) {
                 }
     
                 setReady(true);
+
+                SplashScreen.hideAsync();
             }).catch(() => {
                 dispatch(setUserData({
                     key: undefined,
@@ -73,6 +77,8 @@ export function Provider(props: ProviderProps) {
                 }));
     
                 setReady(true);
+
+                SplashScreen.hideAsync();
             });
         });
 
@@ -102,7 +108,7 @@ export function Provider(props: ProviderProps) {
     }, [ userData?.token, segments, client.token ]);
 
     if(!ready)
-        return (<SplashScreen/>);
+        return null;
 
     return (
         <AuthContext.Provider value={{

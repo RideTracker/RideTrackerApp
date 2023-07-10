@@ -1,80 +1,80 @@
 {
-    "expo": {
-        "name": "ridetrackerapp",
-        "slug": "ridetrackerapp",
-        "scheme": "ridetrackerapp",
-        "version": "0.9.0",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "userInterfaceStyle": "light",
-        "splash": {
-            "image": "./assets/splash.png",
-            "resizeMode": "cover",
-            "backgroundColor": "#191923"
-        },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
-        "ios": {
-            "supportsTablet": true,
-            "associatedDomains": [
-                "applinks:ridetracker.app"
-            ]
-        },
-        "android": {
-            "versionCode": 18,
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#191923"
-            },
-            "package": "com.norasoderlund.ridetrackerapp",
-            "config": {
-                "googleMaps": {
-                    "apiKey": "AIzaSyCUghPPolh8DClj-EFCzXx35K7pH1Qn128"
-                }
-            },
-            "permissions": [
-                "ACCESS_COARSE_LOCATION",
-                "ACCESS_FINE_LOCATION",
-                "ACCESS_BACKGROUND_LOCATION",
-                "android.permission.RECORD_AUDIO"
-            ],
-            "intentFilters": [
-                {
-                    "action": "VIEW",
-                    "data": {
-                        "scheme": "https",
-                        "host": "ridetracker.app"
-                    },
-                    "category": [
-                        "BROWSABLE",
-                        "DEFAULT"
-                    ]
-                }
-            ]
-        },
-        "web": {
-            "favicon": "./assets/favicon.png",
-            "bundler": "metro"
-        },
-        "plugins": [
-            [
-                "expo-location",
-                {
-                    "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-                }
-            ]
-        ],
-        "extra": {
-            "environment": "staging",
-            "apiUserAgent": "RideTrackerApp-0.9.0",
-            "api": "https://staging.service.ridetracker.app",
-            "avatarApi": "https://staging.avatar-service.ridetracker.app",
-            "route": "https://staging.route-service.ridetracker.app",
-            "images": "https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg",
-            "eas": {
-                "projectId": "b821b60b-3f8b-4b59-b660-9e6a51e1714f"
-            }
+  "expo": {
+    "name": "ridetrackerapp",
+    "slug": "ridetrackerapp",
+    "scheme": "ridetrackerapp",
+    "version": "0.9.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#191923"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "associatedDomains": [
+        "applinks:ridetracker.app"
+      ]
+    },
+    "android": {
+      "versionCode": 18,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#191923"
+      },
+      "package": "com.norasoderlund.ridetrackerapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCUghPPolh8DClj-EFCzXx35K7pH1Qn128"
         }
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "https",
+            "host": "ridetracker.app"
+          },
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
+    ],
+    "extra": {
+      "environment": "dev",
+      "apiUserAgent": "RideTrackerApp-0.9.0",
+      "api": "https://staging.service.ridetracker.app",
+      "avatarApi": "https://staging.avatar-service.ridetracker.app",
+      "route": "https://staging.route-service.ridetracker.app",
+      "images": "https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg",
+      "eas": {
+        "projectId": "b821b60b-3f8b-4b59-b660-9e6a51e1714f"
+      }
     }
+  }
 }
