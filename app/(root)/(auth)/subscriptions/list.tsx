@@ -16,20 +16,28 @@ import { createBike } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 import PageOverlay from "../../../../components/PageOverlay";
 import * as Linking from "expo-linking";
+import { connect, getProducts } from "../../../../utils/productsProvider";
+import { IAPItemDetails } from "expo-in-app-purchases";
 
 export default function SubscriptionsListPage() {
     const theme = useTheme();
     const router = useRouter();
     const client = useClient();
 
-    const [ products, setProducts ] = useState<any[]>(null);
+    const [ products, setProducts ] = useState<IAPItemDetails[]>(null);
 
     useEffect(() => {
-        /*getProducts([ "subscription-monthly", "subscription-quartely", "subscription-quartely-deal" ]).then((response) => {
-            if(response.results) {
-                setProducts(response.results);
-            }
-        });*/
+        connect().then(() => {
+            getProducts([ "subscription-monthly", "subscription-quartely" ]).then((response) => {
+                Alert.alert("Results", JSON.stringify(response, null, 4));
+
+                if(response.results) {
+                    setProducts(response.results);
+                }
+            }).catch((error) => {
+                Alert.alert("Error", JSON.stringify(error));
+            });
+        });
     }, []);
 
     return (
@@ -48,6 +56,16 @@ export default function SubscriptionsListPage() {
 
             <ScrollView>
                 <View style={{ gap: 10, padding: 10 }}>
+                    {products?.map((product) => (
+                        <View key={product.productId}>
+                            <CaptionText>{product.title} <ParagraphText>({product.productId})</ParagraphText></CaptionText>
+                        
+                            <ParagraphText>{product.description}</ParagraphText>
+
+                            <CaptionText>{product.price} / {product.subscriptionPeriod}</CaptionText>
+                        </View>
+                    ))}
+
                     <ParagraphText>Manage your subscription on Google Play.</ParagraphText>
 
                     <Button primary={false} label="Google Play Subscriptions" onPress={() => {

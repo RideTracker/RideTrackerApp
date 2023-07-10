@@ -30,6 +30,7 @@ import MapIntermediateMarker from "../../../../components/maps/MapIntermediateMa
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 import useInternetConnection from "../../../../modules/useInternetConnection";
 import SubscriptionPageOverlay from "../../../../components/SubscriptionPageOverlay";
+import PermissionsPageOverlay from "../../../../components/PermissionsPageOverlay";
 
 global.coordinates = [];
 
@@ -62,6 +63,7 @@ export default function Routes() {
     }[]>([]);
     const [ sorting, setSorting ] = useState<boolean>(false);
     const [ drawing, setDrawing ] = useState<boolean>(false);
+    const [ permissions, setPermissions ] = useState<Location.LocationPermissionResponse>(null);
     const [ drawingTimestamp, setDrawingTimestamp ] = useState<number>(0);
 
     useFocusEffect(() => {
@@ -71,33 +73,27 @@ export default function Routes() {
     });
 
     useEffect(() => {
-        if(!initialLocation) {
-            Location.getForegroundPermissionsAsync().then(async (permissions) => {
-                if(!permissions.granted) {
-                    const result = await Location.requestForegroundPermissionsAsync();
+        Location.getForegroundPermissionsAsync().then((permissions) => {
+            setPermissions(permissions);
+        });
+    }, []);
 
-                    if(!result.granted) {
-                        router.back();
-
-                        return;
+    useEffect(() => {
+        if(permissions?.granted) {
+            Location.getCurrentPositionAsync().then((location) => {
+                setInitialLocation(location);
+    
+                mapRef.current.setCamera({
+                    zoom: 12,
+                    
+                    center: {
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude
                     }
-                }
-
-                Location.getCurrentPositionAsync().then((location) => {
-                    setInitialLocation(location);
-        
-                    mapRef.current.setCamera({
-                        zoom: 12,
-                        
-                        center: {
-                            latitude: location.coords.latitude,
-                            longitude: location.coords.longitude
-                        }
-                    });
                 });
             });
         }
-    }, [ initialLocation ]);
+    }, [ permissions ]);
 
     useEffect(() => {
         if(searchTimeout)
@@ -509,9 +505,11 @@ export default function Routes() {
 
             {(internetConnection === "OFFLINE")?(
                 <OfflinePageOverlay/>
-            ):((!userData.user?.subscribed) && (
+            ):((!userData.user?.subscribed)?(
                 <SubscriptionPageOverlay/>
-            ))}
+            ):((permissions !== null && !permissions.granted) && (
+                <PermissionsPageOverlay required={[ "foreground" ]} onGranted={(permissions) => setPermissions(permissions)}/>
+            )))}
         </View>
     );
 }

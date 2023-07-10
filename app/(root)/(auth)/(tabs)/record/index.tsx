@@ -25,6 +25,7 @@ import { NavigationBarVisibility } from "expo-navigation-bar";
 import { NavigationBarBehavior } from "expo-navigation-bar";
 import { BatteryState } from "expo-battery";
 import { CaptionText } from "../../../../../components/texts/Caption";
+import PermissionsPageOverlay from "../../../../../components/PermissionsPageOverlay";
 
 export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
 
@@ -37,8 +38,6 @@ export default function Record() {
     const mapRef = useRef<MapView>();
     const userData = useUser();
 
-    const [ locationPermissionStatus, requestLocationPermission ] = Location.useBackgroundPermissions();
-
     const [ id ] = useState(uuid.v4());
     const [ recorder ] = useState(new Recorder());
     const [ recording, setRecording ] = useState(null);
@@ -50,6 +49,7 @@ export default function Record() {
     const [ focus, setFocus ] = useState<boolean>(true);
     const [ notices, setNotices ] = useState<string[]>([]);
     const [ keepAwake, setKeepAwake ] = useState<boolean>(false);
+    const [ permissions, setPermissions ] = useState<Location.LocationPermissionResponse>(null);
 
     async function ensureDirectoryExists() {
         const info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
@@ -117,40 +117,29 @@ export default function Record() {
     }, []);
 
     useEffect(() => {
-        if(Platform.OS !== "android")
-            return;
-
-        async function getLastPosition() {
-            if(mapRef.current) {
-                const lastLocation = await Location.getLastKnownPositionAsync();
-
-                if(lastLocation !== null) {
-                    mapRef.current.animateCamera({
-                        center: {
-                            latitude: lastLocation.coords.latitude,
-                            longitude: lastLocation.coords.longitude
-                        },
-
-                        zoom: 12
-                    });
-                }
-            }
-        };
-
-        if(!locationPermissionStatus?.granted) {
-            requestLocationPermission().then(async (result) => {
-                if(!result.granted) {
-                    router.push("/record/error");
-
-                    return;
-                }
-
-                await getLastPosition();
-            });
-        }
-        else
-            getLastPosition();
+        Location.getBackgroundPermissionsAsync().then((permissions) => {
+            setPermissions(permissions);
+        });
     }, []);
+
+    useEffect(() => {
+        if(permissions?.granted) {
+            if(mapRef.current) {
+                Location.getLastKnownPositionAsync().then((lastLocation) => {
+                    if(lastLocation !== null) {
+                        mapRef.current.animateCamera({
+                            center: {
+                                latitude: lastLocation.coords.latitude,
+                                longitude: lastLocation.coords.longitude
+                            },
+
+                            zoom: 12
+                        });
+                    }
+                });
+            }
+        }
+    }, [ permissions ]);
 
     useEffect(() => {
         if(recording && !recorder.active) {
@@ -518,6 +507,10 @@ export default function Record() {
                     </View>
                 </LinearGradient>
             </View>
+
+            {(permissions && !permissions.granted) && (
+                <PermissionsPageOverlay required={[ "foreground", "background" ]} onGranted={(permissions) => setPermissions(permissions)}/>
+            )}
         </View>
     );
 }

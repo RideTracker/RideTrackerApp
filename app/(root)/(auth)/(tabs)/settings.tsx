@@ -75,6 +75,10 @@ export default function Settings() {
                             <React.Fragment>
                                 <Button primary={false} label="Avatar editor" onPress={() => router.push("/avatar-editor/")}/>
 
+                                <Button primary={false} label="Add subscription" onPress={() => {
+                                    dispatch(setUserData({ user: { ...userData.user, subscribed: true } }));
+                                }}/>
+                                
                                 <Button primary={false} label="Reset key" onPress={() => {
                                     dispatch(setUserData({ email: null, token: null }));
                                     dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));

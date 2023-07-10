@@ -1,7 +1,9 @@
-import { IAPQueryResponse, IAPItemDetails, getProductsAsync, IAPItemType, IAPResponseCode } from "expo-in-app-purchases";
+import * as InAppPurchases from "expo-in-app-purchases";
 import Constants from "expo-constants";
 
-const mockProducts: IAPItemDetails[] = [
+let mockConnection: boolean = false;
+
+const mockProducts: InAppPurchases.IAPItemDetails[] = [
     {
         description: "Monthly billed subscription",
         price: "20 SEK",
@@ -10,7 +12,7 @@ const mockProducts: IAPItemDetails[] = [
         productId: "subscription-monthly",
         subscriptionPeriod: "P1M",
         title: "Subscription",
-        type: IAPItemType.SUBSCRIPTION
+        type: InAppPurchases.IAPItemType.SUBSCRIPTION
     },
     
     {
@@ -21,7 +23,7 @@ const mockProducts: IAPItemDetails[] = [
         productId: "subscription-quartely",
         subscriptionPeriod: "P3M",
         title: "Subscription",
-        type: IAPItemType.SUBSCRIPTION
+        type: InAppPurchases.IAPItemType.SUBSCRIPTION
     },
     
     {
@@ -29,24 +31,36 @@ const mockProducts: IAPItemDetails[] = [
         price: "48 SEK",
         priceAmountMicros: 48000000,
         priceCurrencyCode: "SEK",
-        productId: "subscription-quartely",
+        productId: "subscription-quartely-deal",
         subscriptionPeriod: "P3M",
         title: "Subscription",
-        type: IAPItemType.SUBSCRIPTION
+        type: InAppPurchases.IAPItemType.SUBSCRIPTION
     }
 ];
 
-export function getProducts(products: string[]): Promise<IAPQueryResponse<IAPItemDetails>> {
+export function connect(): Promise<void> {
     if(Constants.expoConfig.extra.environment === "dev") {
-        return new Promise((resolve) => {
+        mockConnection = true;
+        
+        return new Promise((resolve) => resolve());
+    }
+
+    return InAppPurchases.connectAsync();
+};
+
+export function getProducts(products: string[]): Promise<InAppPurchases.IAPQueryResponse<InAppPurchases.IAPItemDetails>> {
+    if(Constants.expoConfig.extra.environment === "dev") {
+        return new Promise((resolve, reject) => {
+            if(!mockConnection)
+                return reject({ code: InAppPurchases.IAPErrorCode.SERVICE_DISCONNECTED });
+
             resolve({
                 errorCode: undefined,
-                responseCode: IAPResponseCode.OK,
+                responseCode: InAppPurchases.IAPResponseCode.OK,
                 results: mockProducts.filter((mockProduct) => products.includes(mockProduct.productId))
             });
         });
     }
 
-    return getProductsAsync(products);
-
+    return InAppPurchases.getProductsAsync(products);
 };
