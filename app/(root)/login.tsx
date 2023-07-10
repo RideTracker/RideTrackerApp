@@ -12,6 +12,7 @@ import Client, { authenticateUser, createClient, getRandomToken, loginUser } fro
 import Constants from "expo-constants";
 import * as Application from 'expo-application';
 import { setClient } from "../../utils/stores/client";
+import FormDivider from "../../components/FormDivider";
 
 const logo = require("../../assets/logos/logo.png");
 
@@ -110,28 +111,7 @@ export default function Login() {
                 }}>Forgot your credentials? <Link href="/forgotten" style={{ color: theme.brand, fontWeight: "500" }}>Click here to recover</Link></Text>
             </SafeAreaView>
 
-            <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-                marginVertical: 10
-            }}>
-                <View style={{
-                    flex: 1,
-                    height: 2,
-                    backgroundColor: theme.border
-                }}/>
-
-                <Text style={{
-                    color: theme.color
-                }}>OR</Text>
-
-                <View style={{
-                    flex: 1,
-                    height: 2,
-                    backgroundColor: theme.border
-                }}/>
-            </View>
+            <FormDivider label="or"/>
             
             <View style={{
                 marginVertical: 10,

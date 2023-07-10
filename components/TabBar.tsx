@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useCallback } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { EdgeInsets } from "react-native-safe-area-context";
 import { useTheme } from "../utils/themes";
@@ -9,6 +9,7 @@ import { Link } from "expo-router";
 import { State } from "expo-router/src/fork/getPathFromState";
 import useInternetConnection from "../modules/useInternetConnection";
 import TabBarDisabledIcon from "./TabBarDisabledIcon";
+import TabBarSubscriptionIcon from "./TabBarSubscriptionIcon";
 
 type TabBarProps = {
     state: State;
@@ -22,6 +23,7 @@ export const pages: {
     replace: boolean;
     icon: (current: string, color: string) => ReactNode;
     requiresInternetConnection: boolean;
+    requiresSubscription?: boolean;
 }[] = [
     {
         key: "index",
@@ -42,7 +44,8 @@ export const pages: {
         icon: (current, color) => (
             <FontAwesome5 style={{ height: 24 }} name="route" color={color} size={20}/>
         ),
-        requiresInternetConnection: true
+        requiresInternetConnection: true,
+        requiresSubscription: true
     },
 
     {
@@ -97,6 +100,19 @@ export default function TabBar(props: TabBarProps) {
     if(current == "record/index")
         return (null);
 
+    function getPageColor(page: typeof pages[0]) {
+        if(page.requiresInternetConnection && internetConnection === "OFFLINE")
+            return "grey";
+            
+        if(page.requiresSubscription && !userData.user?.subscribed)
+            return "grey";
+        
+        if(current == page.key)
+            return theme.brand;
+        
+        return theme.color;
+    };
+
     return (
         <View style={{
             display: "flex",
@@ -121,15 +137,17 @@ export default function TabBar(props: TabBarProps) {
                     <TouchableOpacity disabled={(page.requiresInternetConnection && internetConnection === "OFFLINE")}>
                         <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                             <View style={{ position: "relative" }}>
-                                {page.icon(current, (!page.requiresInternetConnection || internetConnection !== "OFFLINE")?((current == page.key)?(theme.brand):(theme.color)):("grey"))}
+                                {page.icon(current, getPageColor(page))}
 
-                                {(page.requiresInternetConnection && internetConnection === "OFFLINE") && (
+                                {(page.requiresInternetConnection && internetConnection === "OFFLINE")?(
                                     <TabBarDisabledIcon/>
-                                )}
+                                ):((page.requiresSubscription && !userData.user?.subscribed) && (
+                                    <TabBarSubscriptionIcon/>
+                                ))}
                             </View>
 
                             {(page.title) && (
-                                <ParagraphText style={{ fontSize: 14, color: (!page.requiresInternetConnection || internetConnection !== "OFFLINE")?((current == page.key)?(theme.brand):(theme.color)):("grey") }}>{page.title}</ParagraphText>
+                                <ParagraphText style={{ fontSize: 14, color: getPageColor(page) }}>{page.title}</ParagraphText>
                             )}
                         </View>
                     </TouchableOpacity>

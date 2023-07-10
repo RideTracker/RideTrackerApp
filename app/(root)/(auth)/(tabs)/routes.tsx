@@ -29,6 +29,7 @@ import MapFinishMarker from "../../../../components/maps/MapFinishMarker";
 import MapIntermediateMarker from "../../../../components/maps/MapIntermediateMarker";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 import useInternetConnection from "../../../../modules/useInternetConnection";
+import SubscriptionPageOverlay from "../../../../components/SubscriptionPageOverlay";
 
 global.coordinates = [];
 
@@ -506,9 +507,11 @@ export default function Routes() {
                 </View>
             )}
 
-            {(internetConnection === "OFFLINE") && (
+            {(internetConnection === "OFFLINE")?(
                 <OfflinePageOverlay/>
-            )}
+            ):((!userData.user?.subscribed) && (
+                <SubscriptionPageOverlay/>
+            ))}
         </View>
     );
 }

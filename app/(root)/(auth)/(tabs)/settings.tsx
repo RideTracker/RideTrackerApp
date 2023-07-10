@@ -91,6 +91,24 @@ export default function Settings() {
                             </React.Fragment>
                         )}
 
+                        {(Platform.OS === "android") && (
+                            <React.Fragment>
+                                <View style={{
+                                    marginVertical: 10,
+                                    
+                                    height: 2,
+
+                                    backgroundColor: theme.border
+                                }}/>
+
+                                <ParagraphText>Manage your subscription on Google Play.</ParagraphText>
+
+                                <Button primary={false} label="Google Play Subscriptions" onPress={() => {
+                                    Linking.openURL("https://play.google.com/store/account/subscriptions");
+                                }}/>
+                            </React.Fragment>
+                        )}
+
                         <View style={{
                             marginVertical: 10,
                             
@@ -99,8 +117,6 @@ export default function Settings() {
                             backgroundColor: theme.border
                         }}/>
  
-                        <ParagraphText style={{ color: "grey", textAlign: "center" }}>{Constants.expoConfig.extra.apiUserAgent}</ParagraphText>                    
-
                         <ParagraphText>If you come across a bug, or if you have an idea you'd like to propose, we welcome you to submit them here:</ParagraphText>
 
                         <FormInput inputRef={messageRef} placeholder="Enter your message..." icon={(<FontAwesome name="comments" size={24} color={theme.color}/>)} props={{
@@ -194,6 +210,8 @@ export default function Settings() {
                                 }
                             ]);
                         }}/>
+
+                        <ParagraphText style={{ color: "grey", textAlign: "center", marginBottom: 20 }}>{Constants.expoConfig.extra.apiUserAgent}</ParagraphText>                    
                     </View>
                 </ScrollView>
             </View>
