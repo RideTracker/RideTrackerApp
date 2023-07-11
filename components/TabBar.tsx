@@ -19,7 +19,7 @@ type TabBarProps = {
 export const pages: {
     key: string;
     title?: string;
-    href: string | ((userData: any) => any);
+    href: string;
     replace: boolean;
     icon: (current: string, color: string) => ReactNode;
     requiresInternetConnection: boolean;
@@ -61,14 +61,7 @@ export const pages: {
     {
         key: "profile",
         title: "Profile",
-        href: (userData) => {
-            return {
-                pathname: "/profile",
-                params: {
-                    userId: userData?.user?.id ?? null
-                }
-            };
-        },
+        href: "/profile",
         replace: false,
         icon: (current, color) => (
             <FontAwesome5 style={{ height: 24 }} name="user-alt" color={color} size={18}/>
@@ -133,7 +126,7 @@ export default function TabBar(props: TabBarProps) {
             backgroundColor: theme.background
         }}>
             {pages.map((page) => (
-                <Link key={page.key} asChild={true} style={{ width: "25%", textAlign: "center" }} href={(typeof page.href === "string")?(page.href):(page.href(userData))}>
+                <Link key={page.key} asChild={true} style={{ width: "25%", textAlign: "center" }} href={(page.requiresSubscription && !userData.user?.subscribed)?("/subscriptions/list"):(page.href)}>
                     <TouchableOpacity disabled={(page.requiresInternetConnection && internetConnection === "OFFLINE")}>
                         <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                             <View style={{ position: "relative" }}>

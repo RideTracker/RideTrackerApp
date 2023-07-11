@@ -1,36 +1,37 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { LayoutRectangle, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Stack, useFocusEffect, useRouter } from "expo-router";
-import { useMapStyle, useTheme } from "../../../../utils/themes";
+import { useMapStyle, useTheme } from "../../../../../utils/themes";
 import MapView, { Marker, PanDragEvent, Polyline } from "react-native-maps";
-import { HeaderText } from "../../../../components/texts/Header";
+import { HeaderText } from "../../../../../components/texts/Header";
 import * as Location from "expo-location";
 import { FontAwesome, FontAwesome5, Entypo } from "@expo/vector-icons";
-import FormInput from "../../../../components/FormInput";
+import FormInput from "../../../../../components/FormInput";
 import { getMapsGeocode, getMapsRoutes, getMapsSearchPredictions } from "@ridetracker/ridetrackerclient";
-import { useClient } from "../../../../modules/useClient";
-import { CaptionText } from "../../../../components/texts/Caption";
-import { ParagraphText } from "../../../../components/texts/Paragraph";
-import { useUser } from "../../../../modules/user/useUser";
+import { useClient } from "../../../../../modules/useClient";
+import { CaptionText } from "../../../../../components/texts/Caption";
+import { ParagraphText } from "../../../../../components/texts/Paragraph";
+import { useUser } from "../../../../../modules/user/useUser";
 import { useDispatch } from "react-redux";
-import { useSearchPredictions } from "../../../../modules/usePlacesHistory";
-import { addSearchPrediction } from "../../../../utils/stores/searchPredictions";
-import { SearchPrediction } from "../../../../models/SearchPrediction";
+import { useSearchPredictions } from "../../../../../modules/usePlacesHistory";
+import { addSearchPrediction } from "../../../../../utils/stores/searchPredictions";
+import { SearchPrediction } from "../../../../../models/SearchPrediction";
 import { decode } from "@googlemaps/polyline-codec";
-import GoogleMapsLogo from "../../../../components/maps/GoogleMapsLogo";
-import MapRouteMarkers from "../../../../components/maps/MapRouteMarkers";
-import getFormattedDuration from "../../../../controllers/getFormattedDuration";
-import getDurationAsNumber from "../../../../controllers/getDurationAsNumber";
-import Button from "../../../../components/Button";
+import GoogleMapsLogo from "../../../../../components/maps/GoogleMapsLogo";
+import MapRouteMarkers from "../../../../../components/maps/MapRouteMarkers";
+import getFormattedDuration from "../../../../../controllers/getFormattedDuration";
+import getDurationAsNumber from "../../../../../controllers/getDurationAsNumber";
+import Button from "../../../../../components/Button";
 import * as Linking from "expo-linking";
-import getGoogleMapsDirectionsUrl from "../../../../controllers/getGoogleMapsDirectionsUrl";
-import MapStartMarker from "../../../../components/maps/MapStartMarker";
-import MapFinishMarker from "../../../../components/maps/MapFinishMarker";
-import MapIntermediateMarker from "../../../../components/maps/MapIntermediateMarker";
-import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
-import useInternetConnection from "../../../../modules/useInternetConnection";
-import SubscriptionPageOverlay from "../../../../components/SubscriptionPageOverlay";
-import PermissionsPageOverlay from "../../../../components/PermissionsPageOverlay";
+import getGoogleMapsDirectionsUrl from "../../../../../controllers/getGoogleMapsDirectionsUrl";
+import MapStartMarker from "../../../../../components/maps/MapStartMarker";
+import MapFinishMarker from "../../../../../components/maps/MapFinishMarker";
+import MapIntermediateMarker from "../../../../../components/maps/MapIntermediateMarker";
+import OfflinePageOverlay from "../../../../../components/OfflinePageOverlay";
+import useInternetConnection from "../../../../../modules/useInternetConnection";
+import SubscriptionPageOverlay from "../../../../../components/SubscriptionPageOverlay";
+import PermissionsPageOverlay from "../../../../../components/PermissionsPageOverlay";
+import PageOverlay from "../../../../../components/PageOverlay";
 
 global.coordinates = [];
 
@@ -506,7 +507,7 @@ export default function Routes() {
             {(internetConnection === "OFFLINE")?(
                 <OfflinePageOverlay/>
             ):((!userData.user?.subscribed)?(
-                <SubscriptionPageOverlay/>
+                <PageOverlay/>
             ):((permissions !== null && !permissions.granted) && (
                 <PermissionsPageOverlay required={[ "foreground" ]} onGranted={(permissions) => setPermissions(permissions)}/>
             )))}

@@ -38,60 +38,6 @@ export default function Layout() {
 
             unmountOnBlur: true
         }}>
-            <Tabs.Screen name="index" options={{
-                title: "Feed",
-                tabBarIcon: () => (
-                    <FontAwesome name="home" color={theme.color} size={24}/>
-                )
-            }}/>
-
-            <Tabs.Screen name="routes" options={{
-                title: "Routes",
-                tabBarIcon: () => (
-                    <FontAwesome5 name="route" color={theme.color} size={20}/>
-                )
-            }}/>
-
-            <Tabs.Screen name="record/index" options={{
-                title: "Record",
-
-                tabBarStyle: {
-                    display: "none"
-                },
-
-                tabBarShowLabel: false,
-                tabBarLabelStyle: {
-                    color: "transparent"
-                },
-
-                unmountOnBlur: true,
-                
-                tabBarIcon: () => (
-                    <View style={{ height: 42 }}>
-                        <FontAwesome5 name="dot-circle" color={theme.color} size={42}/>
-                    </View>
-                )
-            }}/>
-
-            <Tabs.Screen name="profile" options={{
-                title: "Profile",
-                href: {
-                    pathname: "/profile",
-                    params: {
-                        userId: userData.user?.id
-                    }
-                },
-                tabBarIcon: () => (
-                    <FontAwesome5 name="user-alt" color={theme.color} size={18}/>
-                )
-            }}/>
-
-            <Tabs.Screen name="settings" options={{
-                title: "Settings",
-                tabBarIcon: () => (
-                    <FontAwesome5 name="cog" color={theme.color} size={21}/>
-                )
-            }}/>
         </Tabs>
     );
 }

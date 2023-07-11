@@ -22,7 +22,7 @@ export default function TabBarSubscriptionIcon() {
             justifyContent: "center",
             alignItems: "center"
         }}>
-            <Ionicons name="logo-google-playstore" size={14} color={"grey"}/>
+            <Ionicons name="logo-google-playstore" size={14} color={theme.color}/>
         </View>
     );
 };

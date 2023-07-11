@@ -22,7 +22,7 @@ export default function TabBarDisabledIcon() {
             justifyContent: "center",
             alignItems: "center"
         }}>
-            <MaterialIcons name="wifi-off" size={14} color={"grey"}/>
+            <MaterialIcons name="wifi-off" size={14} color={theme.color}/>
         </View>
     );
 };

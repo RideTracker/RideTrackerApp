@@ -24,22 +24,28 @@ export default function Profile() {
     const client = useClient();
     const theme = useTheme();
     const userData = useUser();
-    const { userId } = useSearchParams();
+    const searchParams = useSearchParams();
     const internetConnection = useInternetConnection();
     const dispatch = useDispatch();
 
     const [ profile, setProfile ] = useState(null);
+    const [ userId, setUserId ] = useState<string>(null);
 
     const router = useRouter();
 
-    console.log({ userId, user: userData.user });
+    useEffect(() => {
+        if(searchParams) {
+            if(searchParams?.userId)
+                setUserId(searchParams.userId.toString());
+            else if(userData.user?.id)
+                setUserId(userData.user.id);
+        }
+    }, [ searchParams, userData ]);
 
     useEffect(() => {
-        async function getProfile() {
+        if(userId) {
             getProfileById(client, userId as string).then((result) => setProfile(result.profile));
         }
-
-        getProfile();
     }, [ userId ]);
     
     return (

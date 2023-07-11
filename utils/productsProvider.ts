@@ -42,3 +42,10 @@ export function getProducts(products: string[]): Promise<InAppPurchases.IAPQuery
 
     return InAppPurchases.getProductsAsync(products);
 };
+
+export function purchaseProduct(productId: string): Promise<void> {
+    if(Constants.expoConfig.extra.environment === "dev")
+        return;
+    
+    return InAppPurchases.purchaseItemAsync(productId);
+};

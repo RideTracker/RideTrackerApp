@@ -100,11 +100,16 @@ export function Provider(props: ProviderProps) {
             return;
             
         const inAuthGroup = segments.includes("(auth)");
+        const inSubscriptionGroup = segments.includes("(subscription)");
 
         if((!userData?.token || !client.token) && inAuthGroup)
             router.replace("/login");
-        else if ((userData?.token && client.token) && !inAuthGroup)
-            router.replace("/");
+        else if (userData?.token && client.token) {
+            if(!inAuthGroup)
+                router.replace("/");
+            else if(inSubscriptionGroup)
+                router.replace("/");
+        }
     }, [ userData?.token, segments, client.token ]);
 
     if(!ready)
