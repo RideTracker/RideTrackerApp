@@ -37,8 +37,7 @@ export default function PermissionsPageOverlay({ required, onGranted }: Permissi
         }}>
             <Entypo name="location" size={72} color={"white"}/>
 
-            <CaptionText style={{ color: "white" }}>Location permissions are needed!</CaptionText>
-            <ParagraphText style={{ color: "white" }}>RideTracker uses your location to record your position during activities and route planning.{"\n"}{"\n"}During activity recordings, your location is also recorded in the background.</ParagraphText>
+            <CaptionText style={{ color: "white" }}>This app collects location data to enable route planning and activity recording even when the app is closed or not in use.</CaptionText>
 
             <View style={{
                 position: "absolute",

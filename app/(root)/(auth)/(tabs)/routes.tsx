@@ -402,7 +402,7 @@ export default function Routes() {
                 )}
             </View>
 
-            {(!initialLocation) && (
+            {(!initialLocation && permissions?.granted) && (
                 <View style={{
                     position: "absolute",
 
