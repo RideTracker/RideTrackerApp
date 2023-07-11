@@ -28,7 +28,7 @@ export default function SubscriptionsListPage() {
 
     useEffect(() => {
         connect().then(() => {
-            getProducts([ "subscription-monthly", "subscription-quartely" ]).then((response) => {
+            getProducts([ "subscription" ]).then((response) => {
                 Alert.alert("Results", JSON.stringify(response, null, 4));
 
                 if(response.results) {

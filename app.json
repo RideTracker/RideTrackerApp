@@ -22,7 +22,7 @@
       ]
     },
     "android": {
-      "versionCode": 22,
+      "versionCode": 23,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#191923"
@@ -36,8 +36,7 @@
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
-        "ACCESS_BACKGROUND_LOCATION",
-        "android.permission.RECORD_AUDIO"
+        "ACCESS_BACKGROUND_LOCATION"
       ],
       "intentFilters": [
         {
@@ -66,7 +65,7 @@
       ]
     ],
     "extra": {
-      "environment": "staging",
+      "environment": "dev",
       "apiUserAgent": "RideTrackerApp-0.9.0",
       "api": "https://staging.service.ridetracker.app",
       "avatarApi": "https://staging.avatar-service.ridetracker.app",

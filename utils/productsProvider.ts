@@ -5,36 +5,14 @@ let mockConnection: boolean = false;
 
 const mockProducts: InAppPurchases.IAPItemDetails[] = [
     {
-        description: "Monthly billed subscription",
-        price: "20 SEK",
-        priceAmountMicros: 20000000,
+        priceAmountMicros: 25000000,
+        title: "Subscription (com.norasoderlund.ridetrackerapp (unreviewed))",
+        productId: "subscription",
+        type: 1,
         priceCurrencyCode: "SEK",
-        productId: "subscription-monthly",
-        subscriptionPeriod: "P1M",
-        title: "Subscription",
-        type: InAppPurchases.IAPItemType.SUBSCRIPTION
-    },
-    
-    {
-        description: "Quartely billed subscription",
-        price: "60 SEK",
-        priceAmountMicros: 60000000,
-        priceCurrencyCode: "SEK",
-        productId: "subscription-quartely",
-        subscriptionPeriod: "P3M",
-        title: "Subscription",
-        type: InAppPurchases.IAPItemType.SUBSCRIPTION
-    },
-    
-    {
-        description: "Quartely billed subscription",
-        price: "48 SEK",
-        priceAmountMicros: 48000000,
-        priceCurrencyCode: "SEK",
-        productId: "subscription-quartely-deal",
-        subscriptionPeriod: "P3M",
-        title: "Subscription",
-        type: InAppPurchases.IAPItemType.SUBSCRIPTION
+        description: "",
+        price: "25,00 kr",
+        subscriptionPeriod: "P1M"
     }
 ];
 
