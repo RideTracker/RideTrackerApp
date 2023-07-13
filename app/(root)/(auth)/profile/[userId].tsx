@@ -49,7 +49,7 @@ export default function Profile() {
     }, [ userId ]);
     
     return (
-        <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
+        <View style={{ flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{
                 title: "Profile",
                 headerRight: (profile?.user?.id === userData.user?.id)?(() => (
@@ -64,59 +64,55 @@ export default function Profile() {
                 )):(undefined)
             }}/>
 
-            <View style={{
-                flex: 1,
-                paddingVertical: 10
+            <View style={{                    
+                gap: 10,
+
+                alignItems: "center"
             }}>
-                <View style={{
-                    alignItems: "center",
-                    gap: 10
+                <TouchableOpacity disabled={profile?.user?.id !== userData.user?.id} style={{
+                    width: 80,
+                    aspectRatio: 1,
+                    borderRadius: 80,
+                    backgroundColor: theme.placeholder,
+                    overflow: "hidden"
+                }} onPress={() => router.push("/avatar-editor/")}>
+                    {(profile?.user?.avatar) && (
+                        <Image source={{
+                            uri: `${Constants.expoConfig.extra.images}/${profile.user.avatar}/Avatar`
+                        }} style={{
+                            width: "100%",
+                            height: "100%"
+                        }}/>
+                    )}
+                </TouchableOpacity>
+
+                
+                <CaptionText style={(!profile) && {
+                    backgroundColor: theme.placeholder,
+                    color: "transparent"
                 }}>
-                    <TouchableOpacity disabled={profile?.user?.id !== userData.user?.id} style={{
-                        width: 80,
-                        aspectRatio: 1,
-                        borderRadius: 80,
-                        backgroundColor: theme.placeholder,
-                        overflow: "hidden"
-                    }} onPress={() => router.push("/avatar-editor/")}>
-                        {(profile?.user?.avatar) && (
-                            <Image source={{
-                                uri: `${Constants.expoConfig.extra.images}/${profile.user.avatar}/Avatar`
-                            }} style={{
-                                width: "100%",
-                                height: "100%"
-                            }}/>
-                        )}
-                    </TouchableOpacity>
+                    {(profile)?(profile.user.name):("Firstname Lastname")}
+                </CaptionText>
 
-                    
-                    <CaptionText style={(!profile) && {
-                        backgroundColor: theme.placeholder,
-                        color: "transparent"
-                    }}>
-                        {(profile)?(profile.user.name):("Firstname Lastname")}
-                    </CaptionText>
-
-                    <ParagraphText style={(!profile) && {
-                        backgroundColor: theme.placeholder,
-                        color: "transparent"
-                    }}>
-                        {(!profile || profile.stats.followers === 0)?("No followers"):(`${profile.stats.followers} followers`)}
-                        <Text>     </Text>
-                        {(!profile || profile.stats.activities === 0)?("No activities"):(`${profile.stats.activities} activities`)}
-                    </ParagraphText>
-                </View>
-
-                <Tabs initialTab={"activities"} style={{ marginTop: 10 }}>
-                    <TabsPage id={"activities"} title={"Activities"}>
-                        {(profile) && (<ProfileActivities profile={profile}/>)}
-                    </TabsPage>
-                    
-                    <TabsPage id={"bikes"} title={"Bikes"}>
-                        {(profile) && (<ProfileBikes profile={profile}/>)}
-                    </TabsPage>
-                </Tabs>
+                <ParagraphText style={(!profile) && {
+                    backgroundColor: theme.placeholder,
+                    color: "transparent"
+                }}>
+                    {(!profile || profile.stats.followers === 0)?("No followers"):(`${profile.stats.followers} followers`)}
+                    <Text>     </Text>
+                    {(!profile || profile.stats.activities === 0)?("No activities"):(`${profile.stats.activities} activities`)}
+                </ParagraphText>
             </View>
+
+            <Tabs initialTab={"activities"} style={{ flex: 1, paddingBottom: 80 }}>
+                <TabsPage id={"activities"} title={"Activities"}>
+                    {(profile) && (<ProfileActivities profile={profile}/>)}
+                </TabsPage>
+                
+                <TabsPage id={"bikes"} title={"Bikes"}>
+                    {(profile) && (<ProfileBikes profile={profile}/>)}
+                </TabsPage>
+            </Tabs>
 
             {(internetConnection === "OFFLINE") && (
                 <OfflinePageOverlay/>
@@ -150,7 +146,7 @@ export function ProfileActivities({ profile }: ProfileProp) {
             
             return (result.activities.length === 5);
         }} render={(activity: string) => (
-            <TouchableOpacity onPress={() => router.push(`/activities/${activity}`)}>
+            <TouchableOpacity key={activity} onPress={() => router.push(`/activities/${activity}`)}>
                 <ActivityList id={activity}/>
             </TouchableOpacity>
         )}/>
@@ -174,7 +170,7 @@ export function ProfileBikes({ profile }: ProfileProp) {
             
             return (result.bikes.length === 5);
         }} render={(bike: string) => (
-            <TouchableOpacity onPress={() => router.push(`/bikes/${bike}`)}>
+            <TouchableOpacity key={bike} onPress={() => router.push(`/bikes/${bike}`)}>
                 <Bike id={bike}/>
             </TouchableOpacity>
         )}/>

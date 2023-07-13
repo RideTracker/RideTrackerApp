@@ -24,6 +24,7 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
     return (
         <View style={style} pointerEvents={pointerEvents}>
             <View style={{
+                flexGrow: 1,
                 flexDirection: "row",
 
                 borderBottomColor: theme.placeholder,
@@ -53,7 +54,7 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
                 ))}
             </View>
 
-            <View style={{ paddingBottom: 50 }}>
+            <View style={{ flexGrow: 1 }}>
                 {children.find((child) => child.props.id === tab)}
             </View>
         </View>
