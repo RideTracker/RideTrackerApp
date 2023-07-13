@@ -12,6 +12,7 @@ import Button from "../../../../components/Button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SelectListOverlay from "../../../../components/SelectListOverlay";
 import ModalPage from "../../../../components/ModalPage";
+import FormCheckbox from "../../../../components/FormCheckbox";
 
 type FilterPageSearchParams = {
     filterType: string;
@@ -27,7 +28,7 @@ export default function FilterPage() {
     const [ selectListActive, setSelectListActive ] = useState<string>(null);
     const [ filter, setFilter ] = useState<{
         key: string;
-        value: string;
+        value: any;
     }[]>(user.filters?.[filterType] ?? [])
 
     useEffect(() => {
@@ -118,6 +119,10 @@ export default function FilterPage() {
                     }
                 ]} onChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "timeline"), { key: "timeline", value } ])}
                 onState={(active) => setSelectListActive((active)?("timeline"):(null))}/>
+
+                <CaptionText>Include:</CaptionText>
+
+                <FormCheckbox value={false} onChange={(value) => {}}/>
 
                 <Button primary={false} type="danger" label="Reset all filters" onPress={() => {
                     setFilter([]);

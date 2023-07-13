@@ -20,7 +20,7 @@ export type User = {
     filters: {
         [filterType: string]: {
             key: string;
-            value: string;
+            value: any;
         }[];
     }
 };

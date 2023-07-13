@@ -11,11 +11,17 @@ import { LinkText } from "../../../../components/texts/Link";
 import { ScrollViewFilter } from "../../../../components/ScrollViewFilter";
 import { useUser } from "../../../../modules/user/useUser";
 import { Pagination } from "../../../../components/Pagination";
-import { getFeed } from "@ridetracker/ridetrackerclient";
+import { GetFeedResponse, getFeed } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 import useInternetConnection from "../../../../modules/useInternetConnection";
 import { CaptionText } from "../../../../components/texts/Caption";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
+
+type FeedItem = {
+    id: string;
+    type: string;
+    timestamp: number;
+};
 
 export default function Index() {
     const userData = useUser();
@@ -26,10 +32,14 @@ export default function Index() {
 
     const scrollViewRef = useRef<ScrollView>();
 
-    const [ items, setItems ] = useState<string[]>([]);
+    const [ items, setItems ] = useState<FeedItem[]>([]);
     const [ recordings, setRecordings ] = useState(null);
     const [ filterText, setFilterText ] = useState<string>("");
     const [ filterLayout, setFilterLayout ] = useState<LayoutRectangle>(null);
+    const [ offsets, setOffsets ] = useState<GetFeedResponse["offsets"]>({
+        activities: 0,
+        polls: 0
+    });
 
     useEffect(() => {
         if(Platform.OS === "web")
@@ -81,25 +91,51 @@ export default function Index() {
     const handlePagination = async (reset: boolean) => {
         if(!client.token)
             return false;
+
+        const currentOffsets = (reset)?({
+            activities: 0,
+            polls: 0
+        }):(offsets);
             
         const order = userData.filters?.feed?.find((item) => item.key === "order")?.value;
         const timeline = userData.filters?.feed?.find((item) => item.key === "timeline")?.value;
+        const includePolls = userData.filters?.feed?.find((item) => item.key === "includePolls")?.value ?? true;
 
-        const result = await getFeed(client, (!reset)?(items.length):(0), filterText, order, timeline);
+        const result = await getFeed(client, currentOffsets, filterText, order, timeline, includePolls);
 
         if(!result.success)
             return false;
+            
+        setOffsets(result.offsets);
+
+        console.log(result);
+        
+        const activities = result.activities.map((activity) => {
+            return {
+                id: activity.id,
+                type: "activity",
+                timestamp: activity.timestamp
+            };
+        });
+
+        const polls = result.polls.map((poll) => {
+            return {
+                id: poll.id,
+                type: "poll",
+                timestamp: poll.timestamp
+            };
+        });
 
         if(reset) {
             if(!filterText.length && !userData.filters?.feed?.length && scrollViewRef.current)
                 scrollViewRef.current.scrollTo({ x: 0, y: (filterLayout?.height ?? 0) + 10 });
-            
-            setItems(result.activities.map((activity) => activity.id));
+
+            setItems(activities.concat(polls).sort((a, b) => b.timestamp - a.timestamp));
         }
         else
-            setItems(items.concat(result.activities.map((activity) => activity.id)));
+            setItems(items.concat(activities.concat(polls).sort((a, b) => b.timestamp - a.timestamp)));
 
-        return (result.activities.length === 5);
+        return result.activities.length === 5 || result.polls.length === 1;
     };
 
     return (
@@ -120,9 +156,19 @@ export default function Index() {
             }}>
                 <Pagination style={{ padding: 10 }} scrollViewRef={scrollViewRef} paginate={handlePagination} items={items}
                 // TODO: some activities here are undefined, why?
-                    render={((activity) => (
-                        <ActivityCompact key={activity} id={activity}/>
-                    ))}
+                    render={((item: FeedItem) => {
+                        switch(item.type) {
+                            case "activity":
+                                return (
+                                    <ActivityCompact key={"activity_" + item.id} id={item.id}/>
+                                );
+                                
+                            case "poll":
+                                return (
+                                    <CaptionText key={"poll_" + item.id}>Poll {item.id}</CaptionText>
+                                );
+                        }
+                    })}
                     renderPlaceholder={(() => (
                         <ActivityCompact id={null}/>
                     ))}
