@@ -26,6 +26,8 @@ export default function Layout() {
             <Stack.Screen name="activities/[id]/(index)/dropdown" options={{ presentation: "transparentModal", animation: "fade", headerShown: false }} />
             <Stack.Screen name="bike/create" options={{ presentation: "transparentModal", animation: "fade", headerShown: false }} />
             <Stack.Screen name="subscriptions/list" options={{ presentation: "fullScreenModal" }} />
+            <Stack.Screen name="polls/[pollId]/answer" options={{ presentation: "transparentModal", animation: "fade", headerShown: false }} />
+            <Stack.Screen name="polls/[pollId]/hide" options={{ presentation: "transparentModal", animation: "fade", headerShown: false }} />
             {/*<Stack.Screen name="ping" options={{ presentation: "modal" }} />*/}
         </Stack>
     );

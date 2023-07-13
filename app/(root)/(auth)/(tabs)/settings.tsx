@@ -92,6 +92,12 @@ export default function Settings() {
                                 <Button primary={false} label="Reset search predictions" onPress={() => {
                                     dispatch(setSearchPredictions([]));
                                 }}/>
+
+                                <Button primary={false} label="Reset poll timeouts" onPress={() => {
+                                    dispatch(setUserData({
+                                        pollTimeout: undefined
+                                    }));
+                                }}/>
                             </React.Fragment>
                         )}
 

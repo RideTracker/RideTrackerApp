@@ -16,6 +16,7 @@ import { useClient } from "../../../../modules/useClient";
 import useInternetConnection from "../../../../modules/useInternetConnection";
 import { CaptionText } from "../../../../components/texts/Caption";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
+import Poll from "../../../../components/Poll";
 
 type FeedItem = {
     id: string;
@@ -164,8 +165,11 @@ export default function Index() {
                                 );
                                 
                             case "poll":
+                                if(userData.pollTimeout && Date.now() < userData.pollTimeout)
+                                    return null;
+
                                 return (
-                                    <CaptionText key={"poll_" + item.id}>Poll {item.id}</CaptionText>
+                                    <Poll key={"poll_" + item.id} id={item.id}/>
                                 );
                         }
                     })}

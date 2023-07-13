@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import SelectListOverlay from "../../../../components/SelectListOverlay";
 import ModalPage from "../../../../components/ModalPage";
 import FormCheckbox from "../../../../components/FormCheckbox";
+import { ParagraphText } from "../../../../components/texts/Paragraph";
 
 type FilterPageSearchParams = {
     filterType: string;
@@ -122,7 +123,22 @@ export default function FilterPage() {
 
                 <CaptionText>Include:</CaptionText>
 
-                <FormCheckbox value={false} onChange={(value) => {}}/>
+                <View style={{
+                    flexDirection: "row",
+                    gap: 10
+                }}>
+                    <FormCheckbox value={filter.find((item) => item.key === "includePolls")?.value ?? true} onChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "includePolls"), { key: "includePolls", value } ])}/>
+
+                    <ParagraphText>Polls</ParagraphText>
+                </View>
+                
+                {(user.pollTimeout && user.pollTimeout > Date.now()) && (
+                    <Button primary={false} label="Disable poll timeout" onPress={() => {
+                        dispatch(setUserData({
+                            pollTimeout: undefined
+                        }));
+                    }}/>
+                )}
 
                 <Button primary={false} type="danger" label="Reset all filters" onPress={() => {
                     setFilter([]);

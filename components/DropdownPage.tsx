@@ -30,7 +30,11 @@ export default function DropdownPage({ items }: DropdownPageProps) {
                 paddingBottom: 0
             }}>
                 {items.map((item) => (
-                    <TouchableOpacity key={item.text} disabled={item.disabled} onPress={() => item.onPress()} style={{
+                    <TouchableOpacity key={item.text} disabled={item.disabled} onPress={() => {
+                        router.back();
+                        
+                        item.onPress();
+                    }} style={{
                         gap: 10,
 
                         flexDirection: "row",

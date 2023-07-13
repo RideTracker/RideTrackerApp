@@ -8,6 +8,8 @@ export type User = {
         subscribed: boolean;
     };
 
+    pollTimeout?: number;
+
     mapProvider: Provider;
 
     email?: string;

@@ -13,20 +13,21 @@ export default function FormCheckbox({ value, onChange }: FormCheckboxProps) {
     return (
         <TouchableOpacity onPress={() => onChange(!value)}>
             <View style={{
-                width: 40,
-                height: 40,
+                width: 22,
+                height: 22,
 
                 borderWidth: 2,
                 borderColor: theme.border,
                 borderRadius: 6,
 
-                padding: 5
+                padding: 1
             }}>
                 {(value) && (
                     <View style={{
                         flex: 1,
 
-                        backgroundColor: theme.brand
+                        backgroundColor: theme.brand,
+                        borderRadius: 3
                     }}/>
                 )}
             </View>

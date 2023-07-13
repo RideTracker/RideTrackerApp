@@ -64,7 +64,7 @@ export default function PermissionsPageOverlay({ required, onGranted }: Permissi
                     })
                 }}/>
 
-                <Button primary={false} label="Open app settings" type="stroke" onPress={() => {
+                <Button primary={false} label="Open app settings" type="overlay-stroke" onPress={() => {
                     Linking.openSettings();
                 }}/>
             </View>

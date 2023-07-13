@@ -4,7 +4,7 @@ import { useTheme } from "../utils/themes";
 
 type ButtonProps = {
     primary: boolean;
-    type?: "danger" | "stroke";
+    type?: "danger" | "stroke" | "overlay-stroke";
     label?: string;
     icon?: ReactNode;
 
@@ -23,7 +23,7 @@ export default function Button(props: ButtonProps) {
             <TouchableOpacity style={{
                 width: "100%",
 
-                backgroundColor: (type === "danger" || type === "stroke")?("transparent"):((primary)?(theme.brand):(theme.border)),
+                backgroundColor: (type === "danger" || type === "stroke" || type === "overlay-stroke")?("transparent"):((primary)?(theme.brand):(theme.border)),
                 
                 padding: 10,
                 borderRadius: 6,
@@ -39,7 +39,7 @@ export default function Button(props: ButtonProps) {
 
                 {(icon) && icon}
                 {(label) && (
-                    <Text style={{ color: (type === "danger")?("#FF0000"):((primary)?(theme.brandText):((type === "stroke")?(theme.background):(theme.color))), fontSize: 20, textAlign: "center" }}>{label}</Text>
+                    <Text style={{ color: (type === "danger")?("#FF0000"):((primary)?(theme.brandText):((type === "stroke")?(theme.color):(theme.color))), fontSize: 20, textAlign: "center" }}>{label}</Text>
                 )}
 
                 {children}
