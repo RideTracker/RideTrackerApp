@@ -24,7 +24,6 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
     return (
         <View style={style} pointerEvents={pointerEvents}>
             <View style={{
-                flexGrow: 1,
                 flexDirection: "row",
 
                 borderBottomColor: theme.placeholder,
