@@ -136,7 +136,7 @@ export default function Index() {
         else
             setItems(items.concat(activities.concat(polls).sort((a, b) => b.timestamp - a.timestamp)));
 
-        return result.activities.length === 5 || result.polls.length === 1;
+        return result.activities.length === result.limits.activities || result.polls.length === result.limits.polls;
     };
 
     return (
