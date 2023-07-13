@@ -52,6 +52,11 @@ export default function Index() {
         getRecordings();
     }, []);
 
+    useEffect(() => {
+        if(!userData.token)
+            router.push("/login");
+    }, [ userData ]);
+
     /*useEffect(() => {
         if(!refreshing) {
             if(!filterText.length)
@@ -100,6 +105,7 @@ export default function Index() {
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
             <Stack.Screen options={{
+                title: "Feed",
                 /*headerRight: () => (
                     <View style={{ marginRight: 20 }}>
                         <TouchableOpacity>
