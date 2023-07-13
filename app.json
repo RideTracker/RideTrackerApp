@@ -22,7 +22,7 @@
       ]
     },
     "android": {
-      "versionCode": 28,
+      "versionCode": 30,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#191923"
@@ -65,7 +65,7 @@
       ]
     ],
     "extra": {
-      "environment": "staging",
+      "environment": "dev",
       "apiUserAgent": "RideTrackerApp-0.9.0",
       "api": "https://staging.service.ridetracker.app",
       "avatarApi": "https://staging.avatar-service.ridetracker.app",

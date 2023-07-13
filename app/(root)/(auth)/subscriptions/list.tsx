@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { View, ScrollView, TouchableOpacity, Image, Alert } from "react-native";
+import { View, ScrollView, TouchableOpacity, Image, Alert, Platform } from "react-native";
 import ModalPage from "../../../../components/ModalPage";
 import { CaptionText } from "../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
@@ -16,7 +16,7 @@ import { createBike, createClient, createStoreSubscription } from "@ridetracker/
 import { useClient } from "../../../../modules/useClient";
 import PageOverlay from "../../../../components/PageOverlay";
 import * as Linking from "expo-linking";
-import { connect, disconnect, getProducts, purchaseProduct, setProductListener } from "../../../../utils/productsProvider";
+import { connect, disconnect, finishTransaction, getProducts, purchaseProduct, setProductListener } from "../../../../utils/productsProvider";
 import { IAPItemDetails, IAPResponseCode, InAppPurchase } from "expo-in-app-purchases";
 import FormDivider from "../../../../components/FormDivider";
 import { SmallText } from "../../../../components/texts/Small";
@@ -95,14 +95,18 @@ export default function SubscriptionsListPage() {
         productListener = (purchase: InAppPurchase) => {
             createStoreSubscription(client, purchase.productId, purchase.purchaseToken).then((result) => {
                 if(result.success) {
-                    dispatch(setUserData({
-                        user: {
-                            ...userData.user,
-                            subscribed: true
-                        }
-                    }));
+                    finishTransaction(purchase, false).then(() => {
+                        dispatch(setUserData({
+                            user: {
+                                ...userData.user,
+                                subscribed: true
+                            }
+                        }));
 
-                    Alert.alert("subscribed!");
+                        router.back();
+                        
+                        //Alert.alert("subscribed!");
+                    });
                 }
             });
         };
@@ -114,7 +118,7 @@ export default function SubscriptionsListPage() {
 
     useEffect(() => {
         connect().then(() => {
-            getProducts([ "subscription_monthly", "subscription_quartely" ]).then((response) => {
+            getProducts([ "subscription_monthly" ]).then((response) => {
                 if(response.results) {
                     const results: {
                         [ key: string ]: IAPItemDetails
@@ -122,13 +126,21 @@ export default function SubscriptionsListPage() {
 
                     response.results.forEach((result) => results[result.productId] = result);
 
-                    setProducts(results);
+                    getProducts([ "subscription_quartely" ]).then((response) => {
+                        if(response.results)
+                            response.results.forEach((result) => results[result.productId] = result);
+                      
+                        setProducts(results);
+                    }).catch((error) => {
+                        setProducts(results);
+                
+                        //Alert.alert("Error", JSON.stringify(error));        
+                    });
                 }
 
-                Alert.alert("Results", JSON.stringify(response, null, 4));
-
+                //Alert.alert("Results", JSON.stringify(response, null, 4));
             }).catch((error) => {
-                Alert.alert("Error", JSON.stringify(error));
+                //Alert.alert("Error", JSON.stringify(error));
             });
         });
 
@@ -142,11 +154,11 @@ export default function SubscriptionsListPage() {
             <Stack.Screen options={{
                 title: "Subscriptions",
 
-                headerRight: () => (
+                headerRight: (Platform.OS === "ios")?(() => (
                     <TouchableOpacity style={{ paddingHorizontal: 20 }} onPress={() => router.back()}>
                         <ParagraphText style={{ fontSize: 18 }}>Close</ParagraphText>
                     </TouchableOpacity>
-                )
+                )):(undefined)
             }}/>
 
             <View style={{
@@ -248,30 +260,10 @@ export default function SubscriptionsListPage() {
                         <FormDivider/>
 
                         <Button primary={true} label={displayedProducts[product].button} onPress={() => {
-                            purchaseProduct(displayedProducts[product].key);
+                            purchaseProduct(displayedProducts[product].key, client);
                         }}/>
                     </View>
                     
-                    <Button primary={false} label={"subscription"} onPress={() => {
-                        purchaseProduct("subscription");
-                    }}/>
-                    
-                    <Button primary={false} label={"subscription-monthly"} onPress={() => {
-                        purchaseProduct("subscription-monthly");
-                    }}/>
-                    
-                    <Button primary={false} label={"subscription-quartely"} onPress={() => {
-                        purchaseProduct("subscription-quartely");
-                    }}/>
-                    
-                    <Button primary={false} label={"subscription_monthly"} onPress={() => {
-                        purchaseProduct("subscription_monthly");
-                    }}/>
-                    
-                    <Button primary={false} label={"subscription_quartely"} onPress={() => {
-                        purchaseProduct("subscription_quartely");
-                    }}/>
-
                     <SmallText>Rate limit restrictions may come to apply, in such case, you will be prominently informed.</SmallText>
                 </View>
             </ScrollView>

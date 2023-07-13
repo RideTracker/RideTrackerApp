@@ -15,8 +15,6 @@ export type PermissionsPageOverlayProps = {
 };
 
 export default function PermissionsPageOverlay({ required, onGranted }: PermissionsPageOverlayProps) {
-    const router = useRouter();
-
     return (
         <View style={{
             position: "absolute",
@@ -38,6 +36,8 @@ export default function PermissionsPageOverlay({ required, onGranted }: Permissi
             <Entypo name="location" size={72} color={"white"}/>
 
             <CaptionText style={{ color: "white" }}>This app collects location data to enable route planning and activity recording even when the app is closed or not in use.</CaptionText>
+
+            <ParagraphText style={{ color: "white" }}>Your location is tracked in the background only when you're recording an activity, this is so that you can safely lock your phone screen during your activities.</ParagraphText>
 
             <View style={{
                 position: "absolute",

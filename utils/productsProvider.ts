@@ -1,5 +1,6 @@
 import * as InAppPurchases from "expo-in-app-purchases";
 import Constants from "expo-constants";
+import Client, { createStoreCouponDev } from "@ridetracker/ridetrackerclient";
 
 let mockConnection: boolean = false;
 
@@ -7,23 +8,23 @@ let mockListener: (callback: (InAppPurchases.IAPQueryResponse<InAppPurchases.InA
 
 const mockProducts: InAppPurchases.IAPItemDetails[] = [
     {
-        priceAmountMicros: 25000000,
+        priceAmountMicros: 31000000,
         title: "Monthly Subscription (com.norasoderlund.ridetrackerapp (unreviewed))",
         productId: "subscription_monthly",
         type: 1,
         priceCurrencyCode: "SEK",
         description: "",
-        price: "25,00 kr",
+        price: "31,00 kr",
         subscriptionPeriod: "P1M"
     },
     {
-        priceAmountMicros: 60000000,
+        priceAmountMicros: 74000000,
         title: "Quartely Subscription (com.norasoderlund.ridetrackerapp (unreviewed))",
         productId: "subscription_quartely",
         type: 1,
         priceCurrencyCode: "SEK",
         description: "",
-        price: "60,00 kr",
+        price: "74,00 kr",
         subscriptionPeriod: "P3M"
     }
 ];
@@ -75,25 +76,39 @@ export function setProductListener(callback: (result: InAppPurchases.IAPQueryRes
     return InAppPurchases.setPurchaseListener(callback);
 }
 
-export function purchaseProduct(productId: string): Promise<void> {
+export function purchaseProduct(productId: string, client?: Client): Promise<void> {
     if(Constants.expoConfig.extra.environment === "dev") {
-        mockListener?.({
-            responseCode: InAppPurchases.IAPResponseCode.OK,
-            results: [
-                {
-                    acknowledged: false,
-                    orderId: "orderId",
-                    packageName: "com.norasoderlund.ridetrackerapp",
-                    productId: productId,
-                    purchaseState: InAppPurchases.InAppPurchaseState.PURCHASING,
-                    purchaseTime: Date.now(),
-                    purchaseToken: "token"
-                }
-            ]
+        if(!client)
+            throw new Error("Client must be provided in dev environment.");
+
+        createStoreCouponDev(client, productId).then((result) => {
+            if(result.success) {
+                mockListener?.({
+                    responseCode: InAppPurchases.IAPResponseCode.OK,
+                    results: [
+                        {
+                            acknowledged: false,
+                            orderId: "orderId",
+                            packageName: "com.norasoderlund.ridetrackerapp",
+                            productId: productId,
+                            purchaseState: InAppPurchases.InAppPurchaseState.PURCHASING,
+                            purchaseTime: Date.now(),
+                            purchaseToken: result.coupon.token
+                        }
+                    ]
+                });
+            }
         });
 
         return;
     }
     
     return InAppPurchases.purchaseItemAsync(productId);
+};
+
+export function finishTransaction(purchase: InAppPurchases.InAppPurchase, consume: boolean): Promise<void> {
+    if(Constants.expoConfig.extra.environment === "dev")
+        return new Promise((resolve) => resolve());
+
+    return InAppPurchases.finishTransactionAsync(purchase, consume);
 };
