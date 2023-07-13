@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity, Image, Alert, Platform } from "react-native";
 import ModalPage from "../../../../components/ModalPage";
 import { CaptionText } from "../../../../components/texts/Caption";
@@ -12,7 +12,7 @@ import Button from "../../../../components/Button";
 import { HeaderText } from "../../../../components/texts/Header";
 import { Stack, useRouter } from "expo-router";
 import uuid from "react-native-uuid";
-import { createBike, createClient, createStoreSubscription } from "@ridetracker/ridetrackerclient";
+import { createBike, createClient, createStoreSubscription, getStoreProducts } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 import PageOverlay from "../../../../components/PageOverlay";
 import * as Linking from "expo-linking";
@@ -90,6 +90,7 @@ export default function SubscriptionsListPage() {
 
     const [ product, setProduct ] = useState<number>(0);
     const [ products, setProducts ] = useState<{ [ key: string ]: IAPItemDetails }>(null);
+    const [ hasProducts, setHasProducts ] = useState<boolean>(true);
 
     useEffect(() => {
         productListener = (purchase: InAppPurchase) => {
@@ -117,35 +118,38 @@ export default function SubscriptionsListPage() {
     }, []);
 
     useEffect(() => {
-        connect().then(() => {
-            getProducts([ "subscription_monthly" ]).then((response) => {
-                if(response.results) {
-                    const results: {
-                        [ key: string ]: IAPItemDetails
-                    } = {};
+        getStoreProducts(client).then((result) => {
+            if(result.success) {
+                setHasProducts(true);
 
-                    response.results.forEach((result) => results[result.productId] = result);
+                connect().then(() => {
+                    getProducts(result.products).then((response) => {
+                        if(response.results) {
+                            const results: {
+                                [ key: string ]: IAPItemDetails
+                            } = {};
 
-                    getProducts([ "subscription_quartely" ]).then((response) => {
-                        if(response.results)
                             response.results.forEach((result) => results[result.productId] = result);
-                      
-                        setProducts(results);
-                    }).catch((error) => {
-                        setProducts(results);
-                
-                        //Alert.alert("Error", JSON.stringify(error));        
-                    });
-                }
 
-                //Alert.alert("Results", JSON.stringify(response, null, 4));
-            }).catch((error) => {
-                //Alert.alert("Error", JSON.stringify(error));
-            });
+                            setProducts(results);
+                        }
+
+                        //Alert.alert("Results", JSON.stringify(response, null, 4));
+                    }).catch((error) => {
+                        setHasProducts(false);
+
+                        disconnect();
+                        //Alert.alert("Error", JSON.stringify(error));
+                    });
+                });
+            }
+            else
+                setHasProducts(false);
         });
 
         return () => {
-            disconnect();
+            if(hasProducts)
+                disconnect();
         };
     }, []);
 
@@ -254,14 +258,31 @@ export default function SubscriptionsListPage() {
 
                         <FormDivider/>
 
-                        <CaptionText placeholder={!products?.[displayedProducts[product].key]}>Starts at {products?.[displayedProducts[product].key]?.price} per {(products?.[displayedProducts[product].key]?.subscriptionPeriod === "P1M")?("month"):("quarter")}</CaptionText>
-                        <ParagraphText>Subscriptions are non-refundable</ParagraphText>
+                        {(hasProducts)?(
+                            <React.Fragment>
+                                <CaptionText placeholder={!products?.[displayedProducts[product].key]}>Starts at {products?.[displayedProducts[product].key]?.price} per {(products?.[displayedProducts[product].key]?.subscriptionPeriod === "P1M")?("month"):("quarter")}</CaptionText>
+                                <ParagraphText>Subscriptions are non-refundable</ParagraphText>
 
-                        <FormDivider/>
+                                <FormDivider/>
 
-                        <Button primary={true} label={displayedProducts[product].button} onPress={() => {
-                            purchaseProduct(displayedProducts[product].key, client);
-                        }}/>
+                                <Button primary={true} label={displayedProducts[product].button} onPress={() => {
+                                    purchaseProduct(displayedProducts[product].key, client);
+                                }}/>
+                            </React.Fragment>
+                        ):(
+                            <View style={{
+                                gap: 10,
+
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}>
+                                <FontAwesome5 name="store-slash" size={40} color={"grey"}/>
+
+                                <ParagraphText>Sorry, the store is currently not accessible!</ParagraphText>
+
+                                <ParagraphText>During the public beta period, we're still developing some of the subscription based features, and as such, subscriptions will only be enabled after the beta period.</ParagraphText>
+                            </View>
+                        )}
                     </View>
                     
                     <SmallText>Rate limit restrictions may come to apply, in such case, you will be prominently informed.</SmallText>
