@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { ActivityIndicator, Image, Text, View } from "react-native";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
 import { CaptionText } from "../../../../components/texts/Caption";
@@ -12,13 +12,14 @@ import Bike from "../../../../components/Bike";
 import Constants from "expo-constants";
 import { useUser } from "../../../../modules/user/useUser";
 import { useClient } from "../../../../modules/useClient";
-import { createClient, getProfileActivities, getProfileBikes, getProfileById } from "@ridetracker/ridetrackerclient";
+import { GetProfileResponse, createClient, getProfileActivities, getProfileBikes, getProfileById, setProfileFollow } from "@ridetracker/ridetrackerclient";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 import useInternetConnection from "../../../../modules/useInternetConnection";
 import { FontAwesome } from "@expo/vector-icons";
 import { setUserData } from "../../../../utils/stores/userData";
 import { setClient } from "../../../../utils/stores/client";
 import { useDispatch } from "react-redux";
+import { LinkText } from "../../../../components/texts/Link";
 
 export default function Profile() {
     const client = useClient();
@@ -28,8 +29,10 @@ export default function Profile() {
     const internetConnection = useInternetConnection();
     const dispatch = useDispatch();
 
-    const [ profile, setProfile ] = useState(null);
+    const [ profile, setProfile ] = useState<GetProfileResponse["profile"]>(null);
+    const [ follow, setFollow ] = useState<boolean>(null);
     const [ userId, setUserId ] = useState<string>(null);
+    const [ uploadingFollow, setUploadingFollow ] = useState<boolean>(false);
 
     const router = useRouter();
 
@@ -44,12 +47,15 @@ export default function Profile() {
 
     useEffect(() => {
         if(userId) {
-            getProfileById(client, userId as string).then((result) => setProfile(result.profile));
+            getProfileById(client, userId as string).then((result) => {
+                setProfile(result.profile);
+                setFollow(result.follow);
+            });
         }
     }, [ userId ]);
     
     return (
-        <View style={{ flex: 1, backgroundColor: theme.background }}>
+        <View style={{ flex: 1, paddingVertical: 10, backgroundColor: theme.background }}>
             <Stack.Screen options={{
                 title: "Profile",
                 headerRight: (profile?.user?.id === userData.user?.id)?(() => (
@@ -86,7 +92,6 @@ export default function Profile() {
                     )}
                 </TouchableOpacity>
 
-                
                 <CaptionText style={(!profile) && {
                     backgroundColor: theme.placeholder,
                     color: "transparent"
@@ -102,6 +107,27 @@ export default function Profile() {
                     <Text>     </Text>
                     {(!profile || profile.stats.activities === 0)?("No activities"):(`${profile.stats.activities} activities`)}
                 </ParagraphText>
+
+                {(!profile || profile?.user?.id !== userData.user?.id) && (
+                    <TouchableOpacity onPress={() => {
+                        setUploadingFollow(true);
+
+                        setProfileFollow(client, profile.user.id, !follow).then((result) => {
+                            if(result.success)
+                                setFollow(result.follow);
+
+                            setUploadingFollow(false);
+                        })
+                    }}>
+                        {(!uploadingFollow)?(
+                            <ParagraphText placeholder={follow === null}>
+                                <LinkText style={{ fontWeight: "bold" }}>{(follow)?("Unfollow"):("Follow")}</LinkText>
+                            </ParagraphText>
+                        ):(
+                            <ActivityIndicator size={20} color={theme.brand}/>
+                        )}
+                    </TouchableOpacity>
+                )}
             </View>
 
             <Tabs initialTab={"activities"} style={{ flex: 1, paddingBottom: 80 }}>

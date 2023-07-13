@@ -98,11 +98,12 @@ export default function Index() {
             polls: 0
         }):(offsets);
             
+        const relations = userData.filters?.feed?.find((item) => item.key === "relations")?.value ?? "everyone";
+        const includePolls = userData.filters?.feed?.find((item) => item.key === "includePolls")?.value ?? true;
         const order = userData.filters?.feed?.find((item) => item.key === "order")?.value;
         const timeline = userData.filters?.feed?.find((item) => item.key === "timeline")?.value;
-        const includePolls = userData.filters?.feed?.find((item) => item.key === "includePolls")?.value ?? true;
 
-        const result = await getFeed(client, currentOffsets, filterText, order, timeline, includePolls);
+        const result = await getFeed(client, currentOffsets, relations, filterText, order, timeline, includePolls);
 
         if(!result.success)
             return false;

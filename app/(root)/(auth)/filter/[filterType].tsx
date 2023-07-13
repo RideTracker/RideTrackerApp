@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TouchableWithoutFeedback, View } from "react-native";
+import { Switch, TouchableWithoutFeedback, View } from "react-native";
 import { CaptionText } from "../../../../components/texts/Caption";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
@@ -121,15 +121,34 @@ export default function FilterPage() {
                 ]} onChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "timeline"), { key: "timeline", value } ])}
                 onState={(active) => setSelectListActive((active)?("timeline"):(null))}/>
 
-                <CaptionText>Include:</CaptionText>
+                <CaptionText>Show activities from</CaptionText>
+
+                <SelectList active={selectListActive === "relations"} placeholder="Select activity relations..." initialValue={filter.find((item) => item.key === "relations")?.value ?? "everyone"} items={[
+                    {
+                        key: "following_or_follows",
+                        text: "Only those I follow or follow me"
+                    },
+
+                    {
+                        key: "following",
+                        text: "Only those I follow"
+                    },
+
+                    {
+                        key: "everyone",
+                        text: "Everyone"
+                    }
+                ]} onChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "relations"), { key: "relations", value } ])}
+                onState={(active) => setSelectListActive((active)?("relations"):(null))}/>
 
                 <View style={{
+                    gap: 10,
                     flexDirection: "row",
-                    gap: 10
+                    alignItems: "center"
                 }}>
-                    <FormCheckbox value={filter.find((item) => item.key === "includePolls")?.value ?? true} onChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "includePolls"), { key: "includePolls", value } ])}/>
+                    <CaptionText style={{ flex: 1 }}>Include polls in my feed</CaptionText>
 
-                    <ParagraphText>Polls</ParagraphText>
+                    <Switch thumbColor={theme.brand} trackColor={theme.border} value={filter.find((item) => item.key === "includePolls")?.value ?? true} onValueChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "includePolls"), { key: "includePolls", value } ])}/>
                 </View>
                 
                 {(user.pollTimeout && user.pollTimeout > Date.now()) && (
@@ -142,6 +161,8 @@ export default function FilterPage() {
 
                 <Button primary={false} type="danger" label="Reset all filters" onPress={() => {
                     setFilter([]);
+
+                    router.back();
                 }}/>
             </View>
         </ModalPage>

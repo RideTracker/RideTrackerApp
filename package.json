@@ -13,7 +13,7 @@
     "@googlemaps/polyline-codec": "^1.0.28",
     "@reduxjs/toolkit": "^1.9.3",
     "@ridetracker/avatarclient": "^0.9.11",
-    "@ridetracker/ridetrackerclient": "^0.9.53",
+    "@ridetracker/ridetrackerclient": "^0.9.56",
     "@types/react": "~18.0.27",
     "chroma.ts": "^1.0.10",
     "EventEmitter": "^1.0.0",
