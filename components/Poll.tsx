@@ -21,18 +21,19 @@ export default function Poll({ id }: PollProps) {
     const router = useRouter();
 
     const [ poll, setPoll ] = useState<GetPollResponse["poll"]>(null);
-    const [ input, setInput ] = useState<number>(0);
 
     useEffect(() => {
         if(id) {
             getPoll(client, id).then((result) => {
-                console.log(result);
                 if(result.success) {
                     setPoll(result.poll);
                 }
             });
         }
     }, [ id ]);
+
+    if(poll && (poll.answers.length == poll.inputs.length))
+        return null;
 
     return (
         <View style={{
