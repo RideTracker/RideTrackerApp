@@ -107,7 +107,7 @@ export function Provider(props: ProviderProps) {
         else if (userData?.token && client.token) {
             if(!inAuthGroup)
                 router.replace("/");
-            else if(inSubscriptionGroup)
+            else if(inSubscriptionGroup && !userData.user?.subscribed)
                 router.replace("/");
         }
     }, [ userData?.token, segments, client.token ]);

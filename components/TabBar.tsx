@@ -37,7 +37,7 @@ export const pages: {
     },
 
     {
-        key: "routes",
+        key: "(subscription)/routes",
         title: "Routes",
         href: "/routes",
         replace: false,
