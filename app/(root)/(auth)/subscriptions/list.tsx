@@ -5,21 +5,26 @@ import { CaptionText } from "../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import FormInput from "../../../../components/FormInput";
 import { useTheme } from "../../../../utils/themes";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import CategorySelector, { CategorySelectorItem } from "../../../../components/CategorySelector";
 import * as ImagePicker from "expo-image-picker";
 import Button from "../../../../components/Button";
 import { HeaderText } from "../../../../components/texts/Header";
 import { Stack, useRouter } from "expo-router";
 import uuid from "react-native-uuid";
-import { createBike } from "@ridetracker/ridetrackerclient";
+import { createBike, createClient, createStoreSubscription } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 import PageOverlay from "../../../../components/PageOverlay";
 import * as Linking from "expo-linking";
-import { connect, getProducts, purchaseProduct } from "../../../../utils/productsProvider";
-import { IAPItemDetails } from "expo-in-app-purchases";
+import { connect, disconnect, getProducts, purchaseProduct, setProductListener } from "../../../../utils/productsProvider";
+import { IAPItemDetails, IAPResponseCode, InAppPurchase } from "expo-in-app-purchases";
 import FormDivider from "../../../../components/FormDivider";
 import { SmallText } from "../../../../components/texts/Small";
+import { LinkText } from "../../../../components/texts/Link";
+import Constants from "expo-constants";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../../../utils/stores/userData";
+import { useUser } from "../../../../modules/user/useUser";
 
 const features: {
     key: string;
@@ -45,19 +50,71 @@ const features: {
     }
 ];
 
+const displayedProducts: {
+    key: string;
+    title: string;
+    description: string;
+    button: string;
+}[] = [
+    {
+        key: "subscription_monthly",
+        title: "Monthly Subscription",
+        description: "Includes all above features",
+        button: "Subscribe monthly"
+    },
+    
+    {
+        key: "subscription_quartely",
+        title: "Quartely Subscription",
+        description: "Includes all above features",
+        button: "Subscribe quartely"
+    }
+];
+
+let productListener: (purchase: InAppPurchase) => void = null;
+
+setProductListener((result) => {
+    if(result.responseCode === IAPResponseCode.OK) {
+        result.results?.forEach((purchase) => {
+            productListener?.(purchase);
+        });
+    }
+});
+
 export default function SubscriptionsListPage() {
     const theme = useTheme();
     const router = useRouter();
     const client = useClient();
+    const userData = useUser();
+    const dispatch = useDispatch();
 
-    const [ connected, setConnected ] = useState<boolean>(false);
+    const [ product, setProduct ] = useState<number>(0);
     const [ products, setProducts ] = useState<{ [ key: string ]: IAPItemDetails }>(null);
 
     useEffect(() => {
-        connect().then(() => {
-            getProducts([ "subscription", "subscription-monthly", "subscription-quartely", "subscription-quartely-deal", "subscription-quartely-trial" ]).then((response) => {
-                Alert.alert("Results", JSON.stringify(response, null, 4));
+        productListener = (purchase: InAppPurchase) => {
+            createStoreSubscription(client, purchase.productId, purchase.purchaseToken).then((result) => {
+                if(result.success) {
+                    dispatch(setUserData({
+                        user: {
+                            ...userData.user,
+                            subscribed: true
+                        }
+                    }));
 
+                    Alert.alert("subscribed!");
+                }
+            });
+        };
+
+        return () => {
+            productListener = null;
+        };
+    }, []);
+
+    useEffect(() => {
+        connect().then(() => {
+            getProducts([ "subscription_monthly", "subscription_quartely" ]).then((response) => {
                 if(response.results) {
                     const results: {
                         [ key: string ]: IAPItemDetails
@@ -67,10 +124,17 @@ export default function SubscriptionsListPage() {
 
                     setProducts(results);
                 }
+
+                Alert.alert("Results", JSON.stringify(response, null, 4));
+
             }).catch((error) => {
                 Alert.alert("Error", JSON.stringify(error));
             });
         });
+
+        return () => {
+            disconnect();
+        };
     }, []);
 
     return (
@@ -92,7 +156,7 @@ export default function SubscriptionsListPage() {
 
                 alignItems: "center"
             }}>
-                <ParagraphText style={{ color: "white" }}><CaptionText style={{ color: "white" }}>Deal!</CaptionText> Get 3 months for <CaptionText style={{ color: "white" }}>20%</CaptionText> off!</ParagraphText>
+                <ParagraphText style={{ color: "white" }}><CaptionText style={{ color: "white" }}>Deal!</CaptionText> Subscribe quartely for <CaptionText style={{ color: "white" }}>20%</CaptionText> off!</ParagraphText>
             </View>
 
             <ScrollView>
@@ -125,35 +189,90 @@ export default function SubscriptionsListPage() {
                         </View>
                     ))}
 
-                    {(products?.subscription) && (
+                    <View style={{
+                        borderRadius: 4,
+                        borderTopWidth: 4,
+                        borderTopColor: theme.brand,
+
+                        backgroundColor: "rgba(128, 128, 128, .05)",
+
+                        padding: 10
+                    }}>
                         <View style={{
-                            borderRadius: 4,
-                            borderTopWidth: 4,
-                            borderTopColor: theme.brand,
-
-                            backgroundColor: "rgba(128, 128, 128, .05)",
-
-                            padding: 10
+                            flexDirection: "row",
+                            gap: 10
                         }}>
-                            <CaptionText style={{ color: theme.brand }}>Subscription</CaptionText>
-                            <ParagraphText>Includes all above features</ParagraphText>
+                            <View style={{ flexGrow: 1 }}>
+                                <CaptionText style={{ color: theme.brand }}>{displayedProducts[product].title}</CaptionText>
+                                <ParagraphText>{displayedProducts[product].description}</ParagraphText>
+                            </View>
 
-                            <FormDivider/>
+                            <View style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                                flexDirection: "row",
 
-                            <CaptionText>Starts at {(products?.subscription)?(products.subscription.price):("...")} per month</CaptionText>
-                            <ParagraphText>Subscriptions are non-refundable</ParagraphText>
+                                gap: 10
+                            }}> 
+                                {(displayedProducts.length !== 0 && product !== 0) && (
+                                    <TouchableOpacity style={{
+                                        height: 40,
+                                        width: 40,
 
-                            <FormDivider/>
+                                        justifyContent: "center",
+                                        alignItems: "center"
+                                    }} onPress={() => setProduct(product - 1)}>
+                                        <FontAwesome name="chevron-left" size={24} color={theme.color}/>
+                                    </TouchableOpacity>
+                                )}
+                                
+                                {(displayedProducts.length > 1 && product !== displayedProducts.length - 1) && (
+                                    <TouchableOpacity style={{
+                                        height: 40,
+                                        width: 40,
 
-                            <Button primary={true} label="Subscribe" onPress={() => {
-                                purchaseProduct("subscription");
-                            }}/>
+                                        justifyContent: "center",
+                                        alignItems: "center"
+                                    }} onPress={() => setProduct(product + 1)}>
+                                        <FontAwesome name="chevron-right" size={24} color={theme.color}/>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
                         </View>
-                    )}
 
-                    <Button primary={false} label="Subscribe quartely" onPress={() => {
+                        <FormDivider/>
+
+                        <CaptionText placeholder={!products?.[displayedProducts[product].key]}>Starts at {products?.[displayedProducts[product].key]?.price} per {(products?.[displayedProducts[product].key]?.subscriptionPeriod === "P1M")?("month"):("quarter")}</CaptionText>
+                        <ParagraphText>Subscriptions are non-refundable</ParagraphText>
+
+                        <FormDivider/>
+
+                        <Button primary={true} label={displayedProducts[product].button} onPress={() => {
+                            purchaseProduct(displayedProducts[product].key);
+                        }}/>
+                    </View>
+                    
+                    <Button primary={false} label={"subscription"} onPress={() => {
+                        purchaseProduct("subscription");
+                    }}/>
+                    
+                    <Button primary={false} label={"subscription-monthly"} onPress={() => {
+                        purchaseProduct("subscription-monthly");
+                    }}/>
+                    
+                    <Button primary={false} label={"subscription-quartely"} onPress={() => {
                         purchaseProduct("subscription-quartely");
                     }}/>
+                    
+                    <Button primary={false} label={"subscription_monthly"} onPress={() => {
+                        purchaseProduct("subscription_monthly");
+                    }}/>
+                    
+                    <Button primary={false} label={"subscription_quartely"} onPress={() => {
+                        purchaseProduct("subscription_quartely");
+                    }}/>
+
+                    <SmallText>Rate limit restrictions may come to apply, in such case, you will be prominently informed.</SmallText>
                 </View>
             </ScrollView>
         </View>
