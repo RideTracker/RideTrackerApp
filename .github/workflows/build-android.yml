@@ -26,12 +26,18 @@ jobs:
           ndk-version: r21e
           add-to-path: true
       - run: npm install eas-cli --global
+      - run: mkdir ${{ runner.temp }}/artifacts
       - run: npx eas build --platform android --local
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EAS_LOCAL_BUILD_ARTIFACTS_DIR: ${{ runner.temp }}/artifacts
           JAVA_HOME: ${{ steps.java.outputs.path }}
           NDROID_HOME: ${{ env.ANDROID_HOME }}
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
           ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
           GRADLE_OPTS=-Dorg.gradle.jvmargs: '"-Xmx14g -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Artifacts
+          path: ${{ runner.temp }}/artifacts
