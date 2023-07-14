@@ -5,6 +5,8 @@ jobs:
   build:
     name: Build Android
     runs-on: ubuntu-20.04
+    permissions:
+      packages: read
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
