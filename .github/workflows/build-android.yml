@@ -9,13 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
-      - uses: actions/setup-node@v3
-        with:
-          registry-url: "https://npm.pkg.github.com"  
-          scope: "@ridetracker"
-      - run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      - run: |
+          echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > .npmrc
+          echo "@ridetracker=https://npm.pkg.github.com/" >> .npmrc       
+      - run: npm install
