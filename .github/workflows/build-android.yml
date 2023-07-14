@@ -28,6 +28,7 @@ jobs:
       - run: npm install eas-cli --global
       - run: npx eas build --platform android --local
         env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JAVA_HOME: ${{ steps.java.outputs.path }}
           NDROID_HOME: ${{ env.ANDROID_HOME }}
