@@ -15,6 +15,9 @@ export type PermissionsPageOverlayProps = {
 };
 
 export default function PermissionsPageOverlay({ required, onGranted }: PermissionsPageOverlayProps) {
+    const theme = useTheme();
+    const router = useRouter();
+
     return (
         <View style={{
             position: "absolute",
@@ -25,27 +28,24 @@ export default function PermissionsPageOverlay({ required, onGranted }: Permissi
             width: "100%",
             height: "100%",
 
-            backgroundColor: `rgba(0, 0, 0, .75)`,
+            backgroundColor: theme.background,
 
             justifyContent: "center",
-            alignItems: "center",
 
             gap: 10,
             padding: 10
         }}>
-            <Entypo name="location" size={72} color={"white"}/>
+            <Entypo name="location" size={72} color={"grey"} style={{
+                alignSelf: "center"
+            }}/>
 
-            <CaptionText style={{ color: "white" }}>This app collects location data to enable route planning and activity recording even when the app is closed or not in use.</CaptionText>
+            <CaptionText>RideTracker collects location data to enable route planning and activity recording even when the app is closed or not in use.</CaptionText>
 
-            <ParagraphText style={{ color: "white" }}>Your location is tracked in the background only when you're recording an activity, this is so that you can safely lock your phone screen during your activities.</ParagraphText>
+            <ParagraphText>Your location is tracked in the background only when you're recording an activity, this is so that you can safely lock your phone screen during your activities.</ParagraphText>
+
+            <ParagraphText>If you deny location permissions, you will not be able to record activities or use the route planner.</ParagraphText>
 
             <View style={{
-                position: "absolute",
-
-                bottom: 0,
-
-                width: "100%",
-
                 paddingVertical: 10,
                 gap: 10
             }}>
@@ -64,8 +64,8 @@ export default function PermissionsPageOverlay({ required, onGranted }: Permissi
                     })
                 }}/>
 
-                <Button primary={false} label="Open app settings" type="overlay-stroke" onPress={() => {
-                    Linking.openSettings();
+                <Button primary={false} label="Deny permissions" type="danger" onPress={() => {
+                    router.back();
                 }}/>
             </View>
         </View>
