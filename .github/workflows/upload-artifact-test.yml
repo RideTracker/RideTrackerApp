@@ -13,6 +13,6 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: my-artifact
+          name: RideTrackerApp-android-33-0.9.0-staging
           path: path/to/artifact/world.txt
           
