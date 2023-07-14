@@ -13,3 +13,23 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > .npmrc
           echo "@ridetracker=https://npm.pkg.github.com/" >> .npmrc       
       - run: npm install
+      - uses: actions/setup-java@v2
+        id: java
+        with:
+          distribution: "microsoft"
+          java-version: "11"
+          java-package: jdk
+      - uses: android-actions/setup-android@v2
+      - uses: nttld/setup-ndk@v1
+        id: ndk
+        with:
+          ndk-version: r21e
+          add-to-path: true
+      - run: npx eas build --platform android --local
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JAVA_HOME: ${{ steps.java.outputs.path }}
+          NDROID_HOME: ${{ env.ANDROID_HOME }}
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+          ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
+          GRADLE_OPTS=-Dorg.gradle.jvmargs: '\"-Xmx14g -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8\" -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false'
