@@ -96,21 +96,21 @@ export function Provider(props: ProviderProps) {
     }
 
     useEffect(() => {
-        if(!ready)
+        if(!ready || !router)
             return;
             
         const inAuthGroup = segments.includes("(auth)");
         const inSubscriptionGroup = segments.includes("(subscription)");
 
         if((!userData?.token || !client.token) && inAuthGroup)
-            router.replace("/login");
+            router.push("/login");
         else if (userData?.token && client.token) {
             if(!inAuthGroup)
                 router.replace("/");
             else if(inSubscriptionGroup && !userData.user?.subscribed)
                 router.replace("/");
         }
-    }, [ userData?.token, segments, client.token ]);
+    }, [ router, ready, userData?.token, segments, client.token ]);
 
     if(!ready)
         return null;

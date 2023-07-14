@@ -63,11 +63,6 @@ export default function Index() {
         getRecordings();
     }, []);
 
-    useEffect(() => {
-        if(!userData.token)
-            router.push("/login");
-    }, [ userData ]);
-
     /*useEffect(() => {
         if(!refreshing) {
             if(!filterText.length)
