@@ -25,6 +25,7 @@ jobs:
         with:
           ndk-version: r21e
           add-to-path: true
+      - run: npm install eas-cli --global
       - run: npx eas build --platform android --local
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
