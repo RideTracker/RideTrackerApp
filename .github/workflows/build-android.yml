@@ -34,4 +34,4 @@ jobs:
           NDROID_HOME: ${{ env.ANDROID_HOME }}
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
           ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
-          GRADLE_OPTS=-Dorg.gradle.jvmargs: '\"-Xmx14g -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8\" -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false'
+          GRADLE_OPTS=-Dorg.gradle.jvmargs: '"-Xmx14g -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false'
