@@ -38,7 +38,7 @@ on:
         type: string
 jobs:
   build:
-    name: Build Android
+    name: Build android-${{ inputs.versionCode }}-${{ inputs.version }}-${{ inputs.environment }}
     runs-on: ubuntu-20.04
     permissions: read-all
     steps:
