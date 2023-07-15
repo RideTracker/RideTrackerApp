@@ -75,5 +75,5 @@ jobs:
           GRADLE_OPTS=-Dorg.gradle.jvmargs: '"-Xmx14g -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false'
       - uses: actions/upload-artifact@v3
         with:
-          name: Artifacts
+          name: android-${{ inputs.versionCode }}-${{ inputs.version }}-${{ inputs.environment }}
           path: ${{ runner.temp }}/artifacts
