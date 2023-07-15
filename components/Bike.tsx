@@ -8,6 +8,7 @@ import { useClient } from "../modules/useClient";
 import Constants from "expo-constants";
 import { ActivitySummary } from "./ActivitySummary";
 import { BikeActivitySummary } from "./BikeActivitySummary";
+import { BikeTypes } from "./BikeTypes";
 
 type BikeProps = {
     id?: string;
@@ -55,13 +56,21 @@ export default function Bike(props: BikeProps) {
                         backgroundColor: theme.placeholder
                     }}>
                         {(bike) && (
-                            <Image
-                                style={{
-                                    flex: 1
-                                }}
-                                source={{
-                                    uri: `${Constants.expoConfig.extra.images}/${bike.image}/RideTrackerBike`
-                                }}/>
+                            (bike.image)?(
+                                <Image
+                                    style={{
+                                        flex: 1
+                                    }}
+                                    source={{
+                                        uri: `${Constants.expoConfig.extra.images}/${bike.image}/RideTrackerBike`
+                                    }}/>
+                            ):(
+                                <View style={{ flex: 1, padding: 10, justifyContent: "center", alignItems: "center", opacity: .5 }}>
+                                    {BikeTypes.find((bikeType) => bikeType.type == bike.model)?.icon}
+            
+                                    <ParagraphText>{BikeTypes.find((bikeType) => bikeType.type == bike.model).name}</ParagraphText>
+                                </View>
+                            )
                         )}
                     </View>
                 </View>

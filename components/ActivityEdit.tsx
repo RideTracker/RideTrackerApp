@@ -14,6 +14,7 @@ import Constants from "expo-constants";
 import Bike from "./Bike";
 import { SmallText } from "./texts/Small";
 import Button from "./Button";
+import { BikeTypes } from "./BikeTypes";
 
 export type ActivityEditProperties = {
     title?: string;
@@ -131,8 +132,10 @@ export default function ActivityEdit({ properties, onChange }: ActivityEditProps
                                                 width: "100%"
                                             }}/>
                                         ):(
-                                            <View style={{ flex: 1, justifyContent: "center" }}>
-                                                <ParagraphText style={{ textAlign: "center" }}>{bike.name}</ParagraphText>
+                                            <View style={{ flex: 1, padding: 10, justifyContent: "center", alignItems: "center", opacity: .5 }}>
+                                                {BikeTypes.find((bikeType) => bikeType.type == bike.model)?.icon}
+            
+                                                <ParagraphText>{BikeTypes.find((bikeType) => bikeType.type == bike.model).name}</ParagraphText>
                                             </View>
                                         )}
                                     </TouchableOpacity>
