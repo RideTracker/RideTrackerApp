@@ -43,7 +43,7 @@ jobs:
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
-      - run: jq '.expo.android.versionCode = ${{ inputs.versionCode }}' app.json > modified_app.json && mv modified_app.json app.json
+      - run: jq '.expo.android.versionCode = ${{ inputs.versionCode }} | .expo.version = "${{ inputs.version }}" | .expo.extra.environment = "${{ inputs.environment }}" | .expo.extra.apiUserAgent = "RideTrackerApp-${{ inputs.version }}" | .expo.extra.api = "${{ inputs.service }}" | .expo.extra.avatarApi = "${{ inputs.avatarService }}" | .expo.extra.route = "${{ inputs.routeService }}" | .expo.extra.images = "${{ inputs.images }}"' app.json > modified_app.json && mv modified_app.json app.json
       - run: file app.json && cat app.json
       - uses: actions/setup-node@v3
       - run: |
