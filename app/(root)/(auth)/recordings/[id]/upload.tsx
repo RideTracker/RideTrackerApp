@@ -13,7 +13,7 @@ import { CaptionText } from "../../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import Constants from "expo-constants";
 import { useClient } from "../../../../../modules/useClient";
-import { createActivity, getBikes } from "@ridetracker/ridetrackerclient";
+import { createActivity, getBikes, updateActivity } from "@ridetracker/ridetrackerclient";
 import { useUser } from "../../../../../modules/user/useUser";
 import PageOverlay from "../../../../../components/PageOverlay";
 import { SmallText } from "../../../../../components/texts/Small";
@@ -21,6 +21,7 @@ import { RecordingSession } from "../../../../../models/RecordingSession";
 import { getDistance } from "geolib";
 import { SelectList } from "../../../../../components/SelectList";
 import SelectListOverlay from "../../../../../components/SelectListOverlay";
+import ActivityEdit, { ActivityEditProperties } from "../../../../../components/ActivityEdit";
 
 export default function UploadRecordingPage() {
     if(Platform.OS === "web")
@@ -31,17 +32,11 @@ export default function UploadRecordingPage() {
     const mapRef = useRef();
     const router = useRouter();
     const userData = useUser();
-    const navigation = useNavigation();
 
-    const [ submitting ] = useState(false);
+    const [ properties, setProperties ] = useState<ActivityEditProperties>({
+        visibility: "PUBLIC"
+    });
 
-    const [ visibility, setVisibility ] = useState<string>("PUBLIC");
-    const [ selectList, setSelectList ] = useState<boolean>(false);
-
-    const [ title, setTitle ] = useState<string>("");
-    const [ description, setDescription ] = useState<string>("");
-    const [ bikes, setBikes ] = useState(null);
-    const [ selectedBike, setSelectedBike ] = useState(null);
     const [ recording, setRecording ] = useState(null);
     const [ sessions, setSessions ] = useState<RecordingSession[]>(null);
     const [ uploading, setUploading ] = useState<boolean>(false);
@@ -52,14 +47,6 @@ export default function UploadRecordingPage() {
     }>(null);
 
     const { id } = useSearchParams();
-
-    useEffect(() => {
-        getBikes(client).then((result) => setBikes(result.bikes));
-
-        navigation.addListener("focus", () => {
-            getBikes(client).then((result) => setBikes(result.bikes));
-        });
-    }, []);
 
     useEffect(() => {
         if(Platform.OS !== "android")
@@ -113,14 +100,15 @@ export default function UploadRecordingPage() {
         }
     }, [ sessions ]);
 
-    console.log(bikes);
-
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{ title: "Finish your activity" }} />
 
             <ScrollView>
-                <View style={{ gap: 10, padding: 10 }}>
+                <View style={{
+                    gap: 10,
+                    padding: 10
+                }}>
                     <View style={{ width: "100%", height: 200, borderRadius: 6, overflow: "hidden", backgroundColor: theme.placeholder }}>
                         {(recording) && (
                             <MapView ref={mapRef} provider={userData.mapProvider} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
@@ -135,145 +123,12 @@ export default function UploadRecordingPage() {
 
                     <ParagraphText placeholder={!stats}>You reached {Math.round((stats?.distance / 1000) * 10) / 10} km at an average of {Math.round((stats?.averageSpeed * 3.6) * 10) / 10} km/h, at which you topped off at {Math.round((stats?.maxSpeed * 3.6) * 10) / 10} km/h! *</ParagraphText>
 
-                    <View>
-                        <SafeAreaView style={{ gap: 10, marginVertical: 10, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>
-                            <FormInput placeholder="A short summary (optional)" icon={(<FontAwesome name="bicycle" size={24} color={theme.color}/>)} props={{
-                                autoCapitalize: "sentences",
-                                autoCorrect: true,
-                                enterKeyHint: "next",
-                                inputMode: "text",
-                                //onSubmitEditing: () => passwordRef.current.focus(),
-                                onChangeText: (text) => setTitle(text)
-                            }}/>
-                        </SafeAreaView>
-                        
-                        <SafeAreaView style={{ gap: 10, marginVertical: 10, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>
-                            <FormInput placeholder="A longer summary (optional)" icon={(<FontAwesome name="comments" size={24} color={theme.color}/>)} props={{
-                                autoCapitalize: "sentences",
-                                autoCorrect: true,
-                                inputMode: "text",
-                                multiline: true,
-                                //onSubmitEditing: () => passwordRef.current.focus(),
-                                onChangeText: (text) => setDescription(text)
-                            }}
-                            style={{
-                                textAlignVertical: "top",
-                                height: 60
-                            }}/>
-                        </SafeAreaView>
-
-                        <View style={{ gap: 10 }}>
-                            <CaptionText>Who can see this activity?</CaptionText>
-
-                            <SelectListOverlay active={selectList} onCancel={() => setSelectList(false)}/>
-
-                            <SelectList active={selectList} items={[
-                                {
-                                    key: "PUBLIC",
-                                    text: "Everyone"
-                                },
-
-                                {
-                                    key: "UNLISTED",
-                                    text: "Everyone with a link (unlisted)"
-                                },
-
-                                {
-                                    key: "FOLLOWERS_ONLY",
-                                    text: "Only those I follow"
-                                },
-
-                                {
-                                    key: "PRIVATE",
-                                    text: "Only me (private)"
-                                }
-                            ]} onChange={(value) => setVisibility(value)} initialValue={visibility} onState={(active) => setSelectList(active)} placeholder="Select activity visibility..."/>
-
-                        </View>
-                    </View>
-
-                    {(!selectedBike)?(
-                        <ScrollView horizontal={true}>
-                            <View style={{ flexDirection: "row", gap: 10 }}>
-                                {(bikes)?(
-                                    <>
-                                        {(bikes.map((bike) => (
-                                            <TouchableOpacity key={bike.id} style={{
-                                                position: "relative",
-
-                                                height: 80,
-                                                width: 140,
-
-                                                backgroundColor: theme.placeholder,
-                                                borderRadius: 6,
-
-                                                overflow: "hidden"
-                                            }} onPress={() => setSelectedBike((selectedBike?.id === bike.id)?(null):(bike))}>
-                                                {(bike.image)?(
-                                                    <Image source={{
-                                                        uri: `${Constants.expoConfig.extra.images}/${bike.image}/RideTrackerBike`
-                                                    }} style={{
-                                                        height: 80,
-                                                        width: "100%"
-                                                    }}/>
-                                                ):(
-                                                    <View style={{ flex: 1, justifyContent: "center" }}>
-                                                        <ParagraphText style={{ textAlign: "center" }}>{bike.name}</ParagraphText>
-                                                    </View>
-                                                )}
-                                            </TouchableOpacity>
-                                        )))}
-
-                                        <TouchableOpacity style={{
-                                            height: 80,
-                                            width: 140,
-
-                                            borderRadius: 6,
-                                            borderColor: theme.border,
-
-                                            overflow: "hidden",
-
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            gap: 2
-                                        }} onPress={() => router.push("/bike/create")}>
-                                            <View style={{ position: "relative" }}>
-                                                <FontAwesome name="bicycle" size={32} color={theme.color}/>
-                                                <FontAwesome name="plus" size={20} color={theme.color} style={{ 
-                                                    position: "absolute",
-
-                                                    right: -10,
-                                                    top: -5
-                                                }}/>
-                                            </View>
-
-                                            <Text style={{ color: theme.color }}>Add a bike</Text>
-                                        </TouchableOpacity>
-                                    </>
-                                ):(
-                                    Array(4).fill(null).map((_, index) => (
-                                        <View key={index} style={{
-                                            position: "relative",
-
-                                            height: 80,
-                                            width: 140,
-
-                                            backgroundColor: theme.placeholder,
-                                            borderRadius: 6,
-
-                                            overflow: "hidden"
-                                        }}/>
-                                    ))
-                                )}
-                            </View>
-                        </ScrollView>
-                    ):(
-                        <Bike id={selectedBike.id} buttons={(
-                            <TouchableOpacity onPress={() => setSelectedBike(null)}>
-                                <FontAwesome5 name="times" size={24} color={theme.color}/>
-                            </TouchableOpacity>
-                        )}/>
-                    )}
+                    <ActivityEdit properties={properties} onChange={(partialProperties) => {
+                        setProperties({
+                            ...properties,
+                            ...partialProperties
+                        });
+                    }}/>
 
                     <View style={{ marginTop: 20, gap: 10 }}>
                         <SmallText>* preliminary data has not been proccesed yet</SmallText>
@@ -281,9 +136,11 @@ export default function UploadRecordingPage() {
                         <Button primary={true} label="Publish activity" onPress={() => {
                             setUploading(true);
                             
-                            createActivity(client, sessions, visibility, (title.length)?(title):(null), (description.length)?(title):(null), selectedBike?.id).then((result) => {
+                            createActivity(client, sessions, properties.visibility).then((result) => {
                                 if(result.success) {
-                                    router.push("/index");
+                                    updateActivity(client, result.activity.id, (properties.title?.length)?(properties.title):(null), (properties.description?.length)?(properties.description):(null), properties.bike?.id).then((result) => {
+                                        router.push("/index");
+                                    });
                                 }
                             });
                         }}/>

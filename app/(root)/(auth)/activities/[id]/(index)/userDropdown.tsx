@@ -16,9 +16,20 @@ export default function ActivityUserDropdownPage() {
 
     return (<DropdownPage items={[
         {
+            text: "Edit my activity",
+            icon: (<FontAwesome5 name="edit" size={22} color={theme.color}/>),
+
+            onPress: () => {
+                router.back();
+
+                router.push(`/activities/${id}/edit`);
+            }
+        },
+
+        {
             text: "Delete my activity",
             type: "danger",
-            icon: (<FontAwesome5 name="trash" size={22} color={"#FF0000"}/>),
+            icon: (<FontAwesome5 name="trash" size={22} color={theme.red}/>),
 
             onPress: () => {
                 Alert.alert("Are you sure?", "Are you sure you wish to delete your activity? This action is destructive, you cannot undo this!\n\nYou can choose to change the visibility to unlisted or private instead of deleting.", [

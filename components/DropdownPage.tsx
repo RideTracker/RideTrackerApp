@@ -51,7 +51,7 @@ export default function DropdownPage({ items }: DropdownPageProps) {
 
                         <CaptionText style={{
                             paddingRight: 40,
-                            color: (item.type === "danger")?("#FF0000"):(theme.color)    
+                            color: (item.type === "danger")?(theme.red):(theme.color)    
                         }}>{item.text}</CaptionText>
                     </TouchableOpacity>
                 ))}
