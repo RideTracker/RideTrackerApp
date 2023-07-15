@@ -1,6 +1,41 @@
 run-name: Build Android
-on: workflow_dispatch
-
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build, e.g. 0.9.0"
+        default: "0.9.0"
+        required: true
+        type: string
+      versionCode:
+        description: "Android version code to build"
+        required: true
+        type: string
+      environment:
+        description: "Environment for the app only, e.g. dev, staging, production"
+        default: "staging"
+        required: true
+        type: string
+      service:
+        description: "Service API endpoint"
+        default: "https://staging.service.ridetracker.app"
+        required: true
+        type: string
+      avatarService:
+        description: "Avatar Service API endpoint"
+        default: "https://staging.avatar-service.ridetracker.app"
+        required: true
+        type: string
+      routeService:
+        description: "Route Service API endpoint"
+        default: "https://staging.route-service.ridetracker.app"
+        required: true
+        type: string
+      images:
+        description: "Images endpoint"
+        default: "https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg"
+        required: true
+        type: string
 jobs:
   build:
     name: Build Android
@@ -8,6 +43,7 @@ jobs:
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
+      - run: echo "`jq '.expo.android=${{ inputs.versionCode }}' config.json`" > config.json
       - uses: actions/setup-node@v3
       - run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > .npmrc
