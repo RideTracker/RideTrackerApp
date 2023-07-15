@@ -43,7 +43,7 @@ jobs:
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
-      - run: jq '.expo.version = "${{ inputs.version }}"' | '.expo.android.versionCode = ${{ inputs.versionCode }}' | '.expo.extra.environment = "${{ inputs.environment }}"' | '.expo.extra.apiUserAgent = "RideTrackerApp-${{ inputs.version }}"' | '.expo.extra.api = "${{ inputs.service }}"' | '.expo.extra.avatarApi = "${{ inputs.avatarService }}"' | '.expo.extra.route = "${{ inputs.routeService }}"' | '.expo.extra.images = "${{ inputs.images }}"' app.json > app.json
+      - run: echo "`jq '.expo.version = "${{ inputs.version }}"' | '.expo.android.versionCode = ${{ inputs.versionCode }}' | '.expo.extra.environment = "${{ inputs.environment }}"' | '.expo.extra.apiUserAgent = "RideTrackerApp-${{ inputs.version }}"' | '.expo.extra.api = "${{ inputs.service }}"' | '.expo.extra.avatarApi = "${{ inputs.avatarService }}"' | '.expo.extra.route = "${{ inputs.routeService }}"' | '.expo.extra.images = "${{ inputs.images }}"'`" app.json > app.json
       - uses: actions/setup-node@v3
       - run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > .npmrc
