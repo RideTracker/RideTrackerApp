@@ -19,6 +19,8 @@ import PageOverlay from "../../../../../components/PageOverlay";
 import { SmallText } from "../../../../../components/texts/Small";
 import { RecordingSession } from "../../../../../models/RecordingSession";
 import { getDistance } from "geolib";
+import { SelectList } from "../../../../../components/SelectList";
+import SelectListOverlay from "../../../../../components/SelectListOverlay";
 
 export default function UploadRecordingPage() {
     if(Platform.OS === "web")
@@ -32,6 +34,9 @@ export default function UploadRecordingPage() {
     const navigation = useNavigation();
 
     const [ submitting ] = useState(false);
+
+    const [ visibility, setVisibility ] = useState<string>("PUBLIC");
+    const [ selectList, setSelectList ] = useState<boolean>(false);
 
     const [ title, setTitle ] = useState<string>("");
     const [ description, setDescription ] = useState<string>("");
@@ -241,13 +246,39 @@ export default function UploadRecordingPage() {
                         )}/>
                     )}
 
+                    <CaptionText>Who can see this activity?</CaptionText>
+
+                    <SelectListOverlay active={selectList} onCancel={() => setSelectList(false)}/>
+
+                    <SelectList active={selectList} items={[
+                        {
+                            key: "PUBLIC",
+                            text: "Everyone"
+                        },
+
+                        {
+                            key: "UNLISTED",
+                            text: "Everyone with a link (unlisted)"
+                        },
+
+                        {
+                            key: "FOLLOWERS_ONLY",
+                            text: "Only those I follow"
+                        },
+
+                        {
+                            key: "PRIVATE",
+                            text: "Only me (private)"
+                        }
+                    ]} onChange={(value) => setVisibility(value)} initialValue={visibility} onState={(active) => setSelectList(active)} placeholder="Select activity visibility..."/>
+
                     <View style={{ marginTop: 20, gap: 10 }}>
                         <SmallText>* preliminary data has not been proccesed yet</SmallText>
                         
                         <Button primary={true} label="Publish activity" onPress={() => {
                             setUploading(true);
                             
-                            createActivity(client, sessions, (title.length)?(title):(null), (description.length)?(title):(null), selectedBike?.id).then((result) => {
+                            createActivity(client, sessions, visibility, (title.length)?(title):(null), (description.length)?(title):(null), selectedBike?.id).then((result) => {
                                 if(result.success) {
                                     router.push("/index");
                                 }
