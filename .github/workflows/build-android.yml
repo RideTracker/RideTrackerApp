@@ -43,7 +43,17 @@ jobs:
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
-      - run: jq '.expo.android.versionCode = ${{ inputs.versionCode }}' app.json > app.json
+      - run: \
+          jq \
+          '.expo.version = "${{ inputs.version }}"' | \
+          '.expo.android.versionCode = ${{ inputs.versionCode }}' | \
+          '.expo.extra.environment = "${{ inputs.environment }}"' | \
+          '.expo.extra.apiUserAgent = "RideTrackerApp-${{ inputs.version }}"' | \
+          '.expo.extra.api = "${{ inputs.service }}"' | \
+          '.expo.extra.avatarApi = "${{ inputs.avatarService }}"' | \
+          '.expo.extra.route = "${{ inputs.routeService }}"' | \
+          '.expo.extra.images = "${{ inputs.images }}"' \
+          app.json > app.json
       - id: package
         uses: jaywcjlove/github-action-read-file@main
         with:
