@@ -1,20 +1,57 @@
 run-name: Build Android
-on: workflow_dispatch
-
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build, e.g. 0.9.0"
+        default: "0.9.0"
+        required: true
+        type: string
+      versionCode:
+        description: "Android version code to build"
+        required: true
+        type: string
+      environment:
+        description: "Environment for the app only, e.g. dev, staging, production"
+        default: "staging"
+        required: true
+        type: string
+      service:
+        description: "Service API endpoint"
+        default: "https://staging.service.ridetracker.app"
+        required: true
+        type: string
+      avatarService:
+        description: "Avatar Service API endpoint"
+        default: "https://staging.avatar-service.ridetracker.app"
+        required: true
+        type: string
+      routeService:
+        description: "Route Service API endpoint"
+        default: "https://staging.route-service.ridetracker.app"
+        required: true
+        type: string
+      images:
+        description: "Images endpoint"
+        default: "https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg"
+        required: true
+        type: string
 jobs:
   build:
-    name: Build Android
+    name: Build android-${{ inputs.versionCode }}-${{ inputs.version }}-${{ inputs.environment }}
     runs-on: ubuntu-20.04
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
+      - run: jq '.expo.android.versionCode = ${{ inputs.versionCode }} | .expo.version = "${{ inputs.version }}" | .expo.extra.environment = "${{ inputs.environment }}" | .expo.extra.apiUserAgent = "RideTrackerApp-${{ inputs.version }}" | .expo.extra.api = "${{ inputs.service }}" | .expo.extra.avatarApi = "${{ inputs.avatarService }}" | .expo.extra.route = "${{ inputs.routeService }}" | .expo.extra.images = "${{ inputs.images }}"' app.json > modified_app.json && mv modified_app.json app.json
+      - run: file app.json && cat app.json
       - uses: actions/setup-node@v3
       - run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > .npmrc
           echo "@ridetracker=https://npm.pkg.github.com/" >> .npmrc       
-      - run: npm install
-      - uses: actions/setup-java@v2
-        id: java
+      - run: npm ci
+      - id: java
+        uses: actions/setup-java@v2
         with:
           distribution: "microsoft"
           java-version: "11"
@@ -25,19 +62,18 @@ jobs:
         with:
           ndk-version: r21e
           add-to-path: true
-      - run: npm install eas-cli --global
       - run: mkdir ${{ runner.temp }}/artifacts
-      - run: npx eas build --platform android --local
+      - run: npx eas-cli build --platform android --local
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EAS_LOCAL_BUILD_ARTIFACTS_DIR: ${{ runner.temp }}/artifacts
           JAVA_HOME: ${{ steps.java.outputs.path }}
-          NDROID_HOME: ${{ env.ANDROID_HOME }}
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
           ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
           GRADLE_OPTS=-Dorg.gradle.jvmargs: '"-Xmx14g -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" -Dorg.gradle.parallel=true -Dorg.gradle.daemon=false'
       - uses: actions/upload-artifact@v3
         with:
-          name: Artifacts
+          name: android-${{ inputs.versionCode }}-${{ inputs.version }}-${{ inputs.environment }}
           path: ${{ runner.temp }}/artifacts
