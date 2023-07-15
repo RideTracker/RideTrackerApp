@@ -18,21 +18,19 @@ export default function ActivityEditPage() {
     const [ properties, setProperties ] = useState<ActivityEditProperties>(null);
 
     useEffect(() => {
-        if(id) {
-            getActivityById(client, id as string).then(async (result) => {
-                if(result.success) {
-                    const bike = (result.activity.bike)?((await getBike(client, result.activity.bike)).bike):(null);
+        getActivityById(client, id as string).then(async (result) => {
+            if(result.success) {
+                const bike = (result.activity.bike)?((await getBike(client, result.activity.bike)).bike):(null);
 
-                    setProperties({
-                        visibility: result.activity.visibility,
-                        bike,
-                        title: result.activity.title,
-                        description: result.activity.description
-                    });
-                }
-            });
-        }
-    }, [ id ]);
+                setProperties({
+                    visibility: result.activity.visibility,
+                    bike,
+                    title: result.activity.title,
+                    description: result.activity.description
+                });
+            }
+        });
+    }, []);
 
     if(!properties)
         return null;
