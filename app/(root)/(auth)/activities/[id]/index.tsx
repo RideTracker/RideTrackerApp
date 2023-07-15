@@ -17,6 +17,7 @@ import { useUser } from "../../../../../modules/user/useUser";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { CaptionText } from "../../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
+import ActivityMapDetails from "../../../../../components/ActivityMapDetails";
 
 export default function ActivityPage() {
     const client = useClient();
@@ -55,7 +56,9 @@ export default function ActivityPage() {
                 <ScrollView style={{ padding: 10 }}>
                     <View style={{ paddingBottom: 40}}>
                         <View style={{ height: 200 }}>
-                            <ActivityMap activity={activity} type={ComponentType.Default}/>
+                            <ActivityMap activity={activity} type={ComponentType.Default}>
+                                <ActivityMapDetails activity={activity}/>
+                            </ActivityMap>
                         </View>
 
                         <ActivityAuthor activity={activity}/>
