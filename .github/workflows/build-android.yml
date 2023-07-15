@@ -52,7 +52,7 @@ jobs:
         run: echo "::set-output name=file::$(cat app.json)"
       - id: app-properties
         run: |
-          echo "::set-output name=importedProperties::{\"expo\": {\"version\": \"${{ inputs.version }}\", \"android\": {\"versionCode\": ${{ inputs.versionCode }}}, \"extra\": {\"environment\": \"${{ inputs.environment }}\", \"apiUserAgent\": \"RideTrackerApp-${{ inputs.version }}\", \"api\": \"${{ inputs.service }}\", \"avatarApi\": \"${{ inputs.avatarService }}\", \"route\": \"${{ inputs.routeService }}\", \"images\": \"${{ inputs.images }}\"}}}" | jq '.'
+          echo "::set-output name=importedProperties::{\"expo\": {\"version\": \"${{ inputs.version }}\", \"android\": {\"versionCode\": ${{ inputs.versionCode }}}, \"extra\": {\"environment\": \"${{ inputs.environment }}\", \"apiUserAgent\": \"RideTrackerApp-${{ inputs.version }}\", \"api\": \"${{ inputs.service }}\", \"avatarApi\": \"${{ inputs.avatarService }}\", \"route\": \"${{ inputs.routeService }}\", \"images\": \"${{ inputs.images }}\"}}}"
       - run: |
           echo "${{ steps.app.outputs.file }}" > app.json
           echo "${{ steps.app-properties.outputs.importedProperties }}" > imported-properties.json
