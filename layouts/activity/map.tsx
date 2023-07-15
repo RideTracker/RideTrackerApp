@@ -15,11 +15,8 @@ import MapFinishMarker from "../../components/maps/MapFinishMarker";
 type ActivityMapProps = {
     activity: {
         polylines?: string[];
-
-        summary?: {
-            startArea?: string;
-            finishArea?: string;
-        }
+        startArea?: string;
+        finishArea?: string;
     } | null;
     children?: ReactNode;
     type: ComponentType;
@@ -301,7 +298,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                         ]}>
                             {(type !== ComponentType.ListItem) && (<ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>Start</ParagraphText>)}
                             
-                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600", fontSize: (type === ComponentType.ListItem)?(12):(17) }}>{activity.summary?.startArea}</CaptionText>
+                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600", fontSize: (type === ComponentType.ListItem)?(12):(17) }}>{activity.startArea}</CaptionText>
                         </View>
                     </View>
                 )}
@@ -320,7 +317,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                         ]}>
                             {(type !== ComponentType.ListItem) && (<ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2 }}>Finish</ParagraphText>)}
 
-                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600", fontSize: (type === ComponentType.ListItem)?(12):(17) }}>{activity.summary?.finishArea}</CaptionText>
+                            <CaptionText style={{ textTransform: "uppercase", fontStyle: "italic", color: "#FFF", textShadowColor: "#000", textShadowRadius: 2, fontWeight: "600", fontSize: (type === ComponentType.ListItem)?(12):(17) }}>{activity.finishArea}</CaptionText>
                         </View>
                     </View>
                 )}

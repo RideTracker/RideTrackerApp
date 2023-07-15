@@ -12,6 +12,7 @@ type DropdownPageProps = {
         text: string;
         icon: ReactNode;
         disabled?: boolean;
+        type?: "danger";
 
         onPress: () => void;
     }[];
@@ -30,11 +31,7 @@ export default function DropdownPage({ items }: DropdownPageProps) {
                 paddingBottom: 0
             }}>
                 {items.map((item) => (
-                    <TouchableOpacity key={item.text} disabled={item.disabled} onPress={() => {
-                        router.back();
-                        
-                        item.onPress();
-                    }} style={{
+                    <TouchableOpacity key={item.text} disabled={item.disabled} onPress={() => item.onPress()} style={{
                         gap: 10,
 
                         flexDirection: "row",
@@ -52,7 +49,10 @@ export default function DropdownPage({ items }: DropdownPageProps) {
                             {item.icon}
                         </View>
 
-                        <CaptionText style={{ paddingRight: 40 }}>{item.text}</CaptionText>
+                        <CaptionText style={{
+                            paddingRight: 40,
+                            color: (item.type === "danger")?("#FF0000"):(theme.color)    
+                        }}>{item.text}</CaptionText>
                     </TouchableOpacity>
                 ))}
             </View>

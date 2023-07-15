@@ -10,8 +10,8 @@ import Constants from "expo-constants";
 type ActivityAuthorProps = {
     activity: {
         id: string;
-        startArea: string;
-        finishArea: string;
+        startArea?: string;
+        finishArea?: string;
 
         user: {
             id: string;

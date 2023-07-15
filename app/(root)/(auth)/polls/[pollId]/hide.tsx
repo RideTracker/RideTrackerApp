@@ -5,11 +5,13 @@ import { useTheme } from "../../../../../utils/themes";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { setUserData } from "../../../../../utils/stores/userData";
 import { useUser } from "../../../../../modules/user/useUser";
+import { useRouter } from "expo-router";
 
 export default function HidePollPage() {
     const theme = useTheme();
     const dispatch = useDispatch();
     const userData = useUser();
+    const router = useRouter();
 
     return (
         <DropdownPage items={[
@@ -24,6 +26,8 @@ export default function HidePollPage() {
                     dispatch(setUserData({
                         pollTimeout: date.getTime()
                     }));
+                    
+                    router.back();
                 }
             },
             
@@ -39,6 +43,8 @@ export default function HidePollPage() {
                             feed: [ ...filter.filter((item) => item.key !== "includePolls"), { key: "includePolls", value: false } ]
                         }
                     }));
+                    
+                    router.back();
                 }
             }            
         ]}/>
