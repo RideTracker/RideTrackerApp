@@ -43,7 +43,7 @@ jobs:
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
-      - run: echo "`jq '.expo.android=${{ inputs.versionCode }}' config.json`" > config.json
+      - run: echo "`jq '.expo.android=${{ inputs.versionCode }}' app.json`" > app.json
       - uses: actions/setup-node@v3
       - run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > .npmrc
