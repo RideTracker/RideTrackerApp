@@ -43,17 +43,16 @@ jobs:
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
+      - run: jq '.expo.android.versionCode = ${{ inputs.versionCode }}' app.json > app.json
+      - run: cat app.json
+      - run: |
+          echo "${{ steps.properties.outputs.importedProperties }}" | jq -s '.[0] * .[1]' app.json > merged-app.json
+          mv merged-app.json app.json
       - uses: actions/setup-node@v3
       - run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > .npmrc
           echo "@ridetracker=https://npm.pkg.github.com/" >> .npmrc       
       - run: npm ci
-      - id: properties
-        run: |
-          echo "::set-output name=importedProperties::{\"expo\": {\"version\": \"${{ inputs.version }}\", \"android\": {\"versionCode\": ${{ inputs.versionCode }}}, \"extra\": {\"environment\": \"${{ inputs.environment }}\", \"apiUserAgent\": \"RideTrackerApp-${{ inputs.version }}\", \"api\": \"${{ inputs.service }}\", \"avatarApi\": \"${{ inputs.avatarService }}\", \"route\": \"${{ inputs.routeService }}\", \"images\": \"${{ inputs.images }}\"}}}"
-      - run: |
-          echo "${{ steps.properties.outputs.importedProperties }}" | jq -s '.[0] * .[1]' app.json > merged-app.json
-          mv merged-app.json app.json
       - id: java
         uses: actions/setup-java@v2
         with:
