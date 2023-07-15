@@ -32,6 +32,7 @@ import useInternetConnection from "../../../../../modules/useInternetConnection"
 import SubscriptionPageOverlay from "../../../../../components/SubscriptionPageOverlay";
 import PermissionsPageOverlay from "../../../../../components/PermissionsPageOverlay";
 import PageOverlay from "../../../../../components/PageOverlay";
+import DrawingOverlay from "../../../../../components/DrawingOverlay";
 
 global.coordinates = [];
 
@@ -48,6 +49,7 @@ export default function Routes() {
     const mapRef = useRef<MapView>();
     const searchRef = useRef<TextInput>();
 
+    const [ drawing, setDrawing ] = useState<boolean>(false);
     const [ focus, setFocus ] = useState<boolean>(false);
     const [ initialLocation, setInitialLocation ] = useState(null);
     const [ searchFocus, setSearchFocus ] = useState<boolean>(false);
@@ -63,7 +65,6 @@ export default function Routes() {
         duration: string;
     }[]>([]);
     const [ sorting, setSorting ] = useState<boolean>(false);
-    const [ drawing, setDrawing ] = useState<boolean>(false);
     const [ permissions, setPermissions ] = useState<Location.LocationPermissionResponse>(null);
     const [ drawingTimestamp, setDrawingTimestamp ] = useState<number>(0);
 
@@ -226,7 +227,7 @@ export default function Routes() {
         }
     }, [ waypointsLayout?.height, waypoints.length ]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(drawing) {
             const timer = setInterval(() => {
                 setDrawingTimestamp(Date.now());
@@ -236,7 +237,7 @@ export default function Routes() {
                 clearInterval(timer);
             };
         }
-    }, [ drawing ]);
+    }, [ drawing ]);*/
 
     return (
         <View style={{ flex: 1, position: "relative", backgroundColor: theme.background }}>
@@ -253,56 +254,42 @@ export default function Routes() {
             }} />
 
             {(focus) && (
-                <TouchableWithoutFeedback style={{
-                    position: "absolute",
+                <MapView
+                    ref={mapRef}
+                    provider={userData.mapProvider}
+                    showsUserLocation={false}
+                    style={{
+                        position: "absolute",
 
-                    width: "100%",
-                    height: "100%",
+                        width: "100%",
+                        height: "100%",
 
-                    left: 0,
-                    bottom: 0
-                }} onPressIn={() => {
-                    //setDrawing(true);
+                        left: 0,
+                        bottom: 0
+                    }}
+                    scrollEnabled={!drawing}
+                    /*onPanDrag={(event) => {
+                        if(drawing) {
+                            global.coordinates = global.coordinates.concat(event.nativeEvent.coordinate);
+                        }
+                    }}*/
+                    customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
+                    >
+                    {(waypoints.length > 1) && routes.map((route, index) => (
+                        <Polyline key={index} coordinates={route.polyline} fillColor={"white"} strokeColor={"white"} strokeWidth={4}/>                    
+                    ))}
 
-                    //global.coordinates = [];
-                }} onPressOut={() => {
-                    //setDrawing(false);
-                }}>
-                    <MapView
-                        ref={mapRef}
-                        provider={userData.mapProvider}
-                        showsUserLocation={false}
-                        style={{
-                            position: "absolute",
+                    <Polyline coordinates={[...global.coordinates]} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
 
-                            width: "100%",
-                            height: "100%",
+                    <MapRouteMarkers waypoints={waypoints}/>
 
-                            left: 0,
-                            bottom: 0
-                        }}
-                        scrollEnabled={!drawing}
-                        onPanDrag={(event) => {
-                            if(drawing) {
-                                global.coordinates = global.coordinates.concat(event.nativeEvent.coordinate);
-                            }
-                        }}
-                        customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
-                        >
-                        {(waypoints.length > 1) && routes.map((route, index) => (
-                            <Polyline key={index} coordinates={route.polyline} fillColor={"white"} strokeColor={"white"} strokeWidth={4}/>                    
-                        ))}
-
-                        <Polyline coordinates={[...global.coordinates]} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
-
-                        <MapRouteMarkers waypoints={waypoints}/>
-
-                        {/*waypoints.map((waypoint, index) => (
-                            <Marker key={index} coordinate={waypoint.location} pinColor={getWaypointColor(index, waypoints.length)}/>
-                        ))*/}
-                    </MapView>
-                </TouchableWithoutFeedback>
+                    {/*waypoints.map((waypoint, index) => (
+                        <Marker key={index} coordinate={waypoint.location} pinColor={getWaypointColor(index, waypoints.length)}/>
+                    ))*/}
+                </MapView>
             )}
+
+            {(drawing) && (<DrawingOverlay/>)}
 
             {(searchFocus) && (
                 <TouchableWithoutFeedback onPress={() => { searchRef.current.blur() }}>
@@ -328,13 +315,15 @@ export default function Routes() {
                 if(!searchFocus)
                     setSearchLayout(event.nativeEvent.layout);
             }}>
-                <FormInput inputRef={searchRef} borderRadius={20} placeholder="Search for a place..." icon={
-                    <FontAwesome name="search" size={24} color={theme.color}/>
-                } props={{
-                    onChangeText: (text) => setSearchText(text),
-                    onFocus: () => setSearchFocus(true),
-                    onBlur: () => setSearchFocus(false)
-                }}></FormInput>
+                {(!drawing) && (
+                    <FormInput inputRef={searchRef} borderRadius={20} placeholder="Search for a place..." icon={
+                        <FontAwesome name="search" size={24} color={theme.color}/>
+                    } props={{
+                        onChangeText: (text) => setSearchText(text),
+                        onFocus: () => setSearchFocus(true),
+                        onBlur: () => setSearchFocus(false)
+                    }}></FormInput>
+                )}
 
                 {(searchFocus) && (
                     <View style={{ paddingVertical: 10 }}>
@@ -422,87 +411,117 @@ export default function Routes() {
                 </View>
             )}
 
-            {(!!waypoints.length && !searchFocus) && (
-                <View style={{
-                    backgroundColor: theme.background,
+            <View style={{
+                width: "100%",
 
-                    width: "100%",
+                position: "absolute",
 
-                    position: "absolute",
+                bottom: 0,
+                left: 0,
+            }}>
+                {(!drawing) && (<GoogleMapsLogo style={{}}/>)}
 
-                    bottom: 0,
-                    left: 0,
-
-                    padding: 10,
-                    gap: 10,
-
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10
-                }} onLayout={(event) => {
-                    setWaypointsLayout(event.nativeEvent.layout);
-                }}>
-                    <GoogleMapsLogo style={{
-                        position: "absolute",
-                        top: -25
-                    }}/>
-
-                    {(routes.length > 0) && (
-                        <View style={{ flexDirection: "row" }}>
-                            <HeaderText>Est. {getFormattedDuration(getDurationAsNumber(routes.flatMap((route) => route.duration)))}</HeaderText>
-
-                            <HeaderText style={{ color: "grey" }}> ({routes.flatMap((route) => Math.round(route.distance / 1000) + " km").join(', ')})</HeaderText>
-                        </View>
-                    )}
-
-                    <ScrollView style={{ paddingBottom: 10, maxHeight: 180 }}>
-                        <View style={{ gap: 10, position: "relative" }}>
-                            {waypoints.map((waypoint, index) => (
-                                <TouchableWithoutFeedback key={index} onLongPress={() => {
-                                    setSorting(true);
+                {(!searchFocus) && (
+                    (!drawing)?(
+                        <ScrollView horizontal={true}>
+                            <View style={{
+                                padding: 5,
+                                gap: 10,
+                                flexDirection: "row"
+                            }}>
+                                <TouchableOpacity style={{
+                                    gap: 10,
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    backgroundColor: theme.background,
+                                    padding: 10,
+                                    borderRadius: 20
+                                }} onPress={() => {
+                                    setDrawing(true);
                                 }}>
-                                    <View style={{ flexDirection: "row", gap: 10 }}>
-                                        <View style={{
-                                            justifyContent: "center",
-                                            alignItems: "center",
+                                    <Entypo name="brush" size={24} color={theme.color}/>
 
-                                            width: 32,
+                                    <CaptionText>Draw a path</CaptionText>
+                                </TouchableOpacity>
+                            </View>
+                        </ScrollView>
+                    ):(
+                        <Button primary={false} type="danger" label="Cancel drawing" onPress={() => setDrawing(false)}/>
+                    )
+                )}
 
-                                            position: "relative"
-                                        }}>
-                                            <FontAwesome5 name={(index === (waypoints.length - 1) && index !== 0)?("flag-checkered"):("map-marker-alt")} size={24} color={theme.color}/>
+                {(!!waypoints.length && !searchFocus) && (
+                    <View style={{
+                        backgroundColor: theme.background,
 
-                                            {(index !== waypoints.length - 1) && (
-                                                <Entypo name="dots-three-vertical" size={20} color={theme.color} style={{ marginBottom: -25, marginTop: 5 }}/>
-                                            )}
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10,
+
+                        padding: 10,
+                        gap: 10
+                    }} onLayout={(event) => {
+                        setWaypointsLayout(event.nativeEvent.layout);
+                    }}>
+                        {(!!waypoints.length && routes.length > 0) && (
+                            <View style={{ flexDirection: "row" }}>
+                                <HeaderText>Est. {getFormattedDuration(getDurationAsNumber(routes.flatMap((route) => route.duration)))}</HeaderText>
+
+                                <HeaderText style={{ color: "grey" }}> ({routes.flatMap((route) => Math.round(route.distance / 1000) + " km").join(', ')})</HeaderText>
+                            </View>
+                        )}
+
+                        <ScrollView style={{ paddingBottom: 10, maxHeight: 180 }}>
+                            <View style={{ gap: 10, position: "relative" }}>
+                                {waypoints.map((waypoint, index) => (
+                                    <TouchableWithoutFeedback key={index} onLongPress={() => {
+                                        setSorting(true);
+                                    }}>
+                                        <View style={{ flexDirection: "row", gap: 10 }}>
+                                            <View style={{
+                                                justifyContent: "center",
+                                                alignItems: "center",
+
+                                                width: 32,
+
+                                                position: "relative"
+                                            }}>
+                                                <FontAwesome5 name={(index === (waypoints.length - 1) && index !== 0)?("flag-checkered"):("map-marker-alt")} size={24} color={theme.color}/>
+
+                                                {(index !== waypoints.length - 1) && (
+                                                    <Entypo name="dots-three-vertical" size={20} color={theme.color} style={{ marginBottom: -25, marginTop: 5 }}/>
+                                                )}
+                                            </View>
+
+                                            <View style={{ flexGrow: 1 }}>
+                                                <FormInput value={waypoint.name} iconRight={(
+                                                    <TouchableOpacity style={{
+                                                        flexGrow: 1,
+
+                                                        justifyContent: "center",
+                                                        alignItems: "center"
+                                                    }} onPress={() => {
+                                                        setWaypoints(waypoints.filter((_, itemIndex) => itemIndex !== index));
+                                                    }}>
+                                                        <FontAwesome5 name={"times"} size={24} color={theme.color}/>
+                                                    </TouchableOpacity>
+                                                )} props={{
+                                                    editable: false
+                                                }}/>
+                                            </View>
                                         </View>
+                                    </TouchableWithoutFeedback>
+                                ))}
+                            </View>
+                        </ScrollView>
 
-                                        <View style={{ flexGrow: 1 }}>
-                                            <FormInput value={waypoint.name} iconRight={(
-                                                <TouchableOpacity style={{
-                                                    flexGrow: 1,
-
-                                                    justifyContent: "center",
-                                                    alignItems: "center"
-                                                }} onPress={() => {
-                                                    setWaypoints(waypoints.filter((_, itemIndex) => itemIndex !== index));
-                                                }}>
-                                                    <FontAwesome5 name={"times"} size={24} color={theme.color}/>
-                                                </TouchableOpacity>
-                                            )} props={{
-                                                editable: false
-                                            }}/>
-                                        </View>
-                                    </View>
-                                </TouchableWithoutFeedback>
-                            ))}
-                        </View>
-                    </ScrollView>
-
-                    <Button primary={true} label="Open in Google Maps" onPress={() => {
-                        Linking.openURL(getGoogleMapsDirectionsUrl(waypoints));
-                    }}/>
-                </View>
-            )}
+                        {(!!waypoints.length) && (
+                            <Button primary={true} label="Open in Google Maps" onPress={() => {
+                                Linking.openURL(getGoogleMapsDirectionsUrl(waypoints));
+                            }}/>
+                        )}
+                    </View>
+                )}
+            </View>
 
             {(internetConnection === "OFFLINE")?(
                 <OfflinePageOverlay/>
