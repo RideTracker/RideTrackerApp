@@ -150,6 +150,18 @@ export default function FilterPage() {
 
                     <Switch thumbColor={theme.brand} trackColor={theme.border} value={filter.find((item) => item.key === "includePolls")?.value ?? true} onValueChange={(value) => setFilter([ ...filter.filter((item) => item.key !== "includePolls"), { key: "includePolls", value } ])}/>
                 </View>
+
+                <View style={{
+                    gap: 10,
+                    flexDirection: "row",
+                    alignItems: "center"
+                }}>
+                    <CaptionText style={{ flex: 1 }}>Show bike model in activities</CaptionText>
+
+                    <Switch thumbColor={theme.brand} trackColor={theme.border} value={!user.hideBikeModelsInFeed} onValueChange={(value) => {
+                        dispatch(setUserData({ hideBikeModelsInFeed: !value }));
+                    }}/>
+                </View>
                 
                 {(user.pollTimeout && user.pollTimeout > Date.now()) && (
                     <Button primary={false} label="Disable poll timeout" onPress={() => {

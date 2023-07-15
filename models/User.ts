@@ -9,6 +9,7 @@ export type User = {
     };
 
     pollTimeout?: number;
+    hideBikeModelsInFeed?: boolean;
 
     mapProvider: Provider;
 

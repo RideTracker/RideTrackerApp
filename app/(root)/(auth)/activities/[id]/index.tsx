@@ -70,7 +70,7 @@ export default function ActivityPage() {
                         {(activity)?(
                             (activity.bike) && (
                                 <TouchableOpacity onPress={() => router.push(`/bike/${activity.bike}`)}>
-                                    <Bike id={activity.bike} style={{ marginVertical: 10 }}/>
+                                    <Bike id={activity.bike.id} style={{ marginVertical: 10 }}/>
                                 </TouchableOpacity>
                             )
                         ):(

@@ -20,7 +20,7 @@ export default function ActivityEditPage() {
     useEffect(() => {
         getActivityById(client, id as string).then(async (result) => {
             if(result.success) {
-                const bike = (result.activity.bike)?((await getBike(client, result.activity.bike)).bike):(null);
+                const bike = (result.activity.bike)?((await getBike(client, result.activity.bike.id)).bike):(null);
 
                 setProperties({
                     visibility: result.activity.visibility,
