@@ -161,6 +161,35 @@ export default function UploadRecordingPage() {
                                 height: 60
                             }}/>
                         </SafeAreaView>
+
+                        <View style={{ gap: 10 }}>
+                            <CaptionText>Who can see this activity?</CaptionText>
+
+                            <SelectListOverlay active={selectList} onCancel={() => setSelectList(false)}/>
+
+                            <SelectList active={selectList} items={[
+                                {
+                                    key: "PUBLIC",
+                                    text: "Everyone"
+                                },
+
+                                {
+                                    key: "UNLISTED",
+                                    text: "Everyone with a link (unlisted)"
+                                },
+
+                                {
+                                    key: "FOLLOWERS_ONLY",
+                                    text: "Only those I follow"
+                                },
+
+                                {
+                                    key: "PRIVATE",
+                                    text: "Only me (private)"
+                                }
+                            ]} onChange={(value) => setVisibility(value)} initialValue={visibility} onState={(active) => setSelectList(active)} placeholder="Select activity visibility..."/>
+
+                        </View>
                     </View>
 
                     {(!selectedBike)?(
@@ -245,32 +274,6 @@ export default function UploadRecordingPage() {
                             </TouchableOpacity>
                         )}/>
                     )}
-
-                    <CaptionText>Who can see this activity?</CaptionText>
-
-                    <SelectListOverlay active={selectList} onCancel={() => setSelectList(false)}/>
-
-                    <SelectList active={selectList} items={[
-                        {
-                            key: "PUBLIC",
-                            text: "Everyone"
-                        },
-
-                        {
-                            key: "UNLISTED",
-                            text: "Everyone with a link (unlisted)"
-                        },
-
-                        {
-                            key: "FOLLOWERS_ONLY",
-                            text: "Only those I follow"
-                        },
-
-                        {
-                            key: "PRIVATE",
-                            text: "Only me (private)"
-                        }
-                    ]} onChange={(value) => setVisibility(value)} initialValue={visibility} onState={(active) => setSelectList(active)} placeholder="Select activity visibility..."/>
 
                     <View style={{ marginTop: 20, gap: 10 }}>
                         <SmallText>* preliminary data has not been proccesed yet</SmallText>
