@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: jq '.expo.android.versionCode = ${{ inputs.versionCode }}' app.json > app.json
-      - run: echo cat app.json
+      - run: file app.json && cat app.json
       - uses: actions/setup-node@v3
       - run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > .npmrc
