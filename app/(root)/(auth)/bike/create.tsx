@@ -49,7 +49,13 @@ export default function BikeCreatePage() {
                     <CaptionText>Bike Model</CaptionText>
                 </View>
                 
-                <CategorySelector selectedItem={model} items={BikeTypes} onItemPress={(item) => setModel(item)}/>
+                <CategorySelector selectedItem={model} items={BikeTypes.map((bikeType) => {
+                    return {
+                        name: bikeType.name,
+                        type: bikeType.type,
+                        icon: (<Image style={{ height: 24, flex: 1, resizeMode: "contain", tintColor: theme.color }} source={bikeType.image}/>)
+                    }
+                })} onItemPress={(item) => setModel(item)}/>
 
                 <CaptionText style={{ paddingHorizontal: 10 }}>Bike Images</CaptionText>
 

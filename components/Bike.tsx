@@ -8,7 +8,7 @@ import { useClient } from "../modules/useClient";
 import Constants from "expo-constants";
 import { ActivitySummary } from "./ActivitySummary";
 import { BikeActivitySummary } from "./BikeActivitySummary";
-import { BikeTypes } from "./BikeTypes";
+import BikeType, { BikeTypes } from "./BikeTypes";
 
 type BikeProps = {
     id?: string;
@@ -66,9 +66,7 @@ export default function Bike(props: BikeProps) {
                                     }}/>
                             ):(
                                 <View style={{ flex: 1, padding: 10, justifyContent: "center", alignItems: "center", opacity: .5 }}>
-                                    {BikeTypes.find((bikeType) => bikeType.type == bike.model)?.icon}
-            
-                                    <ParagraphText>{BikeTypes.find((bikeType) => bikeType.type == bike.model).name}</ParagraphText>
+                                    <BikeType type={bike.model} withName={true} color="grey"/>
                                 </View>
                             )
                         )}
