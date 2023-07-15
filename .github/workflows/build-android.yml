@@ -43,7 +43,7 @@ jobs:
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
-      - run: echo "`jq '.expo.android=${{ inputs.versionCode }}' app.json`" > app.json
+      - run: jq '.expo.android.versionCode = ${{ inputs.versionCode }}' app.json > app.json
       - id: package
         uses: jaywcjlove/github-action-read-file@main
         with:
