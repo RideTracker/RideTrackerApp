@@ -53,7 +53,7 @@ export default function Bike(props: BikeProps) {
                 <View style={{ width: 140, borderRadius: 6, overflow: "hidden" }}>
                     <View style={{
                         flex: 1,
-                        backgroundColor: theme.placeholder
+                        backgroundColor: (!bike)?(theme.placeholder):("transparent")
                     }}>
                         {(bike) && (
                             (bike.image)?(
