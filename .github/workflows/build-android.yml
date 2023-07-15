@@ -43,12 +43,20 @@ jobs:
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
-      - run: echo "`jq '.expo.version="${{ inputs.version }}"'|'.expo.android.versionCode=${{ inputs.versionCode }}'|'.expo.extra.environment="${{ inputs.environment }}"'|'.expo.extra.apiUserAgent="RideTrackerApp-${{ inputs.version }}"'|'.expo.extra.api="${{ inputs.service }}"'|'.expo.extra.avatarApi="${{ inputs.avatarService }}"'|'.expo.extra.route="${{ inputs.routeService }}"'|'.expo.extra.images="${{ inputs.images }}"'app.json`" > app.json
       - uses: actions/setup-node@v3
       - run: |
           echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > .npmrc
           echo "@ridetracker=https://npm.pkg.github.com/" >> .npmrc       
       - run: npm ci
+      - id: app
+        run: echo "::set-output name=file::$(cat app.json)"
+      - id: app-properties
+        run: |
+          echo "::set-output name=importedProperties::{\"expo\": {\"version\": \"${{ inputs.version }}\", \"android\": {\"versionCode\": ${{ inputs.versionCode }}}, \"extra\": {\"environment\": \"${{ inputs.environment }}\", \"apiUserAgent\": \"RideTrackerApp-${{ inputs.version }}\", \"api\": \"${{ inputs.service }}\", \"avatarApi\": \"${{ inputs.avatarService }}\", \"route\": \"${{ inputs.routeService }}\", \"images\": \"${{ inputs.images }}\"}}}"
+      - run: |
+          echo "${{ steps.app.outputs.file }}" > app.json
+          echo "${{ steps.app-properties.outputs.importedProperties }}" | jq -s '.[0] * .[1]' app.json - > merged-app.json
+          mv merged-app.json app.json
       - id: java
         uses: actions/setup-java@v2
         with:
