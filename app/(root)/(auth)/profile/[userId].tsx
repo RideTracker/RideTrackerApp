@@ -122,7 +122,7 @@ export default function Profile() {
                     }}>
                         {(!uploadingFollow)?(
                             <ParagraphText placeholder={follow === null}>
-                                <LinkText style={{ fontWeight: "bold" }}>{(follow)?("Unfollow"):("Follow")}</LinkText>
+                                <LinkText style={{ fontWeight: "bold", color: (follow)?(theme.red):(theme.brand) }}>{(follow)?("Unfollow"):("Follow")}</LinkText>
                             </ParagraphText>
                         ):(
                             <ActivityIndicator size={20} color={theme.brand}/>
@@ -131,7 +131,7 @@ export default function Profile() {
                 )}
             </View>
 
-            <Tabs initialTab={"activities"} style={{ flex: 1, paddingBottom: 50 }}>
+            <Tabs initialTab={"activities"} style={{ flex: 1, paddingBottom: 60 }}>
                 <TabsPage id={"activities"} title={"Activities"}>
                     {(profile) && (<ProfileActivities profile={profile}/>)}
                 </TabsPage>
@@ -297,7 +297,7 @@ export function ProfileFollowingItem({ following }: ProfileFollowingItemProps) {
                     });
                 }}>
                     {(!submitting)?(
-                        <LinkText style={{ color: (follows)?(theme.red):(theme.brand) }}>{(follows)?("Unfollow"):("Follow")}</LinkText>
+                        <LinkText style={{ color: (follows)?(theme.red):(theme.brand), fontWeight: (follows)?("bold"):("normal") }}>{(follows)?("Unfollow"):("Follow")}</LinkText>
                     ):(
                         <ActivityIndicator color={(follows)?(theme.red):(theme.brand)} size={20}/>
                     )}
@@ -388,7 +388,7 @@ export function ProfileFollowersItem({ follower }: ProfileFollowersItemProps) {
                     });
                 }}>
                     {(!submitting)?(
-                        <LinkText style={{ color: (follows)?(theme.red):(theme.brand) }}>{(follows)?("Unfollow"):("Follow back")}</LinkText>
+                        <LinkText style={{ color: (follows)?(theme.red):(theme.brand), fontWeight: (follows)?("bold"):("normal") }}>{(follows)?("Unfollow"):("Follow back")}</LinkText>
                     ):(
                         <ActivityIndicator color={(follows)?(theme.red):(theme.brand)} size={20}/>
                     )}
