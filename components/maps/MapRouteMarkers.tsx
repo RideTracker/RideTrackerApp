@@ -11,6 +11,7 @@ import MapStartMarker from "./MapStartMarker";
 import MapFinishMarker from "./MapFinishMarker";
 import MapIntermediateMarker from "./MapIntermediateMarker";
 import { RouteWaypoint } from "../../app/(root)/(auth)/(tabs)/(subscription)/routes";
+import { getDistance } from "geolib";
 
 type MapRouteMarker = {
     id: string;
@@ -30,11 +31,13 @@ export function getMarkersFromWaypoints(waypoints: RouteWaypoint[]) {
     const markers: MapRouteMarker[] = [];
 
     waypoints.forEach((waypoint, index) => {
-        const type = (index === 0)?("Start"):((index === waypoints.length - 1)?("Finish"):("Intermediate"));
+        let type = (index === 0)?("Start"):((index === waypoints.length - 1)?("Finish"):("Intermediate"));
 
         if(waypoint.type === "SEARCH_PREDICTION") {
             const marker = markers.find((marker) => {
                 return marker.name === waypoint.searchPrediction.name;
+            }) ?? markers.find((marker) => {
+                return getDistance(marker.location, waypoint.searchPrediction.location) < 100;
             });
     
             if(!marker) {
@@ -46,15 +49,52 @@ export function getMarkersFromWaypoints(waypoints: RouteWaypoint[]) {
                 });
             }
             else
-                marker.types.push(type)
+                marker.types.push(type);
         }
         else if(waypoint.type === "PATH") {
-            markers.push({
-                id: uuid.v4() as string,
-                name: "Custom path",
-                types: [ type ],
-                location: waypoint.path.original[waypoint.path.original.length - 1]
-            });
+            {
+                let newType = type;
+
+                if(newType === "Finish")
+                    newType = "Intermediate";
+
+                const marker = markers.find((marker) => {
+                    return getDistance(marker.location, waypoint.path.route[0]) < 100;
+                });
+    
+                if(!marker) {
+                    markers.push({
+                        id: uuid.v4() as string,
+                        name: "Custom path",
+                        types: [ newType ],
+                        location: waypoint.path.route[0]
+                    });
+                }
+                else
+                    marker.types.push(newType);
+            }
+            
+            {
+                let newType = type;
+
+                if(newType === "Start")
+                    newType = "Intermediate";
+
+                const marker = markers.find((marker) => {
+                    return getDistance(marker.location, waypoint.path.route[waypoint.path.route.length - 1]) < 100;
+                });
+    
+                if(!marker) {
+                    markers.push({
+                        id: uuid.v4() as string,
+                        name: "Custom path",
+                        types: [ newType ],
+                        location: waypoint.path.route[waypoint.path.route.length - 1]
+                    });
+                }
+                else
+                    marker.types.push(newType);
+            }
         }
     });
 
