@@ -52,9 +52,7 @@ export default function ActivityStats({ activity }: ActivityStatsProps) {
     return (
         <View style={{
             flexDirection: "row",
-            flexWrap: "wrap",
-
-            paddingBottom: 10
+            flexWrap: "wrap"
         }}>
             {activity.summary.map((activitySummary) => (
                 <View key={activitySummary.key} style={{ width: "50%", marginVertical: 10 }}>

@@ -32,7 +32,9 @@ export default function ActivityCommentsSummary(props: ActivityCommentsSummaryPr
     }[] | null>(null);
 
     useEffect(() => {
+        console.log({ id });
         getActivityCommentsSummary(client, id).then((result) => {
+            console.log({result})
             if(!result.success)
                 return;
 
@@ -43,8 +45,6 @@ export default function ActivityCommentsSummary(props: ActivityCommentsSummaryPr
 
     return (
         <View style={{ gap: 10 }}>
-            <HeaderText>Comments</HeaderText>
-
             {(comments)?(
                 <React.Fragment>
                     <View style={{ gap: 20 }}>
@@ -52,13 +52,14 @@ export default function ActivityCommentsSummary(props: ActivityCommentsSummaryPr
                             <ActivityCommentSummary key={comment.id} activity={id} comment={comment}/>
                         ))}
                     </View>
-                    <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments`)}>
-                        <ParagraphText style={{ textAlign: "center", padding: 10 }}>Show {((count - comments.length) > 0)?(`${(count - comments.length)} more`):("all")} comments</ParagraphText>
-                    </TouchableOpacity>
                 </React.Fragment>
             ):(Array(2).fill(null).map((_, index) => (
                 <ActivityCommentSummary key={index} comment={null}/>
             )))}
+
+            <TouchableOpacity onPress={() => router.push(`/activities/${id}/comments/list`)}>
+                <ParagraphText style={{ textAlign: "center", padding: 10 }}>Show {((count - comments?.length) > 0)?(`${(count - comments.length)} more`):("all")} comments</ParagraphText>
+            </TouchableOpacity>
         </View>
     );
 }

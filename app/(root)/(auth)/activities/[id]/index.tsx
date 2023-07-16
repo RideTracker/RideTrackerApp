@@ -54,27 +54,29 @@ export default function ActivityPage() {
 
             {(!deleted)?(
                 <ScrollView style={{ padding: 10 }}>
-                    <View style={{ paddingBottom: 40}}>
-                        <View style={{ height: 200 }}>
-                            <ActivityMap activity={activity} type={ComponentType.Default}>
-                                <ActivityMapDetails activity={activity}/>
-                            </ActivityMap>
+                    <View style={{ paddingBottom: 40, gap: 20 }}>
+                        <View>
+                            <View style={{ height: 200 }}>
+                                <ActivityMap activity={activity} type={ComponentType.Default}>
+                                    <ActivityMapDetails activity={activity}/>
+                                </ActivityMap>
+                            </View>
+
+                            <ActivityAuthor activity={activity}/>
+
+                            <ActivityStats activity={activity}/>
                         </View>
-
-                        <ActivityAuthor activity={activity}/>
-
-                        <ActivityStats activity={activity}/>
 
                         <ActivityRoute activity={activity}/>
 
                         {(activity)?(
                             (activity.bike) && (
                                 <TouchableOpacity onPress={() => router.push(`/bike/${activity.bike}`)}>
-                                    <Bike id={activity.bike.id} style={{ marginVertical: 10 }}/>
+                                    <Bike id={activity.bike.id}/>
                                 </TouchableOpacity>
                             )
                         ):(
-                            <Bike style={{ marginVertical: 10 }}/>
+                            <Bike/>
                         )}
 
                         <ActivityCommentsSummary id={id as string}/>

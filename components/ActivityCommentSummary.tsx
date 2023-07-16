@@ -105,7 +105,7 @@ export default function ActivityCommentSummary(props: ActivityCommentSummaryProp
                         alignItems: "baseline",
                         gap: 5
                     }}>
-                        <TouchableOpacity onPress={() => router.push(`/activities/${activity}/comments/${comment.id}/reply`)}>
+                        <TouchableOpacity onPress={() => router.push(`/activities/${activity}/comments/reply?commentId=${comment.id}`)}>
                             <LinkText>Reply</LinkText>
                         </TouchableOpacity>
 

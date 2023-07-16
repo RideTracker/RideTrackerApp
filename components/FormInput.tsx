@@ -57,7 +57,6 @@ export default function FormInput({ value, props, placeholder, icon, iconRight, 
                     marginVertical: 5,
 
                     flex: 1,
-                    height: 35,
 
                     ...style
                 }}
