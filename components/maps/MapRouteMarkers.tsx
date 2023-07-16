@@ -77,8 +77,12 @@ export function getMarkersFromWaypoints(waypoints: RouteWaypoint[]) {
             {
                 let newType = type;
 
-                if(newType === "Start")
-                    newType = "Intermediate";
+                if(newType === "Start") {
+                    if(index === waypoints.length - 1)
+                        newType = "Finish";
+                    else
+                        newType = "Intermediate";
+                }
 
                 const marker = markers.find((marker) => {
                     return getDistance(marker.location, waypoint.path.route[waypoint.path.route.length - 1]) < 100;

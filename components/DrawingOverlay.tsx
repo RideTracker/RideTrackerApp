@@ -160,7 +160,7 @@ export default function DrawingOverlay({ mapRef, onUpdate }: DrawingOverlayProps
 
         let limitedCoordinates = bankedCoordinates;
 
-        if(bankedCoordinates.length >= 25) {
+        if(bankedCoordinates.length >= 10) {
             limitedCoordinates = bankedCoordinates.map((coordinate, index) => {
                 return {
                     coordinate,

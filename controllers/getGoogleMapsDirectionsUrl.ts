@@ -6,7 +6,7 @@ function getFormattedWaypointUrl(waypoint: Partial<SearchPrediction>) {
         return waypoint.name;
 
     if(waypoint.location)
-        return `${waypoint.location.latitude},${waypoint.location.longitude}`;
+        return `${Math.round(waypoint.location.latitude * 1000) / 1000},${Math.round(waypoint.location.longitude * 1000) / 1000}`;
 
     return waypoint.name;
 };
@@ -34,7 +34,11 @@ export default function getGoogleMapsDirectionsUrl(waypoints: RouteWaypoint[]) {
     else if(waypoints[0].type === "PATH") {
         url.searchParams.append("origin", getFormattedCoordinateUrl(waypoints[0].path.original[0]));
 
-        for(let index = 1; index < waypoints[0].path.original.length; index++)
+        console.log({ length: waypoints[0].path.original.length });
+
+        const length = (waypoints.length > 1)?(waypoints[0].path.original.length):(waypoints[0].path.original.length - 1);
+
+        for(let index = 1; index < length; index++)
             intermediates.push({ location: waypoints[0].path.original[index] });
     }
         
@@ -67,10 +71,14 @@ export default function getGoogleMapsDirectionsUrl(waypoints: RouteWaypoint[]) {
                 intermediates.push({ location: waypoints[waypoints.length - 1].path.original[index] });
         }
     }
+    else if(waypoints[0].type === "PATH") {
+        url.searchParams.append("destination", getFormattedCoordinateUrl(waypoints[0].path.original[waypoints[0].path.original.length - 1]));
+    }
 
     if(intermediates.length > 2) {
+        console.log({ intermediates: intermediates.length });
         url.searchParams.append("waypoints", intermediates.flatMap((waypoint) => getFormattedWaypointUrl(waypoint)).join('|'));
-        url.searchParams.append("waypoint_place_ids", intermediates.flatMap((waypoint) => String(waypoint.placeId)).join('|'));
+        //url.searchParams.append("waypoint_place_ids", intermediates.flatMap((waypoint) => String(waypoint.placeId ?? null)).join('|'));
     }
 
     console.log(url);
