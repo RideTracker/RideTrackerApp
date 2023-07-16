@@ -85,8 +85,11 @@ export default function Index() {
     }, [ userData.filters?.feed, filterText ]);
 
     const handlePagination = async (reset: boolean) => {
-        if(!client.token)
+        if(!client.token) {
+            router.push("/login");
+            
             return false;
+        }
 
         const currentOffsets = (reset)?({
             activities: 0,
