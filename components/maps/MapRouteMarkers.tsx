@@ -106,7 +106,7 @@ export default function MapRouteMarkers({ waypoints }: MapRouteMarkersProps) {
 
     useEffect(() => {
         setMarkers(getMarkersFromWaypoints(waypoints));
-    }, [ waypoints.length ]);
+    }, [ waypoints ]);
 
     return (
         <React.Fragment>
