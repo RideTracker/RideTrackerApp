@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ReactNode, ReactElement } from "react";
-import { View, ViewStyle } from "react-native";
+import { ScrollView, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { CaptionText } from "./texts/Caption";
 import { useTheme } from "../utils/themes";
@@ -23,38 +23,37 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
 
     return (
         <View style={style} pointerEvents={pointerEvents}>
-            <View style={{
-                flexDirection: "row",
+            <View>
+                <ScrollView horizontal={true} style={{ overflow: "visible" }}>
+                    <View style={{
+                        flexDirection: "row",
 
-                borderBottomColor: theme.placeholder,
-                borderBottomWidth: 2,
+                        paddingHorizontal: 10
+                    }}>
+                        {React.Children.map(children, (child, index) => (
+                            <TouchableOpacity key={index} style={{
+                                padding: 10,
+                                paddingVertical: 15,
 
-                paddingHorizontal: 10,
+                                paddingHorizontal: 15,
 
-                gap: 5
-            }}>
-                {React.Children.map(children, (child, index) => (
-                    <TouchableOpacity key={index} style={{
-                        padding: 10,
-                        paddingVertical: 15,
-
-                        marginBottom: -2,
-
-                        borderBottomColor: (tab === child.props.id)?(theme.color):(theme.placeholder),
-                        borderBottomWidth: 2
-                    }} onPress={() => setTab(child.props.id)}>
-                        <CaptionText style={{
-                            fontSize: 18,
-                            opacity: (tab === child.props.id)?(1):(0.6)
-                        }}>
-                            {child.props.title}
-                        </CaptionText>
-                    </TouchableOpacity>
-                ))}
+                                borderBottomColor: (tab === child?.props?.id)?(theme.color):(theme.placeholder),
+                                borderBottomWidth: 2
+                            }} onPress={() => setTab(child?.props?.id)}>
+                                <CaptionText style={{
+                                    fontSize: 18,
+                                    opacity: (tab === child?.props?.id)?(1):(0.6)
+                                }}>
+                                    {child?.props?.title}
+                                </CaptionText>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </ScrollView>
             </View>
 
             <View style={{ flexGrow: 1 }}>
-                {children.find((child) => child.props.id === tab)}
+                {children.find((child) => child?.props?.id === tab)}
             </View>
         </View>
     );
