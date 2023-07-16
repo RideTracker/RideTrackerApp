@@ -32,9 +32,22 @@ import useInternetConnection from "../../../../../modules/useInternetConnection"
 import SubscriptionPageOverlay from "../../../../../components/SubscriptionPageOverlay";
 import PermissionsPageOverlay from "../../../../../components/PermissionsPageOverlay";
 import PageOverlay from "../../../../../components/PageOverlay";
-import DrawingOverlay from "../../../../../components/DrawingOverlay";
+import DrawingOverlay, { DrawingPolyline, DrawingState } from "../../../../../components/DrawingOverlay";
 
 global.coordinates = [];
+
+export type RouteWaypoint = {
+    type: "SEARCH_PREDICTION" | "PATH";
+    searchPrediction?: SearchPrediction;
+    path?: RoutePath;
+};
+
+export type RoutePath = {
+    original: DrawingPolyline;
+    route: DrawingPolyline;
+    distance: number;
+    duration: string;
+};
 
 export default function Routes() {
     const client = useClient();
@@ -50,6 +63,8 @@ export default function Routes() {
     const searchRef = useRef<TextInput>();
 
     const [ drawing, setDrawing ] = useState<boolean>(false);
+    const [ drawingPolyline, setDrawingPolyline ] = useState<DrawingPolyline>(null);
+
     const [ focus, setFocus ] = useState<boolean>(false);
     const [ initialLocation, setInitialLocation ] = useState(null);
     const [ searchFocus, setSearchFocus ] = useState<boolean>(false);
@@ -57,7 +72,7 @@ export default function Routes() {
     const [ searchTimeout, setSearchTimeout ] = useState<NodeJS.Timeout>(null);
     const [ searchPredictions, setSearchPredictions ] = useState<SearchPrediction[]>([]);
     const [ searchLayout, setSearchLayout ] = useState<LayoutRectangle>(null);
-    const [ waypoints, setWaypoints ] = useState<SearchPrediction[]>([]);
+    const [ waypoints, setWaypoints ] = useState<RouteWaypoint[]>([]);
     const [ waypointsLayout, setWaypointsLayout ] = useState<LayoutRectangle>(null);
     const [ routes, setRoutes ] = useState<{
         polyline: { latitude: number; longitude: number; }[];
@@ -66,7 +81,6 @@ export default function Routes() {
     }[]>([]);
     const [ sorting, setSorting ] = useState<boolean>(false);
     const [ permissions, setPermissions ] = useState<Location.LocationPermissionResponse>(null);
-    const [ drawingTimestamp, setDrawingTimestamp ] = useState<number>(0);
 
     useFocusEffect(() => {
         setFocus(true);
@@ -147,10 +161,13 @@ export default function Routes() {
                 if(newWaypoints.length === 0 && initialLocation) {
                     newWaypoints = [
                         {
-                            name: "Your location",
-                            location: {
-                                latitude: initialLocation.coords.latitude,
-                                longitude: initialLocation.coords.longitude
+                            type: "SEARCH_PREDICTION",
+                            searchPrediction: {
+                                name: "Your location",
+                                location: {
+                                    latitude: initialLocation.coords.latitude,
+                                    longitude: initialLocation.coords.longitude
+                                }
                             }
                         }
                     ];
@@ -158,7 +175,10 @@ export default function Routes() {
 
                 searchPrediction.location = result.places[0].location;
 
-                newWaypoints.push(searchPrediction);
+                newWaypoints.push({
+                    type: "SEARCH_PREDICTION",
+                    searchPrediction
+                });
 
                 dispatch(addSearchPrediction(searchPrediction));
 
@@ -176,16 +196,22 @@ export default function Routes() {
             if(newWaypoints.length === 0 && initialLocation) {
                 newWaypoints = [
                     {
-                        name: "Your location",
-                        location: {
-                            latitude: initialLocation.coords.latitude,
-                            longitude: initialLocation.coords.longitude
+                        type: "SEARCH_PREDICTION",
+                        searchPrediction: {
+                            name: "Your location",
+                            location: {
+                                latitude: initialLocation.coords.latitude,
+                                longitude: initialLocation.coords.longitude
+                            }
                         }
                     }
                 ];
             }
             
-            newWaypoints.push(searchPrediction);
+            newWaypoints.push({
+                type: "SEARCH_PREDICTION",
+                searchPrediction
+            });
 
             setWaypoints(newWaypoints);
             
@@ -196,15 +222,51 @@ export default function Routes() {
 
     useEffect(() => {
         if(waypoints.length >= 2) {
-            getMapsRoutes(client, waypoints.map((waypoint) => waypoint.location)).then((result) => {
+            getMapsRoutes(client, waypoints.flatMap((waypoint) => {
+                if(waypoint.type === "SEARCH_PREDICTION")
+                    return waypoint.searchPrediction.location;
+                else if(waypoint.type === "PATH") {
+                    return [
+                        waypoint.path.route[0],
+                        waypoint.path.route[waypoint.path.route.length - 1]
+                    ];
+                }
+            })).then((result) => {
+                const route = result.routes[0];
+
+                let polyline = decode(route.polyline, 5).map((coordinate) => {
+                    return {
+                        latitude: coordinate[0],
+                        longitude: coordinate[1]
+                    };
+                });
+
+                waypoints.filter((waypoint) => waypoint.type === "PATH").forEach((waypoint) => {
+                    const startCoordinate = waypoint.path.route[0];
+                    const endCoordinate = waypoint.path.route[waypoint.path.route.length - 1];
+
+                    const startIndex = polyline.findIndex((coordinate) => coordinate.latitude === startCoordinate.latitude && coordinate.longitude === startCoordinate.longitude);
+                    const endIndex = polyline.findLastIndex((coordinate) => coordinate.latitude === endCoordinate.latitude && coordinate.longitude === endCoordinate.longitude);
+
+                    if(startIndex !== -1 && endIndex !== -1) {
+                        const startSection = polyline.slice(0, startIndex);
+                        const endSection = polyline.slice(endIndex, polyline.length);
+
+                        polyline = startSection.concat(waypoint.path.route, endSection);
+
+                        if(polyline.length !== startSection.length + waypoint.path.route.length + endSection.length)
+                            console.error("Something does not add up in the result polyline!");
+                        else
+                            console.log("Intercepted with custom route!");
+                    }
+                    else
+                        console.error("Failed to extract path route from returned route!");
+                });
+
+
                 setRoutes(result.routes.map((route) => {
                     return {
-                        polyline: decode(route.polyline, 5).map((coordinate) => {
-                            return {
-                                latitude: coordinate[0],
-                                longitude: coordinate[1]
-                            };
-                        }),
+                        polyline,
                         duration: route.duration,
                         distance: route.distance
                     };
@@ -215,7 +277,16 @@ export default function Routes() {
 
     useEffect(() => {
         if(waypoints.length && waypointsLayout) {
-            mapRef.current.fitToCoordinates(waypoints.flatMap((waypoint) => waypoint.location), {
+            mapRef.current.fitToCoordinates(waypoints.flatMap((waypoint) => {
+                if(waypoint.type === "SEARCH_PREDICTION")
+                    return waypoint.searchPrediction.location;
+                else if(waypoint.type === "PATH") {
+                    return [
+                        waypoint.path.route[0],
+                        waypoint.path.route[waypoint.path.route.length - 1]
+                    ];
+                }
+            }), {
                 animated: true,
                 edgePadding: {
                     left: 40,
@@ -226,6 +297,40 @@ export default function Routes() {
             });
         }
     }, [ waypointsLayout?.height, waypoints.length ]);
+
+    const handleDrawingUpdate = useCallback((state: DrawingState, polyline: DrawingPolyline) => {
+        if(state === "POLYLINE_UPDATE") 
+            setDrawingPolyline(polyline);
+        else if(state === "POLYLINE_FINISH") {
+            setDrawing(false);
+
+            getMapsRoutes(client, polyline).then((result) => {
+                const route = result.routes[0];
+
+                const newWaypoints = waypoints;
+
+                newWaypoints.push({
+                    type: "PATH",
+                    path: {
+                        distance: route.distance,
+                        duration: route.duration,
+                        original: polyline,
+                        route: decode(result.routes[0].polyline).map((coordinate) => {
+                            return {
+                                latitude: coordinate[0],
+                                longitude: coordinate[1]
+                            };
+                        })
+                    }
+                });
+    
+                setWaypoints(newWaypoints);
+
+                setDrawingPolyline(null);
+            });
+        }
+
+    }, [ waypoints ]);
 
     /*useEffect(() => {
         if(drawing) {
@@ -276,7 +381,7 @@ export default function Routes() {
                     customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
                     >
                     {(waypoints.length > 1) && routes.map((route, index) => (
-                        <Polyline key={index} coordinates={route.polyline} fillColor={"white"} strokeColor={"white"} strokeWidth={4}/>                    
+                        <Polyline key={index} coordinates={route.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4}/>                    
                     ))}
 
                     <Polyline coordinates={[...global.coordinates]} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
@@ -286,10 +391,14 @@ export default function Routes() {
                     {/*waypoints.map((waypoint, index) => (
                         <Marker key={index} coordinate={waypoint.location} pinColor={getWaypointColor(index, waypoints.length)}/>
                     ))*/}
+
+                    {(drawingPolyline) && (
+                        <Polyline coordinates={drawingPolyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin="round"/>
+                    )}
                 </MapView>
             )}
 
-            {(drawing) && (<DrawingOverlay/>)}
+            {(drawing) && (<DrawingOverlay mapRef={mapRef} onUpdate={handleDrawingUpdate}/>)}
 
             {(searchFocus) && (
                 <TouchableWithoutFeedback onPress={() => { searchRef.current.blur() }}>
@@ -450,7 +559,7 @@ export default function Routes() {
                     )
                 )}
 
-                {(!!waypoints.length && !searchFocus) && (
+                {(!!waypoints.length && !searchFocus && !drawing) && (
                     <View style={{
                         backgroundColor: theme.background,
 
@@ -493,7 +602,7 @@ export default function Routes() {
                                             </View>
 
                                             <View style={{ flexGrow: 1 }}>
-                                                <FormInput value={waypoint.name} iconRight={(
+                                                <FormInput value={(waypoint.type === "SEARCH_PREDICTION")?(waypoint.searchPrediction.name):("Custom path")} iconRight={(
                                                     <TouchableOpacity style={{
                                                         flexGrow: 1,
 

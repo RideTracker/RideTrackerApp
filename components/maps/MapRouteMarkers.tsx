@@ -10,6 +10,7 @@ import MapStartFinishMarker from "./MapStartFinishMarker";
 import MapStartMarker from "./MapStartMarker";
 import MapFinishMarker from "./MapFinishMarker";
 import MapIntermediateMarker from "./MapIntermediateMarker";
+import { RouteWaypoint } from "../../app/(root)/(auth)/(tabs)/(subscription)/routes";
 
 type MapRouteMarker = {
     id: string;
@@ -22,29 +23,39 @@ type MapRouteMarker = {
 };
 
 type MapRouteMarkersProps = {
-    waypoints: SearchPrediction[];
+    waypoints: RouteWaypoint[];
 };
 
-export function getMarkersFromWaypoints(waypoints: SearchPrediction[]) {
+export function getMarkersFromWaypoints(waypoints: RouteWaypoint[]) {
     const markers: MapRouteMarker[] = [];
 
-    waypoints.filter((waypoint) => waypoint.location).forEach((waypoint, index) => {
-        const marker = markers.find((marker) => {
-            return marker.name === waypoint.name;
-        });
-
+    waypoints.forEach((waypoint, index) => {
         const type = (index === 0)?("Start"):((index === waypoints.length - 1)?("Finish"):("Intermediate"));
 
-        if(!marker) {
+        if(waypoint.type === "SEARCH_PREDICTION") {
+            const marker = markers.find((marker) => {
+                return marker.name === waypoint.searchPrediction.name;
+            });
+    
+            if(!marker) {
+                markers.push({
+                    id: uuid.v4() as string,
+                    name: waypoint.searchPrediction.name,
+                    types: [ type ],
+                    location: waypoint.searchPrediction.location
+                });
+            }
+            else
+                marker.types.push(type)
+        }
+        else if(waypoint.type === "PATH") {
             markers.push({
                 id: uuid.v4() as string,
-                name: waypoint.name,
+                name: "Custom path",
                 types: [ type ],
-                location: waypoint.location
+                location: waypoint.path.original[waypoint.path.original.length - 1]
             });
         }
-        else
-            marker.types.push(type)
     });
 
     return markers;
