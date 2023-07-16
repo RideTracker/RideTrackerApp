@@ -129,10 +129,10 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
             else {
                 mapView.fitToCoordinates(points, {
                     edgePadding: {
-                        left: 10,
-                        top: 10,
-                        right: 10,
-                        bottom: 25
+                        left: 0,
+                        top: 0,
+                        right: 0,
+                        bottom: 5
                     },
                     animated: false
                 });
