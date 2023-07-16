@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { LayoutRectangle, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Stack, useFocusEffect, useRouter } from "expo-router";
 import { useMapStyle, useTheme } from "../../../../../utils/themes";
@@ -387,7 +387,11 @@ export default function Routes() {
                     customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
                     >
                     {(routes) && (
-                        <Polyline coordinates={routes.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4}/>                    
+                        <React.Fragment>
+                            <Polyline coordinates={routes.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4}/>                    
+
+                            <MapRouteMarkers waypoints={waypoints}/>
+                        </React.Fragment>
                     )}
 
                     <Polyline coordinates={[...global.coordinates]} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
