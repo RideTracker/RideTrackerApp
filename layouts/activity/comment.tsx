@@ -1,4 +1,4 @@
-import { Image, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Alert, Image, TouchableOpacity, View, ViewStyle } from "react-native";
 import { useTheme } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
 import { ParagraphText } from "../../components/texts/Paragraph";
@@ -99,13 +99,26 @@ export default function ActivityComment(props: ActivityCommentProps) {
 
                             {(comment.user.id === userData.user.id) && (
                                 <TouchableOpacity onPress={() => {
-                                    deleteActivityComment(client, activityId, comment.id).then((result) => {
-                                        if(result.success) {
-                                            router.replace(`/activities/${activityId}/comments/list`);
+                                    Alert.alert("Are you sure?", "Are you sure you want to delete your comment? This action is destructive", [
+                                        {
+                                            style: "cancel",
+                                            text: "Cancel"
+                                        },
+
+                                        {
+                                            style: "destructive",
+                                            text: "I am sure",
+                                            onPress: () => {
+                                                deleteActivityComment(client, activityId, comment.id).then((result) => {
+                                                    if(result.success) {
+                                                        router.replace(`/activities/${activityId}/comments/list`);
+                                                    }
+                                                });
+                                            }
                                         }
-                                    });
+                                    ]);
                                 }}>
-                                    <LinkText style={{ color: theme.red }}>Delete</LinkText>
+                                    <LinkText style={{ color: theme.red, fontWeight: "bold" }}>Delete</LinkText>
                                 </TouchableOpacity>
                             )}
 
