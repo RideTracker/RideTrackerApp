@@ -218,7 +218,7 @@ export default function Routes() {
             setSearchPredictions([]);
             searchRef.current.clear();
         }
-    }, [ client, searchRef, initialLocation ]);
+    }, [ client, searchRef, initialLocation, waypoints ]);
 
     useEffect(() => {
         if(waypoints.length >= 2) {
@@ -277,6 +277,8 @@ export default function Routes() {
                 distance: waypoints[0].path.distance
             });
         }
+        else
+            setRoutes(null);
     }, [ waypoints.length ]);
 
     useEffect(() => {
