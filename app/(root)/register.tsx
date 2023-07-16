@@ -51,14 +51,14 @@ export default function Register() {
                         email,
                         key: response.token.key
                     })));
-    
+
                     dispatch(setUserData({
                         email,
                         token: response.token,
                         user: response.user
                     }));
     
-                    router.push("/");
+                    router.push("/avatar-editor/");
                 }
                 else if(response.verification) {
                     dispatch(setUserData({
@@ -142,11 +142,22 @@ export default function Register() {
                         }}/>
                     </SafeAreaView>
 
-                    <Button primary={false} label={!submitting && "Register"} onPress={() => setSubmitting(true)}>
+                    <Button primary={true} label={!submitting && "Register"} onPress={() => setSubmitting(true)}>
                         {(submitting) && (
                             <ActivityIndicator size={24}/>
                         )}
                     </Button>
+
+                    {(Constants.expoConfig.extra.environment === "dev") && (
+                        <Button primary={false} label="Autofill with mock data" onPress={() => {
+                            setFirstname("John");
+                            setLastname("Mock");
+                            setEmail(Math.round(Math.random() * 10000).toString() + "+mock@ridetracker.app");
+                            setPassword("123456");
+
+                            setSubmitting(true);
+                        }}/>
+                    )}
                 </View>
             </ScrollView>
         </View>
