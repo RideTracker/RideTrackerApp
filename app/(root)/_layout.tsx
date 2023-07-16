@@ -22,6 +22,11 @@ export default function Layout() {
                 headerShown: true,
                 title: "Register with email address"
             }}/>
+
+            <Stack.Screen name="(public)/update" options={{
+                title: "Available update",
+                presentation: "modal"
+            }}/>
         </Stack>
     );
 }

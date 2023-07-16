@@ -100,17 +100,32 @@ export function Provider(props: ProviderProps) {
             return;
             
         const inAuthGroup = segments.includes("(auth)");
+        const inPublicGroup = segments.includes("(public)");
         const inSubscriptionGroup = segments.includes("(subscription)");
 
         if((!userData?.token || !client.token) && inAuthGroup)
             router.push("/login");
         else if (userData?.token && client.token) {
-            if(!inAuthGroup)
+            if(!inAuthGroup && !inPublicGroup)
                 router.replace("/");
             else if(inSubscriptionGroup && !userData.user?.subscribed)
                 router.replace("/");
         }
     }, [ router, ready, userData?.token, segments, client.token ]);
+
+    useEffect(() => {
+        if(ready) {
+            getStatus(client, Platform.OS).then((result) => {
+                if(result.success) {
+                    if(result.supersededBy) {
+                        if(!userData.updateTimeout || Date.now() >= userData.updateTimeout) {
+                            router.push("/update");
+                        }
+                    }
+                }
+            });
+        }
+    }, [ ready ]);
 
     if(!ready)
         return null;
