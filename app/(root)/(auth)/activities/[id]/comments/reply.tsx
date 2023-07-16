@@ -81,7 +81,7 @@ export default function ActivityCommentsPage() {
                         }}/>
                     </View>
 
-                    <TouchableOpacity style={{
+                    <TouchableOpacity disabled={submitting || !text.length} style={{
                         height: 30,
                         width: 30,
 
