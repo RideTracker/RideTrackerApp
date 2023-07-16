@@ -7,6 +7,7 @@ import { getActivityById, getBike, updateActivity } from "@ridetracker/ridetrack
 import { useClient } from "../../../../../modules/useClient";
 import Button from "../../../../../components/Button";
 import { useTheme } from "../../../../../utils/themes";
+import { HeaderText } from "../../../../../components/texts/Header";
 
 export default function ActivityEditPage() {
     const { id } = useSearchParams();
@@ -42,14 +43,18 @@ export default function ActivityEditPage() {
                     gap: 10,
                     padding: 10
                 }}>
-                    <ActivityEdit properties={properties} onChange={(partialProperties) => {
-                        setProperties({
-                            ...properties,
-                            ...partialProperties
-                        });
-                    }}/>
+                    <View>
+                        <HeaderText>Edit activity</HeaderText>
+                        
+                        <ActivityEdit properties={properties} onChange={(partialProperties) => {
+                            setProperties({
+                                ...properties,
+                                ...partialProperties
+                            });
+                        }}/>
+                    </View>
 
-                    <Button primary={true} label={(!submitting) && ("Update activity")} onPress={() => {
+                    <Button primary={true} label={(!submitting) && ("Update")} onPress={() => {
                         setSubmitting(true);
 
                         updateActivity(client, id as string, properties.visibility, properties.title, properties.description, properties.bike?.id).then((result) => {
