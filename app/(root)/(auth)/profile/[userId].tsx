@@ -130,7 +130,7 @@ export default function Profile() {
                 )}
             </View>
 
-            <Tabs initialTab={"activities"} style={{ flex: 1, paddingBottom: 80 }}>
+            <Tabs initialTab={"activities"} style={{ flex: 1, paddingBottom: 50 }}>
                 <TabsPage id={"activities"} title={"Activities"}>
                     {(profile) && (<ProfileActivities profile={profile}/>)}
                 </TabsPage>
