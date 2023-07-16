@@ -28,7 +28,12 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
                     <View style={{
                         flexDirection: "row",
 
-                        paddingHorizontal: 10
+                        paddingHorizontal: 10,
+                        
+                        borderBottomColor: theme.placeholder,                        
+                        borderBottomWidth: 2,
+
+                        minWidth: "100%"
                     }}>
                         {React.Children.map(children, (child, index) => (
                             <TouchableOpacity key={index} style={{
@@ -36,6 +41,8 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
                                 paddingVertical: 15,
 
                                 paddingHorizontal: 15,
+
+                                marginBottom: -2,
 
                                 borderBottomColor: (tab === child?.props?.id)?(theme.color):(theme.placeholder),
                                 borderBottomWidth: 2
