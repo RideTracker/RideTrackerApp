@@ -17,7 +17,7 @@ import FormInput from "../../../../../../components/FormInput";
 export default function ActivityCommentsPage() {
     const client = useClient();
     const theme = useTheme();
-    const { id } = useSearchParams();
+    const { id, highlightCommentId } = useSearchParams();
     const internetConnection = useInternetConnection();
     const userData = useUser();
     const router = useRouter();
@@ -41,15 +41,15 @@ export default function ActivityCommentsPage() {
                 {(comments)?(
                     <View style={{ maxHeight: 300 }}>
                         <ScrollView>
-                            <View style={{ gap: 10 }}>
+                            <View>
                                 {comments.filter((comment) => !comment.parent).map((comment) => (
                                     <React.Fragment key={comment.id}>
-                                        <ActivityComment activityId={id as string} comment={comment}/>
+                                        <ActivityComment activityId={id as string} comment={comment} highlight={highlightCommentId === comment.id}/>
 
                                         <View style={{ marginLeft: 10, borderLeftWidth: 1, borderLeftColor: theme.border }}>
-                                            <View style={{ paddingLeft: 10, gap: 10 }}>
+                                            <View style={{ paddingLeft: 10 }}>
                                                 {comments.filter((childComment) => childComment.parent === comment.id).sort((a, b) => a.timestamp - b.timestamp).map((childComment) => (
-                                                    <ActivityComment key={childComment.id} activityId={id as string} comment={childComment} child={true}/>
+                                                    <ActivityComment key={childComment.id} activityId={id as string} comment={childComment} highlight={highlightCommentId === comment.id} child={true}/>
                                                 ))}
                                             </View>
                                         </View>

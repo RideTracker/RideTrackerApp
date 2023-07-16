@@ -1,4 +1,4 @@
-import { Alert, Image, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Alert, Image, TouchableOpacity, View, ViewStyle, Share } from "react-native";
 import { useTheme } from "../../utils/themes";
 import { timeSince } from "../../utils/time";
 import { ParagraphText } from "../../components/texts/Paragraph";
@@ -9,6 +9,7 @@ import { useRouter } from "expo-router";
 import { LinkText } from "../../components/texts/Link";
 import { deleteActivityComment } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../modules/useClient";
+import { getFormattedSentence } from "../../controllers/getFormattedSentence";
 
 type ActivityCommentProps = {
     activityId?: string;
@@ -28,11 +29,10 @@ type ActivityCommentProps = {
         timestamp: number;
     };
     child?: boolean;
+    highlight?: boolean;
 };
 
-export default function ActivityComment(props: ActivityCommentProps) {
-    const { activityId, style, comment, child } = props;
-
+export default function ActivityComment({ activityId, style, comment, child, highlight }: ActivityCommentProps) {
     const userData = useUser();
     const theme = useTheme();
     const router = useRouter();
@@ -43,7 +43,11 @@ export default function ActivityComment(props: ActivityCommentProps) {
             <View style={{
                 flexDirection: "row",
                 paddingHorizontal: 10,
-                gap: 10
+                gap: 10,
+
+                backgroundColor: (highlight)?("rgba(187,135,252, .15)"):("transparent"),
+                padding: 10,
+                borderRadius: 10
             }}>
                 <View style={{ gap: 5, justifyContent: "center", flexGrow: 1 }}>
                     <View style={{
@@ -94,6 +98,19 @@ export default function ActivityComment(props: ActivityCommentProps) {
                             {(!comment.parent) && (
                                 <TouchableOpacity onPress={() => router.push(`/activities/${activityId}/comments/reply?commentId=${comment.id}`)}>
                                     <LinkText>Reply</LinkText>
+                                </TouchableOpacity>
+                            )}
+
+                            {(!comment.parent) && (
+                                <TouchableOpacity onPress={() => {
+                                    Share.share({
+                                        title: `"${getFormattedSentence(comment.message, 80)}" by ${comment.user.name} on the RideTracker platform!`,
+                                        message: `https://ridetracker.app/activities/${activityId}/comments?highlightCommentId=${comment.id}`
+                                    }, {
+                                        dialogTitle: `Share ${comment.user.name}'s comment link to others!`
+                                    });
+                                }}>
+                                    <LinkText style={{ color: "grey" }}>Share</LinkText>
                                 </TouchableOpacity>
                             )}
 
