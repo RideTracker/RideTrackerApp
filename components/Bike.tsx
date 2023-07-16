@@ -65,7 +65,7 @@ export default function Bike(props: BikeProps) {
                                         uri: `${Constants.expoConfig.extra.images}/${bike.image}/RideTrackerBike`
                                     }}/>
                             ):(
-                                <View style={{ flex: 1, padding: 10, justifyContent: "center", alignItems: "center", opacity: .5 }}>
+                                <View style={{ flex: 1, padding: 10, justifyContent: "center", alignItems: "center" }}>
                                     <BikeType type={bike.model} withName={true} color="grey"/>
                                 </View>
                             )

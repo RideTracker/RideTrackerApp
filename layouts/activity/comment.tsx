@@ -89,7 +89,7 @@ export default function ActivityComment(props: ActivityCommentProps) {
                         <View style={{
                             flexDirection: "row",
                             alignItems: "baseline",
-                            gap: 5
+                            gap: 10
                         }}>
                             {(!comment.parent) && (
                                 <TouchableOpacity onPress={() => router.push(`/activities/${activityId}/comments/reply?commentId=${comment.id}`)}>
