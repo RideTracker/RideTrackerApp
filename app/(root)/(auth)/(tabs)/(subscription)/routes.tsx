@@ -78,7 +78,7 @@ export default function Routes() {
         polyline: { latitude: number; longitude: number; }[];
         distance: number;
         duration: string;
-    }[]>([]);
+    }>(null);
     const [ sorting, setSorting ] = useState<boolean>(false);
     const [ permissions, setPermissions ] = useState<Location.LocationPermissionResponse>(null);
 
@@ -227,8 +227,8 @@ export default function Routes() {
                     return waypoint.searchPrediction.location;
                 else if(waypoint.type === "PATH") {
                     return [
-                        waypoint.path.route[0],
-                        waypoint.path.route[waypoint.path.route.length - 1]
+                        waypoint.path.original[0],
+                        waypoint.path.original[waypoint.path.original.length - 1]
                     ];
                 }
             })).then((result) => {
@@ -263,15 +263,19 @@ export default function Routes() {
                         console.error("Failed to extract path route from returned route!");
                 });
 
-
-                setRoutes(result.routes.map((route) => {
-                    return {
-                        polyline,
-                        duration: route.duration,
-                        distance: route.distance
-                    };
-                }));
+                setRoutes({
+                    polyline,
+                    duration: route.duration,
+                    distance: route.distance
+                });
             })
+        }
+        else if(waypoints.length === 1 && waypoints[0].type === "PATH") {
+            setRoutes({
+                polyline: waypoints[0].path.route,
+                duration: waypoints[0].path.duration,
+                distance: waypoints[0].path.distance
+            });
         }
     }, [ waypoints.length ]);
 
@@ -380,13 +384,11 @@ export default function Routes() {
                     }}*/
                     customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
                     >
-                    {(waypoints.length > 1) && routes.map((route, index) => (
-                        <Polyline key={index} coordinates={route.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4}/>                    
-                    ))}
+                    {(routes) && (
+                        <Polyline coordinates={routes.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4}/>                    
+                    )}
 
                     <Polyline coordinates={[...global.coordinates]} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
-
-                    <MapRouteMarkers waypoints={waypoints}/>
 
                     {/*waypoints.map((waypoint, index) => (
                         <Marker key={index} coordinate={waypoint.location} pinColor={getWaypointColor(index, waypoints.length)}/>
@@ -571,11 +573,11 @@ export default function Routes() {
                     }} onLayout={(event) => {
                         setWaypointsLayout(event.nativeEvent.layout);
                     }}>
-                        {(!!waypoints.length && routes.length > 0) && (
+                        {(!!waypoints.length && routes) && (
                             <View style={{ flexDirection: "row" }}>
-                                <HeaderText>Est. {getFormattedDuration(getDurationAsNumber(routes.flatMap((route) => route.duration)))}</HeaderText>
+                                <HeaderText>Est. {getFormattedDuration(getDurationAsNumber(routes.duration))}</HeaderText>
 
-                                <HeaderText style={{ color: "grey" }}> ({routes.flatMap((route) => Math.round(route.distance / 1000) + " km").join(', ')})</HeaderText>
+                                <HeaderText style={{ color: "grey" }}> ({Math.round(routes.distance / 1000) + " km"})</HeaderText>
                             </View>
                         )}
 
