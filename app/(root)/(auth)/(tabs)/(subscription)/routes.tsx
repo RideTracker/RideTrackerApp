@@ -611,16 +611,47 @@ export default function Routes() {
 
                                             <View style={{ flexGrow: 1 }}>
                                                 <FormInput value={(waypoint.type === "SEARCH_PREDICTION")?(waypoint.searchPrediction.name):("Custom path")} iconRight={(
-                                                    <TouchableOpacity style={{
-                                                        flexGrow: 1,
+                                                    (!sorting)?(
+                                                        <TouchableOpacity style={{
+                                                            flexGrow: 1,
 
-                                                        justifyContent: "center",
-                                                        alignItems: "center"
-                                                    }} onPress={() => {
-                                                        setWaypoints(waypoints.filter((_, itemIndex) => itemIndex !== index));
-                                                    }}>
-                                                        <FontAwesome5 name={"times"} size={24} color={theme.color}/>
-                                                    </TouchableOpacity>
+                                                            justifyContent: "center",
+                                                            alignItems: "center"
+                                                        }} onPress={() => {
+                                                            setWaypoints(waypoints.filter((_, itemIndex) => itemIndex !== index));
+                                                        }}>
+                                                            <FontAwesome5 name={"times"} size={24} color={theme.color}/>
+                                                        </TouchableOpacity>
+                                                    ):(
+                                                        <View style={{
+                                                            flexGrow: 1,
+                                                            flexDirection: "column"
+                                                        }}>
+                                                            <TouchableOpacity disabled={index === 0} style={{
+                                                                justifyContent: "center",
+                                                                alignItems: "center"
+                                                            }} onPress={() => {
+                                                                const newWaypoints = [ ...waypoints ];
+                                                                newWaypoints.splice(index, 0, newWaypoints.splice(index - 1, 1)[0]);
+
+                                                                setWaypoints(newWaypoints);
+                                                            }}>
+                                                                <FontAwesome5 name={"caret-up"} size={12} color={(index === 0)?("grey"):(theme.color)}/>
+                                                            </TouchableOpacity>
+                                                            
+                                                            <TouchableOpacity disabled={index === waypoints.length - 1} style={{
+                                                                justifyContent: "center",
+                                                                alignItems: "center"
+                                                            }} onPress={() => {
+                                                                const newWaypoints = [ ...waypoints ];
+                                                                newWaypoints.splice(index, 0, newWaypoints.splice(index + 1, 1)[0]);
+
+                                                                setWaypoints(newWaypoints);
+                                                            }}>
+                                                                <FontAwesome5 name={"caret-down"} size={12} color={(index === waypoints.length - 1)?("grey"):(theme.color)}/>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    )
                                                 )} props={{
                                                     editable: false
                                                 }}/>
@@ -632,9 +663,15 @@ export default function Routes() {
                         </ScrollView>
 
                         {(!!waypoints.length) && (
-                            <Button primary={true} label="Open in Google Maps" onPress={() => {
-                                Linking.openURL(getGoogleMapsDirectionsUrl(waypoints));
-                            }}/>
+                            (!sorting)?(
+                                <Button primary={true} label="Open in Google Maps" onPress={() => {
+                                    Linking.openURL(getGoogleMapsDirectionsUrl(waypoints));
+                                }}/>
+                            ):(
+                                <Button primary={false} label="Save order" onPress={() => {
+                                    setSorting(false);
+                                }}/>
+                            )
                         )}
                     </View>
                 )}
