@@ -7,12 +7,15 @@ import Constants from "expo-constants";
 import { useUser } from "../../modules/user/useUser";
 import { useRouter } from "expo-router";
 import { LinkText } from "../../components/texts/Link";
+import { deleteActivityComment } from "@ridetracker/ridetrackerclient";
+import { useClient } from "../../modules/useClient";
 
 type ActivityCommentProps = {
     activityId?: string;
     style?: ViewStyle;
     comment?: {
         user?: {
+            id: string;
             avatar: string;
             name: string;
         };
@@ -33,6 +36,7 @@ export default function ActivityComment(props: ActivityCommentProps) {
     const userData = useUser();
     const theme = useTheme();
     const router = useRouter();
+    const client = useClient();
     
     return (
         <View style={style}>
@@ -81,15 +85,29 @@ export default function ActivityComment(props: ActivityCommentProps) {
                         {(comment)?(comment.message):("This is a comment!")}
                     </ParagraphText>
 
-                    {(comment && activityId && !comment.parent) && (
+                    {(comment && activityId) && (
                         <View style={{
                             flexDirection: "row",
                             alignItems: "baseline",
                             gap: 5
                         }}>
-                            <TouchableOpacity onPress={() => router.push(`/activities/${activityId}/comments/reply?commentId=${comment.id}`)}>
-                                <LinkText>Reply</LinkText>
-                            </TouchableOpacity>
+                            {(!comment.parent) && (
+                                <TouchableOpacity onPress={() => router.push(`/activities/${activityId}/comments/reply?commentId=${comment.id}`)}>
+                                    <LinkText>Reply</LinkText>
+                                </TouchableOpacity>
+                            )}
+
+                            {(comment.user.id === userData.user.id) && (
+                                <TouchableOpacity onPress={() => {
+                                    deleteActivityComment(client, activityId, comment.id).then((result) => {
+                                        if(result.success) {
+                                            router.replace(`/activities/${activityId}/comments/list`);
+                                        }
+                                    });
+                                }}>
+                                    <LinkText style={{ color: theme.red }}>Delete</LinkText>
+                                </TouchableOpacity>
+                            )}
 
                             {(!!comment?.comments_count) && (<ParagraphText style={{ color: "silver" }}>{comment.comments_count} replies</ParagraphText>)}
                         </View>
