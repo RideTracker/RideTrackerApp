@@ -24,7 +24,7 @@ type MapRouteMarker = {
 };
 
 type MapRouteMarkersProps = {
-    waypoints: RouteWaypoint[];
+    waypoints: string;
 };
 
 export function getMarkersFromWaypoints(waypoints: RouteWaypoint[]) {
@@ -106,10 +106,10 @@ export function getMarkersFromWaypoints(waypoints: RouteWaypoint[]) {
 };
 
 export default function MapRouteMarkers({ waypoints }: MapRouteMarkersProps) {
-    const [ markers, setMarkers ] = useState<MapRouteMarker[]>(getMarkersFromWaypoints(waypoints));
+    const [ markers, setMarkers ] = useState<MapRouteMarker[]>(getMarkersFromWaypoints(JSON.parse(waypoints)));
 
     useEffect(() => {
-        setMarkers(getMarkersFromWaypoints(waypoints));
+        setMarkers(getMarkersFromWaypoints(JSON.parse(waypoints)));
     }, [ waypoints ]);
 
     return (
