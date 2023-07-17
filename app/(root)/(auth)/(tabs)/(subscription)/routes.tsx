@@ -20,6 +20,7 @@ import RouteEditor from "../../../../../components/RouteEditor";
 import Tabs, { TabsPage } from "../../../../../components/Tabs";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import { RoutesList } from "../../../../../components/RoutesList";
+import ResizableView from "../../../../../components/ResizableView";
 
 global.coordinates = [];
 
@@ -288,22 +289,18 @@ export default function Routes() {
                         backgroundColor: theme.background,
 
                         borderTopLeftRadius: 10,
-                        borderTopRightRadius: 10,
-
-                        gap: 10
+                        borderTopRightRadius: 10
                     }}>
-                        <View style={{ flex: 1 }}>
+                        <ResizableView initialHeight={250} headerStyle={{ marginBottom: -10 }}>
                             <Tabs initialTab="routes">
-                                <TabsPage id="routes" title="My routes" style={{ height: 250 }}>
+                                <TabsPage id="routes" title="My routes" style={{ flex: 1 }}>
                                     <RoutesList/>
                                 </TabsPage>
 
-                                <TabsPage id={"global"} title="Global routes" style={{ height: 250 }}>
-                                    <View style={{ padding: 10 }}>
-                                    </View>
+                                <TabsPage id={"global"} title="Global routes" style={{ flex: 1 }}>
                                 </TabsPage>
                             </Tabs>
-                        </View>
+                        </ResizableView>
                     </View>
                 )}
             </RouteEditor>
