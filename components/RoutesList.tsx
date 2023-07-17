@@ -34,6 +34,8 @@ export function RoutesList({}: RoutesListProps) {
 
                 setItems((reset)?(result.routes):(items.concat(result.routes)));
                 setOffset(result.offset);
+
+                console.log("reset? " + reset);
                 
                 return (result.routes.length === result.limit);
             }}

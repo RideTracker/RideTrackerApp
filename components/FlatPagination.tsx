@@ -21,8 +21,10 @@ export default function FlatPagination({ style, data, render, paginate }: FlatPl
         handleEndReached(true);
     }, []);
 
-    const handleEndReached = useCallback((reset: boolean) => {
+    const handleEndReached = useCallback((reset?: boolean) => {
         if((!reset && !endReachedDuringMomentum && !reachedEnd) || reset) {
+            console.log("Requesting pagination");
+
             paginate(reset).then((length: boolean) => {
                 setRefreshing(false);
     
@@ -33,29 +35,43 @@ export default function FlatPagination({ style, data, render, paginate }: FlatPl
                     return;
                 }
 
-                console.log("Paginating with new items in flatlist");
+                console.log("There's more to load");
+            }).catch((error) => {
+                setRefreshing(false);
+
+                console.info("Error occured, disabling refresh");
+                console.error(error);
             });
 
             setEndReachedDuringMomentum(true);
         }
-    }, [ endReachedDuringMomentum, refreshing ]);
+    }, [ endReachedDuringMomentum, reachedEnd ]);
 
     return (
         <FlatList
             data={data}
             renderItem={render}
-            style={style}
+            style={{
+                marginBottom: 20,
+
+                ...style
+            }}
             contentContainerStyle={{
                 gap: 10,
                 paddingBottom: 20
             }}
 
-            ListFooterComponent={reachedEnd && (
-                <View style={{ alignItems: "center", padding: 10 }}>
-                    <ParagraphText>You've reached the end!</ParagraphText>
+            ListFooterComponent={(
+                <View>
+                    {(reachedEnd) && (
+                        <View style={{ alignItems: "center", padding: 10 }}>
+                            <ParagraphText>You've reached the end!</ParagraphText>
+                        </View>
+                    )}
                 </View>
             )}
 
+            onEndReachedThreshold={0.2}
             onEndReached={() => handleEndReached(false)}
             onMomentumScrollBegin={() => setEndReachedDuringMomentum(false)}
 
