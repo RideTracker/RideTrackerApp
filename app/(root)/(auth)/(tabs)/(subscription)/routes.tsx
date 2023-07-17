@@ -5,7 +5,7 @@ import { useMapStyle, useTheme } from "../../../../../utils/themes";
 import MapView, { Polyline } from "react-native-maps";
 import { HeaderText } from "../../../../../components/texts/Header";
 import * as Location from "expo-location";
-import { createRoute, getMapsRoutes } from "@ridetracker/ridetrackerclient";
+import { GetRoutesByUserFeedResponse, createRoute, getMapsRoutes } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../../modules/useClient";
 import { useUser } from "../../../../../modules/user/useUser";
 import { SearchPrediction } from "../../../../../models/SearchPrediction";
@@ -19,8 +19,9 @@ import { DrawingPolyline } from "../../../../../components/DrawingOverlay";
 import RouteEditor from "../../../../../components/RouteEditor";
 import Tabs, { TabsPage } from "../../../../../components/Tabs";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
-import { RoutesList } from "../../../../../components/RoutesList";
+import { RouteListRouteData, RoutesList } from "../../../../../components/RoutesList";
 import ResizableView from "../../../../../components/ResizableView";
+import getJsonColor from "../../../../../controllers/getJsonColor";
 
 global.coordinates = [];
 
@@ -49,7 +50,7 @@ export default function Routes() {
     const [ drawingPolyline, setDrawingPolyline ] = useState<DrawingPolyline>(null);
 
     const [ screen ] = useState<ScaledSize>(Dimensions.get("screen"));
-    const [ height, setHeight ] = useState<number>(null);
+    const [ viewableRoutes, setViewableRoutes ] = useState<RouteListRouteData[]>([]);
     const [ focus, setFocus ] = useState<boolean>(false);
     const [ initialLocation, setInitialLocation ] = useState(null);
     const [ searchLayout, setSearchLayout ] = useState<LayoutRectangle>(null);
@@ -180,6 +181,22 @@ export default function Routes() {
         }
     }, [ waypointsLayout?.height, waypoints.length ]);
 
+    useEffect(() => {
+        if(!waypoints.length && viewableRoutes.length) {
+            mapRef.current.fitToCoordinates(viewableRoutes.flatMap((route) => {
+                return route.decodedPolyline;
+            }), {
+                animated: true,
+                edgePadding: {
+                    left: 40,
+                    top: 10 + ((searchLayout)?(searchLayout.y + searchLayout.height):(0)),
+                    right: 40,
+                    bottom: 10 + 40 + ((waypointsLayout)?(waypointsLayout.height):(0))
+                }
+            });
+        }
+    }, [ viewableRoutes ]);
+
 
     /*useEffect(() => {
         if(drawing) {
@@ -245,6 +262,17 @@ export default function Routes() {
                     {(drawingPolyline) && (
                         <Polyline coordinates={drawingPolyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin="round"/>
                     )}
+
+                    {viewableRoutes.map((route) => (
+                        <Polyline
+                            key={route.id}
+                            coordinates={route.decodedPolyline}
+                            fillColor={getJsonColor(route.color, theme)}
+                            strokeColor={getJsonColor(route.color, theme)}
+                            strokeWidth={4}
+                            lineJoin="round"
+                        />
+                    ))}
                 </MapView>
             )}
 
@@ -292,11 +320,11 @@ export default function Routes() {
 
                         borderTopLeftRadius: 10,
                         borderTopRightRadius: 10
-                    }}>
+                    }} onLayout={(event) => setWaypointsLayout(event.nativeEvent.layout)}>
                         <ResizableView steps={[ 0, 0.3, 0.5 ]} initialHeight={screen.height * 0.3} headerStyle={{ marginBottom: -10 }}>
                             <Tabs initialTab="routes">
                                 <TabsPage id="routes" title="My routes" style={{ flex: 1 }}>
-                                    <RoutesList/>
+                                    <RoutesList onViewableRoutesChanged={(routes) => setViewableRoutes(routes)}/>
                                 </TabsPage>
 
                                 <TabsPage id={"global"} title="Global routes" style={{ flex: 1 }}>

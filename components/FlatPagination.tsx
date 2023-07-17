@@ -8,9 +8,10 @@ export type FlatPlaginationProps = {
     data: any[];
     render: (item: FlatPlaginationProps["data"][0]) => React.ReactElement | null;
     paginate: (reset: boolean) => Promise<boolean>;
+    onViewableItemsChanged?: (items: FlatPlaginationProps["data"], changed: FlatPlaginationProps["data"]) => void;
 };
 
-export default function FlatPagination({ style, data, render, paginate }: FlatPlaginationProps) {
+export default function FlatPagination({ style, data, render, paginate, onViewableItemsChanged }: FlatPlaginationProps) {
     const theme = useTheme();
 
     const [ reachedEnd, setReachedEnd ] = useState<boolean>(false);
@@ -47,6 +48,10 @@ export default function FlatPagination({ style, data, render, paginate }: FlatPl
         }
     }, [ endReachedDuringMomentum, reachedEnd ]);
 
+    const handleViewableItemsChanged = useCallback((info) => {
+        onViewableItemsChanged?.(info.viewableItems.map((item) => item.item), info.changed.map((item) => item.item));
+    }, []);
+
     return (
         <FlatList
             data={data}
@@ -60,6 +65,7 @@ export default function FlatPagination({ style, data, render, paginate }: FlatPl
                 gap: 10,
                 paddingBottom: 20
             }}
+            onViewableItemsChanged={handleViewableItemsChanged}
 
             ListFooterComponent={(
                 <View>

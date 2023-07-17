@@ -12,9 +12,11 @@ import { BikeActivitySummary } from "./BikeActivitySummary";
 import { CaptionText } from "./texts/Caption";
 import getFormattedDuration from "../controllers/getFormattedDuration";
 import getDurationAsNumber from "../controllers/getDurationAsNumber";
+import { RouteListRouteData } from "./RoutesList";
+import getJsonColor from "../controllers/getJsonColor";
 
 export type RoutesListItemProps = {
-    route: GetRoutesByUserFeedResponse["routes"][0];
+    route: RouteListRouteData;
 };
 
 export function RoutesListItem({ route }: RoutesListItemProps) {
@@ -25,16 +27,6 @@ export function RoutesListItem({ route }: RoutesListItemProps) {
     const mapStyle = useMapStyle();
 
     const mapViewRef = useRef<MapView>();
-
-    const [ coordinates ] = useState<{
-        latitude: number;
-        longitude: number;
-    }[]>(decode(route.polyline).map((item) => { 
-        return {
-            latitude: item[0],
-            longitude: item[1]
-        };
-    }));
 
     return (
         <View style={{
@@ -55,9 +47,9 @@ export function RoutesListItem({ route }: RoutesListItemProps) {
                     pitchEnabled={false}
                     rotateEnabled={false}
                     scrollEnabled={false}
-                    onMapReady={() => mapViewRef.current.fitToCoordinates(coordinates, { animated: false })}
+                    onMapReady={() => mapViewRef.current.fitToCoordinates(route.decodedPolyline, { animated: false })}
                     >
-                    <Polyline coordinates={coordinates} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={2}/>
+                    <Polyline coordinates={route.decodedPolyline} fillColor={getJsonColor(route.color, theme)} strokeColor={getJsonColor(route.color, theme)} strokeWidth={4}/>
                 </MapView>
             </View>
 
