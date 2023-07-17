@@ -1,14 +1,16 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { View, ViewStyle, LayoutRectangle, Dimensions, ScaledSize } from "react-native";
 import { useTheme } from "../utils/themes";
 
 export type ResizableViewProps = {
     initialHeight: number;
+    height?: number;
+    onHeight?: (height: number) => void;
     headerStyle?: ViewStyle;
     children: ReactNode;
 }
 
-export default function ResizableView({ initialHeight, headerStyle, children }: ResizableViewProps) {
+export default function ResizableView({ initialHeight, headerStyle, children, height, onHeight }: ResizableViewProps) {
     const theme = useTheme();
 
     const [ screen ] = useState<ScaledSize>(Dimensions.get("screen"));
@@ -19,10 +21,10 @@ export default function ResizableView({ initialHeight, headerStyle, children }: 
         new: number;
     }>({ current: 0, new: 0 });
 
-    let height = Math.min(Math.max((layout)?(layout.height):(0), initialHeight - (offsets.current + offsets.new)), screen.height * 0.5);
+    let currentHeight = Math.min(Math.max((layout)?(layout.height):(0), (height ?? initialHeight) - (offsets.current + offsets.new)), screen.height * 0.5);
 
-    if(Math.abs(initialHeight - height) < 20)
-        height = initialHeight;
+    if(Math.abs(initialHeight - currentHeight) < 20)
+        currentHeight = initialHeight;
 
     return (
         <View style={{
@@ -54,7 +56,14 @@ export default function ResizableView({ initialHeight, headerStyle, children }: 
                         current: offsets.current + (event.nativeEvent.pageY - start),
                         new: 0
                     });
+
                     setStart(null);
+
+                    if(onHeight) {
+                        let newHeight = Math.min(Math.max((layout)?(layout.height):(0), (height ?? initialHeight) - (offsets.current + (event.nativeEvent.pageY - start))), screen.height * 0.5);
+
+                        onHeight(newHeight);
+                    }
                 }}
                 onLayout={(event) => {
                     if(!layout)
@@ -71,7 +80,7 @@ export default function ResizableView({ initialHeight, headerStyle, children }: 
                 }}/>
             </View>
 
-            <View style={{ height }}>
+            <View style={{ height: currentHeight }}>
                 {children}
             </View>
         </View>

@@ -48,6 +48,7 @@ export default function Routes() {
 
     const [ drawingPolyline, setDrawingPolyline ] = useState<DrawingPolyline>(null);
 
+    const [ height, setHeight ] = useState<number>(null);
     const [ focus, setFocus ] = useState<boolean>(false);
     const [ initialLocation, setInitialLocation ] = useState(null);
     const [ searchLayout, setSearchLayout ] = useState<LayoutRectangle>(null);
@@ -291,7 +292,7 @@ export default function Routes() {
                         borderTopLeftRadius: 10,
                         borderTopRightRadius: 10
                     }}>
-                        <ResizableView initialHeight={250} headerStyle={{ marginBottom: -10 }}>
+                        <ResizableView initialHeight={250} height={height} onHeight={(height) => setHeight(height)} headerStyle={{ marginBottom: -10 }}>
                             <Tabs initialTab="routes">
                                 <TabsPage id="routes" title="My routes" style={{ flex: 1 }}>
                                     <RoutesList/>
