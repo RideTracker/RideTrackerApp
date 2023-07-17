@@ -52,6 +52,7 @@ export default function Routes() {
     const [ screen ] = useState<ScaledSize>(Dimensions.get("screen"));
     const [ viewableRoutes, setViewableRoutes ] = useState<RouteListRouteData[]>([]);
     const [ focus, setFocus ] = useState<boolean>(false);
+    const [ editorActive, setEditorActive ] = useState<boolean>(false);
     const [ initialLocation, setInitialLocation ] = useState(null);
     const [ searchLayout, setSearchLayout ] = useState<LayoutRectangle>(null);
     const [ mapLayout, setMapLayout ] = useState<LayoutRectangle>(null);
@@ -263,7 +264,7 @@ export default function Routes() {
                         <Polyline coordinates={drawingPolyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin="round"/>
                     )}
 
-                    {viewableRoutes.map((route) => (
+                    {(!editorActive) && viewableRoutes.map((route) => (
                         <Polyline
                             key={route.id}
                             coordinates={route.decodedPolyline}
@@ -278,6 +279,7 @@ export default function Routes() {
 
             <RouteEditor
                 mapRef={mapRef}
+                onActive={(active) => setEditorActive(active)}
                 mapLayout={mapLayout}
                 initialLocation={initialLocation}
                 waypoints={waypoints}

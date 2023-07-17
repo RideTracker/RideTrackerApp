@@ -41,9 +41,10 @@ export type RouteEditorProps = {
     onSearchLayout: (rectangle: LayoutRectangle) => void;
     onWaypointsLayout: (rectangle: LayoutRectangle) => void;
     onSave: () => void;
+    onActive?: (active: boolean) => void;
 };
 
-export default function RouteEditor({ routeId, children, mapRef, mapLayout, initialLocation, waypoints, routes, onDrawingPolyline, onWaypoints, onSearchLayout, onWaypointsLayout, onSave }: RouteEditorProps) {
+export default function RouteEditor({ routeId, children, mapRef, mapLayout, initialLocation, waypoints, routes, onDrawingPolyline, onWaypoints, onSearchLayout, onWaypointsLayout, onSave, onActive }: RouteEditorProps) {
     const theme = useTheme();
     const client = useClient();
     const dispatch = useDispatch();
@@ -91,6 +92,10 @@ export default function RouteEditor({ routeId, children, mapRef, mapLayout, init
             });
         }, 500));
     }, [ searchText ]);
+
+    useEffect(() => {
+        onActive(pointing || drawing || searchFocus);
+    }, [ pointing, drawing, searchFocus ]);
 
     const handleSearchPlace = useCallback((searchPrediction: SearchPrediction) => {
         if(!searchPrediction.location && searchPrediction.placeId) {
@@ -540,7 +545,7 @@ export default function RouteEditor({ routeId, children, mapRef, mapLayout, init
                     </View>
                 )}
 
-                {(!drawing && !pointing) && (children)}
+                {(!drawing && !pointing && !searchFocus) && (children)}
             </View>
         </React.Fragment>
     );
