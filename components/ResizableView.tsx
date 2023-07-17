@@ -3,14 +3,13 @@ import { View, ViewStyle, LayoutRectangle, Dimensions, ScaledSize } from "react-
 import { useTheme } from "../utils/themes";
 
 export type ResizableViewProps = {
+    steps: number[];
     initialHeight: number;
-    height?: number;
-    onHeight?: (height: number) => void;
     headerStyle?: ViewStyle;
     children: ReactNode;
 }
 
-export default function ResizableView({ initialHeight, headerStyle, children, height, onHeight }: ResizableViewProps) {
+export default function ResizableView({ steps, initialHeight, headerStyle, children }: ResizableViewProps) {
     const theme = useTheme();
 
     const [ screen ] = useState<ScaledSize>(Dimensions.get("screen"));
@@ -21,10 +20,11 @@ export default function ResizableView({ initialHeight, headerStyle, children, he
         new: number;
     }>({ current: 0, new: 0 });
 
-    let currentHeight = Math.min(Math.max((layout)?(layout.height):(0), (height ?? initialHeight) - (offsets.current + offsets.new)), screen.height * 0.5);
+    let currentHeight = initialHeight - (offsets.current + offsets.new);
 
-    if(Math.abs(initialHeight - currentHeight) < 20)
-        currentHeight = initialHeight;
+    const step = steps.reduce(function(previous, current) {
+        return (Math.abs(current - (currentHeight / screen.height)) < Math.abs(previous - (currentHeight / screen.height)) ? current : previous);
+    });
 
     return (
         <View style={{
@@ -58,12 +58,6 @@ export default function ResizableView({ initialHeight, headerStyle, children, he
                     });
 
                     setStart(null);
-
-                    if(onHeight) {
-                        let newHeight = Math.min(Math.max((layout)?(layout.height):(0), (height ?? initialHeight) - (offsets.current + (event.nativeEvent.pageY - start))), screen.height * 0.5);
-
-                        onHeight(newHeight);
-                    }
                 }}
                 onLayout={(event) => {
                     if(!layout)
@@ -80,7 +74,7 @@ export default function ResizableView({ initialHeight, headerStyle, children, he
                 }}/>
             </View>
 
-            <View style={{ height: currentHeight }}>
+            <View style={{ height: Math.max(10, screen.height * step) }}>
                 {children}
             </View>
         </View>

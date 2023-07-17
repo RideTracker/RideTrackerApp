@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { LayoutRectangle, View } from "react-native";
+import { LayoutRectangle, View, Dimensions, ScaledSize } from "react-native";
 import { Stack, useFocusEffect } from "expo-router";
 import { useMapStyle, useTheme } from "../../../../../utils/themes";
 import MapView, { Polyline } from "react-native-maps";
@@ -48,6 +48,7 @@ export default function Routes() {
 
     const [ drawingPolyline, setDrawingPolyline ] = useState<DrawingPolyline>(null);
 
+    const [ screen ] = useState<ScaledSize>(Dimensions.get("screen"));
     const [ height, setHeight ] = useState<number>(null);
     const [ focus, setFocus ] = useState<boolean>(false);
     const [ initialLocation, setInitialLocation ] = useState(null);
@@ -292,7 +293,7 @@ export default function Routes() {
                         borderTopLeftRadius: 10,
                         borderTopRightRadius: 10
                     }}>
-                        <ResizableView initialHeight={250} height={height} onHeight={(height) => setHeight(height)} headerStyle={{ marginBottom: -10 }}>
+                        <ResizableView steps={[ 0, 0.3, 0.5 ]} initialHeight={screen.height * 0.3} headerStyle={{ marginBottom: -10 }}>
                             <Tabs initialTab="routes">
                                 <TabsPage id="routes" title="My routes" style={{ flex: 1 }}>
                                     <RoutesList/>

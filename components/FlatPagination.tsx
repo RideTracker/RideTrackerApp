@@ -52,7 +52,7 @@ export default function FlatPagination({ style, data, render, paginate }: FlatPl
             data={data}
             renderItem={render}
             style={{
-                marginBottom: 20,
+                paddingBottom: 20,
 
                 ...style
             }}
