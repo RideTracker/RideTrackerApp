@@ -35,7 +35,7 @@ export function getMarkersFromWaypoints(waypoints: RouteWaypoint[]) {
 
         if(waypoint.type === "SEARCH_PREDICTION") {
             const marker = markers.find((marker) => {
-                return marker.name === waypoint.searchPrediction.name;
+                return getDistance(marker.location, waypoint.searchPrediction.location) < 100 && marker.name === waypoint.searchPrediction.name;
             }) ?? markers.find((marker) => {
                 return getDistance(marker.location, waypoint.searchPrediction.location) < 100;
             });

@@ -62,6 +62,7 @@ export default function Routes() {
     const mapRef = useRef<MapView>();
     const searchRef = useRef<TextInput>();
 
+    const [ pointing, setPointing ] = useState<boolean>(false);
     const [ drawing, setDrawing ] = useState<boolean>(false);
     const [ drawingPolyline, setDrawingPolyline ] = useState<DrawingPolyline>(null);
 
@@ -72,6 +73,7 @@ export default function Routes() {
     const [ searchTimeout, setSearchTimeout ] = useState<NodeJS.Timeout>(null);
     const [ searchPredictions, setSearchPredictions ] = useState<SearchPrediction[]>([]);
     const [ searchLayout, setSearchLayout ] = useState<LayoutRectangle>(null);
+    const [ mapLayout, setMapLayout ] = useState<LayoutRectangle>(null);
     const [ waypoints, setWaypoints ] = useState<RouteWaypoint[]>([]);
     const [ waypointsLayout, setWaypointsLayout ] = useState<LayoutRectangle>(null);
     const [ routes, setRoutes ] = useState<{
@@ -283,24 +285,32 @@ export default function Routes() {
 
     useEffect(() => {
         if(waypoints.length && waypointsLayout) {
-            mapRef.current.fitToCoordinates(waypoints.flatMap((waypoint) => {
-                if(waypoint.type === "SEARCH_PREDICTION")
-                    return waypoint.searchPrediction.location;
-                else if(waypoint.type === "PATH") {
-                    return [
-                        waypoint.path.route[0],
-                        waypoint.path.route[waypoint.path.route.length - 1]
-                    ];
-                }
-            }), {
-                animated: true,
-                edgePadding: {
-                    left: 40,
-                    top: 10 + ((searchLayout)?(searchLayout.y + searchLayout.height):(0)),
-                    right: 40,
-                    bottom: 10 + 40 + ((waypointsLayout)?(waypointsLayout.height):(0))
-                }
-            });
+            if(waypoints.length > 1 || waypoints[0].type === "PATH") {
+                mapRef.current.fitToCoordinates(waypoints.flatMap((waypoint) => {
+                    if(waypoint.type === "SEARCH_PREDICTION")
+                        return waypoint.searchPrediction.location;
+                    else if(waypoint.type === "PATH") {
+                        return [
+                            waypoint.path.route[0],
+                            waypoint.path.route[waypoint.path.route.length - 1]
+                        ];
+                    }
+                }), {
+                    animated: true,
+                    edgePadding: {
+                        left: 40,
+                        top: 10 + ((searchLayout)?(searchLayout.y + searchLayout.height):(0)),
+                        right: 40,
+                        bottom: 10 + 40 + ((waypointsLayout)?(waypointsLayout.height):(0))
+                    }
+                });
+            }
+            else {
+                mapRef.current.setCamera({
+                    center: waypoints[0].searchPrediction.location,
+                    zoom: 12
+                });
+            }
         }
     }, [ waypointsLayout?.height, waypoints.length ]);
 
@@ -367,6 +377,7 @@ export default function Routes() {
             {(focus) && (
                 <MapView
                     ref={mapRef}
+                    onLayout={(event) => setMapLayout(event.nativeEvent.layout)}
                     provider={userData.mapProvider}
                     showsUserLocation={false}
                     style={{
@@ -387,12 +398,10 @@ export default function Routes() {
                     customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
                     >
                     {(routes) && (
-                        <React.Fragment>
-                            <Polyline coordinates={routes.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4}/>                    
-
-                            <MapRouteMarkers waypoints={waypoints}/>
-                        </React.Fragment>
+                        <Polyline coordinates={routes.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4}/>
                     )}
+
+                    <MapRouteMarkers waypoints={waypoints}/>
 
                     <Polyline coordinates={[...global.coordinates]} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
 
@@ -407,6 +416,27 @@ export default function Routes() {
             )}
 
             {(drawing) && (<DrawingOverlay mapRef={mapRef} onUpdate={handleDrawingUpdate}/>)}
+            {(pointing) && (
+                <View style={{
+                    position: "absolute",
+
+                    left: "50%",
+                    top: "50%"
+                }}>
+                    <View style={{
+                        width: 60,
+                        height: 60,
+
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+
+                        marginLeft: -30,
+                        marginTop: -60
+                    }}>
+                        <FontAwesome5 name="map-pin" size={40} color={theme.color}/>
+                    </View>
+                </View>
+            )}
 
             {(searchFocus) && (
                 <TouchableWithoutFeedback onPress={() => { searchRef.current.blur() }}>
@@ -432,7 +462,7 @@ export default function Routes() {
                 if(!searchFocus)
                     setSearchLayout(event.nativeEvent.layout);
             }}>
-                {(!drawing) && (
+                {(!drawing && !pointing) && (
                     <FormInput inputRef={searchRef} borderRadius={20} placeholder="Search for a place..." icon={
                         <FontAwesome name="search" size={24} color={theme.color}/>
                     } props={{
@@ -536,38 +566,80 @@ export default function Routes() {
                 bottom: 0,
                 left: 0,
             }}>
-                {(!drawing) && (<GoogleMapsLogo style={{}}/>)}
+                {(!drawing && !pointing) && (<GoogleMapsLogo style={{}}/>)}
 
                 {(!searchFocus) && (
                     (!drawing)?(
-                        <ScrollView horizontal={true}>
-                            <View style={{
-                                padding: 5,
-                                gap: 10,
-                                flexDirection: "row"
-                            }}>
-                                <TouchableOpacity style={{
+                        (!pointing)?(
+                            <ScrollView horizontal={true}>
+                                <View style={{
+                                    padding: 5,
                                     gap: 10,
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    backgroundColor: theme.background,
-                                    padding: 10,
-                                    borderRadius: 20
-                                }} onPress={() => {
-                                    setDrawing(true);
+                                    flexDirection: "row"
                                 }}>
-                                    <Entypo name="brush" size={24} color={theme.color}/>
+                                    <TouchableOpacity style={{
+                                        gap: 10,
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        backgroundColor: theme.background,
+                                        padding: 10,
+                                        borderRadius: 10
+                                    }} onPress={() => {
+                                        setDrawing(true);
+                                    }}>
+                                        <Entypo name="brush" size={20} color={theme.color}/>
 
-                                    <CaptionText>Draw a path</CaptionText>
-                                </TouchableOpacity>
+                                        <CaptionText>Draw a path</CaptionText>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity style={{
+                                        gap: 10,
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        backgroundColor: theme.background,
+                                        padding: 10,
+                                        borderRadius: 10
+                                    }} onPress={() => {
+                                        setPointing(true);
+                                    }}>
+                                        <FontAwesome5 name="map-pin" size={20} color={theme.color}/>
+
+                                        <CaptionText>Add waypoints</CaptionText>
+                                    </TouchableOpacity>
+                                </View>
+                            </ScrollView>
+                        ):(
+                            <View style={{
+                                padding: 10,
+                                flexDirection: "column",
+                                gap: 10
+                            }}>
+                                <Button primary={false} type="overlay-stroke" label="Add waypoint" onPress={() => {
+                                    mapRef.current.coordinateForPoint({
+                                        x: Math.round(mapLayout.width / 2),
+                                        y: Math.round(mapLayout.height / 2)
+                                    }).then((coordinate) => {
+                                        setWaypoints(waypoints.concat({
+                                            type: "SEARCH_PREDICTION",
+                                            searchPrediction: {
+                                                name: "Custom waypoint",
+                                                location: coordinate
+                                            }
+                                        }));
+
+                                        setPointing(false);
+                                    });
+                                }}/>
+                                
+                                <Button primary={false} type="danger" label="Cancel" onPress={() => setPointing(false)}/>
                             </View>
-                        </ScrollView>
+                        )
                     ):(
                         <Button primary={false} type="danger" label="Cancel drawing" onPress={() => setDrawing(false)}/>
                     )
                 )}
 
-                {(!!waypoints.length && !searchFocus && !drawing) && (
+                {(!!waypoints.length && !searchFocus && !drawing && !pointing) && (
                     <View style={{
                         backgroundColor: theme.background,
 

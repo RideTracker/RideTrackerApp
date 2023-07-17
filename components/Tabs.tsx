@@ -24,7 +24,7 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
     return (
         <View style={style} pointerEvents={pointerEvents}>
             <View>
-                <ScrollView horizontal={true} style={{ overflow: "visible" }}>
+                <ScrollView horizontal={true}>
                     <View style={{
                         flexDirection: "row",
 
