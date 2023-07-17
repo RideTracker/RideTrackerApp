@@ -1,40 +1,25 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { LayoutRectangle, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { Stack, useFocusEffect, useRouter } from "expo-router";
+import React, { useState, useEffect, useRef } from "react";
+import { LayoutRectangle, View } from "react-native";
+import { Stack, useFocusEffect } from "expo-router";
 import { useMapStyle, useTheme } from "../../../../../utils/themes";
-import MapView, { Marker, PanDragEvent, Polyline } from "react-native-maps";
+import MapView, { Polyline } from "react-native-maps";
 import { HeaderText } from "../../../../../components/texts/Header";
 import * as Location from "expo-location";
-import { FontAwesome, FontAwesome5, Entypo } from "@expo/vector-icons";
-import FormInput from "../../../../../components/FormInput";
-import { getMapsGeocode, getMapsRoutes, getMapsSearchPredictions } from "@ridetracker/ridetrackerclient";
+import { createRoute, getMapsRoutes } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../../modules/useClient";
-import { CaptionText } from "../../../../../components/texts/Caption";
-import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import { useUser } from "../../../../../modules/user/useUser";
-import { useDispatch } from "react-redux";
-import { useSearchPredictions } from "../../../../../modules/usePlacesHistory";
-import { addSearchPrediction } from "../../../../../utils/stores/searchPredictions";
 import { SearchPrediction } from "../../../../../models/SearchPrediction";
-import { decode } from "@googlemaps/polyline-codec";
-import GoogleMapsLogo from "../../../../../components/maps/GoogleMapsLogo";
+import { decode, encode } from "@googlemaps/polyline-codec";
 import MapRouteMarkers from "../../../../../components/maps/MapRouteMarkers";
-import getFormattedDuration from "../../../../../controllers/getFormattedDuration";
-import getDurationAsNumber from "../../../../../controllers/getDurationAsNumber";
-import Button from "../../../../../components/Button";
-import * as Linking from "expo-linking";
-import getGoogleMapsDirectionsUrl from "../../../../../controllers/getGoogleMapsDirectionsUrl";
-import MapStartMarker from "../../../../../components/maps/MapStartMarker";
-import MapFinishMarker from "../../../../../components/maps/MapFinishMarker";
-import MapIntermediateMarker from "../../../../../components/maps/MapIntermediateMarker";
 import OfflinePageOverlay from "../../../../../components/OfflinePageOverlay";
 import useInternetConnection from "../../../../../modules/useInternetConnection";
-import SubscriptionPageOverlay from "../../../../../components/SubscriptionPageOverlay";
 import PermissionsPageOverlay from "../../../../../components/PermissionsPageOverlay";
 import PageOverlay from "../../../../../components/PageOverlay";
-import DrawingOverlay, { DrawingPolyline, DrawingState } from "../../../../../components/DrawingOverlay";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { DrawingPolyline } from "../../../../../components/DrawingOverlay";
 import RouteEditor from "../../../../../components/RouteEditor";
+import Tabs, { TabsPage } from "../../../../../components/Tabs";
+import { ParagraphText } from "../../../../../components/texts/Paragraph";
+import { RoutesList } from "../../../../../components/RoutesList";
 
 global.coordinates = [];
 
@@ -171,12 +156,8 @@ export default function Routes() {
                 mapRef.current.fitToCoordinates(waypoints.flatMap((waypoint) => {
                     if(waypoint.type === "SEARCH_PREDICTION")
                         return waypoint.searchPrediction.location;
-                    else if(waypoint.type === "PATH") {
-                        return [
-                            waypoint.path.route[0],
-                            waypoint.path.route[waypoint.path.route.length - 1]
-                        ];
-                    }
+                    else if(waypoint.type === "PATH")
+                        return waypoint.path.original;
                 }), {
                     animated: true,
                     edgePadding: {
@@ -274,7 +255,59 @@ export default function Routes() {
                 onSearchLayout={(rectangle) => setSearchLayout(rectangle)}
                 onWaypointsLayout={(rectangle) => setWaypointsLayout(rectangle)}
                 onDrawingPolyline={(drawingPolyline) => setDrawingPolyline(drawingPolyline)}
-                />
+                onSave={() => {
+                    createRoute(client, encode(routes.polyline.map((coordinate) => [ coordinate.latitude, coordinate.longitude ])), routes.distance, routes.duration, waypoints.map((waypoint) => {
+                        return {
+                            type: waypoint.type,
+                            
+                            searchPrediction: (waypoint.searchPrediction)?({
+                                location: {
+                                    latitude: waypoint.searchPrediction.location.latitude,
+                                    longitude: waypoint.searchPrediction.location.longitude
+                                },
+                                name: waypoint.searchPrediction.name,
+                                placeId: waypoint.searchPrediction.placeId ?? null
+                            }):(undefined),
+
+                            path: (waypoint.path)?({
+                                original: encode(waypoint.path.original.map((coordinate) => [ coordinate.latitude, coordinate.longitude ])),
+                                route: encode(waypoint.path.route.map((coordinate) => [ coordinate.latitude, coordinate.longitude ])),
+                                distance: waypoint.path.distance,
+                                duration: waypoint.path.duration
+                            }):(undefined)
+                        };
+                    })).then((result) => {
+                        if(result.success) {
+                            setWaypoints([]);
+                            setRoutes(null);
+                        }
+                    })
+                }}>
+                {(!waypoints.length) && (
+                    <View style={{
+                        backgroundColor: theme.background,
+
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10,
+
+                        gap: 10
+                    }}>
+                        <View style={{ flex: 1 }}>
+                            <Tabs initialTab="routes">
+                                <TabsPage id="routes" title="My routes" style={{ height: 250 }}>
+                                    <RoutesList/>
+                                </TabsPage>
+
+                                <TabsPage id={"global"} title="Global routes" style={{ height: 250 }}>
+                                    <View style={{ padding: 10 }}>
+                                    </View>
+                                </TabsPage>
+                            </Tabs>
+                        </View>
+                    </View>
+                )}
+            </RouteEditor>
+
 
             {(!initialLocation && permissions?.granted) && (
                 <View style={{

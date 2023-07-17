@@ -1,6 +1,6 @@
 import getFormattedWords from "./getFormattedWords";
 
-export default function getFormattedDuration(seconds: number) {
+export default function getFormattedDuration(seconds: number, short: boolean = false) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
@@ -8,13 +8,13 @@ export default function getFormattedDuration(seconds: number) {
     let result = [];
 
     if(hours)
-        result.push(`${hours} hr${((hours !== 1)?('s'):(''))}`);
+        result.push(`${hours}${(!short)?(` hr${((hours !== 1)?('s'):(''))}`):('h')}`);
 
     if(minutes)
-        result.push(`${minutes} min${((minutes !== 1)?('s'):(''))}`);
+        result.push(`${minutes}${(!short)?(` min${((minutes !== 1)?('s'):(''))}`):('m')}`);
 
-    if(!hours && remainingSeconds)
-        result.push(`${remainingSeconds} sec${((remainingSeconds !== 1)?('s'):(''))}`);
+    if(!hours && remainingSeconds && (!short || hours === 0))
+        result.push(`${remainingSeconds}${(!short)?(` sec${((remainingSeconds !== 1)?('s'):(''))}`):('s')}`);
 
-    return getFormattedWords(result);
+    return (!short)?(getFormattedWords(result)):(result.join(' '));
 };

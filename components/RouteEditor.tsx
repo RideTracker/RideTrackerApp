@@ -1,5 +1,5 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import { View, LayoutRectangle, TextInput, TouchableOpacity, TouchableWithoutFeedback, ScrollView } from "react-native";
+import React, { useState, useRef, useCallback, useEffect, ReactNode } from "react";
+import { View, LayoutRectangle, TextInput, TouchableOpacity, TouchableWithoutFeedback, ScrollView, Linking, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormInput from "./FormInput";
 import { FontAwesome, FontAwesome5, Entypo } from "@expo/vector-icons";
@@ -21,11 +21,12 @@ import { HeaderText } from "./texts/Header";
 import getFormattedDuration from "../controllers/getFormattedDuration";
 import getDurationAsNumber from "../controllers/getDurationAsNumber";
 import getGoogleMapsDirectionsUrl from "../controllers/getGoogleMapsDirectionsUrl";
-import Linking from "expo-linking";
 import DrawingOverlay, { DrawingPolyline, DrawingState } from "./DrawingOverlay";
 import { decode } from "@googlemaps/polyline-codec";
 
 export type RouteEditorProps = {
+    routeId?: string;
+    children: ReactNode;
     mapRef: React.MutableRefObject<MapView>;
     mapLayout: LayoutRectangle;
     initialLocation: LocationObject;
@@ -39,9 +40,10 @@ export type RouteEditorProps = {
     onWaypoints: (waypoints: RouteWaypoint[]) => void;
     onSearchLayout: (rectangle: LayoutRectangle) => void;
     onWaypointsLayout: (rectangle: LayoutRectangle) => void;
+    onSave: () => void;
 };
 
-export default function RouteEditor({ mapRef, mapLayout, initialLocation, waypoints, routes, onDrawingPolyline, onWaypoints, onSearchLayout, onWaypointsLayout }: RouteEditorProps) {
+export default function RouteEditor({ routeId, children, mapRef, mapLayout, initialLocation, waypoints, routes, onDrawingPolyline, onWaypoints, onSearchLayout, onWaypointsLayout, onSave }: RouteEditorProps) {
     const theme = useTheme();
     const client = useClient();
     const dispatch = useDispatch();
@@ -501,9 +503,34 @@ export default function RouteEditor({ mapRef, mapLayout, initialLocation, waypoi
 
                         {(!!waypoints.length) && (
                             (!sorting)?(
-                                <Button primary={true} label="Open in Google Maps" onPress={() => {
+                                /*<Button primary={true} label="Open in Google Maps" onPress={() => {
                                     Linking.openURL(getGoogleMapsDirectionsUrl(waypoints));
-                                }}/>
+                                }}/>*/
+                                <React.Fragment>
+                                    {(routeId)?(
+                                        <Button primary={true} label="Update route" onPress={() => {
+                                            onSave();
+                                        }}/>
+                                    ):(
+                                        <Button primary={true} label="Save route" onPress={() => {
+                                            onSave();
+                                        }}/>
+                                    )}
+                                        
+                                    {/*<Button primary={false} type="danger" label="Cancel" onPress={() => {
+                                        Alert.alert("Are you sure?", "Your changes will not be saved.", [
+                                            {
+                                                style: "cancel",
+                                                text: "Cancel"
+                                            },
+
+                                            {
+                                                style: "destructive",
+                                                text: "I am sure"
+                                            }
+                                        ])
+                                    }}/>*/}
+                                </React.Fragment>
                             ):(
                                 <Button primary={false} label="Save order" onPress={() => {
                                     setSorting(false);
@@ -512,6 +539,8 @@ export default function RouteEditor({ mapRef, mapLayout, initialLocation, waypoi
                         )}
                     </View>
                 )}
+
+                {(!drawing && !pointing) && (children)}
             </View>
         </React.Fragment>
     );

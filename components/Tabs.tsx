@@ -23,8 +23,7 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
 
     return (
         <View style={style} pointerEvents={pointerEvents}>
-            <View>
-                <ScrollView horizontal={true}>
+                <ScrollView horizontal={true} style={{ overflow: "visible" }}>
                     <View style={{
                         flexDirection: "row",
 
@@ -57,9 +56,8 @@ export default function Tabs({ initialTab, style, children, onChange, pointerEve
                         ))}
                     </View>
                 </ScrollView>
-            </View>
 
-            <View style={{ flexGrow: 1 }}>
+            <View style={{ flex: 1 }}>
                 {children.find((child) => child?.props?.id === tab)}
             </View>
         </View>
