@@ -66,8 +66,6 @@ export function RoutesList(props: RoutesListProps) {
                 }
             };
 
-            console.log(JSON.stringify(coordinateBounds, undefined, 4));
-
             return getRoutesByFeed(client, offset, coordinateBounds);
         }
     }, [ client, type ]);

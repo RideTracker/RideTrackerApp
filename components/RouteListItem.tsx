@@ -93,7 +93,7 @@ export function RoutesListItem({ route, onPress }: RoutesListItemProps) {
                             gap: 10,
 
                             alignItems: "center"
-                        }} onPress={() => router.push(`/profile/${route.user}`)}>
+                        }} onPress={() => router.push(`/profile/${route.user.id}`)}>
                             <View style={{
                                 height: 25,
                                 aspectRatio: 1,
