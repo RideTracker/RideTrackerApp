@@ -39,7 +39,7 @@ on:
 jobs:
   build:
     name: Build android-${{ inputs.versionCode }}-${{ inputs.version }}-${{ inputs.environment }}
-    runs-on: ubuntu-20.04
+    runs-on: Android
     permissions: read-all
     steps:
       - uses: actions/checkout@v3
