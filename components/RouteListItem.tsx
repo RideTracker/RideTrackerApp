@@ -31,14 +31,14 @@ export function RoutesListItem({ route, onPress }: RoutesListItemProps) {
     const mapViewRef = useRef<MapView>();
 
     return (
-        <View style={{
+        <TouchableOpacity style={{
             flexDirection: "row",
             gap: 10,
             height: 80,
 
             alignItems: "center"
-        }}>
-            <TouchableOpacity style={{ width: 140, borderRadius: 10, overflow: "hidden", backgroundColor: theme.placeholder }} onPress={() => onPress()}>
+        }} onPress={() => onPress()}>
+            <View style={{ width: 140, borderRadius: 10, overflow: "hidden", backgroundColor: theme.placeholder }}>
                 <MapView
                     style={{ flex: 1 }}
                     ref={mapViewRef}
@@ -53,7 +53,7 @@ export function RoutesListItem({ route, onPress }: RoutesListItemProps) {
                     >
                     <Polyline coordinates={route.decodedPolyline} fillColor={getJsonColor(route.color, theme)} strokeColor={getJsonColor(route.color, theme)} strokeWidth={4}/>
                 </MapView>
-            </TouchableOpacity>
+            </View>
 
             <View style={{
                 flex: 1,
@@ -118,6 +118,6 @@ export function RoutesListItem({ route, onPress }: RoutesListItemProps) {
                     </View>
                 )}
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
