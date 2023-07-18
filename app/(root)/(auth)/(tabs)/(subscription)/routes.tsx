@@ -328,7 +328,7 @@ export default function Routes() {
                         borderTopLeftRadius: 10,
                         borderTopRightRadius: 10
                     }} onLayout={(event) => setWaypointsLayout(event.nativeEvent.layout)}>
-                        <ResizableView steps={[ 0, 0.3, 0.5 ]} initialHeight={screen.height * 0.3} headerStyle={{ marginBottom: -10 }}>
+                        <ResizableView steps={[ 0, 0.3, 0.5 ]} initialStep={1} headerStyle={{ marginBottom: -10 }}>
                             <Tabs initialTab="routes" onChange={(tab) => setTab(tab)}>
                                 <TabsPage id="routes" title="My routes" style={{ flex: 1 }}>
                                     <RoutesList key={"user"} type="USER" onViewableRoutesChanged={(routes) => setViewableRoutes(routes)} onRoutePress={(route) => handleRouteClick(route.id)}/>

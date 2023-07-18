@@ -4,27 +4,40 @@ import { useTheme } from "../utils/themes";
 
 export type ResizableViewProps = {
     steps: number[];
-    initialHeight: number;
+    initialStep: number;
     headerStyle?: ViewStyle;
     children: ReactNode;
 }
 
-export default function ResizableView({ steps, initialHeight, headerStyle, children }: ResizableViewProps) {
+export default function ResizableView({ steps, initialStep, headerStyle, children }: ResizableViewProps) {
     const theme = useTheme();
 
     const [ screen ] = useState<ScaledSize>(Dimensions.get("screen"));
     const [ layout, setLayout ] = useState<LayoutRectangle>(null);
-    const [ start, setStart ] = useState<number>(null);
+
     const [ offsets, setOffsets ] = useState<{
-        current: number;
-        new: number;
-    }>({ current: 0, new: 0 });
-
-    let currentHeight = initialHeight - (offsets.current + offsets.new);
-
-    const step = steps.reduce(function(previous, current) {
-        return (Math.abs(current - (currentHeight / screen.height)) < Math.abs(previous - (currentHeight / screen.height)) ? current : previous);
+        step: number;
+        height: number;
+        offset: number;
+        start: number;
+    }>({
+        step: initialStep,
+        height: screen.height * steps[initialStep],
+        offset: 0,
+        start: null
     });
+
+    //let currentHeight = initialHeight - offset;
+
+    /*if(!start) {
+        const step = steps.reduce(function(previous, current) {
+            return (Math.abs(current - (currentHeight / screen.height)) < Math.abs(previous - (currentHeight / screen.height)) ? current : previous);
+        });
+
+        currentHeight = Math.max(10, screen.height * step);
+    }*/
+
+    //console.log({ currentHeight });
 
     return (
         <View style={{
@@ -41,28 +54,37 @@ export default function ResizableView({ steps, initialHeight, headerStyle, child
 
                     ...headerStyle
                 }}
-                onTouchStart={(event) => setStart(event.nativeEvent.pageY)}
+                onTouchStart={(event) => setOffsets({ ...offsets, start: event.nativeEvent.pageY })}
                 onTouchMove={(event) => {
-                    if(start === null)
+                    if(offsets.start === null)
                         return;
 
                     setOffsets({
-                        current: offsets.current,
-                        new: event.nativeEvent.pageY - start
+                        ...offsets,
+                        offset: offsets.start - event.nativeEvent.pageY
                     });
                 }}
                 onTouchEnd={(event) => {
-                    setOffsets({
-                        current: offsets.current + (event.nativeEvent.pageY - start),
-                        new: 0
-                    });
+                    let newStep = offsets.step;
+                    
+                    if(offsets.offset > 0)
+                        newStep++;
+                    else if(offsets.offset < 0)
+                        newStep--;
 
-                    setStart(null);
+                    newStep = Math.max(Math.min(newStep, steps.length - 1), 0);
+            
+                    setOffsets({
+                        height: Math.max(10, screen.height * steps[newStep]),
+                        start: null,
+                        offset: 0,
+                        step: newStep
+                    });
                 }}
-                onLayout={(event) => {
+                /*onLayout={(event) => {
                     if(!layout)
                         setLayout(event.nativeEvent.layout);
-                }}
+                }}*/
                 >
                 <View style={{
                     width: "60%",
@@ -74,7 +96,7 @@ export default function ResizableView({ steps, initialHeight, headerStyle, child
                 }}/>
             </View>
 
-            <View style={{ height: Math.max(10, screen.height * step) }}>
+            <View style={{ height: Math.min(offsets.height + offsets.offset, screen.height * steps[steps.length - 1]) }}>
                 {children}
             </View>
         </View>
