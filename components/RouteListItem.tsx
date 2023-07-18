@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import { decode } from "@googlemaps/polyline-codec";
-import { GetRoutesByUserFeedResponse } from "@ridetracker/ridetrackerclient";
+import { GetRoutesByFeedResponse, GetRoutesByUserFeedResponse } from "@ridetracker/ridetrackerclient";
 import { useRouter } from "expo-router";
-import { View } from "react-native";
+import { View, TouchableOpacity, Image } from "react-native";
 import MapView, { Polyline } from "react-native-maps";
 import { useClient } from "../modules/useClient";
 import { useMapStyle, useTheme } from "../utils/themes";
@@ -14,12 +14,14 @@ import getFormattedDuration from "../controllers/getFormattedDuration";
 import getDurationAsNumber from "../controllers/getDurationAsNumber";
 import { RouteListRouteData } from "./RoutesList";
 import getJsonColor from "../controllers/getJsonColor";
+import Constants from "expo-constants";
 
 export type RoutesListItemProps = {
     route: RouteListRouteData;
+    onPress: () => void;
 };
 
-export function RoutesListItem({ route }: RoutesListItemProps) {
+export function RoutesListItem({ route, onPress }: RoutesListItemProps) {
     const router = useRouter();
     const theme = useTheme();
     const client = useClient();
@@ -36,7 +38,7 @@ export function RoutesListItem({ route }: RoutesListItemProps) {
 
             alignItems: "center"
         }}>
-            <View style={{ width: 140, borderRadius: 10, overflow: "hidden", backgroundColor: theme.placeholder }}>
+            <TouchableOpacity style={{ width: 140, borderRadius: 10, overflow: "hidden", backgroundColor: theme.placeholder }} onPress={() => onPress()}>
                 <MapView
                     style={{ flex: 1 }}
                     ref={mapViewRef}
@@ -51,13 +53,13 @@ export function RoutesListItem({ route }: RoutesListItemProps) {
                     >
                     <Polyline coordinates={route.decodedPolyline} fillColor={getJsonColor(route.color, theme)} strokeColor={getJsonColor(route.color, theme)} strokeWidth={4}/>
                 </MapView>
-            </View>
+            </TouchableOpacity>
 
             <View style={{
                 flex: 1,
                 paddingVertical: 2,
                 justifyContent: "space-around",
-                gap: 5
+                gap: 10
             }}>
                 <View style={{
                     flexDirection: "row",
@@ -78,6 +80,43 @@ export function RoutesListItem({ route }: RoutesListItemProps) {
                         <ParagraphText style={{ textAlign: "center", fontSize: 12 }}>waypoint{(route.waypoints.length === 1)?(''):('s')}</ParagraphText>
                     </View>
                 </View>
+
+                {(route?.user) && (
+                    <View style={{
+                        flexDirection: "row",
+                        gap: 10,
+
+                        alignItems: "center"
+                    }}>
+                        <TouchableOpacity style={{
+                            flexDirection: "row",
+                            gap: 10,
+
+                            alignItems: "center"
+                        }} onPress={() => router.push(`/profile/${route.user}`)}>
+                            <View style={{
+                                height: 25,
+                                aspectRatio: 1,
+                                
+                                backgroundColor: theme.placeholder,
+                                
+                                borderRadius: 25,
+                                overflow: "hidden"
+                            }}>
+                                <Image
+                                    source={{
+                                        uri: `${Constants.expoConfig.extra.images}/${route.user.avatar}/Avatar`
+                                    }}
+                                    style={{
+                                        width: "100%",
+                                        height: "100%"
+                                    }}/>
+                            </View>
+
+                            <CaptionText>{route.user.name}</CaptionText>
+                        </TouchableOpacity>
+                    </View>
+                )}
             </View>
         </View>
     );

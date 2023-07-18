@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { LayoutRectangle, View, Dimensions, ScaledSize } from "react-native";
 import { Stack, useFocusEffect } from "expo-router";
 import { useMapStyle, useTheme } from "../../../../../utils/themes";
-import MapView, { Polyline } from "react-native-maps";
+import MapView, { Polyline, Region } from "react-native-maps";
 import { HeaderText } from "../../../../../components/texts/Header";
 import * as Location from "expo-location";
 import { GetRoutesByUserFeedResponse, createRoute, getMapsRoutes } from "@ridetracker/ridetrackerclient";
@@ -52,6 +52,8 @@ export default function Routes() {
     const [ screen ] = useState<ScaledSize>(Dimensions.get("screen"));
     const [ viewableRoutes, setViewableRoutes ] = useState<RouteListRouteData[]>([]);
     const [ focus, setFocus ] = useState<boolean>(false);
+    const [ tab, setTab ] = useState<string>("routes");
+    const [ mapRegion, setMapRegion ] = useState<Region>(null);
     const [ editorActive, setEditorActive ] = useState<boolean>(false);
     const [ initialLocation, setInitialLocation ] = useState(null);
     const [ searchLayout, setSearchLayout ] = useState<LayoutRectangle>(null);
@@ -183,7 +185,7 @@ export default function Routes() {
     }, [ waypointsLayout?.height, waypoints.length ]);
 
     useEffect(() => {
-        if(!waypoints.length && viewableRoutes.length) {
+        if(!waypoints.length && viewableRoutes.length && tab === "routes") {
             mapRef.current.fitToCoordinates(viewableRoutes.flatMap((route) => {
                 return route.decodedPolyline;
             }), {
@@ -210,6 +212,10 @@ export default function Routes() {
             };
         }
     }, [ drawing ]);*/
+
+    const handleRouteClick = useCallback((routeId: string) => {
+
+    }, []);
 
     return (
         <View style={{ flex: 1, position: "relative", backgroundColor: theme.background }}>
@@ -241,12 +247,9 @@ export default function Routes() {
                         left: 0,
                         bottom: 0
                     }}
-                    /*onPanDrag={(event) => {
-                        if(drawing) {
-                            global.coordinates = global.coordinates.concat(event.nativeEvent.coordinate);
-                        }
-                    }}*/
+                    onPanDrag={(event) => {}}
                     customMapStyle={(waypoints.length < 2)?(theme.mapStyle):(theme.mapStyle.concat(mapStyle.compact))}
+                    onRegionChangeComplete={(region) => setMapRegion(region)}
                     >
                     {(routes) && (
                         <Polyline coordinates={routes.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4}/>
@@ -272,6 +275,8 @@ export default function Routes() {
                             strokeColor={getJsonColor(route.color, theme)}
                             strokeWidth={4}
                             lineJoin="round"
+                            tappable={true}
+                            onPress={() => handleRouteClick(route.id)}
                         />
                     ))}
                 </MapView>
@@ -324,12 +329,13 @@ export default function Routes() {
                         borderTopRightRadius: 10
                     }} onLayout={(event) => setWaypointsLayout(event.nativeEvent.layout)}>
                         <ResizableView steps={[ 0, 0.3, 0.5 ]} initialHeight={screen.height * 0.3} headerStyle={{ marginBottom: -10 }}>
-                            <Tabs initialTab="routes">
+                            <Tabs initialTab="routes" onChange={(tab) => setTab(tab)}>
                                 <TabsPage id="routes" title="My routes" style={{ flex: 1 }}>
-                                    <RoutesList onViewableRoutesChanged={(routes) => setViewableRoutes(routes)}/>
+                                    <RoutesList key={"user"} type="USER" onViewableRoutesChanged={(routes) => setViewableRoutes(routes)} onRoutePress={(route) => handleRouteClick(route.id)}/>
                                 </TabsPage>
 
                                 <TabsPage id={"global"} title="Global routes" style={{ flex: 1 }}>
+                                    <RoutesList key={"global"} type="GLOBAL" mapRef={mapRef} mapRegion={mapRegion} onViewableRoutesChanged={(routes) => setViewableRoutes(routes)} onRoutePress={(route) => handleRouteClick(route.id)}/>
                                 </TabsPage>
                             </Tabs>
                         </ResizableView>
