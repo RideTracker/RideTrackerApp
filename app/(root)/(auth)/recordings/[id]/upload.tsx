@@ -138,7 +138,9 @@ export default function UploadRecordingPage() {
                             
                             createActivity(client, sessions, properties.visibility).then((result) => {
                                 if(result.success) {
-                                    updateActivity(client, result.activity.id, (properties.title?.length)?(properties.title):(null), (properties.description?.length)?(properties.description):(null), properties.bike?.id).then((result) => {
+                                    updateActivity(client, result.activity.id, (properties.title?.length)?(properties.title):(null), (properties.description?.length)?(properties.description):(null), properties.bike?.id ?? null).then((result) => {
+                                        router.push("/index");
+                                    }).catch(() => {
                                         router.push("/index");
                                     });
                                 }
