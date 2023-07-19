@@ -37,7 +37,10 @@ export default function UploadRecordingPage() {
         visibility: "PUBLIC"
     });
 
-    const [ recording, setRecording ] = useState(null);
+    const [ recording, setRecording ] = useState<{
+        id: string,
+        locations: RecordingSession["locations"]
+    }>(null);
     const [ sessions, setSessions ] = useState<RecordingSession[]>(null);
     const [ uploading, setUploading ] = useState<boolean>(false);
     const [ stats, setStats ] = useState<{
@@ -119,7 +122,7 @@ export default function UploadRecordingPage() {
                         )}
                     </View>
 
-                    <CaptionText style={{ fontSize: 40, textAlign: "center" }}>Great job, Nora!</CaptionText>
+                    <CaptionText style={{ fontSize: 40, textAlign: "center" }}>Great job, {userData.user?.name.split(' ')[0]}!</CaptionText>
 
                     <ParagraphText placeholder={!stats}>You reached {Math.round((stats?.distance / 1000) * 10) / 10} km at an average of {Math.round((stats?.averageSpeed * 3.6) * 10) / 10} km/h, at which you topped off at {Math.round((stats?.maxSpeed * 3.6) * 10) / 10} km/h! *</ParagraphText>
 
@@ -136,13 +139,31 @@ export default function UploadRecordingPage() {
                         <Button primary={true} label="Publish activity" onPress={() => {
                             setUploading(true);
                             
-                            createActivity(client, sessions, properties.visibility).then((result) => {
+                            createActivity(client, recording.id, sessions, properties.visibility).then((result) => {
                                 if(result.success) {
-                                    updateActivity(client, result.activity.id, (properties.title?.length)?(properties.title):(null), (properties.description?.length)?(properties.description):(null), properties.bike?.id ?? null).then((result) => {
+                                    updateActivity(client, result.activity.id, properties.visibility, (properties.title?.length)?(properties.title):(null), (properties.description?.length)?(properties.description):(null), properties.bike?.id ?? null).then((result) => {
                                         router.push("/index");
                                     }).catch(() => {
                                         router.push("/index");
                                     });
+                                }
+                                else if(result.message === "You have already uploaded this activity!") {
+                                    Alert.alert("Something went wrong", "You have already uploaded this activity!\n\nDo you want to discard it?", [
+                                        {
+                                            text: "Yes",
+                                            onPress: async () => {
+                                                const file = RECORDINGS_PATH + recording.id + ".json";
+        
+                                                const info = await FileSystem.getInfoAsync(file);
+        
+                                                if(info.exists)
+                                                    await FileSystem.deleteAsync(file);
+                                                
+                                                router.push("/index");
+                                            }
+                                        },
+                                        { text: "Cancel" }
+                                    ]);
                                 }
                             });
                         }}/>
@@ -154,14 +175,14 @@ export default function UploadRecordingPage() {
                                 {
                                     text: "I am sure",
                                     onPress: async () => {
-                                        router.push("/index");
-
                                         const file = RECORDINGS_PATH + id + ".json";
 
                                         const info = await FileSystem.getInfoAsync(file);
 
                                         if(info.exists)
                                             await FileSystem.deleteAsync(file);
+                                        
+                                        router.push("/index");
                                     }
                                 },
                                 { text: "Cancel" }
