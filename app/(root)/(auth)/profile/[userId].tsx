@@ -113,7 +113,7 @@ export default function Profile() {
                     <TouchableOpacity onPress={() => {
                         setUploadingFollow(true);
 
-                        setProfileFollow(client, profile.user.id, !follow).then((result) => {
+                        setProfileFollow(client, profile.user?.id, !follow).then((result) => {
                             if(result.success)
                                 setFollow(result.follow);
 
@@ -140,13 +140,13 @@ export default function Profile() {
                     {(profile) && (<ProfileBikes profile={profile}/>)}
                 </TabsPage>
 
-                {(profile?.user?.id === userData.user.id) && (
+                {(profile?.user?.id === userData.user?.id) && (
                     <TabsPage id={"following"} title={"Following"}>
                         <ProfileFollowing/>
                     </TabsPage>
                 )}
                     
-                {(profile?.user?.id === userData.user.id) && (
+                {(profile?.user?.id === userData.user?.id) && (
                     <TabsPage id={"followers"} title={"Followers"}>
                         <ProfileFollowers/>
                     </TabsPage>

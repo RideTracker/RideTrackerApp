@@ -85,7 +85,7 @@ export default function Index() {
     }, [ userData.filters?.feed, filterText ]);
 
     const handlePagination = async (reset: boolean) => {
-        if(!client.token) {
+        if(!client.token && internetConnection !== "OFFLINE") {
             router.push("/login");
             
             return false;

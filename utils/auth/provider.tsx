@@ -12,6 +12,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { Platform } from "react-native";
 import { setClient } from "../stores/client";
 import { useClient } from "../../modules/useClient";
+import useInternetConnection from "../../modules/useInternetConnection";
 
 const AuthContext = React.createContext(null);
 
@@ -35,6 +36,7 @@ export function Provider(props: ProviderProps) {
     const segments = useSegments();
     const userData = useUser();
     const client = useClient();
+    const internetConnection = useInternetConnection();
 
     const [ user, setAuth ] = useState(null);
     const [ ready, setReady ] = useState<boolean>(false);
@@ -43,43 +45,39 @@ export function Provider(props: ProviderProps) {
     useEffect(() => {
         const client = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, null);
         
-        getStatus(client, Platform.OS).then((result) => {
-            setStatus(result);
+        readUserData().then(async (data) => {
+            if(data.email && data.token) {
+                const client = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                    identity: data.email,
+                    key: data.token.key,
+                    type: "Basic"
+                });
 
-            readUserData().then(async (data) => {
-                if(data.email && data.token) {
-                    const client = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                        identity: data.email,
-                        key: data.token.key,
-                        type: "Basic"
-                    });
+                const authentication = await authenticateUser(client);
 
-                    const authentication = await authenticateUser(client);
-    
-                    dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                        identity: data.email,
-                        key: authentication.token.key,
-                        type: "Basic"
-                    })));
+                dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                    identity: data.email,
+                    key: authentication.token.key,
+                    type: "Basic"
+                })));
 
-                    dispatch(setUserData({
-                        email: data.email,
-                        token: authentication.token,
-                        user: authentication.user
-                    }));
-                }
-    
-                setReady(true);
-
-                SplashScreen.hideAsync();
-            }).catch(() => {
                 dispatch(setUserData({
-                    key: undefined,
-                    user: undefined
+                    email: data.email,
+                    token: authentication.token,
+                    user: authentication.user
                 }));
-    
+            }
+        }).catch(() => {
+            dispatch(setUserData({
+                key: undefined,
+                user: undefined
+            }));
+        }).finally(() => {
+            getStatus(client, Platform.OS).then((result) => {
+                setStatus(result);
+            }).finally(() => {
                 setReady(true);
-
+    
                 SplashScreen.hideAsync();
             });
         });
@@ -105,13 +103,21 @@ export function Provider(props: ProviderProps) {
         const inPublicGroup = segments.includes("(public)");
         const inSubscriptionGroup = segments.includes("(subscription)");
 
-        if((!userData?.token || !client.token) && inAuthGroup)
-            router.push("/login");
-        else if (userData?.token && client.token) {
-            if((!inAuthGroup && segments[segments.length - 1] !== "register") && !inPublicGroup) 
-                router.replace("/");
-            else if(inSubscriptionGroup && !userData.user?.subscribed)
-                router.replace("/");
+        if(internetConnection === "OFFLINE") {
+            if(inSubscriptionGroup)
+                router.push("/");
+            else if(!inAuthGroup && !inPublicGroup)
+                router.push("/");
+        }
+        else {
+            if((!userData?.token || !client.token) && inAuthGroup)
+                router.push("/login");
+            else if ((userData?.token && client.token)) {
+                if((!inAuthGroup && segments[segments.length - 1] !== "register") && !inPublicGroup) 
+                    router.replace("/");
+                else if(inSubscriptionGroup && !userData.user?.subscribed)
+                    router.replace("/");
+            }
         }
     }, [ router, ready, userData?.token, segments, client.token ]);
 
