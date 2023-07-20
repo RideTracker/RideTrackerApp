@@ -8,7 +8,7 @@ import FormInput from "../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../utils/stores/userData";
 import { useClient } from "../../modules/useClient";
-import Client, { authenticateUser, createClient, getRandomToken, loginUser } from "@ridetracker/ridetrackerclient";
+import { createRideTrackerClient, authenticateUser, getRandomToken, loginUser } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
 import * as Application from 'expo-application';
 import { setClient } from "../../utils/stores/client";
@@ -47,9 +47,10 @@ export default function Login() {
                 }
 
                 if(response.token) {
-                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                        email,
-                        key: response.token.key
+                    dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        identity: email,
+                        key: response.token.key,
+                        type: "Basic"
                     })));
     
                     dispatch(setUserData({
@@ -123,17 +124,19 @@ export default function Login() {
                     <Button primary={false} label="Assume random user" onPress={async () => {
                         const randomUser = await getRandomToken(client);
 
-                        const randomUserClient = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                            email: randomUser.email,
-                            key: randomUser.token.key
+                        const randomUserClient = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                            identity: randomUser.email,
+                            key: randomUser.token.key,
+                            type: "Basic"
                         });
 
                         const authentication = await authenticateUser(randomUserClient);
 
                         if(authentication.success) {
-                            dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                                email: randomUser.email,
-                                key: authentication.token.key
+                            dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                                identity: randomUser.email,
+                                key: authentication.token.key,
+                                type: "Basic"
                             })));
 
                             dispatch(setUserData({

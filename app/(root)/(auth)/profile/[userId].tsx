@@ -12,7 +12,7 @@ import Bike from "../../../../components/Bike";
 import Constants from "expo-constants";
 import { useUser } from "../../../../modules/user/useUser";
 import { useClient } from "../../../../modules/useClient";
-import { GetProfileResponse, GetUserFollowersResponse, GetUserFollowingResponse, createClient, getProfileActivities, getProfileBikes, getProfileById, getUserFollowers, getUserFollowing, setProfileFollow } from "@ridetracker/ridetrackerclient";
+import { createRideTrackerClient, GetProfileResponse, GetUserFollowersResponse, GetUserFollowingResponse, getProfileActivities, getProfileBikes, getProfileById, getUserFollowers, getUserFollowing, setProfileFollow } from "@ridetracker/ridetrackerclient";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 import useInternetConnection from "../../../../modules/useInternetConnection";
 import { FontAwesome } from "@expo/vector-icons";
@@ -63,7 +63,7 @@ export default function Profile() {
                     <View style={{ marginRight: 20 }}>
                         <TouchableOpacity onPress={() => {
                             dispatch(setUserData({ email: null, token: null }));
-                            dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
+                            dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, null)));
                         }}>
                             <FontAwesome name="sign-out" size={24} color={theme.color}/>
                         </TouchableOpacity>

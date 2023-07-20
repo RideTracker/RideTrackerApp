@@ -8,7 +8,7 @@ import FormInput from "../../../components/FormInput";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../../utils/stores/userData";
 import { useClient } from "../../../modules/useClient";
-import { createClient, verifyLogin } from "@ridetracker/ridetrackerclient";
+import { createRideTrackerClient, verifyLogin } from "@ridetracker/ridetrackerclient";
 import { useUser } from "../../../modules/user/useUser";
 import { setClient } from "../../../utils/stores/client";
 import Constants from "expo-constants";
@@ -42,9 +42,10 @@ export default function Verify() {
                     return;
                 }
 
-                dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                    email: userData.email,
-                    key: response.token.key
+                dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                    identity: userData.email,
+                    key: response.token.key,
+                    type: "Basic"
                 })));
 
                 dispatch(setUserData({

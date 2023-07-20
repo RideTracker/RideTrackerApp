@@ -6,7 +6,7 @@ import Button from "../../components/Button";
 import { FontAwesome } from "@expo/vector-icons"; 
 import FormInput from "../../components/FormInput";
 import { useClient } from "../../modules/useClient";
-import { createClient, registerUser } from "@ridetracker/ridetrackerclient";
+import { createRideTrackerClient, registerUser } from "@ridetracker/ridetrackerclient";
 import { setClient } from "../../utils/stores/client";
 import { setUserData } from "../../utils/stores/userData";
 import { useDispatch } from "react-redux";
@@ -47,9 +47,10 @@ export default function Register() {
 
                 
                 if(response.token) {
-                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                        email,
-                        key: response.token.key
+                    dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        identity: email,
+                        key: response.token.key,
+                        type: "Basic"
                     })));
 
                     dispatch(setUserData({

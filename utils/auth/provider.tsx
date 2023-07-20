@@ -5,7 +5,7 @@ import { readUserData, setUserData } from "../stores/userData";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../themes";
 import { useUser } from "../../modules/user/useUser";
-import Client, { StatusResponse, authenticateUser, createClient, getStatus } from "@ridetracker/ridetrackerclient";
+import Client, { StatusResponse, authenticateUser, createRideTrackerClient, getStatus } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
 import { readSearchPredictions, setSearchPredictions } from "../stores/searchPredictions";
 import * as NavigationBar from "expo-navigation-bar";
@@ -41,23 +41,25 @@ export function Provider(props: ProviderProps) {
     const [ status, setStatus ] = useState<StatusResponse>(null);
 
     useEffect(() => {
-        const client = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api);
+        const client = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, null);
         
         getStatus(client, Platform.OS).then((result) => {
             setStatus(result);
 
             readUserData().then(async (data) => {
                 if(data.email && data.token) {
-                    const client = createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                        email: data.email,
-                        key: data.token.key
+                    const client = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        identity: data.email,
+                        key: data.token.key,
+                        type: "Basic"
                     });
 
                     const authentication = await authenticateUser(client);
     
-                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                        email: data.email,
-                        key: authentication.token.key
+                    dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                        identity: data.email,
+                        key: authentication.token.key,
+                        type: "Basic"
                     })));
 
                     dispatch(setUserData({
