@@ -18,6 +18,7 @@ import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { CaptionText } from "../../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import ActivityMapDetails from "../../../../../components/ActivityMapDetails";
+import ActivityDataMap from "../../../../../components/activity/ActivityDataMap";
 
 export default function ActivityPage() {
     const client = useClient();
@@ -80,6 +81,10 @@ export default function ActivityPage() {
                         )}
 
                         <ActivityCommentsSummary id={id as string}/>
+
+                        <View style={{ height: 200 }}>
+                            <ActivityDataMap activity={activity}/>
+                        </View>
                     </View>
                 </ScrollView>
             ):(
