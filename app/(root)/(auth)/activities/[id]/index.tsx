@@ -20,7 +20,7 @@ import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import ActivityMapDetails from "../../../../../components/ActivityMapDetails";
 import ActivityDataMap from "../../../../../components/activity/ActivityDataMap";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getActivitySessionsAltitude } from "@ridetracker/routeclient";
+import { getActivitySessionsAltitude, getActivitySessionsSpeed } from "@ridetracker/routeclient";
 import { useRoutesClient } from "../../../../../modules/useRoutesClient";
 import getClosestCoordinate from "../../../../../controllers/polylines/getClosestCoordinate";
 
@@ -108,6 +108,30 @@ export default function ActivityPage() {
                                 return `${Math.round(sessions.altitudes.minimum + (((sessions.altitudes.maximum - sessions.altitudes.minimum) / 5) * index))} m`;
                             }}/>
                         </View>
+
+                        <ParagraphText>{"<"}insert some fun elevation data here{">"}</ParagraphText>
+                        
+                        <View style={{ height: 200 }}>
+                            <ActivityDataMap activity={activity} type="Speed" getSessions={async () => {
+                                const result = await getActivitySessionsSpeed(routesClient, activity.id);
+
+                                if(!result.success)
+                                    return null;
+
+                                return {
+                                    speeds: result.speeds,
+                                    polylines: result.polylines
+                                };
+                            }} getCoordinateFraction={(index, sessions, polyline, polylines) => {
+                                const closestCoordinateIndex = getClosestCoordinate(polylines[polyline][index], sessions.polylines[polyline].points.map((point) => point.coordinate));
+
+                                return sessions.polylines[polyline].points[closestCoordinateIndex].speed / sessions.speeds.maximum;
+                            }} getUnit={(index, sessions) => {
+                                return `${Math.round(((sessions.speeds.maximum / 5) * index) * 3.6)} km/h`;
+                            }}/>
+                        </View>
+
+                        <ParagraphText>{"<"}insert some fun speed data here{">"}</ParagraphText>
                     </SafeAreaView>
                 </ScrollView>
             ):(

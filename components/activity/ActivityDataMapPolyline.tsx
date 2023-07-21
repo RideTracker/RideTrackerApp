@@ -9,7 +9,7 @@ import { scale } from "chroma.ts";
 import { decode } from "@googlemaps/polyline-codec";
 import getStrippedPolylineByPoints from "../../controllers/polylines/getStrippedPolylineByPoints";
 import getFurthestCoordinate from "../../controllers/polylines/getFurthestCoordinate";
-import { getCenter, getRhumbLineBearing } from "geolib";
+import { getBounds, getCenter, getRhumbLineBearing } from "geolib";
 
 export type ActivityDataMapPolylineProps = {
     mapViewRef: MutableRefObject<MapView>;
@@ -69,7 +69,6 @@ export default function ActivityDataMapPolyline({ mapViewRef, region, polylines,
                 });
 
                 mapViewRef.current.setCamera({
-                    ...mapViewRef.current.getCamera(),
                     heading: getRhumbLineBearing(startCoordinate, furthestCoordinate) + 90 + 180
                 });
     

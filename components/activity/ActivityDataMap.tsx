@@ -19,6 +19,7 @@ import getClosestCoordinate from "../../controllers/polylines/getClosestCoordina
 import { Coordinate } from "../../models/Coordinate";
 import CategorySelector from "../CategorySelector";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import getStrippedPolylineByCoordinates from "../../controllers/polylines/getStrippedPolylineByCoordinates";
 
 export type ActivityDataMapProps = {
     activity: {
@@ -65,15 +66,17 @@ export default function ActivityDataMap({ activity, type, getSessions, getCoordi
 
     useEffect(() => {
         if(activity) {
-            setPolylines(activity.polylines.map((polyline) => decode(polyline).map((coordinate) => {
-                return {
-                    latitude: coordinate[0],
-                    longitude: coordinate[1]
-                };
-            })));
+            requestAnimationFrame(() => {
+                setPolylines(activity.polylines.map((polyline) => getStrippedPolylineByCoordinates(decode(polyline).map((coordinate) => {
+                    return {
+                        latitude: coordinate[0],
+                        longitude: coordinate[1]
+                    };
+                }), 1000)));
 
-            getSessions().then((result) => {
-                setSessions(result);
+                getSessions().then((result) => {
+                    setSessions(result);
+                });
             });
         }
     }, [ activity ]);
