@@ -5,6 +5,7 @@ import { Coordinate } from "../../models/Coordinate";
 import { ExpoWebGLRenderingContext, GLView } from "expo-gl";
 import Expo2DContext from "expo-2d-context";
 import { useTheme } from "../../utils/themes";
+import { scale } from "chroma.ts";
 
 export type ActivityDataMapPolylineProps = {
     polylines: {
@@ -20,13 +21,13 @@ export default function ActivityDataMapPolyline({ polylines }: ActivityDataMapPo
 
     useEffect(() => {
         if(context) {
-            const scale = Dimensions.get("screen").scale;
+            const dimensions = Dimensions.get("screen");
 
             context.lineCap = "round";
             
             polylines.forEach((polyline) => {
                 context.strokeStyle = "white";
-                context.lineWidth = (scale * 1.2) / 3 * 5;
+                context.lineWidth = (dimensions.scale * 1.2) / 3 * 5;
 
                 context.beginPath();
 
@@ -41,23 +42,16 @@ export default function ActivityDataMapPolyline({ polylines }: ActivityDataMapPo
                 context.closePath();
             });
 
-            const green = [ 0, 1, 0, 1 ];
-            const red = [ 1, 0, 0, 1 ];
-
             let count = 0;
-            const items = polylines.reduce((accumulated, polyline) => accumulated + polyline.points.length, 0);
+            const items = polylines.reduce((accumulated, polyline) => accumulated + (polyline.points.length - 1), 0);
+
+            const colorScale = scale([ "green", "orange", "red" ]);
 
             polylines.forEach((polyline) => {
-                context.lineWidth = (scale * 1.2) / 3 * 3;
+                context.lineWidth = (dimensions.scale * 1.2) / 3 * 3;
 
                 for(let index = 1; index < polyline.points.length; index++) {
-                    const colorMultiplier = count / items;
-
-                    const getColor = (index) => Math.round((green[index] + (red[index] - green[index]) * colorMultiplier) * 255);
-                   
-                    const color =  `rgb(${getColor(0)}, ${getColor(1)}, ${getColor(2)})`;
-
-                    context.strokeStyle = color;
+                    context.strokeStyle = colorScale(Math.random()).toString();
                     context.beginPath();
 
                     context.moveTo(polyline.points[index - 1].x, polyline.points[index - 1].y);

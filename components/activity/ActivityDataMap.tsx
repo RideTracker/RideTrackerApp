@@ -1,42 +1,24 @@
 import MapView, { Point } from "react-native-maps";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, Text } from "react-native";
 import { useMapStyle, useTheme } from "../../utils/themes";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getBounds, getCenterOfBounds } from "geolib";
-import { Coordinate } from "../../models/Coordinate";
 import { decode } from "@googlemaps/polyline-codec";
 import { useUser } from "../../modules/user/useUser";
 import ActivityDataMapPolyline, { ActivityDataMapPolylineProps } from "./ActivityDataMapPolyline";
+import getStrippedPolylineByPoints from "../../controllers/polylines/getStrippedPolylineByPoints";
+import { CaptionText } from "../texts/Caption";
+import { ParagraphText } from "../texts/Paragraph";
+import { LinearGradient } from "expo-linear-gradient";
+import getFurthestCoordinate from "../../controllers/polylines/getFurthestCoordinate";
+import { getBounds, getRhumbLineBearing } from "geolib";
+import { SmallText } from "../texts/Small";
+import { scale } from "chroma.ts";
 
 export type ActivityDataMapProps = {
     activity: {
         polylines?: string[];
     };
 };
-
-function distance(point1, point2) {
-    // Calculate the Euclidean distance between two points
-    return Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2);
-  }
-  
-  function removeClosePoints(points, scale) {
-    // Create a copy of the points array to avoid modifying the original array
-    let filteredPoints = points.slice();
-  
-    // Iterate through the points and check distances
-    for (let i = filteredPoints.length - 1; i >= 0; i--) {
-      for (let j = i - 1; j >= 0; j--) {
-        // Check the distance between points[i] and points[j]
-        if (distance(filteredPoints[i], filteredPoints[j]) < 1 / scale) {
-          // Remove one of the points (you can choose which one to remove)
-          filteredPoints.splice(i, 1);
-          break; // Break the inner loop as we have already removed the point
-        }
-      }
-    }
-  
-    return filteredPoints;
-  }
 
 export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
     const theme = useTheme();
@@ -56,7 +38,7 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
             return;
 
         requestAnimationFrame(async () => {
-            const scale = Dimensions.get("screen").scale;
+            const dimensions = Dimensions.get("screen");
 
             const polylines = await Promise.all<ActivityDataMapPolylineProps["polylines"][0]>(activity.polylines.map(async (polyline) => {
                 const coordinates = decode(polyline, 5).map((coordinate) => {
@@ -68,20 +50,28 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
 
                 return {
                     coordinates,
-                    points: removeClosePoints(await Promise.all(coordinates.map(async (coordinate) => await mapViewRef.current.pointForCoordinate(coordinate))), scale)
+                    points: getStrippedPolylineByPoints(await Promise.all(coordinates.map(async (coordinate) => await mapViewRef.current.pointForCoordinate(coordinate))), dimensions.scale / 2 * 1)
                 };
             }));
 
             const coordinates = polylines.flatMap((polyline) => polyline.coordinates);
 
+            const startCoordinate = polylines[0].coordinates[0];
+            const furthestCoordinate = getFurthestCoordinate(polylines.flatMap((polyline) => polyline.coordinates));
+
             mapViewRef.current.fitToCoordinates(coordinates, {
                 animated: false,
                 edgePadding: {
-                    left: 10,
-                    top: 10,
-                    right: 10,
+                    left: 20,
+                    top: 20,
+                    right: 20,
                     bottom: 20
                 }
+            });
+
+            mapViewRef.current.setCamera({
+                ...mapViewRef.current.getCamera(),
+                heading: getRhumbLineBearing(startCoordinate, furthestCoordinate) + 90 + 180
             });
 
             setPolylines(polylines);
@@ -91,16 +81,37 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
     return (
         <View style={{
             flex: 1,
-            borderRadius: 10,
-            overflow: "hidden",
-
-            position: "relative"
+            flexDirection: "row",
+            gap: 10
         }}>
-            <MapView
-                ref={mapViewRef}
-                customMapStyle={theme.mapStyle.concat(mapStyle.compact)}
-                onRegionChangeComplete={handleRegionChangeComplete}
-                style={{
+            <View style={{
+                flex: 1,
+                overflow: "hidden",
+                borderRadius: 10,
+
+                position: "relative"
+            }}>
+                <MapView
+                    ref={mapViewRef}
+                    customMapStyle={theme.mapStyle.concat(mapStyle.compact)}
+                    onRegionChangeComplete={handleRegionChangeComplete}
+                    showsCompass={false}
+                    style={{
+                        position: "absolute",
+
+                        left: 0,
+                        top: 0,
+
+                        width: "100%",
+                        height: "100%",
+
+                        opacity: .4
+                    }}
+                    provider={userData.mapProvider}
+                >
+                </MapView>
+
+                <LinearGradient colors={[ theme.background, "transparent", theme.background ]} locations={[ 0, 0.1, 0.9 ]} style={{
                     position: "absolute",
 
                     left: 0,
@@ -108,12 +119,63 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
 
                     width: "100%",
                     height: "100%"
-                }}
-                provider={userData.mapProvider}
-            >
-            </MapView>
+                }}>
+                    <LinearGradient colors={[ theme.background, "transparent", theme.background ]} locations={[ 0, 0.1, 0.9 ]} style={{
+                        position: "absolute",
 
-            <ActivityDataMapPolyline polylines={polylines}/>
+                        left: 0,
+                        top: 0,
+
+                        width: "100%",
+                        height: "100%"
+                    }} start={{ x: 0, y: 1 }} end={{ x: 1, y: 1}}/>
+                </LinearGradient>
+
+                <ActivityDataMapPolyline polylines={polylines}/>
+
+                <View style={{
+                    position: "absolute",
+
+                    bottom: 0,
+                    right: 0,
+                    
+                    padding: 10,
+
+                    width: "100%",
+
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                    gap: 5,
+
+                    flexDirection: "row"
+                }}>
+                    <View style={{
+                        maxWidth: "70%",
+                        flexDirection: "row",
+                        opacity: .5
+                    }}>
+                        {Array(5).fill(null).map((_, index, array) => (
+                            <View key={index} style={{
+                                gap: 5,
+                                flex: 1
+                            }}>
+                                <Text style={{
+                                    color: theme.color,
+                                    fontSize: 10,
+                                    paddingRight: 5
+                                }} numberOfLines={1}>
+                                    {((index * 13))} km/h
+                                </Text>
+
+                                <View style={{
+                                    backgroundColor: scale([ "green", "orange", "red" ])(index / (array.length - 1)).toString(),
+                                    height: 10
+                                }}/>
+                            </View>
+                        ))}
+                    </View>
+                </View>
+            </View>
         </View>
     );
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity, Dimensions } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
 import Bike from "../../../../../components/Bike";
 import { useTheme } from "../../../../../utils/themes";
@@ -19,6 +19,7 @@ import { CaptionText } from "../../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import ActivityMapDetails from "../../../../../components/ActivityMapDetails";
 import ActivityDataMap from "../../../../../components/activity/ActivityDataMap";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ActivityPage() {
     const client = useClient();
@@ -42,6 +43,8 @@ export default function ActivityPage() {
         }
     }, []);
 
+    const dimensions = Dimensions.get("screen");
+
     return (
         <View style={{flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{
@@ -54,8 +57,8 @@ export default function ActivityPage() {
             }}/>
 
             {(!deleted)?(
-                <ScrollView style={{ padding: 10 }}>
-                    <View style={{ paddingBottom: 40, gap: 20 }}>
+                <ScrollView>
+                    <SafeAreaView style={{ padding: 10, gap: 20 }} edges={[ "bottom" ]}>
                         <View>
                             <View style={{ height: 200 }}>
                                 <ActivityMap activity={activity} type={ComponentType.Default}>
@@ -85,7 +88,7 @@ export default function ActivityPage() {
                         <View style={{ height: 200 }}>
                             <ActivityDataMap activity={activity}/>
                         </View>
-                    </View>
+                    </SafeAreaView>
                 </ScrollView>
             ):(
                 <View style={{
