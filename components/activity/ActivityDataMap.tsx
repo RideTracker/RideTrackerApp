@@ -17,23 +17,49 @@ import { useRoutesClient } from "../../modules/useRoutesClient";
 import { getActivitySessionsAltitude, GetActivitySessionsAltitudeResponse } from "@ridetracker/routeclient";
 import getClosestCoordinate from "../../controllers/polylines/getClosestCoordinate";
 import { Coordinate } from "../../models/Coordinate";
+import CategorySelector from "../CategorySelector";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export type ActivityDataMapProps = {
     activity: {
         id: string;
         polylines?: string[];
     };
+
+    type: string;
+
+    getSessions: () => Promise<{
+        polylines: {
+            points: {
+                coordinate: {
+                    latitude: number;
+                    longitude: number;
+                };
+            }[];
+        }[];
+    }>;
+
+    getCoordinateFraction: (index: number, sessions: any, polyline: number, polylines: Coordinate[][]) => number;
+    getUnit: (index: number, sessions: any) => string;
 };
 
-export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
+export default function ActivityDataMap({ activity, type, getSessions, getCoordinateFraction, getUnit }: ActivityDataMapProps) {
     const theme = useTheme();
     const mapStyle = useMapStyle();
     const userData = useUser();
-    const routesClient = useRoutesClient();
 
     const mapViewRef = useRef<MapView>();
     
-    const [ sessions, setSessions ] = useState<GetActivitySessionsAltitudeResponse>(null);
+    const [ sessions, setSessions ] = useState<{
+        polylines: {
+            points: {
+                coordinate: {
+                    latitude: number;
+                    longitude: number;
+                };
+            }[];
+        }[];
+    }>(null);
     const [ polylines, setPolylines ] = useState<Coordinate[][]>(null);
     const [ region, setRegion ] = useState<Region>(null);
 
@@ -46,13 +72,8 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
                 };
             })));
 
-            getActivitySessionsAltitude(routesClient, activity.id).then((result) => {
-                console.log("result");
-                console.log(result);
-
-                if(result.success) {
-                    setSessions(result);
-                }
+            getSessions().then((result) => {
+                setSessions(result);
             });
         }
     }, [ activity ]);
@@ -91,7 +112,7 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
                         width: "100%",
                         height: "100%",
 
-                        opacity: .4
+                        opacity: .75
                     }}
                     provider={userData.mapProvider}
                 >
@@ -120,12 +141,48 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
                 )}
 
                 {(sessions) && (
-                    <ActivityDataMapPolyline mapViewRef={mapViewRef} region={region} polylines={polylines} getCoordinateFraction={(index, polyline) => {
-                        const closestCoordinateIndex = getClosestCoordinate(polylines[polyline][index], sessions.polylines[polyline].points.map((point) => point.coordinate));
-
-                        return sessions.polylines[polyline].points[closestCoordinateIndex].altitude / (sessions.altitudes.maximum - sessions.altitudes.minimum);
-                    }}/>
+                    <ActivityDataMapPolyline key={JSON.stringify(polylines)} mapViewRef={mapViewRef} region={region} polylines={polylines} getCoordinateFraction={(index, polyline) => getCoordinateFraction(index, sessions, polyline, polylines)}/>
                 )}
+
+                {/*<View style={{
+                    position: "absolute",
+
+                    top: 0,
+                    left: 0,
+                    
+                    width: "100%"
+                }}>
+                    <CategorySelector items={[
+                        {
+                            name: "Elevation",
+                            type: "elevation",
+                            icon: (<MaterialCommunityIcons name="elevation-rise" size={24} color={theme.color}/>)
+                        },
+                        
+                        {
+                            name: "Speed",
+                            type: "speed",
+                            icon: (<MaterialCommunityIcons name="bike-fast" size={24} color={theme.color}/>)
+                        },
+                        
+                        {
+                            name: "Speed",
+                            type: "speed",
+                            icon: (<MaterialCommunityIcons name="bike-fast" size={24} color={theme.color}/>)
+                        }
+                    ]} selectedItem={null} onItemPress={() => {}}/>
+                </View>*/}
+
+                <View style={{
+                    position: "absolute",
+
+                    left: 0,
+                    top: 0,
+
+                    padding: 10
+                }}>
+                    <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: theme.color, textShadowColor: (theme.contrast === "dark")?("transparent"):("#000"), textShadowRadius: 2, fontSize: 24 }}>{type}</ParagraphText>
+                </View>
 
                 <View style={{
                     position: "absolute",
@@ -146,7 +203,8 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
                     {(sessions) && (
                         <View style={{
                             maxWidth: "70%",
-                            flexDirection: "row"
+                            flexDirection: "row",
+                            opacity: .5
                         }}>
                             {Array(5).fill(null).map((_, index, array) => (
                                 <View key={index} style={{
@@ -158,12 +216,12 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
                                         fontSize: 10,
                                         paddingRight: 5
                                     }} numberOfLines={1}>
-                                        {Math.round(sessions.altitudes.minimum + (((sessions.altitudes.maximum - sessions.altitudes.minimum) / 5) * index))} m
+                                        {getUnit(index, sessions)}
                                     </Text>
 
                                     <View style={{
                                         backgroundColor: scale([ "green", "orange", "red" ])(index / (array.length - 1)).toString(),
-                                        height: 10
+                                        height: 8
                                     }}/>
                                 </View>
                             ))}

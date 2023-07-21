@@ -46,7 +46,7 @@ export default function ActivityDataMapPolyline({ mapViewRef, region, polylines,
                         y: Math.round(point.y),
                         coordinateIndex: index
                     }
-                })), 1 / dimensions.scale);
+                })), dimensions.scale / 3 * 2);
 
                 return {
                     coordinates,
@@ -79,9 +79,8 @@ export default function ActivityDataMapPolyline({ mapViewRef, region, polylines,
     }, [ region, polylines ]);
 
     useEffect(() => {
-        if(processedPolylines)
-            handleRender();
-    }, [ processedPolylines ]);
+        handleRender();
+    }, [ processedPolylines, context ]);
 
     const handleRender = useCallback(() => {
         if(processedPolylines && context) {

@@ -41,7 +41,7 @@ export default function CategorySelector({ selectedItem, items, onItemPress }: C
                         borderWidth: 1,
                         borderColor: (selectedItem?.type === item.type)?(theme.border):("transparent")
                     }} onPress={() => onItemPress(item)}>
-                        <View style={{ marginTop: -3, width: 40, flexDirection: "row", alignItems: "flex-start" }}>
+                        <View style={{ marginTop: -3, maxWidth: 40, flexDirection: "row", alignItems: "flex-start" }}>
                             {item.icon}
                         </View>
 

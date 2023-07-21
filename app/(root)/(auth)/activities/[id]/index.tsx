@@ -20,6 +20,9 @@ import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import ActivityMapDetails from "../../../../../components/ActivityMapDetails";
 import ActivityDataMap from "../../../../../components/activity/ActivityDataMap";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getActivitySessionsAltitude } from "@ridetracker/routeclient";
+import { useRoutesClient } from "../../../../../modules/useRoutesClient";
+import getClosestCoordinate from "../../../../../controllers/polylines/getClosestCoordinate";
 
 export default function ActivityPage() {
     const client = useClient();
@@ -28,6 +31,7 @@ export default function ActivityPage() {
     const { id } = useSearchParams();
     const internetConnection = useInternetConnection();
     const userData = useUser();
+    const routesClient = useRoutesClient();
 
     const [ activity, setActivity ] = useState<GetActivityResponse["activity"]>(null);
     const [ deleted, setDeleted ] = useState<boolean>(false);
@@ -86,7 +90,23 @@ export default function ActivityPage() {
                         <ActivityCommentsSummary id={id as string}/>
 
                         <View style={{ height: 200 }}>
-                            <ActivityDataMap activity={activity}/>
+                            <ActivityDataMap activity={activity} type="Elevation" getSessions={async () => {
+                                const result = await getActivitySessionsAltitude(routesClient, activity.id);
+
+                                if(!result.success)
+                                    return null;
+
+                                return {
+                                    altitudes: result.altitudes,
+                                    polylines: result.polylines
+                                };
+                            }} getCoordinateFraction={(index, sessions, polyline, polylines) => {
+                                const closestCoordinateIndex = getClosestCoordinate(polylines[polyline][index], sessions.polylines[polyline].points.map((point) => point.coordinate));
+
+                                return sessions.polylines[polyline].points[closestCoordinateIndex].altitude / (sessions.altitudes.maximum - sessions.altitudes.minimum);
+                            }} getUnit={(index, sessions) => {
+                                return `${Math.round(sessions.altitudes.minimum + (((sessions.altitudes.maximum - sessions.altitudes.minimum) / 5) * index))} m`;
+                            }}/>
                         </View>
                     </SafeAreaView>
                 </ScrollView>
