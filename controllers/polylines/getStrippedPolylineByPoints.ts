@@ -1,14 +1,9 @@
 import { Point } from "react-native-maps";
 import { getDistanceBetweenPoints } from "./getDistanceBetweenPoints";
 
-export default function getStrippedPolylineByPoints(points: Point[], distance: number) {
+export default function getStrippedPolylineByPoints(points: Point[], distance: number): (any & Point)[] {
     // Create a copy of the points array to avoid modifying the original array
-    let filteredPoints = points.slice().map((point) => {
-        return {
-            x: Math.round(point.x),
-            y: Math.round(point.y)
-        };
-    });
+    let filteredPoints = points.slice();
 
     // Iterate through the points and check distances
     for (let i = filteredPoints.length - 1; i >= 0; i--) {

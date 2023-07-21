@@ -69,7 +69,7 @@
       "apiUserAgent": "RideTrackerApp-0.9.3",
       "api": "https://staging.service.ridetracker.app",
       "avatarApi": "https://staging.avatar-service.ridetracker.app",
-      "routeApi": "https://staging.route-service.ridetracker.app",
+      "routesApi": "https://staging.route-service.ridetracker.app",
       "images": "https://ridetracker.app/cdn-cgi/imagedelivery/iF-n-0zUOubWqw15Yx-oAg",
       "eas": {
         "projectId": "b821b60b-3f8b-4b59-b660-9e6a51e1714f"

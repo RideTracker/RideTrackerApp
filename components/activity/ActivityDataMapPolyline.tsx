@@ -1,31 +1,95 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import { View, Dimensions } from "react-native";
-import { Point } from "react-native-maps";
+import MapView, { Point, Region } from "react-native-maps";
 import { Coordinate } from "../../models/Coordinate";
 import { ExpoWebGLRenderingContext, GLView } from "expo-gl";
 import Expo2DContext from "expo-2d-context";
 import { useTheme } from "../../utils/themes";
 import { scale } from "chroma.ts";
+import { decode } from "@googlemaps/polyline-codec";
+import getStrippedPolylineByPoints from "../../controllers/polylines/getStrippedPolylineByPoints";
+import getFurthestCoordinate from "../../controllers/polylines/getFurthestCoordinate";
+import { getCenter, getRhumbLineBearing } from "geolib";
 
 export type ActivityDataMapPolylineProps = {
-    polylines: {
-        coordinates: Coordinate[];
-        points: Point[];
-    }[];
+    mapViewRef: MutableRefObject<MapView>;
+
+    region: Region;
+    polylines: Coordinate[][];
+
+    getCoordinateFraction: (index: number, polyline: number) => number;
 }
 
-export default function ActivityDataMapPolyline({ polylines }: ActivityDataMapPolylineProps) {
+export default function ActivityDataMapPolyline({ mapViewRef, region, polylines, getCoordinateFraction }: ActivityDataMapPolylineProps) {
     const theme = useTheme();
     
     const [ context, setContext ] = useState<Expo2DContext>(null);
+    const [ processedPolylines, setProcessedPolylines ] = useState<{
+        coordinates: Coordinate[];
+        points: (Point & {
+            coordinateIndex: number;
+        })[];
+    }[]>(null);
 
     useEffect(() => {
-        if(context) {
+        if(polylines) {
+            const dimensions = Dimensions.get("screen");
+
+            Promise.all(polylines.map(async (polyline) => {
+                const coordinates = polyline;
+
+                const points = getStrippedPolylineByPoints(await Promise.all(coordinates.map(async (coordinate, index) => {
+                    const point = await mapViewRef.current.pointForCoordinate(coordinate);
+
+                    return {
+                        x: Math.round(point.x),
+                        y: Math.round(point.y),
+                        coordinateIndex: index
+                    }
+                })), 1 / dimensions.scale);
+
+                return {
+                    coordinates,
+                    points
+                };
+            })).then((polylines) => {
+                const coordinates = polylines.flatMap((polyline) => polyline.coordinates);
+
+                const startCoordinate = coordinates[0];
+                const furthestCoordinate = getFurthestCoordinate(coordinates);
+
+                mapViewRef.current.fitToCoordinates(coordinates, {
+                    animated: false,
+                    edgePadding: {
+                        left: 20,
+                        top: 20,
+                        right: 20,
+                        bottom: 20
+                    }
+                });
+
+                mapViewRef.current.setCamera({
+                    ...mapViewRef.current.getCamera(),
+                    heading: getRhumbLineBearing(startCoordinate, furthestCoordinate) + 90 + 180
+                });
+    
+                setProcessedPolylines(polylines);
+            });
+        }
+    }, [ region, polylines ]);
+
+    useEffect(() => {
+        if(processedPolylines)
+            handleRender();
+    }, [ processedPolylines ]);
+
+    const handleRender = useCallback(() => {
+        if(processedPolylines && context) {
             const dimensions = Dimensions.get("screen");
 
             context.lineCap = "round";
             
-            polylines.forEach((polyline) => {
+            processedPolylines.forEach((polyline) => {
                 context.strokeStyle = "white";
                 context.lineWidth = (dimensions.scale * 1.2) / 3 * 5;
 
@@ -43,15 +107,14 @@ export default function ActivityDataMapPolyline({ polylines }: ActivityDataMapPo
             });
 
             let count = 0;
-            const items = polylines.reduce((accumulated, polyline) => accumulated + (polyline.points.length - 1), 0);
 
             const colorScale = scale([ "green", "orange", "red" ]);
 
-            polylines.forEach((polyline) => {
+            processedPolylines.forEach((polyline, polylineIndex) => {
                 context.lineWidth = (dimensions.scale * 1.2) / 3 * 3;
 
                 for(let index = 1; index < polyline.points.length; index++) {
-                    context.strokeStyle = colorScale(Math.random()).toString();
+                    context.strokeStyle = colorScale(getCoordinateFraction(polyline.points[index].coordinateIndex, polylineIndex)).toString();
                     context.beginPath();
 
                     context.moveTo(polyline.points[index - 1].x, polyline.points[index - 1].y);
@@ -67,7 +130,7 @@ export default function ActivityDataMapPolyline({ polylines }: ActivityDataMapPo
 
             context.flush();
         }
-    }, [ context, polylines ]);
+    }, [ context, processedPolylines ]);
 
     const handleContextCreate = useCallback((gl) => {
         const context = new Expo2DContext(gl as any, {
@@ -78,7 +141,6 @@ export default function ActivityDataMapPolyline({ polylines }: ActivityDataMapPo
 
         const scale = Dimensions.get("screen").scale;
         context.scale(scale, scale);
-
 
         setContext(context);
     }, [ theme ]);

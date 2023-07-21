@@ -1,5 +1,5 @@
-import MapView, { Point } from "react-native-maps";
-import { View, Dimensions, Text } from "react-native";
+import MapView, { Point, Region } from "react-native-maps";
+import { View, Dimensions, Text, Platform } from "react-native";
 import { useMapStyle, useTheme } from "../../utils/themes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { decode } from "@googlemaps/polyline-codec";
@@ -13,9 +13,14 @@ import getFurthestCoordinate from "../../controllers/polylines/getFurthestCoordi
 import { getBounds, getRhumbLineBearing } from "geolib";
 import { SmallText } from "../texts/Small";
 import { scale } from "chroma.ts";
+import { useRoutesClient } from "../../modules/useRoutesClient";
+import { getActivitySessionsAltitude, GetActivitySessionsAltitudeResponse } from "@ridetracker/routeclient";
+import getClosestCoordinate from "../../controllers/polylines/getClosestCoordinate";
+import { Coordinate } from "../../models/Coordinate";
 
 export type ActivityDataMapProps = {
     activity: {
+        id: string;
         polylines?: string[];
     };
 };
@@ -24,59 +29,40 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
     const theme = useTheme();
     const mapStyle = useMapStyle();
     const userData = useUser();
+    const routesClient = useRoutesClient();
 
     const mapViewRef = useRef<MapView>();
     
-    const [ polylines, setPolylines ] = useState<ActivityDataMapPolylineProps["polylines"]>([]);
+    const [ sessions, setSessions ] = useState<GetActivitySessionsAltitudeResponse>(null);
+    const [ polylines, setPolylines ] = useState<Coordinate[][]>(null);
+    const [ region, setRegion ] = useState<Region>(null);
 
     useEffect(() => {
-        handleRegionChangeComplete();
-    }, [ activity ]);
-
-    const handleRegionChangeComplete = useCallback(() => {
-        if(!activity?.polylines)
-            return;
-
-        requestAnimationFrame(async () => {
-            const dimensions = Dimensions.get("screen");
-
-            const polylines = await Promise.all<ActivityDataMapPolylineProps["polylines"][0]>(activity.polylines.map(async (polyline) => {
-                const coordinates = decode(polyline, 5).map((coordinate) => {
-                    return {
-                        latitude: coordinate[0],
-                        longitude: coordinate[1]
-                    };
-                });
-
+        if(activity) {
+            setPolylines(activity.polylines.map((polyline) => decode(polyline).map((coordinate) => {
                 return {
-                    coordinates,
-                    points: getStrippedPolylineByPoints(await Promise.all(coordinates.map(async (coordinate) => await mapViewRef.current.pointForCoordinate(coordinate))), dimensions.scale / 2 * 1)
+                    latitude: coordinate[0],
+                    longitude: coordinate[1]
                 };
-            }));
+            })));
 
-            const coordinates = polylines.flatMap((polyline) => polyline.coordinates);
+            getActivitySessionsAltitude(routesClient, activity.id).then((result) => {
+                console.log("result");
+                console.log(result);
 
-            const startCoordinate = polylines[0].coordinates[0];
-            const furthestCoordinate = getFurthestCoordinate(polylines.flatMap((polyline) => polyline.coordinates));
-
-            mapViewRef.current.fitToCoordinates(coordinates, {
-                animated: false,
-                edgePadding: {
-                    left: 20,
-                    top: 20,
-                    right: 20,
-                    bottom: 20
+                if(result.success) {
+                    setSessions(result);
                 }
             });
+        }
+    }, [ activity ]);
 
-            mapViewRef.current.setCamera({
-                ...mapViewRef.current.getCamera(),
-                heading: getRhumbLineBearing(startCoordinate, furthestCoordinate) + 90 + 180
-            });
+    /*const handleRegionChangeComplete = useCallback(() => {
+        if(!activity?.polylines || !sessions)
+            return;
 
-            setPolylines(polylines);
-        });
-    }, [ activity, mapViewRef ]);
+        handleRender(sessions);
+    }, [ activity, sessions, mapViewRef ]);*/
 
     return (
         <View style={{
@@ -94,7 +80,7 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
                 <MapView
                     ref={mapViewRef}
                     customMapStyle={theme.mapStyle.concat(mapStyle.compact)}
-                    onRegionChangeComplete={handleRegionChangeComplete}
+                    onRegionChangeComplete={(region) => setRegion(region)}
                     showsCompass={false}
                     style={{
                         position: "absolute",
@@ -111,15 +97,7 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
                 >
                 </MapView>
 
-                <LinearGradient colors={[ theme.background, "transparent", theme.background ]} locations={[ 0, 0.1, 0.9 ]} style={{
-                    position: "absolute",
-
-                    left: 0,
-                    top: 0,
-
-                    width: "100%",
-                    height: "100%"
-                }}>
+                {(Platform.OS === "android") && (
                     <LinearGradient colors={[ theme.background, "transparent", theme.background ]} locations={[ 0, 0.1, 0.9 ]} style={{
                         position: "absolute",
 
@@ -128,10 +106,26 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
 
                         width: "100%",
                         height: "100%"
-                    }} start={{ x: 0, y: 1 }} end={{ x: 1, y: 1}}/>
-                </LinearGradient>
+                    }}>
+                        <LinearGradient colors={[ theme.background, "transparent", theme.background ]} locations={[ 0, 0.1, 0.9 ]} style={{
+                            position: "absolute",
 
-                <ActivityDataMapPolyline polylines={polylines}/>
+                            left: 0,
+                            top: 0,
+
+                            width: "100%",
+                            height: "100%"
+                        }} start={{ x: 0, y: 1 }} end={{ x: 1, y: 1}}/>
+                    </LinearGradient>
+                )}
+
+                {(sessions) && (
+                    <ActivityDataMapPolyline mapViewRef={mapViewRef} region={region} polylines={polylines} getCoordinateFraction={(index, polyline) => {
+                        const closestCoordinateIndex = getClosestCoordinate(polylines[polyline][index], sessions.polylines[polyline].points.map((point) => point.coordinate));
+
+                        return sessions.polylines[polyline].points[closestCoordinateIndex].altitude / (sessions.altitudes.maximum - sessions.altitudes.minimum);
+                    }}/>
+                )}
 
                 <View style={{
                     position: "absolute",
@@ -149,31 +143,32 @@ export default function ActivityDataMap({ activity }: ActivityDataMapProps) {
 
                     flexDirection: "row"
                 }}>
-                    <View style={{
-                        maxWidth: "70%",
-                        flexDirection: "row",
-                        opacity: .5
-                    }}>
-                        {Array(5).fill(null).map((_, index, array) => (
-                            <View key={index} style={{
-                                gap: 5,
-                                flex: 1
-                            }}>
-                                <Text style={{
-                                    color: theme.color,
-                                    fontSize: 10,
-                                    paddingRight: 5
-                                }} numberOfLines={1}>
-                                    {((index * 13))} km/h
-                                </Text>
+                    {(sessions) && (
+                        <View style={{
+                            maxWidth: "70%",
+                            flexDirection: "row"
+                        }}>
+                            {Array(5).fill(null).map((_, index, array) => (
+                                <View key={index} style={{
+                                    gap: 5,
+                                    flex: 1
+                                }}>
+                                    <Text style={{
+                                        color: theme.color,
+                                        fontSize: 10,
+                                        paddingRight: 5
+                                    }} numberOfLines={1}>
+                                        {Math.round(sessions.altitudes.minimum + (((sessions.altitudes.maximum - sessions.altitudes.minimum) / 5) * index))} m
+                                    </Text>
 
-                                <View style={{
-                                    backgroundColor: scale([ "green", "orange", "red" ])(index / (array.length - 1)).toString(),
-                                    height: 10
-                                }}/>
-                            </View>
-                        ))}
-                    </View>
+                                    <View style={{
+                                        backgroundColor: scale([ "green", "orange", "red" ])(index / (array.length - 1)).toString(),
+                                        height: 10
+                                    }}/>
+                                </View>
+                            ))}
+                        </View>
+                    )}
                 </View>
             </View>
         </View>
