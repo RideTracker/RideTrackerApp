@@ -15,6 +15,7 @@ import uuid from "react-native-uuid";
 import { createBike } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 import PageOverlay from "../../../../components/PageOverlay";
+import { BikeTypes } from "../../../../components/BikeTypes";
 
 type ImageAsset = {
     id: string;
@@ -48,37 +49,13 @@ export default function BikeCreatePage() {
                     <CaptionText>Bike Model</CaptionText>
                 </View>
                 
-                <CategorySelector selectedItem={model} items={[
-                    {
-                        type: "road_bike",
-                        name: "Road Bike",
-                        icon: (<FontAwesome name="bicycle" size={24} color={theme.color}/>)
-                    },
-                    
-                    {
-                        type: "mountain_bike",
-                        name: "Mountain Bike",
-                        icon: (<FontAwesome name="bicycle" size={24} color={theme.color}/>)
-                    },
-                    
-                    {
-                        type: "fixed_gear",
-                        name: "Fixed Gear",
-                        icon: (<FontAwesome name="bicycle" size={24} color={theme.color}/>)
-                    },
-                    
-                    {
-                        type: "touring_bike",
-                        name: "Touring Bike",
-                        icon: (<FontAwesome name="bicycle" size={24} color={theme.color}/>)
-                    },
-                    
-                    {
-                        type: "cruiser",
-                        name: "Cruiser",
-                        icon: (<FontAwesome name="bicycle" size={24} color={theme.color}/>)
+                <CategorySelector selectedItem={model} items={BikeTypes.map((bikeType) => {
+                    return {
+                        name: bikeType.name,
+                        type: bikeType.type,
+                        icon: (<Image style={{ height: 24, flex: 1, resizeMode: "contain", tintColor: theme.color }} source={bikeType.image}/>)
                     }
-                ]} onItemPress={(item) => setModel(item)}/>
+                })} onItemPress={(item) => setModel(item)}/>
 
                 <CaptionText style={{ paddingHorizontal: 10 }}>Bike Images</CaptionText>
 

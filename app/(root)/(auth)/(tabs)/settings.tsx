@@ -10,7 +10,7 @@ import { SelectList } from "../../../../components/SelectList";
 import { useUser } from "../../../../modules/user/useUser";
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 import { setSearchPredictions } from "../../../../utils/stores/searchPredictions";
-import { createClient, createMessage, deleteUser } from "@ridetracker/ridetrackerclient";
+import { createMessage, createRideTrackerClient, deleteUser } from "@ridetracker/ridetrackerclient";
 import Constants from "expo-constants";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import { CaptionText } from "../../../../components/texts/Caption";
@@ -81,12 +81,12 @@ export default function Settings() {
                                 
                                 <Button primary={false} label="Reset key" onPress={() => {
                                     dispatch(setUserData({ email: null, token: null }));
-                                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
+                                    dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, null)));
                                 }}/>
 
                                 <Button primary={false} label="Reset data" onPress={() => {
                                     dispatch(setUserData({ email: undefined, token: undefined, filters: undefined, user: undefined }));
-                                    dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
+                                    dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, null)));
                                 }}/>
 
                                 <Button primary={false} label="Reset search predictions" onPress={() => {
@@ -202,7 +202,7 @@ export default function Settings() {
                                                         Alert.alert("Account deleted", "Your account has now been set up for deletion. We reserve the right to process your account deletion up to 30 days.\n\nYour content will not be deleted. If you wish to have your content deleted, please contact us within 30 days at privacy@ridetracker.app");
                                                         
                                                         dispatch(setUserData({ email: null, token: null }));
-                                                        dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
+                                                        dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, null)));
                                                     });
 
                                                 }

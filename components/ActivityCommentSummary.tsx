@@ -96,16 +96,18 @@ export default function ActivityCommentSummary(props: ActivityCommentSummaryProp
                         </ParagraphText>
                     </View>
 
-                    <ParagraphText placeholder={!comment}>
-                        {(comment) && getCommentSummaryMessage(comment.message, 80)}
-                    </ParagraphText>
+                    <TouchableOpacity disabled={!comment} onPress={() => router.push(`/activities/${activity}/comments/list?highlightCommentId=${comment.id}`)}>
+                        <ParagraphText placeholder={!comment}>
+                            {(comment) && getCommentSummaryMessage(comment.message, 80)}
+                        </ParagraphText>
+                    </TouchableOpacity>
 
                     <View style={{
                         flexDirection: "row",
                         alignItems: "baseline",
-                        gap: 5
+                        gap: 10
                     }}>
-                        <TouchableOpacity onPress={() => router.push(`/activities/${activity}/comments/${comment.id}/reply`)}>
+                        <TouchableOpacity onPress={() => router.push(`/activities/${activity}/comments/reply?commentId=${comment.id}`)}>
                             <LinkText>Reply</LinkText>
                         </TouchableOpacity>
 

@@ -7,8 +7,9 @@ import { timeSince } from "../../utils/time";
 import ActivityMap from "../../layouts/activity/map";
 import { ComponentType } from "../../models/componentType";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { getActivityById } from "@ridetracker/ridetrackerclient";
+import { GetActivityResponse, getActivityById } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../modules/useClient";
+import { BikeActivitySummary } from "../BikeActivitySummary";
 
 type ActivityListProps = {
     id: string | null;
@@ -20,7 +21,7 @@ export default function ActivityList({ id, style }: ActivityListProps) {
     const router = useRouter();
     const theme = useTheme();
 
-    const [ activity, setActivity ] = useState(null);
+    const [ activity, setActivity ] = useState<GetActivityResponse["activity"]>(null);
 
     useEffect(() => {
         if(id !== null)
@@ -37,59 +38,43 @@ export default function ActivityList({ id, style }: ActivityListProps) {
                 <View style={{
                     flex: 1,
                     paddingVertical: 2,
-                    paddingLeft: 10,
                     justifyContent: "space-around",
                     gap: 5
                 }}>
 
                     {(activity)?(
                         <React.Fragment>
-                            {/*(activity.summary) && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    justifyContent: "space-between"
-                                }}>
-                                    <View>
-                                        <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{activity?.summary?.distance}</ParagraphText>
-                                        <ParagraphText style={{ textAlign: "center" }}>distance</ParagraphText>
-                                    </View>
-
-                                    <View>
-                                        <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{activity?.summary?.averageSpeed} km</ParagraphText>
-                                        <ParagraphText style={{ textAlign: "center" }}>average speed</ParagraphText>
-                                    </View>
-
-                                    <View>
-                                        <ParagraphText style={{ textAlign: "center", fontSize: 18 }}>{activity?.summary?.elevation} m</ParagraphText>
-                                        <ParagraphText style={{ textAlign: "center" }}>elevation</ParagraphText>
-                                    </View>
-                                </View>
-                            )*/}
-                            
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <ParagraphText>{timeSince(activity.timestamp)} {(activity.summary?.startArea) && (`in ${activity.summary.startArea}`)}</ParagraphText>
-                                
-                                <TouchableOpacity style={{
-                                    width: 30,
-                                    height: 30,
+                                <ParagraphText>{timeSince(activity.timestamp)} {(activity?.finishArea) && (`in ${activity.finishArea}`)}</ParagraphText>
+                            </View>
 
-                                    marginLeft: "auto",
-
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }}>
-                                    <FontAwesome name="ellipsis-v" size={24} color={theme.color} />
-                                </TouchableOpacity>
+                            <View style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between"
+                            }}>
+                                {activity.summary.filter((summary) => summary.key === "average_speed" || summary.key === "distance" || summary.key === "elevation").slice(0, 3).map((summary) => (
+                                    <BikeActivitySummary key={summary.key} type={summary.key} value={summary.value} color={theme.color}/>
+                                ))}
                             </View>
                         </React.Fragment>
                     ):(
-                        <View style={{
-                            height: 16,
+                        <React.Fragment>
+                            <View style={{
+                                height: 16,
 
-                            flexGrow: 1,
+                                flexGrow: 1,
 
-                            backgroundColor: theme.placeholder
-                        }}/>
+                                backgroundColor: theme.placeholder
+                            }}/>
+
+                            <View style={{
+                                height: 16,
+
+                                flexGrow: 1,
+
+                                backgroundColor: theme.placeholder
+                            }}/>
+                        </React.Fragment>
                     )}
                 </View>
             </View>

@@ -3,12 +3,13 @@ import DropdownPage from "../../../../../../components/DropdownPage";
 import { FontAwesome5 } from '@expo/vector-icons';
 import * as Sharing from 'expo-sharing';
 import { useEffect, useState } from "react";
-import { useSearchParams } from "expo-router";
+import { useRouter, useSearchParams } from "expo-router";
 import { Share } from "react-native";
 
 export default function ActivityDropdownPage() {
     const theme = useTheme();
     const { id } = useSearchParams();
+    const router = useRouter();
 
     return (<DropdownPage items={[
         {
@@ -16,6 +17,8 @@ export default function ActivityDropdownPage() {
             icon: (<FontAwesome5 name="share-square" size={22} color={theme.color}/>),
 
             onPress: () => {
+                router.back();
+                
                 Share.share({
                     title: "View this activity on the RideTracker platform!",
                     message: `https://ridetracker.app/activities/${id}`

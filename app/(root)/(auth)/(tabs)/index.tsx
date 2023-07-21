@@ -63,11 +63,6 @@ export default function Index() {
         getRecordings();
     }, []);
 
-    useEffect(() => {
-        if(!userData.token)
-            router.push("/login");
-    }, [ userData ]);
-
     /*useEffect(() => {
         if(!refreshing) {
             if(!filterText.length)
@@ -90,8 +85,11 @@ export default function Index() {
     }, [ userData.filters?.feed, filterText ]);
 
     const handlePagination = async (reset: boolean) => {
-        if(!client.token)
+        if(!client.token && internetConnection !== "OFFLINE") {
+            router.push("/login");
+            
             return false;
+        }
 
         const currentOffsets = (reset)?({
             activities: 0,

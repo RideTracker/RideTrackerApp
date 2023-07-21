@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Image, Text, View } from "react-native";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
@@ -12,7 +12,7 @@ import Bike from "../../../../components/Bike";
 import Constants from "expo-constants";
 import { useUser } from "../../../../modules/user/useUser";
 import { useClient } from "../../../../modules/useClient";
-import { GetProfileResponse, createClient, getProfileActivities, getProfileBikes, getProfileById, setProfileFollow } from "@ridetracker/ridetrackerclient";
+import { createRideTrackerClient, GetProfileResponse, GetUserFollowersResponse, GetUserFollowingResponse, getProfileActivities, getProfileBikes, getProfileById, getUserFollowers, getUserFollowing, setProfileFollow } from "@ridetracker/ridetrackerclient";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 import useInternetConnection from "../../../../modules/useInternetConnection";
 import { FontAwesome } from "@expo/vector-icons";
@@ -20,6 +20,7 @@ import { setUserData } from "../../../../utils/stores/userData";
 import { setClient } from "../../../../utils/stores/client";
 import { useDispatch } from "react-redux";
 import { LinkText } from "../../../../components/texts/Link";
+import Button from "../../../../components/Button";
 
 export default function Profile() {
     const client = useClient();
@@ -62,7 +63,7 @@ export default function Profile() {
                     <View style={{ marginRight: 20 }}>
                         <TouchableOpacity onPress={() => {
                             dispatch(setUserData({ email: null, token: null }));
-                            dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api)));
+                            dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, null)));
                         }}>
                             <FontAwesome name="sign-out" size={24} color={theme.color}/>
                         </TouchableOpacity>
@@ -112,7 +113,7 @@ export default function Profile() {
                     <TouchableOpacity onPress={() => {
                         setUploadingFollow(true);
 
-                        setProfileFollow(client, profile.user.id, !follow).then((result) => {
+                        setProfileFollow(client, profile.user?.id, !follow).then((result) => {
                             if(result.success)
                                 setFollow(result.follow);
 
@@ -121,7 +122,7 @@ export default function Profile() {
                     }}>
                         {(!uploadingFollow)?(
                             <ParagraphText placeholder={follow === null}>
-                                <LinkText style={{ fontWeight: "bold" }}>{(follow)?("Unfollow"):("Follow")}</LinkText>
+                                <LinkText style={{ fontWeight: "bold", color: (follow)?(theme.red):(theme.brand) }}>{(follow)?("Unfollow"):("Follow")}</LinkText>
                             </ParagraphText>
                         ):(
                             <ActivityIndicator size={20} color={theme.brand}/>
@@ -130,7 +131,7 @@ export default function Profile() {
                 )}
             </View>
 
-            <Tabs initialTab={"activities"} style={{ flex: 1, paddingBottom: 80 }}>
+            <Tabs initialTab={"activities"} style={{ flex: 1 }}>
                 <TabsPage id={"activities"} title={"Activities"}>
                     {(profile) && (<ProfileActivities profile={profile}/>)}
                 </TabsPage>
@@ -138,6 +139,18 @@ export default function Profile() {
                 <TabsPage id={"bikes"} title={"Bikes"}>
                     {(profile) && (<ProfileBikes profile={profile}/>)}
                 </TabsPage>
+
+                {(profile?.user?.id === userData.user?.id) && (
+                    <TabsPage id={"following"} title={"Following"}>
+                        <ProfileFollowing/>
+                    </TabsPage>
+                )}
+                    
+                {(profile?.user?.id === userData.user?.id) && (
+                    <TabsPage id={"followers"} title={"Followers"}>
+                        <ProfileFollowers/>
+                    </TabsPage>
+                )}
             </Tabs>
 
             {(internetConnection === "OFFLINE") && (
@@ -201,4 +214,186 @@ export function ProfileBikes({ profile }: ProfileProp) {
             </TouchableOpacity>
         )}/>
     );
-}
+};
+
+
+export function ProfileFollowing() {
+    const client = useClient();
+
+    const [ items, setItems ] = useState<GetUserFollowingResponse["following"]>([]);
+    const [ offset, setOffset ] = useState<number>(0);
+
+    return (
+        <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
+            const result = await getUserFollowing(client, (reset)?(0):(offset));
+
+            if(!result.success)
+                return false;
+
+            setItems((reset)?(result.following):(items.concat(result.following)));
+            setOffset(result.offset);
+            
+            return (result.following.length === result.limit);
+        }} render={(following: GetUserFollowingResponse["following"][0]) => (<ProfileFollowingItem key={following.id} following={following}/>)}/>
+    );
+};
+
+export type ProfileFollowingItemProps = {
+    following: GetUserFollowingResponse["following"][0];
+};
+
+export function ProfileFollowingItem({ following }: ProfileFollowingItemProps) {
+    const router = useRouter();
+    const theme = useTheme();
+    const client = useClient();
+
+    const [ follows, setFollows ] = useState<boolean>(true);
+    const [ submitting, setSubmitting ] = useState<boolean>(false);
+
+    return (
+        <View style={{
+            flexDirection: "row",
+            gap: 10,
+
+            alignItems: "center"
+        }}>
+            <TouchableOpacity style={{
+                flexDirection: "row",
+                gap: 10,
+
+                alignItems: "center"
+            }} onPress={() => router.push(`/profile/${following.follow.id}`)}>
+                <View style={{
+                    height: 40,
+                    aspectRatio: 1,
+                    
+                    backgroundColor: theme.placeholder,
+                    
+                    borderRadius: 40,
+                    overflow: "hidden"
+                }}>
+                    <Image
+                        source={{
+                            uri: `${Constants.expoConfig.extra.images}/${following.follow.avatar}/Avatar`
+                        }}
+                        style={{
+                            width: "100%",
+                            height: "100%"
+                        }}/>
+                </View>
+
+                <CaptionText>{following.follow.name}</CaptionText>
+            </TouchableOpacity>
+
+            <View style={{ marginLeft: "auto" }}>
+                <TouchableOpacity style={{ padding: 10, width: 100, alignItems: "center" }} onPress={() => {
+                    setSubmitting(true);
+
+                    setProfileFollow(client, following.follow.id, !follows).then((result) => {
+                        if(result.success)
+                            setFollows(result.follow);
+
+                        setSubmitting(false);
+                    });
+                }}>
+                    {(!submitting)?(
+                        <LinkText style={{ color: (follows)?(theme.red):(theme.brand), fontWeight: (follows)?("bold"):("normal") }}>{(follows)?("Unfollow"):("Follow")}</LinkText>
+                    ):(
+                        <ActivityIndicator color={(follows)?(theme.red):(theme.brand)} size={20}/>
+                    )}
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+};
+
+
+export function ProfileFollowers() {
+    const client = useClient();
+
+    const [ items, setItems ] = useState<GetUserFollowersResponse["followers"]>([]);
+    const [ offset, setOffset ] = useState<number>(0);
+
+    return (
+        <Pagination style={{ padding: 10, height: "100%" }} items={items} paginate={async (reset) => {
+            const result = await getUserFollowers(client, (reset)?(0):(offset));
+
+            if(!result.success)
+                return false;
+
+            setItems((reset)?(result.followers):(items.concat(result.followers)));
+            setOffset(result.offset);
+            
+            return (result.followers.length === result.limit);
+        }} render={(followers: GetUserFollowersResponse["followers"][0]) => (<ProfileFollowersItem key={followers.id} follower={followers}/>)}/>
+    );
+};
+
+export type ProfileFollowersItemProps = {
+    follower: GetUserFollowersResponse["followers"][0];
+};
+
+export function ProfileFollowersItem({ follower }: ProfileFollowersItemProps) {
+    const router = useRouter();
+    const theme = useTheme();
+    const client = useClient();
+
+    const [ follows, setFollows ] = useState<boolean>(follower.followsBack);
+    const [ submitting, setSubmitting ] = useState<boolean>(false);
+
+    return (
+        <View style={{
+            flexDirection: "row",
+            gap: 10,
+
+            alignItems: "center"
+        }}>
+            <TouchableOpacity style={{
+                flexDirection: "row",
+                gap: 10,
+
+                alignItems: "center"
+            }} onPress={() => router.push(`/profile/${follower.follow.id}`)}>
+                <View style={{
+                    height: 40,
+                    aspectRatio: 1,
+                    
+                    backgroundColor: theme.placeholder,
+                    
+                    borderRadius: 40,
+                    overflow: "hidden"
+                }}>
+                    <Image
+                        source={{
+                            uri: `${Constants.expoConfig.extra.images}/${follower.follow.avatar}/Avatar`
+                        }}
+                        style={{
+                            width: "100%",
+                            height: "100%"
+                        }}/>
+                </View>
+
+                <CaptionText>{follower.follow.name}</CaptionText>
+            </TouchableOpacity>
+
+            <View style={{ marginLeft: "auto" }}>
+                <TouchableOpacity style={{ padding: 10, width: 100, alignItems: "center" }} onPress={() => {
+                    setSubmitting(true);
+
+                    setProfileFollow(client, follower.follow.id, !follows).then((result) => {
+                        if(result.success)
+                            setFollows(result.follow);
+
+                        setSubmitting(false);
+                    });
+                }}>
+                    {(!submitting)?(
+                        <LinkText style={{ color: (follows)?(theme.red):(theme.brand), fontWeight: (follows)?("bold"):("normal") }}>{(follows)?("Unfollow"):("Follow back")}</LinkText>
+                    ):(
+                        <ActivityIndicator color={(follows)?(theme.red):(theme.brand)} size={20}/>
+                    )}
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+};

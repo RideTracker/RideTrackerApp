@@ -127,7 +127,7 @@ export default function TabBar(props: TabBarProps) {
         }}>
             {pages.map((page) => (
                 <Link key={page.key} asChild={true} style={{ width: "25%", textAlign: "center" }} href={(page.requiresSubscription && !userData.user?.subscribed)?("/subscriptions/list"):(page.href)}>
-                    <TouchableOpacity disabled={(page.requiresInternetConnection && internetConnection === "OFFLINE")}>
+                    <TouchableOpacity>
                         <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                             <View style={{ position: "relative" }}>
                                 {page.icon(current, getPageColor(page))}

@@ -8,6 +8,7 @@ import { useClient } from "../modules/useClient";
 import Constants from "expo-constants";
 import { ActivitySummary } from "./ActivitySummary";
 import { BikeActivitySummary } from "./BikeActivitySummary";
+import BikeType, { BikeTypes } from "./BikeTypes";
 
 type BikeProps = {
     id?: string;
@@ -52,16 +53,22 @@ export default function Bike(props: BikeProps) {
                 <View style={{ width: 140, borderRadius: 6, overflow: "hidden" }}>
                     <View style={{
                         flex: 1,
-                        backgroundColor: theme.placeholder
+                        backgroundColor: (!bike)?(theme.placeholder):("transparent")
                     }}>
                         {(bike) && (
-                            <Image
-                                style={{
-                                    flex: 1
-                                }}
-                                source={{
-                                    uri: `${Constants.expoConfig.extra.images}/${bike.image}/RideTrackerBike`
-                                }}/>
+                            (bike.image)?(
+                                <Image
+                                    style={{
+                                        flex: 1
+                                    }}
+                                    source={{
+                                        uri: `${Constants.expoConfig.extra.images}/${bike.image}/RideTrackerBike`
+                                    }}/>
+                            ):(
+                                <View style={{ flex: 1, padding: 10, justifyContent: "center", alignItems: "center" }}>
+                                    <BikeType type={bike.model} withName={true} color="grey"/>
+                                </View>
+                            )
                         )}
                     </View>
                 </View>

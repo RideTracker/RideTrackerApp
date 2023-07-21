@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity, Dimensions } from "react-native";
 import { useRouter, Stack, useSearchParams } from "expo-router";
 import Bike from "../../../../../components/Bike";
 import { useTheme } from "../../../../../utils/themes";
@@ -10,9 +10,16 @@ import { ComponentType } from "../../../../../models/componentType";
 import ActivityCommentsSummary from "../../../../../components/ActivityCommentsSummary";
 import ActivityRoute from "../../../../../components/ActivityRoute";
 import { useClient } from "../../../../../modules/useClient";
-import { getActivityById, getActivitySummary } from "@ridetracker/ridetrackerclient";
+import { GetActivityResponse, getActivityById } from "@ridetracker/ridetrackerclient";
 import OfflinePageOverlay from "../../../../../components/OfflinePageOverlay";
 import useInternetConnection from "../../../../../modules/useInternetConnection";
+import { useUser } from "../../../../../modules/user/useUser";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { CaptionText } from "../../../../../components/texts/Caption";
+import { ParagraphText } from "../../../../../components/texts/Paragraph";
+import ActivityMapDetails from "../../../../../components/ActivityMapDetails";
+import ActivityDataMap from "../../../../../components/activity/ActivityDataMap";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ActivityPage() {
     const client = useClient();
@@ -20,52 +27,88 @@ export default function ActivityPage() {
     const router = useRouter();
     const { id } = useSearchParams();
     const internetConnection = useInternetConnection();
+    const userData = useUser();
 
-    const [ activity, setActivity ] = useState(null);
-
-    useEffect(() => {
-        if(id !== null)
-            getActivityById(client, id as string).then((result) => setActivity(result.activity));
-    }, []);
+    const [ activity, setActivity ] = useState<GetActivityResponse["activity"]>(null);
+    const [ deleted, setDeleted ] = useState<boolean>(false);
 
     useEffect(() => {
-        if(activity && !activity.summary) {
-            getActivitySummary(client, activity.id).then((result) => {
+        if(id !== null) {
+            getActivityById(client, id as string).then((result) => {
                 if(result.success)
-                    setActivity({ ...activity, summary: result.activitySummary });
+                    setActivity(result.activity);
+                else if(result.deleted)
+                    setDeleted(true);
             });
         }
-    }, [ activity ]);
+    }, []);
+
+    const dimensions = Dimensions.get("screen");
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.background }}>
-            <Stack.Screen options={{ title: "Activity" }} />
+        <View style={{flex: 1, backgroundColor: theme.background }}>
+            <Stack.Screen options={{
+                title: "Activity",
+                headerRight: (activity?.user?.id === userData.user?.id)?(() => (
+                    <TouchableOpacity onPress={() => router.push(`/activities/${id}/(index)/userDropdown`)}>
+                        <Entypo name="dots-three-vertical" size={24} color={theme.color}/>
+                    </TouchableOpacity>
+                )):(undefined)
+            }}/>
 
-            <ScrollView style={{ padding: 10 }}>
-                <View style={{ paddingBottom: 40}}>
-                    <View style={{ height: 200 }}>
-                        <ActivityMap activity={activity} type={ComponentType.Default}/>
-                    </View>
+            {(!deleted)?(
+                <ScrollView>
+                    <SafeAreaView style={{ padding: 10, gap: 20 }} edges={[ "bottom" ]}>
+                        <View>
+                            <View style={{ height: 200 }}>
+                                <ActivityMap activity={activity} type={ComponentType.Default}>
+                                    <ActivityMapDetails activity={activity}/>
+                                </ActivityMap>
+                            </View>
 
-                    <ActivityAuthor activity={activity}/>
+                            <ActivityAuthor activity={activity}/>
 
-                    <ActivityStats activity={activity}/>
+                            <ActivityStats activity={activity}/>
+                        </View>
 
-                    <ActivityRoute activity={activity}/>
+                        <ActivityRoute activity={activity}/>
 
-                    {(activity)?(
-                        (activity.bike) && (
-                            <TouchableOpacity onPress={() => router.push(`/bike/${activity.bike}`)}>
-                                <Bike id={activity.bike} style={{ marginVertical: 10 }}/>
-                            </TouchableOpacity>
-                        )
-                    ):(
-                        <Bike style={{ marginVertical: 10 }}/>
-                    )}
+                        {(activity)?(
+                            (activity.bike) && (
+                                <TouchableOpacity onPress={() => router.push(`/bike/${activity.bike}`)}>
+                                    <Bike id={activity.bike.id}/>
+                                </TouchableOpacity>
+                            )
+                        ):(
+                            <Bike/>
+                        )}
 
-                    <ActivityCommentsSummary id={id as string}/>
+                        <ActivityCommentsSummary id={id as string}/>
+
+                        <View style={{ height: 200 }}>
+                            <ActivityDataMap activity={activity}/>
+                        </View>
+                    </SafeAreaView>
+                </ScrollView>
+            ):(
+                <View style={{
+                    flex: 1,
+
+                    justifyContent: "center",
+                    alignItems: "center",
+        
+                    gap: 10,
+                    padding: 10
+                }}>
+                    <FontAwesome5 name="trash" size={72} color={"grey"} style={{
+                        alignSelf: "center"
+                    }}/>
+        
+                    <CaptionText>This activity is deleted.</CaptionText>
+        
+                    <ParagraphText>It may take a while for the activity to be removed from everywhere.</ParagraphText>
                 </View>
-            </ScrollView>
+            )}
 
             {/*<View style={{
                 marginBottom: 20,

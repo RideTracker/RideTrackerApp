@@ -18,7 +18,7 @@ import { useUser } from "../../../../modules/user/useUser";
 import { setClient } from "../../../../utils/stores/client";
 import { useAvatarClient } from "../../../../modules/useAvatarClient";
 import { GetUserAvatarsResponse, createUserAvatar, getAvatars, getUserAvatars } from "@ridetracker/avatarclient";
-import { authenticateUser, createClient, uploadUserAvatar } from "@ridetracker/ridetrackerclient";
+import { createRideTrackerClient, authenticateUser, uploadUserAvatar } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 
 export default function AvatarEditorPage() {
@@ -123,9 +123,10 @@ export default function AvatarEditorPage() {
                     const authentication = await authenticateUser(client);
 
                     if(authentication.success) {
-                        dispatch(setClient(createClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                            email: userData.email,
-                            key: authentication.token.key
+                        dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                            identity: userData.email,
+                            key: authentication.token.key,
+                            type: "Basic"
                         })));
 
                         dispatch(setUserData({

@@ -35,13 +35,13 @@ export default function CategorySelector({ selectedItem, items, onItemPress }: C
 
                         alignItems: "center",
 
-                        padding: 10,
+                        paddingHorizontal: 10,
 
                         backgroundColor: (selectedItem?.type === item.type)?(theme.highlight):(theme.placeholder),
                         borderWidth: 1,
                         borderColor: (selectedItem?.type === item.type)?(theme.border):("transparent")
                     }} onPress={() => onItemPress(item)}>
-                        <View style={{ marginTop: -3 }}>
+                        <View style={{ marginTop: -3, width: 40, flexDirection: "row", alignItems: "flex-start" }}>
                             {item.icon}
                         </View>
 

@@ -10,6 +10,8 @@ import MapStartFinishMarker from "./MapStartFinishMarker";
 import MapStartMarker from "./MapStartMarker";
 import MapFinishMarker from "./MapFinishMarker";
 import MapIntermediateMarker from "./MapIntermediateMarker";
+import { RouteWaypoint } from "../../app/(root)/(auth)/(tabs)/(subscription)/routes";
+import { getDistance } from "geolib";
 
 type MapRouteMarker = {
     id: string;
@@ -22,40 +24,93 @@ type MapRouteMarker = {
 };
 
 type MapRouteMarkersProps = {
-    waypoints: SearchPrediction[];
+    waypoints: string;
 };
 
-export function getMarkersFromWaypoints(waypoints: SearchPrediction[]) {
+export function getMarkersFromWaypoints(waypoints: RouteWaypoint[]) {
     const markers: MapRouteMarker[] = [];
 
-    waypoints.filter((waypoint) => waypoint.location).forEach((waypoint, index) => {
-        const marker = markers.find((marker) => {
-            return marker.name === waypoint.name;
-        });
+    waypoints.forEach((waypoint, index) => {
+        let type = (index === 0)?("Start"):((index === waypoints.length - 1)?("Finish"):("Intermediate"));
 
-        const type = (index === 0)?("Start"):((index === waypoints.length - 1)?("Finish"):("Intermediate"));
-
-        if(!marker) {
-            markers.push({
-                id: uuid.v4() as string,
-                name: waypoint.name,
-                types: [ type ],
-                location: waypoint.location
+        if(waypoint.type === "SEARCH_PREDICTION") {
+            const marker = markers.find((marker) => {
+                return getDistance(marker.location, waypoint.searchPrediction.location) < 100 && marker.name === waypoint.searchPrediction.name;
+            }) ?? markers.find((marker) => {
+                return getDistance(marker.location, waypoint.searchPrediction.location) < 100;
             });
+    
+            if(!marker) {
+                markers.push({
+                    id: uuid.v4() as string,
+                    name: waypoint.searchPrediction.name,
+                    types: [ type ],
+                    location: waypoint.searchPrediction.location
+                });
+            }
+            else
+                marker.types.push(type);
         }
-        else
-            marker.types.push(type)
+        else if(waypoint.type === "PATH") {
+            {
+                let newType = type;
+
+                if(newType === "Finish")
+                    newType = "Intermediate";
+
+                const marker = markers.find((marker) => {
+                    return getDistance(marker.location, waypoint.path.route[0]) < 100;
+                });
+    
+                if(!marker) {
+                    markers.push({
+                        id: uuid.v4() as string,
+                        name: "Custom path",
+                        types: [ newType ],
+                        location: waypoint.path.route[0]
+                    });
+                }
+                else
+                    marker.types.push(newType);
+            }
+            
+            {
+                let newType = type;
+
+                if(newType === "Start") {
+                    if(index === waypoints.length - 1)
+                        newType = "Finish";
+                    else
+                        newType = "Intermediate";
+                }
+
+                const marker = markers.find((marker) => {
+                    return getDistance(marker.location, waypoint.path.route[waypoint.path.route.length - 1]) < 100;
+                });
+    
+                if(!marker) {
+                    markers.push({
+                        id: uuid.v4() as string,
+                        name: "Custom path",
+                        types: [ newType ],
+                        location: waypoint.path.route[waypoint.path.route.length - 1]
+                    });
+                }
+                else
+                    marker.types.push(newType);
+            }
+        }
     });
 
     return markers;
 };
 
 export default function MapRouteMarkers({ waypoints }: MapRouteMarkersProps) {
-    const [ markers, setMarkers ] = useState<MapRouteMarker[]>(getMarkersFromWaypoints(waypoints));
+    const [ markers, setMarkers ] = useState<MapRouteMarker[]>(getMarkersFromWaypoints(JSON.parse(waypoints)));
 
     useEffect(() => {
-        setMarkers(getMarkersFromWaypoints(waypoints));
-    }, [ waypoints.length ]);
+        setMarkers(getMarkersFromWaypoints(JSON.parse(waypoints)));
+    }, [ waypoints ]);
 
     return (
         <React.Fragment>

@@ -12,7 +12,7 @@ import Button from "../../../../components/Button";
 import { HeaderText } from "../../../../components/texts/Header";
 import { Stack, useRouter } from "expo-router";
 import uuid from "react-native-uuid";
-import { createBike, createClient, createStoreSubscription, getStoreProducts } from "@ridetracker/ridetrackerclient";
+import { createStoreSubscription, getStoreProducts } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
 import PageOverlay from "../../../../components/PageOverlay";
 import * as Linking from "expo-linking";

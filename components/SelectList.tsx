@@ -92,7 +92,7 @@ export function SelectList(props: SelectListProps) {
                                 borderTopWidth: 1,
 
                                 flexDirection: "row",
-                                gap: 10,
+                                gap: 10
                             }} onPress={() => {
                                 setSelectedItem(selectedItem);
                                 onState(false);

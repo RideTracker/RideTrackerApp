@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ActivityIndicator, Alert, View } from "react-native";
-import DropdownPage from "../../../../../components/DropdownPage";
 import ModalPage from "../../../../../components/ModalPage";
 import { useTheme } from "../../../../../utils/themes";
 import { MaterialCommunityIcons } from "@expo/vector-icons";

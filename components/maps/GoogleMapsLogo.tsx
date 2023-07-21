@@ -7,7 +7,7 @@ const googleOnWhite = require("../../assets/extras/google/google_on_white.png");
 const googleOnNonWhite = require("../../assets/extras/google/google_on_non_white.png");
 
 type GoogleMapsLogoProps = {
-    style: ImageStyle;
+    style?: ImageStyle;
 };
 
 export default function GoogleMapsLogo({ style }: GoogleMapsLogoProps) {
