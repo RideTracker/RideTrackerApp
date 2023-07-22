@@ -1,24 +1,14 @@
 import MapView, { Point, Region } from "react-native-maps";
-import { View, Dimensions, Text, Platform } from "react-native";
+import { View, Dimensions, Text, Platform, LayoutRectangle } from "react-native";
 import { useMapStyle, useTheme } from "../../utils/themes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { decode } from "@googlemaps/polyline-codec";
 import { useUser } from "../../modules/user/useUser";
 import ActivityDataMapPolyline, { ActivityDataMapPolylineProps } from "./ActivityDataMapPolyline";
-import getStrippedPolylineByPoints from "../../controllers/polylines/getStrippedPolylineByPoints";
-import { CaptionText } from "../texts/Caption";
 import { ParagraphText } from "../texts/Paragraph";
 import { LinearGradient } from "expo-linear-gradient";
-import getFurthestCoordinate from "../../controllers/polylines/getFurthestCoordinate";
-import { getBounds, getRhumbLineBearing } from "geolib";
-import { SmallText } from "../texts/Small";
 import { scale } from "chroma.ts";
-import { useRoutesClient } from "../../modules/useRoutesClient";
-import { getActivitySessionsAltitude, GetActivitySessionsAltitudeResponse } from "@ridetracker/routeclient";
-import getClosestCoordinate from "../../controllers/polylines/getClosestCoordinate";
 import { Coordinate } from "../../models/Coordinate";
-import CategorySelector from "../CategorySelector";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import getStrippedPolylineByCoordinates from "../../controllers/polylines/getStrippedPolylineByCoordinates";
 
 export type ActivityDataMapProps = {
@@ -29,40 +19,29 @@ export type ActivityDataMapProps = {
 
     type: string;
 
-    getSessions: () => Promise<{
-        polylines: {
-            points: {
-                coordinate: {
-                    latitude: number;
-                    longitude: number;
-                };
-            }[];
+    sessions: {
+        points: {
+            coordinate: {
+                latitude: number;
+                longitude: number;
+            };
         }[];
-    }>;
+    }[];
 
-    getCoordinateFraction: (index: number, sessions: any, polyline: number, polylines: Coordinate[][]) => number;
-    getUnit: (index: number, sessions: any) => string;
+    getCoordinateFraction: (index: number, polyline: number, polylines: Coordinate[][]) => number;
+    getUnit: (index: number) => string;
 };
 
-export default function ActivityDataMap({ activity, type, getSessions, getCoordinateFraction, getUnit }: ActivityDataMapProps) {
+export default function ActivityDataMap({ activity, type, sessions, getCoordinateFraction, getUnit }: ActivityDataMapProps) {
     const theme = useTheme();
     const mapStyle = useMapStyle();
     const userData = useUser();
 
     const mapViewRef = useRef<MapView>();
-    
-    const [ sessions, setSessions ] = useState<{
-        polylines: {
-            points: {
-                coordinate: {
-                    latitude: number;
-                    longitude: number;
-                };
-            }[];
-        }[];
-    }>(null);
+
     const [ polylines, setPolylines ] = useState<Coordinate[][]>(null);
     const [ region, setRegion ] = useState<Region>(null);
+    const [ layout, setLayout ] = useState<LayoutRectangle>(null);
 
     useEffect(() => {
         if(activity) {
@@ -73,10 +52,6 @@ export default function ActivityDataMap({ activity, type, getSessions, getCoordi
                         longitude: coordinate[1]
                     };
                 }), 1000)));
-
-                getSessions().then((result) => {
-                    setSessions(result);
-                });
             });
         }
     }, [ activity ]);
@@ -100,26 +75,33 @@ export default function ActivityDataMap({ activity, type, getSessions, getCoordi
                 borderRadius: 10,
 
                 position: "relative"
-            }}>
-                <MapView
-                    ref={mapViewRef}
-                    customMapStyle={theme.mapStyle.concat(mapStyle.compact)}
-                    onRegionChangeComplete={(region) => setRegion(region)}
-                    showsCompass={false}
-                    style={{
-                        position: "absolute",
+            }} onLayout={(event) => setLayout(event.nativeEvent.layout)}>
+                <View style={{
+                    position: "absolute",
 
-                        left: 0,
-                        top: 0,
+                    left: 0,
+                    top: 0,
 
-                        width: "100%",
-                        height: "100%",
+                    width: "100%",
+                    height: "100%",
 
-                        opacity: .75
-                    }}
-                    provider={userData.mapProvider}
-                >
-                </MapView>
+                    borderRadius: 20,
+                    overflow: "hidden"
+                }}>
+                    <MapView
+                        ref={mapViewRef}
+                        customMapStyle={theme.mapStyle.concat(mapStyle.compact)}
+                        onRegionChangeComplete={(region) => setRegion(region)}
+                        showsCompass={false}
+                        style={{
+                            flex: 1,
+
+                            opacity: .75
+                        }}
+                        provider={userData.mapProvider}
+                    >
+                    </MapView>
+                </View>
 
                 {(Platform.OS === "android") && (
                     <LinearGradient colors={[ theme.background, "transparent", theme.background ]} locations={[ 0, 0.1, 0.9 ]} style={{
@@ -144,7 +126,7 @@ export default function ActivityDataMap({ activity, type, getSessions, getCoordi
                 )}
 
                 {(sessions) && (
-                    <ActivityDataMapPolyline key={JSON.stringify(polylines)} mapViewRef={mapViewRef} region={region} polylines={polylines} getCoordinateFraction={(index, polyline) => getCoordinateFraction(index, sessions, polyline, polylines)}/>
+                    <ActivityDataMapPolyline key={JSON.stringify(polylines)} layout={layout} mapViewRef={mapViewRef} region={region} polylines={polylines} getCoordinateFraction={(index, polyline) => getCoordinateFraction(index, polyline, polylines)}/>
                 )}
 
                 {/*<View style={{
@@ -184,7 +166,7 @@ export default function ActivityDataMap({ activity, type, getSessions, getCoordi
 
                     padding: 10
                 }}>
-                    <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: theme.color, textShadowColor: (theme.contrast === "dark")?("transparent"):("#000"), textShadowRadius: 2, fontSize: 24 }}>{type}</ParagraphText>
+                    <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: theme.color, fontSize: 24 }}>{type}</ParagraphText>
                 </View>
 
                 <View style={{
@@ -207,7 +189,6 @@ export default function ActivityDataMap({ activity, type, getSessions, getCoordi
                         <View style={{
                             maxWidth: "70%",
                             flexDirection: "row",
-                            opacity: .5
                         }}>
                             {Array(5).fill(null).map((_, index, array) => (
                                 <View key={index} style={{
@@ -215,11 +196,11 @@ export default function ActivityDataMap({ activity, type, getSessions, getCoordi
                                     flex: 1
                                 }}>
                                     <Text style={{
-                                        color: theme.color,
+                                        color: "silver",
                                         fontSize: 10,
                                         paddingRight: 5
                                     }} numberOfLines={1}>
-                                        {getUnit(index, sessions)}
+                                        {getUnit(index)}
                                     </Text>
 
                                     <View style={{

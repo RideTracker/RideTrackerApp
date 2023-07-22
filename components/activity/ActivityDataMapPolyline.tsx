@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, LayoutRectangle } from "react-native";
 import MapView, { Point, Region } from "react-native-maps";
 import { Coordinate } from "../../models/Coordinate";
 import { ExpoWebGLRenderingContext, GLView } from "expo-gl";
@@ -10,9 +10,12 @@ import { decode } from "@googlemaps/polyline-codec";
 import getStrippedPolylineByPoints from "../../controllers/polylines/getStrippedPolylineByPoints";
 import getFurthestCoordinate from "../../controllers/polylines/getFurthestCoordinate";
 import { getBounds, getCenter, getRhumbLineBearing } from "geolib";
+import getMapZoomByBounds from "../../controllers/maps/getMapZoomByBounds";
 
 export type ActivityDataMapPolylineProps = {
     mapViewRef: MutableRefObject<MapView>;
+
+    layout: LayoutRectangle;
 
     region: Region;
     polylines: Coordinate[][];
@@ -20,7 +23,7 @@ export type ActivityDataMapPolylineProps = {
     getCoordinateFraction: (index: number, polyline: number) => number;
 }
 
-export default function ActivityDataMapPolyline({ mapViewRef, region, polylines, getCoordinateFraction }: ActivityDataMapPolylineProps) {
+export default function ActivityDataMapPolyline({ layout, mapViewRef, region, polylines, getCoordinateFraction }: ActivityDataMapPolylineProps) {
     const theme = useTheme();
     
     const [ context, setContext ] = useState<Expo2DContext>(null);
@@ -33,46 +36,53 @@ export default function ActivityDataMapPolyline({ mapViewRef, region, polylines,
 
     useEffect(() => {
         if(polylines) {
-            const dimensions = Dimensions.get("screen");
+            requestAnimationFrame(() => {
+                const dimensions = Dimensions.get("screen");
 
-            Promise.all(polylines.map(async (polyline) => {
-                const coordinates = polyline;
+                Promise.all(polylines.map(async (polyline) => {
+                    const coordinates = polyline;
 
-                const points = getStrippedPolylineByPoints(await Promise.all(coordinates.map(async (coordinate, index) => {
-                    const point = await mapViewRef.current.pointForCoordinate(coordinate);
+                    const points = getStrippedPolylineByPoints(await Promise.all(coordinates.map(async (coordinate, index) => {
+                        const point = await mapViewRef.current.pointForCoordinate(coordinate);
+
+                        return {
+                            x: Math.round(point.x),
+                            y: Math.round(point.y),
+                            coordinateIndex: index
+                        }
+                    })), dimensions.scale / 3 * 2);
 
                     return {
-                        x: Math.round(point.x),
-                        y: Math.round(point.y),
-                        coordinateIndex: index
-                    }
-                })), dimensions.scale / 3 * 2);
+                        coordinates,
+                        points
+                    };
+                })).then((polylines) => {
+                    const coordinates = polylines.flatMap((polyline) => polyline.coordinates);
 
-                return {
-                    coordinates,
-                    points
-                };
-            })).then((polylines) => {
-                const coordinates = polylines.flatMap((polyline) => polyline.coordinates);
+                    const startCoordinate = coordinates[0];
+                    const furthestCoordinate = getFurthestCoordinate(coordinates);
+                    
+                    const center = getCenter([ startCoordinate, furthestCoordinate ]) as Coordinate;
+                    const bounds = getBounds(coordinates);
 
-                const startCoordinate = coordinates[0];
-                const furthestCoordinate = getFurthestCoordinate(coordinates);
+                    /*mapViewRef.current.fitToCoordinates(coordinates, {
+                        animated: false,
+                        edgePadding: {
+                            left: 20,
+                            top: 20,
+                            right: 20,
+                            bottom: 20
+                        }
+                    });*/
 
-                mapViewRef.current.fitToCoordinates(coordinates, {
-                    animated: false,
-                    edgePadding: {
-                        left: 20,
-                        top: 20,
-                        right: 20,
-                        bottom: 20
-                    }
+                    mapViewRef.current.setCamera({
+                        center,
+                        zoom: getMapZoomByBounds(bounds, layout) - .2,
+                        heading: getRhumbLineBearing(startCoordinate, furthestCoordinate) + 90 + 180
+                    });
+        
+                    setProcessedPolylines(polylines);
                 });
-
-                mapViewRef.current.setCamera({
-                    heading: getRhumbLineBearing(startCoordinate, furthestCoordinate) + 90 + 180
-                });
-    
-                setProcessedPolylines(polylines);
             });
         }
     }, [ region, polylines ]);
@@ -152,7 +162,7 @@ export default function ActivityDataMapPolyline({ mapViewRef, region, polylines,
 
             width: "100%",
             height: "100%"
-        }} onContextCreate={handleContextCreate}>
+        }} onContextCreate={handleContextCreate} pointerEvents="none">
 
         </GLView>
     );
