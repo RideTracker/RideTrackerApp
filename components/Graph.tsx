@@ -5,6 +5,7 @@ import { useTheme } from "../utils/themes";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import Expo2DContext from "expo-2d-context";
 import { Point } from "react-native-maps";
+import { getDistanceBetweenPoints } from "../controllers/polylines/getDistanceBetweenPoints";
 
 export type GraphDatasetPoints = {
     points: {
@@ -24,6 +25,12 @@ export type GraphProps = {
     },
 
     datasets: {
+        stroke?: string;
+        strokeOpacity?: number;
+
+        fill?: string;
+        fillOpacity?: number;
+
         data: {
             x: number;
             y: number;
@@ -47,6 +54,9 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
         
         minimumY: number;
         maximumY: number;
+
+        stepsX: number[];
+        stepsY: number[];
     }>(null);
 
     useEffect(() => {
@@ -66,9 +76,15 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
             const minimumY = Math.min(...verticals);
             const maximumY = Math.max(...verticals);
 
+            const stepsX = Array(horizontalSteps).fill((maximumX - minimumX) / (horizontalSteps - 1)).map((step, index) => step * index);
+            const stepsY = Array(verticalSteps).fill((maximumY - minimumY) / (verticalSteps - 1)).map((step, index) => (step * ((verticalSteps - 1) - index)));
+
+            console.log({ stepsY, mid: maximumY - minimumY });
+
             setLimits({
                 minimumX, maximumX,
-                minimumY, maximumY
+                minimumY, maximumY,
+                stepsX, stepsY
             });
 
             {
@@ -98,9 +114,7 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
             const datasetPoints: GraphDatasetPoints[] = [];
 
             datasets.forEach((dataset) => {
-                const points = [];
-
-                context.beginPath();
+                const points: GraphDatasetPoints["points"] = [];
 
                 {
                     const item = dataset.data[0];
@@ -108,7 +122,7 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
                     const x = 5 + ((item.x - minimumX) / (maximumX - minimumX)) * width;
                     const y = 5 + ((item.y - maximumY) / (minimumY - maximumY)) * height;
 
-                    context.moveTo(x, y);
+                    //context.moveTo(x, y);
 
                     points.push({
                         x: item.x,
@@ -125,26 +139,79 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
                     const x = 5 + ((item.x - minimumX) / (maximumX - minimumX)) * width;
                     const y = 5 + ((item.y - maximumY) / (minimumY - maximumY)) * height;
 
-                    context.lineTo(x, y);
+                    const previous = points[points.length - 1];
 
-                    points.push({
-                        x: item.x,
-                        y: item.y,
+                    const distance = getDistanceBetweenPoints({ x: previous.location.x, y: 0 }, { x, y: 0 });
 
-                        location: { x, y }
-                    });
+                    if(distance < 1) {
+                        if(previous.y > item.y)
+                            continue;
+
+                        points[points.length - 1] = {
+                            x: item.x,
+                            y: item.y,
+    
+                            location: { x, y }
+                        };
+                    }
+                    else {
+                        //context.lineTo(x, y);
+
+                        points.push({
+                            x: item.x,
+                            y: item.y,
+
+                            location: { x, y }
+                        });
+                    }
                 }
+
+                if(dataset.fill) {
+                    context.save();
+
+                    context.beginPath();
+
+                    context.moveTo(points[0].location.x, points[0].location.y);
+
+                    for(let index = 1; index < points.length; index++)
+                        context.lineTo(points[index].location.x, points[index].location.y);
+
+                    context.lineTo(points[points.length - 1].location.x, height + 5);
+                    context.lineTo(5, height + 5);
+
+                    context.fillStyle = dataset.fill;
+
+                    if(dataset.fillOpacity !== undefined)
+                        context.globalAlpha = dataset.fillOpacity;
+
+                    context.fill();
+
+                    context.restore();
+                }
+
+                context.save();
+
+                context.beginPath();
+
+                context.moveTo(points[0].location.x, points[0].location.y);
+
+                for(let index = 1; index < points.length; index++)
+                    context.lineTo(points[index].location.x, points[index].location.y);
 
                 context.lineCap = "round";
                 
                 context.lineWidth = scale * 1;
-                context.strokeStyle = theme.brand;
+                context.strokeStyle = dataset.stroke ?? theme.brand;
+
+                if(dataset.strokeOpacity !== undefined)
+                    context.globalAlpha = dataset.strokeOpacity;
+
                 context.stroke();
+
+                context.restore();
 
                 datasetPoints.push({ points });
             });
-
-            context.restore();
 
             context.flush();
 
@@ -179,18 +246,17 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
                     width: 30,
                     position: "relative",
                     alignItems: "flex-end",
-                    paddingBottom: 10
+                    paddingBottom: 30
                 }}>
-                    {limits && Array(verticalSteps).fill(null).map((_, index) => (
-                        <ParagraphText key={index} style={{
+                    {limits?.stepsY?.map((step, index) => (
+                        <ParagraphText key={step} style={{
                             color: "silver",
                             fontSize: 12,
                             position: "absolute",
                             height: "100%",
-                            textAlignVertical: (index === 0)?("top"):((index === 4)?("bottom"):("center")),
-                            top: `${(index * (100 / (verticalSteps - 1))) - ((index === 0)?(0):((index === (verticalSteps - 1))?(100):(50)))}%`
+                            top: `${(index === 0)?(0):(100 - ((step / (limits.maximumY - limits.minimumY)) * 100))}%`
                         }}>
-                            {Math.round((limits.minimumY + ((verticalSteps - index) * ((limits.maximumY - limits.minimumY) / verticalSteps))))}{(typeof(units.y) === "function")?(units.y((limits.minimumY + ((verticalSteps - index) * ((limits.maximumY - limits.minimumY) / verticalSteps))))):(units.y)}
+                            {(typeof(units.y) === "function")?(units.y(step)):(Math.round(step).toString() + units.y)}
                         </ParagraphText>
                     ))}
                 </View>
@@ -219,17 +285,17 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
                     <View style={{
                         position: "relative"
                     }}>
-                        {limits && Array(horizontalSteps).fill(null).map((_, index) => (
-                            <ParagraphText key={index.toString()} style={{
-                                color: "silver",
-                                fontSize: 12,
-                                position: "absolute",
-                                textAlign: (index === 0)?("left"):((index === (horizontalSteps - 1))?("right"):("center")),
-                                width: "100%",
-                                left: `${(index * (100 / (horizontalSteps - 1))) - ((index === 0)?(0):((index === (horizontalSteps - 1))?(100):(50)))}%`
-                            }}>
-                                {((typeof(units.x) === "function")?(units.x((limits.minimumX + (index * ((limits.maximumX - limits.minimumX) / horizontalSteps))))):(`${Math.round((limits.minimumX + (index * ((limits.maximumX - limits.minimumX) / horizontalSteps))))}${units.x}`))}
-                            </ParagraphText>
+                        {limits?.stepsX.map((step, index, array) => (
+                        <ParagraphText key={step} style={{
+                            color: "silver",
+                            fontSize: 12,
+                            position: "absolute",
+                            width: "100%",
+                            textAlign: (index === array.length - 1)?("right"):("left"),
+                            left: `${(index === array.length - 1)?(0):((step / (limits.maximumX - limits.minimumX)) * 100)}%`
+                        }}>
+                            {(typeof(units.x) === "function")?(units.x(step)):(Math.round(step).toString() + units.x)}
+                        </ParagraphText>
                         ))}
                     </View>
                 </View>

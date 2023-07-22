@@ -14,9 +14,7 @@ export default function GraphPoint({ point, selected, onPress }: GraphPointProps
     const theme = useTheme();
 
     const size = (selected)?(18):(10);
-    const border = (selected)?(10):(4);
-
-    console.log(`rgba(${chroma.css(theme.brand).rgb().join(', ')}, .1)`);
+    const border = (selected)?(12):(4);
 
     return (
         <TouchableOpacity disabled={selected} style={{

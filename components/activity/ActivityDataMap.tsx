@@ -1,7 +1,7 @@
 import MapView, { Point, Region } from "react-native-maps";
 import { View, Dimensions, Text, Platform, LayoutRectangle } from "react-native";
 import { useMapStyle, useTheme } from "../../utils/themes";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, ReactNode } from "react";
 import { decode } from "@googlemaps/polyline-codec";
 import { useUser } from "../../modules/user/useUser";
 import ActivityDataMapPolyline, { ActivityDataMapPolylineProps } from "./ActivityDataMapPolyline";
@@ -17,7 +17,7 @@ export type ActivityDataMapProps = {
         polylines?: string[];
     };
 
-    type: string;
+    children: ReactNode;
 
     sessions: {
         points: {
@@ -29,10 +29,9 @@ export type ActivityDataMapProps = {
     }[];
 
     getCoordinateFraction: (index: number, polyline: number, polylines: Coordinate[][]) => number;
-    getUnit: (index: number) => string;
 };
 
-export default function ActivityDataMap({ activity, type, sessions, getCoordinateFraction, getUnit }: ActivityDataMapProps) {
+export default function ActivityDataMap({ children, activity, sessions, getCoordinateFraction }: ActivityDataMapProps) {
     const theme = useTheme();
     const mapStyle = useMapStyle();
     const userData = useUser();
@@ -96,7 +95,7 @@ export default function ActivityDataMap({ activity, type, sessions, getCoordinat
                         style={{
                             flex: 1,
 
-                            opacity: .75
+                            opacity: (theme.contrastStyle === "dark")?(0.3):(0.75)
                         }}
                         provider={userData.mapProvider}
                     >
@@ -126,7 +125,7 @@ export default function ActivityDataMap({ activity, type, sessions, getCoordinat
                 )}
 
                 {(sessions) && (
-                    <ActivityDataMapPolyline key={JSON.stringify(polylines)} layout={layout} mapViewRef={mapViewRef} region={region} polylines={polylines} getCoordinateFraction={(index, polyline) => getCoordinateFraction(index, polyline, polylines)}/>
+                    <ActivityDataMapPolyline key={JSON.stringify(sessions)} layout={layout} mapViewRef={mapViewRef} region={region} polylines={polylines} getCoordinateFraction={(index, polyline) => getCoordinateFraction(index, polyline, polylines)}/>
                 )}
 
                 {/*<View style={{
@@ -158,60 +157,7 @@ export default function ActivityDataMap({ activity, type, sessions, getCoordinat
                     ]} selectedItem={null} onItemPress={() => {}}/>
                 </View>*/}
 
-                <View style={{
-                    position: "absolute",
-
-                    left: 0,
-                    top: 0,
-
-                    padding: 10
-                }}>
-                    <ParagraphText style={{ textTransform: "uppercase", fontStyle: "italic", color: theme.color, fontSize: 24 }}>{type}</ParagraphText>
-                </View>
-
-                <View style={{
-                    position: "absolute",
-
-                    bottom: 0,
-                    right: 0,
-                    
-                    padding: 10,
-
-                    width: "100%",
-
-                    justifyContent: "flex-end",
-                    alignItems: "flex-end",
-                    gap: 5,
-
-                    flexDirection: "row"
-                }}>
-                    {(sessions) && (
-                        <View style={{
-                            maxWidth: "70%",
-                            flexDirection: "row",
-                        }}>
-                            {Array(5).fill(null).map((_, index, array) => (
-                                <View key={index} style={{
-                                    gap: 5,
-                                    flex: 1
-                                }}>
-                                    <Text style={{
-                                        color: "silver",
-                                        fontSize: 10,
-                                        paddingRight: 5
-                                    }} numberOfLines={1}>
-                                        {getUnit(index)}
-                                    </Text>
-
-                                    <View style={{
-                                        backgroundColor: scale([ "green", "orange", "red" ])(index / (array.length - 1)).toString(),
-                                        height: 8
-                                    }}/>
-                                </View>
-                            ))}
-                        </View>
-                    )}
-                </View>
+                {children}
             </View>
         </View>
     );
