@@ -275,12 +275,21 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                     rotateEnabled={false}
                     scrollEnabled={false}>
                     {(polylines) && polylines.map((polyline, index) => (
-                        <Polyline key={index} coordinates={polyline.map((point) => {
-                            return {
-                                latitude: point[0],
-                                longitude: point[1]
-                            };
-                        })} strokeColor={theme.brand} fillColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
+                        <React.Fragment key={index}>
+                            <Polyline coordinates={polyline.map((point) => {
+                                return {
+                                    latitude: point[0],
+                                    longitude: point[1]
+                                };
+                            })} strokeColor={"white"} fillColor={"white"} strokeWidth={6} lineJoin={"round"}/>
+                            
+                            <Polyline coordinates={polyline.map((point) => {
+                                return {
+                                    latitude: point[0],
+                                    longitude: point[1]
+                                };
+                            })} strokeColor={theme.brand} fillColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
+                        </React.Fragment>
                     ))}
                 </MapView>
 
