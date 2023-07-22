@@ -27,7 +27,7 @@ export default function ActivityInsights({ activity }: ActivityInsightsProps) {
     const theme = useTheme();
 
     const [ dataMap, setDataMap ] = useState<"speed" | "altitude">("speed");
-    const [ insights, setInsights ] = useState<GetActivitySessionsInsightsResponse>(null);
+    const [ insights, setInsights ] = useState<GetActivitySessionsInsightsResponse["insights"]>(null);
     const [ batteryDatasetPoints, setBatteryDatasetPoints ] = useState<GraphDatasetPoints[]>([]);
     const [ selectedBatteryPoint, setSelectedBatteryPoint ] = useState<GraphDatasetPoints["points"][0]>(null);
 
@@ -35,7 +35,7 @@ export default function ActivityInsights({ activity }: ActivityInsightsProps) {
         if(activity) {
             getActivitySessionsInsights(routesClient, activity.id).then((result) => {
                 if(result.success) {
-                    setInsights(result);
+                    setInsights(result.insights);
                 } 
             });
         }

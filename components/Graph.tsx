@@ -76,8 +76,8 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
             const minimumY = Math.min(...verticals);
             const maximumY = Math.max(...verticals);
 
-            const stepsX = Array(horizontalSteps).fill((maximumX - minimumX) / (horizontalSteps - 1)).map((step, index) => step * index);
-            const stepsY = Array(verticalSteps).fill((maximumY - minimumY) / (verticalSteps - 1)).map((step, index) => (step * ((verticalSteps - 1) - index)));
+            const stepsX = Array(horizontalSteps).fill((maximumX - minimumX) / (horizontalSteps - 1)).map((step, index) => minimumX + (step * index));
+            const stepsY = Array(verticalSteps).fill((maximumY - minimumY) / (verticalSteps - 1)).map((step, index) => minimumY + (step * ((verticalSteps - 1) - index)));
 
             console.log({ stepsY, mid: maximumY - minimumY });
 
@@ -254,9 +254,9 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
                             fontSize: 12,
                             position: "absolute",
                             height: "100%",
-                            top: `${(index === 0)?(0):(100 - ((step / (limits.maximumY - limits.minimumY)) * 100))}%`
+                            top: `${(index === 0)?(0):(100 - (((step - limits.minimumY) / (limits.maximumY - limits.minimumY)) * 100))}%`
                         }}>
-                            {(typeof(units.y) === "function")?(units.y(step)):(Math.round(step).toString() + units.y)}
+                            {(typeof(units.y) === "function")?(units.y(step)):(Math.floor(step).toString() + units.y)}
                         </ParagraphText>
                     ))}
                 </View>
