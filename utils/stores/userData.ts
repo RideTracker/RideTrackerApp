@@ -7,6 +7,7 @@ const userDataPath = FileSystem.documentDirectory + "/userData.json";
 
 const initialState: User = {
     filters: {},
+    theme: "dark",
     mapProvider: "google"
 };
 

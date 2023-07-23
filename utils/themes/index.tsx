@@ -19,7 +19,6 @@ export function useTheme(scheme?: string) {
 
 import mapStyle from "./mapStyle.json";
 import { useUser } from "../../modules/user/useUser";
-import { useSegments } from "expo-router";
 
 export function useMapStyle() {
     return mapStyle;
