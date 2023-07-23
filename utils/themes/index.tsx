@@ -2,16 +2,16 @@ import { useColorScheme } from "react-native";
 
 import config from "./config.json";
 
-export function useTheme() {
+export function useTheme(scheme?: string) {
     const colorScheme = useColorScheme();
 
     try {
         const userData = useUser();
 
-        return config[userData?.theme ?? colorScheme];
+        return config[scheme ?? userData?.theme ?? colorScheme];
     }
     catch {
-        return config[colorScheme];
+        return config[scheme ?? colorScheme];
     }
 }
 

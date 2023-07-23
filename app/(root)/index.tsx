@@ -10,7 +10,7 @@ const logo = require("../../assets/logos/logo-white.png");
 const background = require("../../assets/extras/wallpapers/login.jpg");
 
 export default function IndexPage() {
-    const theme = useTheme();
+    const theme = useTheme("light");
 
     const router = useRouter();
 

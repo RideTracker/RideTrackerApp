@@ -111,7 +111,7 @@ export function Provider(props: ProviderProps) {
         }
         else {
             if((!userData?.token || !client.token) && inAuthGroup)
-                router.push("/login");
+                router.push("/");
             else if ((userData?.token && client.token)) {
                 if((!inAuthGroup && segments[segments.length - 1] !== "register") && !inPublicGroup) 
                     router.replace("/feed");

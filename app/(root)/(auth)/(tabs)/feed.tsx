@@ -86,7 +86,7 @@ export default function FeedPage() {
 
     const handlePagination = async (reset: boolean) => {
         if(!client.token && internetConnection !== "OFFLINE") {
-            router.push("/login");
+            router.push("/");
             
             return false;
         }
