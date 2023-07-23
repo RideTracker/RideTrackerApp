@@ -52,7 +52,7 @@ export default function Verify() {
                     token: response.token
                 }));
 
-                router.push("/");
+                router.push("/feed");
             });
         }
     }, [ submitting ]);

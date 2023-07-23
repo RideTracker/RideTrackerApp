@@ -149,6 +149,8 @@ export default function Register() {
                         )}
                     </Button>
 
+                    <Button primary={false} label={"Cancel"} onPress={() => router.back()}/>
+
                     {(Constants.expoConfig.extra.environment === "dev") && (
                         <Button primary={false} label="Autofill with mock data" onPress={() => {
                             setFirstname("John");

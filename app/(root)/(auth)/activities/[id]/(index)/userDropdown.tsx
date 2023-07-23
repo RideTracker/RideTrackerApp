@@ -45,7 +45,7 @@ export default function ActivityUserDropdownPage() {
                         onPress: () => {
                             deleteActivity(client, id as string).then((result) => {
                                 if(result.success) {
-                                    router.replace("/index");
+                                    router.replace("/feed");
                                 }
                             });
                         }

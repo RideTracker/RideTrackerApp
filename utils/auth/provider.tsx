@@ -105,18 +105,18 @@ export function Provider(props: ProviderProps) {
 
         if(internetConnection === "OFFLINE") {
             if(inSubscriptionGroup)
-                router.push("/");
+                router.push("/feed");
             else if(!inAuthGroup && !inPublicGroup)
-                router.push("/");
+                router.push("/feed");
         }
         else {
             if((!userData?.token || !client.token) && inAuthGroup)
                 router.push("/login");
             else if ((userData?.token && client.token)) {
                 if((!inAuthGroup && segments[segments.length - 1] !== "register") && !inPublicGroup) 
-                    router.replace("/");
+                    router.replace("/feed");
                 else if(inSubscriptionGroup && !userData.user?.subscribed)
-                    router.replace("/");
+                    router.replace("/feed");
             }
         }
     }, [ router, ready, userData?.token, segments, client.token ]);

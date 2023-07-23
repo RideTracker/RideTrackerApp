@@ -26,9 +26,9 @@ export const pages: {
     requiresSubscription?: boolean;
 }[] = [
     {
-        key: "index",
+        key: "feed",
         title: "Feed",
-        href: "/",
+        href: "/feed",
         replace: false,
         icon: (current, color) => (
             <FontAwesome style={{ height: 24 }} name="home" color={color} size={24}/>

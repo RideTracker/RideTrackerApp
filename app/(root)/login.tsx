@@ -59,7 +59,7 @@ export default function Login() {
                         user: response.user
                     }));
     
-                    router.push("/");
+                    router.push("/feed");
                 }
                 else if(response.verification) {
                     dispatch(setUserData({
@@ -145,7 +145,7 @@ export default function Login() {
                                 user: authentication.user
                             }));
 
-                            router.push("/");
+                            router.push("/feed");
                         }
                     }}/>
                 )}

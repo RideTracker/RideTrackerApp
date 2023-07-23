@@ -142,9 +142,9 @@ export default function UploadRecordingPage() {
                             createActivity(client, recording.id, sessions, properties.visibility).then((result) => {
                                 if(result.success) {
                                     updateActivity(client, result.activity.id, properties.visibility, (properties.title?.length)?(properties.title):(null), (properties.description?.length)?(properties.description):(null), properties.bike?.id ?? null).then((result) => {
-                                        router.push("/index");
+                                        router.push("/feed");
                                     }).catch(() => {
-                                        router.push("/index");
+                                        router.push("/feed");
                                     });
                                 }
                                 else if(result.message === "You have already uploaded this activity!") {
@@ -159,7 +159,7 @@ export default function UploadRecordingPage() {
                                                 if(info.exists)
                                                     await FileSystem.deleteAsync(file);
                                                 
-                                                router.push("/index");
+                                                router.push("/feed");
                                             }
                                         },
                                         { text: "Cancel" }
@@ -168,7 +168,7 @@ export default function UploadRecordingPage() {
                             });
                         }}/>
 
-                        <Button primary={false} label="Save as draft" onPress={() => router.push("/")}/>
+                        <Button primary={false} label="Save as draft" onPress={() => router.push("/feed")}/>
 
                         <Button primary={false} type="danger" label="Discard" onPress={() => {
                             Alert.alert("Discard recording", "Are you sure you want to discard your recording?", [
@@ -182,7 +182,7 @@ export default function UploadRecordingPage() {
                                         if(info.exists)
                                             await FileSystem.deleteAsync(file);
                                         
-                                        router.push("/index");
+                                        router.push("/feed");
                                     }
                                 },
                                 { text: "Cancel" }
