@@ -1,11 +1,12 @@
 import { scale } from "chroma.ts";
-import { View, Text } from "react-native";
+import { View, Text, LayoutChangeEvent } from "react-native";
 
 export type ActivityDataMapGradientProps = {
+    onLayout?: (event: LayoutChangeEvent) => void;
     getUnit: (index: number) => string;
 }
 
-export default function ActivityDataMapGradient({ getUnit }: ActivityDataMapGradientProps) {
+export default function ActivityDataMapGradient({ onLayout, getUnit }: ActivityDataMapGradientProps) {
     return (
         <View style={{
             position: "absolute",
@@ -23,7 +24,7 @@ export default function ActivityDataMapGradient({ getUnit }: ActivityDataMapGrad
 
             flexDirection: "row"
         }}>
-            <View style={{
+            <View onLayout={onLayout} style={{
                 maxWidth: "70%",
                 flexDirection: "row",
             }}>

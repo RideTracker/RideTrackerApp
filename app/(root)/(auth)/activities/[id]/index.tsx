@@ -19,7 +19,6 @@ import { CaptionText } from "../../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
 import ActivityMapDetails from "../../../../../components/ActivityMapDetails";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRoutesClient } from "../../../../../modules/useRoutesClient";
 import ActivityInsights from "../../../../../components/activity/ActivityInsights";
 
 export default function ActivityPage() {
@@ -29,7 +28,6 @@ export default function ActivityPage() {
     const { id } = useSearchParams();
     const internetConnection = useInternetConnection();
     const userData = useUser();
-    const routesClient = useRoutesClient();
 
     const [ activity, setActivity ] = useState<GetActivityResponse["activity"]>(null);
     const [ deleted, setDeleted ] = useState<boolean>(false);
@@ -44,8 +42,6 @@ export default function ActivityPage() {
             });
         }
     }, []);
-
-    const dimensions = Dimensions.get("screen");
 
     return (
         <View style={{flex: 1, backgroundColor: theme.background }}>

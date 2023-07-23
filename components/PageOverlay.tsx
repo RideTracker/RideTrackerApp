@@ -1,15 +1,14 @@
-import { View } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { View, ViewStyle } from "react-native";
 import { useTheme } from "../utils/themes";
-import { CaptionText } from "./texts/Caption";
-import { ParagraphText } from "./texts/Paragraph";
 import { ReactNode } from "react";
 
 type PageOverlayProps = {
     children?: ReactNode;
+    pointerEvents?: "box-none" | "none" | "box-only" | "auto";
+    style?: ViewStyle;
 };
 
-export default function PageOverlay({ children}: PageOverlayProps) {
+export default function PageOverlay({ children, style, pointerEvents = "auto" }: PageOverlayProps) {
     const theme = useTheme();
 
     return (
@@ -27,8 +26,10 @@ export default function PageOverlay({ children}: PageOverlayProps) {
             justifyContent: "center",
             alignItems: "center",
 
-            gap: 10
-        }}>
+            gap: 10,
+
+            ...style
+        }} pointerEvents={pointerEvents}>
             {children}
         </View>
     );
