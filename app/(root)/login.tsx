@@ -129,7 +129,7 @@ export default function LoginPage() {
                 padding: 10
             }}>
                 <KeyboardAvoidingView contentContainerStyle={{ opacity: (submitting)?(0.5):(1.0) }} behavior="padding" keyboardVerticalOffset={layout?.height} pointerEvents={(submitting)?("none"):("auto")}>
-                    <View style={{ marginTop: -50 }}>
+                    <View style={{ marginTop: -100 }}>
                         <Image source={logo} style={{ height: 100, width: "100%", resizeMode: "contain" }}/>
                     </View>
 
@@ -167,31 +167,33 @@ export default function LoginPage() {
                 }}>Forgot your credentials? <Link href="/forgotten" style={{ color: theme.brand, fontWeight: "500" }}>Click here to recover</Link></Text>
 
                 {(Constants.expoConfig.extra.environment !== "production") && (
-                    <Button primary={false} label="Assume random user" onPress={async () => {
-                        const randomUser = await getRandomToken(client);
+                    <View style={{ marginTop: "auto" }}>
+                        <Button primary={false} label="Assume random user" onPress={async () => {
+                            const randomUser = await getRandomToken(client);
 
-                        const randomUserClient = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                            identity: randomUser.email,
-                            key: randomUser.token.key,
-                            type: "Basic"
-                        });
-
-                        const authentication = await authenticateUser(randomUserClient);
-
-                        if(authentication.success) {
-                            dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                            const randomUserClient = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
                                 identity: randomUser.email,
-                                key: authentication.token.key,
+                                key: randomUser.token.key,
                                 type: "Basic"
-                            })));
+                            });
 
-                            dispatch(setUserData({
-                                email: randomUser.email,
-                                token: authentication.token,
-                                user: authentication.user
-                            }));
-                        }
-                    }}/>
+                            const authentication = await authenticateUser(randomUserClient);
+
+                            if(authentication.success) {
+                                dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                                    identity: randomUser.email,
+                                    key: authentication.token.key,
+                                    type: "Basic"
+                                })));
+
+                                dispatch(setUserData({
+                                    email: randomUser.email,
+                                    token: authentication.token,
+                                    user: authentication.user
+                                }));
+                            }
+                        }}/>
+                    </View>
                 )}
             </View>
         </View>

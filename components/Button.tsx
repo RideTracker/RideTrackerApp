@@ -17,7 +17,7 @@ type ButtonProps = {
 
 
 export default function Button(props: ButtonProps) {
-    const { borderRadius = 6, primary, label, icon, type, children, style, onPress } = props;
+    const { borderRadius = 3, primary, label, icon, type, children, style, onPress } = props;
 
     const theme = useTheme();
 
@@ -41,6 +41,7 @@ export default function Button(props: ButtonProps) {
         },
 
         "stroke": {
+            backgroundColor: "trasparent",
             color: theme.color
         }
     };
