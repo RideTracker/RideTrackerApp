@@ -4,9 +4,11 @@ import config from "./config.json";
 
 export function useTheme(scheme?: string) {
     const colorScheme = useColorScheme();
+    const userData = useUser();
 
     try {
-        const userData = useUser();
+        if(!userData?.token)
+            return config["dark"];
 
         return config[scheme ?? userData?.theme ?? colorScheme];
     }
@@ -17,6 +19,7 @@ export function useTheme(scheme?: string) {
 
 import mapStyle from "./mapStyle.json";
 import { useUser } from "../../modules/user/useUser";
+import { useSegments } from "expo-router";
 
 export function useMapStyle() {
     return mapStyle;

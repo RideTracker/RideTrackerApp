@@ -1,13 +1,14 @@
 import React from "react";
-import { View, Text, TextStyle } from "react-native";
+import { View, Text, TextStyle, ViewStyle } from "react-native";
 import { useTheme } from "../utils/themes";
 
 export type FormDividerProps = {
     label?: string;
     labelStyle?: TextStyle;
+    style?: ViewStyle;
 };
 
-export default function FormDivider({ label, labelStyle }: FormDividerProps) {
+export default function FormDivider({ label, labelStyle, style }: FormDividerProps) {
     const theme = useTheme();
 
     return (
@@ -15,7 +16,8 @@ export default function FormDivider({ label, labelStyle }: FormDividerProps) {
             flexDirection: "row",
             alignItems: "center",
             gap: 10,
-            marginVertical: 10
+            marginVertical: 10,
+            ...style
         }}>
             <View style={{
                 flex: 1,

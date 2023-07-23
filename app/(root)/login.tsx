@@ -1,35 +1,35 @@
-import { useState, useEffect, useRef } from "react";
-import { View, Text, SafeAreaView, ActivityIndicator, Alert, Image } from "react-native";
-import { useRouter, Stack, Link } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { useRef, useState, useEffect } from "react";
+import { View, Image, TextInput, ActivityIndicator, Text, Alert, KeyboardAvoidingView, LayoutRectangle } from "react-native";
 import { useTheme } from "../../utils/themes";
-import Button from "../../components/Button";
-import { FontAwesome } from "@expo/vector-icons"; 
+import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
 import FormInput from "../../components/FormInput";
-import { useDispatch } from "react-redux";
+import { FontAwesome } from "@expo/vector-icons";
+import Button from "../../components/Button";
+import { Link } from "expo-router";
+import { getRandomToken, createRideTrackerClient, authenticateUser, loginUser } from "@ridetracker/ridetrackerclient";
+import Constants from "expo-constants";
+import { setClient } from "../../utils/stores/client";
 import { setUserData } from "../../utils/stores/userData";
 import { useClient } from "../../modules/useClient";
-import { createRideTrackerClient, authenticateUser, getRandomToken, loginUser } from "@ridetracker/ridetrackerclient";
-import Constants from "expo-constants";
-import * as Application from 'expo-application';
-import { setClient } from "../../utils/stores/client";
-import FormDivider from "../../components/FormDivider";
+import { useDispatch } from "react-redux";
 
-const logo = require("../../assets/logos/logo.png");
+const logo = require("../../assets/logos/logo-motto.png");
+const background = require("../../assets/extras/wallpapers/login.jpg");
 
-export default function Login() {
-    const client = useClient();
+export default function LoginPage() {
     const theme = useTheme();
-
+    const client = useClient();
+    const router = useRouter();
     const dispatch = useDispatch();
 
-    const router = useRouter();
+    const passwordRef = useRef<TextInput>(null);
 
-    const [ submitting, setSubmitting ] = useState(false);
-
-    const [ email, setEmail ] = useState("");
-    const [ password, setPassword ] = useState("");
-
-    const passwordRef = useRef(null);
+    const [ email, setEmail ] = useState<string>("");
+    const [ password, setPassword ] = useState<string>("");
+    const [ submitting, setSubmitting ] = useState<boolean>(false);
+    const [ layout, setLayout ] = useState<LayoutRectangle>(null);
 
     useEffect(() => {
         if(submitting) {
@@ -59,7 +59,7 @@ export default function Login() {
                         user: response.user
                     }));
     
-                    router.push("/feed");
+                    //router.push("/feed");
                 }
                 else if(response.verification) {
                     dispatch(setUserData({
@@ -74,51 +74,97 @@ export default function Login() {
     }, [ submitting ]);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", padding: 10, backgroundColor: theme.background }}>
-            <Stack.Screen options={{ title: "Ping" }} />
+        <View style={{ flex: 1, backgroundColor: theme.background }}>
+            <Stack.Screen options={{
+                title: "",
+                headerShown: true,
+                headerTransparent: true,
 
-            <Image source={logo} style={{ height: 100, width: "100%", resizeMode: "contain" }}/>
+                headerStyle: {
+                    backgroundColor: "transparent"
+                },
 
-            <SafeAreaView style={{ gap: 10, marginVertical: 10, opacity: (submitting)?(0.5):(1.0) }} pointerEvents={(submitting)?("none"):("auto")}>
-                <FormInput placeholder="Email address" icon={(<FontAwesome name="envelope" size={24} color={theme.color}/>)} props={{
-                    autoCapitalize: "none",
-                    autoComplete: "email",
-                    autoCorrect: false,
-                    enterKeyHint: "next",
-                    inputMode: "email",
-                    keyboardType: "email-address",
-                    onSubmitEditing: () => passwordRef.current.focus(),
-                    onChangeText: (text) => setEmail(text)
+                headerTintColor: theme.color,
+                headerTitleStyle: {
+                    color: theme.color
+                }
+            }} />
+
+            <View style={{
+                height: "40%",
+
+                backgroundColor: theme.background,
+
+                position: "relative"
+            }} onLayout={(event) => setLayout(event.nativeEvent.layout)}>
+                <Image style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+
+                    height: "100%",
+                    width: "100%",
+
+                    opacity: .5,
+
+                    resizeMode: "cover"
+                }} source={background} fadeDuration={1000} defaultSource={background}/>
+
+                <LinearGradient colors={[ "transparent", theme.background ]} locations={[ 0.2, 1 ]} style={{ 
+                    position: "absolute",
+
+                    left: 0,
+                    top: 0,
+
+                    height: "100%",
+                    width: "100%"
                 }}/>
+            </View>
 
-                <FormInput inputRef={passwordRef} placeholder="Password" icon={(<FontAwesome name="lock" size={24} color={theme.color}/>)} props={{
-                    autoCapitalize: "none",
-                    autoComplete: "password",
-                    autoCorrect: false,
-                    enterKeyHint: "send",
-                    secureTextEntry: true,
-                    onSubmitEditing: () => setSubmitting(true),
-                    onChangeText: (text) => setPassword(text)
-                }}/>
+            <View style={{
+                flex: 1,
 
-                <Button primary={true} label={!submitting && "Sign in"} onPress={() => setSubmitting(true)}>
-                    {(submitting) && (<ActivityIndicator size={24} color={theme.contrast}/>)}
-                </Button>
+                gap: 10,
+
+                padding: 10
+            }}>
+                <KeyboardAvoidingView contentContainerStyle={{ opacity: (submitting)?(0.5):(1.0) }} behavior="padding" keyboardVerticalOffset={layout?.height} pointerEvents={(submitting)?("none"):("auto")}>
+                    <View style={{ marginTop: -50 }}>
+                        <Image source={logo} style={{ height: 100, width: "100%", resizeMode: "contain" }}/>
+                    </View>
+
+                    <View style={{ backgroundColor: theme.background, marginVertical: 10, gap: 10 }}>
+                        <FormInput placeholder="Email address" icon={(<FontAwesome name="envelope" size={24} color={theme.color}/>)} props={{
+                            autoCapitalize: "none",
+                            autoComplete: "email",
+                            autoCorrect: false,
+                            enterKeyHint: "next",
+                            inputMode: "email",
+                            keyboardType: "email-address",
+                            onSubmitEditing: () => passwordRef.current.focus(),
+                            onChangeText: (text) => setEmail(text)
+                        }}/>
+
+                        <FormInput inputRef={passwordRef} placeholder="Password" icon={(<FontAwesome name="lock" size={24} color={theme.color}/>)} props={{
+                            autoCapitalize: "none",
+                            autoComplete: "password",
+                            autoCorrect: false,
+                            enterKeyHint: "send",
+                            secureTextEntry: true,
+                            onSubmitEditing: () => setSubmitting(true),
+                            onChangeText: (text) => setPassword(text)
+                        }}/>
+
+                        <Button primary={true} label={!submitting && "Sign in"} onPress={() => setSubmitting(true)}>
+                            {(submitting) && (<ActivityIndicator size={24} color={theme.contrast}/>)}
+                        </Button>
+                    </View>
+                </KeyboardAvoidingView>
 
                 <Text style={{
                     textAlign: "center",
-                    color: theme.color,
-                    marginTop: 10
+                    color: theme.color
                 }}>Forgot your credentials? <Link href="/forgotten" style={{ color: theme.brand, fontWeight: "500" }}>Click here to recover</Link></Text>
-            </SafeAreaView>
-
-            <FormDivider label="or"/>
-            
-            <View style={{
-                marginVertical: 10,
-                gap: 10
-            }}>
-                <Button primary={false} label="Register with email address" onPress={() => router.push("/register")}/>
 
                 {(Constants.expoConfig.extra.environment !== "production") && (
                     <Button primary={false} label="Assume random user" onPress={async () => {
@@ -144,12 +190,10 @@ export default function Login() {
                                 token: authentication.token,
                                 user: authentication.user
                             }));
-
-                            router.push("/feed");
                         }
                     }}/>
                 )}
             </View>
         </View>
     );
-}
+};

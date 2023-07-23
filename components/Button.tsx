@@ -8,28 +8,48 @@ type ButtonProps = {
     label?: string;
     icon?: ReactNode;
 
+    borderRadius?: number;
+
     children?: ReactNode;
     style?: ViewStyle;
     onPress?: (event: GestureResponderEvent) => void;
 };
 
+
 export default function Button(props: ButtonProps) {
-    const { primary, label, icon, type, children, style, onPress } = props;
+    const { borderRadius = 6, primary, label, icon, type, children, style, onPress } = props;
 
     const theme = useTheme();
+
+    const buttonStyles: {
+        [key: string]: ViewStyle & { color: string };
+    } = {
+        "outline": {
+            backgroundColor: "rgba(0, 0, 0, .2)",
+            
+            padding: 6,
+            
+            borderWidth: 2,
+            borderColor: theme.color,
+
+            color: theme.background
+        },
+
+        "danger": {
+            backgroundColor: "transparent",
+            color: "#FF0000"
+        },
+
+        "stroke": {
+            color: theme.color
+        }
+    };
 
     return (
         <View style={style}>
             <TouchableOpacity style={{
                 width: "100%",
-
-                backgroundColor: (type === "outline")?("rgba(0, 0, 0, .2)"):((type === "danger" || type === "stroke" || type === "overlay-stroke")?("transparent"):((primary)?(theme.brand):(theme.border))),
-                
-                padding: (type === "outline")?(6):(10),
-                borderRadius: 6,
-
-                borderWidth: (type === "outline")?(2):(0),
-                borderColor: (type === "outline")?(theme.border):("none"),
+                borderRadius,
 
                 height: 45,
 
@@ -37,12 +57,18 @@ export default function Button(props: ButtonProps) {
                 gap: 5,
 
                 justifyContent: "center",
-                alignItems: "center"
-            }} onPress={onPress}>
+                alignItems: "center",
+                
+                ...buttonStyles[type],
 
+                backgroundColor: buttonStyles[type]?.backgroundColor ?? ((primary)?(theme.brand):(theme.border)),
+                
+                padding: buttonStyles[type]?.padding ?? 10
+            }} onPress={onPress}>
                 {(icon) && icon}
+
                 {(label) && (
-                    <Text style={{ color: (type === "outline")?(theme.background):((type === "danger")?("#FF0000"):((primary)?(theme.brandText):((type === "stroke")?(theme.color):(theme.color)))), fontSize: 20, textAlign: "center" }}>{label}</Text>
+                    <Text style={{ color: buttonStyles[type]?.color ?? (primary)?(theme.brandText):(theme.color), fontSize: 20, textAlign: "center" }}>{label}</Text>
                 )}
 
                 {children}

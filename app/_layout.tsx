@@ -8,7 +8,11 @@ export default function Layout() {
         <ReduxProvider store={store}>
             <Provider>
                 <Stack screenOptions={{
-                    headerShown: false
+                    headerShown: false,
+
+                    contentStyle: {
+                        backgroundColor: "black"
+                    }
                 }}/>
             </Provider>
         </ReduxProvider>

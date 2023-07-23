@@ -16,6 +16,10 @@ export default function Layout() {
                 fontSize: 24,
                 fontWeight: "500",
                 color: theme.color
+            },
+
+            contentStyle: {
+                backgroundColor: theme.background
             }
         }}>
             <Stack.Screen name="register" options={{

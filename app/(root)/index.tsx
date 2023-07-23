@@ -5,12 +5,13 @@ import { useTheme } from "../../utils/themes";
 import Button from "../../components/Button";
 import * as NavigationBar from "expo-navigation-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
+import FormDivider from "../../components/FormDivider";
 
-const logo = require("../../assets/logos/logo-white.png");
-const background = require("../../assets/extras/wallpapers/login.jpg");
+const logo = require("../../assets/logos/logo-motto.png");
+const background = require("../../assets/extras/wallpapers/index.jpg");
 
 export default function IndexPage() {
-    const theme = useTheme("light");
+    const theme = useTheme();
 
     const router = useRouter();
 
@@ -49,7 +50,7 @@ export default function IndexPage() {
                 width: "100%",
                 height: "100%",
 
-                backgroundColor: theme.color
+                backgroundColor: theme.background
             }}>
                 <Image style={{
                     position: "absolute",
@@ -60,7 +61,9 @@ export default function IndexPage() {
                     width: "100%",
                     height: "100%",
 
-                    opacity: .5
+                    opacity: .5,
+
+                    resizeMode: "cover"
                 }} source={background}/>
             </View>
 
@@ -69,14 +72,15 @@ export default function IndexPage() {
 
                 flexDirection: "column",
                 padding: 10
-            }} edges={[ "bottom" ]}>
+            }} edges={[ "top", "bottom" ]}>
                 <View style={{ flex: 1, justifyContent: "center" }}>
                     <Image source={logo} style={{ height: 100, width: "100%", resizeMode: "contain" }}/>
                 </View>
 
                 <View style={{ gap: 10 }}>
-                    <Button primary={true} label="Create a new account" onPress={() => router.push("/register")}/>
-                    <Button primary={false} type="outline" label="I have an existing account" onPress={() => router.push("/login")}/>
+                    <Button primary={true} borderRadius={3} label="Create a new account" onPress={() => router.push("/register2")}/>
+
+                    <Button primary={false} borderRadius={3} type="outline" label="I have an existing account" onPress={() => router.push("/login")}/>
                 </View>
             </SafeAreaView>
         </View>
