@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import { View, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
 import { useTheme } from "../../../../utils/themes";
@@ -33,7 +33,7 @@ export default function ProfileDevices() {
             if(timer != null)
                 clearInterval(timer);
         };
-    });
+    }, []);
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -115,7 +115,7 @@ export default function ProfileDevices() {
                                     <View style={{
                                         justifyContent: "space-evenly"
                                     }}>
-                                        <CaptionText>{device.id}</CaptionText>
+                                        <CaptionText>{device.name}</CaptionText>
                                         <ParagraphText>Last used a moment ago</ParagraphText>
                                     </View>
                                     
