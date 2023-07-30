@@ -15,7 +15,7 @@ import { useClient } from "../../../../modules/useClient";
 import { createRideTrackerClient, GetProfileResponse, GetUserFollowersResponse, GetUserFollowingResponse, getProfileActivities, getProfileBikes, getProfileById, getUserFollowers, getUserFollowing, setProfileFollow } from "@ridetracker/ridetrackerclient";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 import useInternetConnection from "../../../../modules/useInternetConnection";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { setUserData } from "../../../../utils/stores/userData";
 import { setClient } from "../../../../utils/stores/client";
 import { useDispatch } from "react-redux";
@@ -61,11 +61,8 @@ export default function Profile() {
                 title: "Profile",
                 headerRight: (profile?.user?.id === userData.user?.id)?(() => (
                     <View style={{ marginRight: 20 }}>
-                        <TouchableOpacity onPress={() => {
-                            dispatch(setUserData({ email: null, token: null }));
-                            dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, null)));
-                        }}>
-                            <FontAwesome name="sign-out" size={24} color={theme.color}/>
+                        <TouchableOpacity onPress={() => router.push("/profile/settings")}>
+                            <FontAwesome5 name="cog" size={24} color={theme.color}/>
                         </TouchableOpacity>
                     </View>
                 )):(undefined)

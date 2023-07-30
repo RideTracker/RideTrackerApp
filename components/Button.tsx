@@ -7,6 +7,7 @@ type ButtonProps = {
     type?: "danger" | "stroke" | "overlay-stroke" | "outline";
     label?: string;
     icon?: ReactNode;
+    disabled?: boolean;
 
     borderRadius?: number;
 
@@ -17,7 +18,7 @@ type ButtonProps = {
 
 
 export default function Button(props: ButtonProps) {
-    const { borderRadius = 3, primary, label, icon, type, children, style, onPress } = props;
+    const { borderRadius = 3, disabled = false, primary, label, icon, type, children, style, onPress } = props;
 
     const theme = useTheme();
 
@@ -37,18 +38,18 @@ export default function Button(props: ButtonProps) {
 
         "danger": {
             backgroundColor: "transparent",
-            color: "#FF0000"
+            color: theme.red
         },
 
         "stroke": {
-            backgroundColor: "trasparent",
+            backgroundColor: "transparent",
             color: theme.color
         }
     };
 
     return (
         <View style={style}>
-            <TouchableOpacity style={{
+            <TouchableOpacity disabled={disabled} style={{
                 width: "100%",
                 borderRadius,
 
@@ -69,7 +70,7 @@ export default function Button(props: ButtonProps) {
                 {(icon) && icon}
 
                 {(label) && (
-                    <Text style={{ color: buttonStyles[type]?.color ?? (primary)?(theme.brandText):(theme.color), fontSize: 20, textAlign: "center" }}>{label}</Text>
+                    <Text style={{ color: buttonStyles[type]?.color ?? ((primary)?(theme.brandText):(theme.color)), fontSize: 20, textAlign: "center" }}>{label}</Text>
                 )}
 
                 {children}
