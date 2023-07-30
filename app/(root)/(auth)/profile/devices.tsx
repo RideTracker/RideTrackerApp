@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import { View, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
 import { useTheme } from "../../../../utils/themes";
@@ -8,14 +8,32 @@ import { ParagraphText } from "../../../../components/texts/Paragraph";
 import FormDivider from "../../../../components/FormDivider";
 import Button from "../../../../components/Button";
 import { usePreventScreenCapture } from 'expo-screen-capture';
+import { GetDevicesResponse, getDeviceVerification, getDevices } from "@ridetracker/ridetrackerclient";
+import { useClient } from "../../../../modules/useClient";
 
 export default function ProfileDevices() {
     usePreventScreenCapture();
 
     const theme = useTheme();
+    const client = useClient();
 
-    const [ active, setActive ] = useState<boolean>(false);
+    const [ submitting, setSubmitting ] = useState<boolean>(false);
     const [ code, setCode ] = useState<string>(null);
+    const [ timer, setTimer ] = useState<NodeJS.Timer>(null);
+    const [ devices, setDevices ] = useState<GetDevicesResponse["devices"]>([]);
+
+    useEffect(() => {
+        getDevices(client).then((result) => {
+            if(result.success) {
+                setDevices(result.devices);
+            }
+        });
+
+        return () => {
+            if(timer != null)
+                clearInterval(timer);
+        };
+    });
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -44,54 +62,74 @@ export default function ProfileDevices() {
                             <ParagraphText style={{ paddingRight: 80 }}>Click on the button below to reveal your 6 digit code and follow the instructions on your wearable device.</ParagraphText>
                         </View>
 
-                        <Button primary={false} type={(code)?("stroke"):(undefined)} label={(!active)?("Reveal my temporary code"):((code)?(code):(undefined))} disabled={active} onPress={() => {
-                            setActive(true);
-                            setCode("213 546");
+                        <Button primary={false} type={(code)?("stroke"):(undefined)} label={(!submitting)?("Reveal my temporary code"):((code)?(code):(undefined))} disabled={submitting} onPress={() => {
+                            setSubmitting(true);
+
+                            getDeviceVerification(client).then((result) => {
+                                if(result.success) {
+                                    setCode(result.code.key.substring(0, 3) + " " + result.code.key.substring(3));
+
+                                    setTimer(setTimeout(() => {
+                                        setCode(null);
+                                        setSubmitting(false);
+                                        
+                                        getDevices(client).then((result) => {
+                                            if(result.success) {
+                                                setDevices(result.devices);
+                                            }
+                                        });
+                                    }, result.code.expires - Date.now()));
+                                }
+                            });
                         }}>
-                            {(active && !code) && (<ActivityIndicator color={theme.brand}/>)}
+                            {(submitting && !code) && (<ActivityIndicator color={theme.brand}/>)}
                         </Button>
 
                         <ParagraphText>The provided code refreshes every 30 seconds while visible and expires when dismissed.</ParagraphText>
                     </View>
                 </View>
 
-                <FormDivider/>
+                {(devices.length != 0) && (<FormDivider/>)}
 
                 <View style={{ flexShrink: 1 }}>
                     <ScrollView>
-                        <View style={{
-                            flexDirection: "row",
-                            gap: 10
-                        }}>
-                            <View style={{
-                                width: 60,
-                                height: 60,
-                                borderRadius: 60,
-
-                                justifyContent: "center",
-                                alignItems: "center",
-
-                                backgroundColor: theme.border
-                            }}>
-                                <MaterialCommunityIcons name="watch" size={36} color={theme.color}/>
-                            </View>
-
-                            <View style={{
-                                justifyContent: "space-evenly"
-                            }}>
-                                <CaptionText>Samsung Galaxy Watch 5</CaptionText>
-                                <ParagraphText>Last used a moment ago</ParagraphText>
-                            </View>
-                            
-                            <TouchableOpacity style={{
-                                width: 60,
-                                height: 60,
-
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}>
-                                <FontAwesome5 name="times" size={24} color={theme.red}/>
-                            </TouchableOpacity>
+                        <View style={{ flexDirection: "column", gap: 10 }}>
+                            {devices.map((device) => (
+                                <View key={device.id} style={{
+                                    flexDirection: "row",
+                                    gap: 10
+                                }}>
+                                    <View style={{
+                                        width: 60,
+                                        height: 60,
+                                        borderRadius: 60,
+        
+                                        justifyContent: "center",
+                                        alignItems: "center",
+        
+                                        backgroundColor: theme.border
+                                    }}>
+                                        <MaterialCommunityIcons name="watch" size={36} color={theme.color}/>
+                                    </View>
+        
+                                    <View style={{
+                                        justifyContent: "space-evenly"
+                                    }}>
+                                        <CaptionText>{device.id}</CaptionText>
+                                        <ParagraphText>Last used a moment ago</ParagraphText>
+                                    </View>
+                                    
+                                    <TouchableOpacity style={{
+                                        width: 60,
+                                        height: 60,
+        
+                                        justifyContent: "center",
+                                        alignItems: "center"
+                                    }}>
+                                        <FontAwesome5 name="times" size={24} color={theme.red}/>
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
                         </View>
                     </ScrollView>
                 </View>

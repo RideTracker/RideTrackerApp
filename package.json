@@ -13,7 +13,7 @@
     "@googlemaps/polyline-codec": "^1.0.28",
     "@reduxjs/toolkit": "^1.9.3",
     "@ridetracker/avatarclient": "^0.9.11",
-    "@ridetracker/ridetrackerclient": "^0.9.79",
+    "@ridetracker/ridetrackerclient": "^0.9.81",
     "@ridetracker/routeclient": "^0.9.7",
     "@types/react": "~18.0.27",
     "chroma.ts": "^1.0.10",
@@ -33,6 +33,7 @@
     "expo-location": "~15.1.1",
     "expo-navigation-bar": "~2.1.1",
     "expo-router": "^1.2.1",
+    "expo-screen-capture": "~5.1.1",
     "expo-sharing": "~11.2.2",
     "expo-status-bar": "~1.4.4",
     "expo-task-manager": "~11.1.1",
@@ -54,8 +55,7 @@
     "react-native-wheel-color-picker": "^1.2.0",
     "react-redux": "^8.0.5",
     "redux": "^4.2.1",
-    "typescript": "^4.9.4",
-    "expo-screen-capture": "~5.1.1"
+    "typescript": "^4.9.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
