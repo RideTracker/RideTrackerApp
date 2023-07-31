@@ -15,7 +15,8 @@
         "contrast": "black",
 		"contrastStyle": "dark",
 
-        "mapStyle": []
+        "mapStyle": [],
+		"mapStyleFullscreen": []
     },
 
     "dark": {

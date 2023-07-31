@@ -31,4 +31,5 @@ export type Theme = {
     contrastStyle: "light" | "dark";
 
     mapStyle: any[];
+    mapStyleFullscreen: any[];
 };

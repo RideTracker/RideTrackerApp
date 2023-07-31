@@ -329,7 +329,7 @@ export default function Record() {
                                     latitude: location.coords.latitude,
                                     longitude: location.coords.longitude
                                 };
-                            })} strokeWidth={4} fillColor={"white"} strokeColor={"white"}/>
+                            })} strokeWidth={3} fillColor={"white"} strokeColor={"white"}/>
 
                             {(session.locations.length > 0) && (
                                 (index === 0)?(

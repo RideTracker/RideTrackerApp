@@ -252,19 +252,19 @@ export default function Routes() {
                     onRegionChangeComplete={(region) => setMapRegion(region)}
                     >
                     {(routes) && (
-                        <Polyline coordinates={routes.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4}/>
+                        <Polyline coordinates={routes.polyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={3}/>
                     )}
 
                     <MapRouteMarkers waypoints={JSON.stringify(waypoints)}/>
 
-                    <Polyline coordinates={[...global.coordinates]} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
+                    <Polyline coordinates={[...global.coordinates]} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={3} lineJoin={"round"}/>
 
                     {/*waypoints.map((waypoint, index) => (
                         <Marker key={index} coordinate={waypoint.location} pinColor={getWaypointColor(index, waypoints.length)}/>
                     ))*/}
 
                     {(drawingPolyline) && (
-                        <Polyline coordinates={drawingPolyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={4} lineJoin="round"/>
+                        <Polyline coordinates={drawingPolyline} fillColor={theme.brand} strokeColor={theme.brand} strokeWidth={3} lineJoin="round"/>
                     )}
 
                     {(!editorActive) && viewableRoutes.map((route) => (
@@ -273,7 +273,7 @@ export default function Routes() {
                             coordinates={route.decodedPolyline}
                             fillColor={getJsonColor(route.color, theme)}
                             strokeColor={getJsonColor(route.color, theme)}
-                            strokeWidth={4}
+                            strokeWidth={3}
                             lineJoin="round"
                             tappable={true}
                             onPress={() => handleRouteClick(route.id)}

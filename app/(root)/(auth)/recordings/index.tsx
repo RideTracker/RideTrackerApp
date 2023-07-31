@@ -48,7 +48,7 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
                     });
                 }}>
                     {recording.sessions.filter((session) => session).map((session) => (
-                        <Polyline key={session.id} coordinates={session.locations.map((location) => location.coords)} strokeWidth={4} fillColor={theme.brand} strokeColor={theme.brand}/>
+                        <Polyline key={session.id} coordinates={session.locations.map((location) => location.coords)} strokeWidth={3} fillColor={theme.brand} strokeColor={theme.brand}/>
                     ))}
                 </MapView>
             </View>

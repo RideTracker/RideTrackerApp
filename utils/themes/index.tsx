@@ -39,7 +39,8 @@ Object.entries(config).forEach((item) => {
         contrast: keys.contrast as "black" | "white",
         contrastStyle: keys.contrastStyle as "dark" | "light",
     
-        mapStyle: keys.mapStyle
+        mapStyle: keys.mapStyle,
+        mapStyleFullscreen: keys.mapStyleFullscreen
     };
 })
 

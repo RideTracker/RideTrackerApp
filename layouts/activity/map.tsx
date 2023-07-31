@@ -281,14 +281,14 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                                     latitude: point[0],
                                     longitude: point[1]
                                 };
-                            })} strokeColor={"white"} fillColor={"white"} strokeWidth={6} lineJoin={"round"}/>
+                            })} strokeColor={theme.variants.brand.dark} fillColor={theme.variants.brand.dark} strokeWidth={5}/>
                             
                             <Polyline coordinates={polyline.map((point) => {
                                 return {
                                     latitude: point[0],
                                     longitude: point[1]
                                 };
-                            })} strokeColor={theme.brand} fillColor={theme.brand} strokeWidth={4} lineJoin={"round"}/>
+                            })} strokeColor={theme.brand} fillColor={theme.brand} strokeWidth={3}/>
                         </React.Fragment>
                     ))}
                 </MapView>

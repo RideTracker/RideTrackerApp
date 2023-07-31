@@ -117,7 +117,7 @@ export default function UploadRecordingPage() {
                             <MapView ref={mapRef} provider={userData.mapProvider} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
                                 (mapRef.current as MapView).fitToCoordinates(recording.locations.map((location) => location.coords));
                             }}>
-                                <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={2} strokeColor={theme.brand}/>
+                                <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={3} strokeColor={theme.brand}/>
                             </MapView>
                         )}
                     </View>

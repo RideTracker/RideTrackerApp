@@ -51,7 +51,7 @@ export function RoutesListItem({ route, onPress }: RoutesListItemProps) {
                     scrollEnabled={false}
                     onMapReady={() => mapViewRef.current.fitToCoordinates(route.decodedPolyline, { animated: false })}
                     >
-                    <Polyline coordinates={route.decodedPolyline} fillColor={getJsonColor(route.color, theme)} strokeColor={getJsonColor(route.color, theme)} strokeWidth={4}/>
+                    <Polyline coordinates={route.decodedPolyline} fillColor={getJsonColor(route.color, theme)} strokeColor={getJsonColor(route.color, theme)} strokeWidth={3}/>
                 </MapView>
             </View>
 
