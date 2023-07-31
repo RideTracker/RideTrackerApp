@@ -102,6 +102,8 @@ export default function ActivityAuthor({ activity }: ActivityAuthorProps) {
             </TouchableOpacity>
 
             <View style={{
+                height: 40,
+                
                 justifyContent: "center",
                 alignItems: "center",
 
