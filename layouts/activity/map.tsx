@@ -245,7 +245,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                     }}
                     onMapReady={() => setReady(true)}
                     onRegionChangeComplete={() => {
-                        if(!polylines)
+                        if(!polylines?.length || !polylines[0].length)
                             return;
 
                         const mapView = mapViewRef.current as MapView;

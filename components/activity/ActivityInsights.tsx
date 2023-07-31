@@ -36,7 +36,7 @@ export default function ActivityInsights({ activity }: ActivityInsightsProps) {
             getActivitySessionsInsights(routesClient, activity.id).then((result) => {
                 if(result.success) {
                     setInsights(result.insights);
-                } 
+                }
             });
         }
     }, [ activity ]);

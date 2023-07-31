@@ -42,7 +42,7 @@ export default function ActivityDataMapPolyline({ layout, mapViewRef, region, po
                 Promise.all(polylines.map(async (polyline) => {
                     const coordinates = polyline;
 
-                    const points = getStrippedPolylineByPoints(await Promise.all(coordinates.map(async (coordinate, index) => {
+                    const points = getStrippedPolylineByPoints(await Promise.all(coordinates.filter((coordinate) => coordinate).map(async (coordinate, index) => {
                         const point = await mapViewRef.current.pointForCoordinate(coordinate);
 
                         return {
@@ -58,6 +58,9 @@ export default function ActivityDataMapPolyline({ layout, mapViewRef, region, po
                     };
                 })).then((polylines) => {
                     const coordinates = polylines.flatMap((polyline) => polyline.coordinates);
+
+                    if(coordinates.includes(undefined))
+                        return;
 
                     const startCoordinate = coordinates[0];
                     const furthestCoordinate = getFurthestCoordinate(coordinates);

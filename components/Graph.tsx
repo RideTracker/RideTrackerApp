@@ -79,6 +79,9 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
             const stepsX = Array(horizontalSteps).fill((maximumX - minimumX) / (horizontalSteps - 1)).map((step, index) => minimumX + (step * index));
             const stepsY = Array(verticalSteps).fill((maximumY - minimumY) / (verticalSteps - 1)).map((step, index) => minimumY + (step * ((verticalSteps - 1) - index)));
 
+            if(stepsX.includes(NaN) || stepsY.includes(NaN))
+                return;
+
             console.log({ stepsY, mid: maximumY - minimumY });
 
             setLimits({
@@ -114,6 +117,9 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
             const datasetPoints: GraphDatasetPoints[] = [];
 
             datasets.forEach((dataset) => {
+                if(!dataset.data.length)
+                    return;
+
                 const points: GraphDatasetPoints["points"] = [];
 
                 {
