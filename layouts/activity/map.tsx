@@ -266,6 +266,7 @@ export default function ActivityMap({ activity, children, type }: ActivityMapPro
                             setFinishPosition(position);
                         });
                     }}
+                    maxZoomLevel={16}
                     onLayout={(event) => setLayout(event.nativeEvent.layout)}
                     pointerEvents={(type !== ComponentType.Default)?("none"):("auto")}
                     provider={userData.mapProvider}
