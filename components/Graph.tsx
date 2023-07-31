@@ -292,16 +292,16 @@ export default function Graph({ children, units, datasets, verticalSteps = 5, ho
                         position: "relative"
                     }}>
                         {limits?.stepsX.map((step, index, array) => (
-                        <ParagraphText key={step} style={{
-                            color: "silver",
-                            fontSize: 12,
-                            position: "absolute",
-                            width: "100%",
-                            textAlign: (index === array.length - 1)?("right"):("left"),
-                            left: `${(index === array.length - 1)?(0):((step / (limits.maximumX - limits.minimumX)) * 100)}%`
-                        }}>
-                            {(typeof(units.x) === "function")?(units.x(step)):(Math.round(step).toString() + units.x)}
-                        </ParagraphText>
+                            <ParagraphText key={step} style={{
+                                color: "silver",
+                                fontSize: 12,
+                                position: "absolute",
+                                width: "100%",
+                                textAlign: (index === array.length - 1)?("right"):("left"),
+                                left: `${(index === array.length - 1)?(0):((step / (limits.maximumX - limits.minimumX)) * 100)}%`
+                            }}>
+                                {(typeof(units.x) === "function")?(units.x(step)):(Math.round(step).toString() + units.x)}
+                            </ParagraphText>
                         ))}
                     </View>
                 </View>

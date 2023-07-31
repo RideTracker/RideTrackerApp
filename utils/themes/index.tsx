@@ -10,6 +10,8 @@ Object.entries(config).forEach((item) => {
     console.log("Creating theme " + item[0]);
 
     themes[item[0]] = {
+        name: item[0] as "dark" | "light",
+
         background: keys.background,
         color: keys.color,
         placeholder: keys.placeholder,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableWithoutFeedback, Text, TouchableOpacity } from "react-native";
+import { View, TouchableWithoutFeedback, Text, TouchableOpacity, Image } from "react-native";
 import ActivityDataMap from "./ActivityDataMap";
 import { getActivitySessionsInsights, GetActivitySessionsInsightsResponse } from "@ridetracker/routeclient";
 import { useRoutesClient } from "../../modules/useRoutesClient";
@@ -14,6 +14,12 @@ import { CaptionText } from "../texts/Caption";
 import ActivityDataMapGradient from "./ActivityDataMapGradient";
 import { css } from "chroma.ts";
 import ActivityDataMapSolids from "./ActivityDataMapSolids";
+import getFractionOfRange from "../../controllers/getFractionOfRange";
+import { Ionicons } from "@expo/vector-icons";
+import { BatteryState } from "expo-battery";
+import Button from "../Button";
+import SubscriptionFeatures from "../SubscriptionFeatures";
+import { useRouter } from "expo-router";
 
 export type ActivityInsightsProps = {
     activity: {
@@ -21,10 +27,25 @@ export type ActivityInsightsProps = {
     };
 };
 
+const images = {
+    "dark": [
+        require("../../assets/extras/previews/insights/dark_speed.png"),
+        require("../../assets/extras/previews/insights/dark_speed_elevation.png"),
+        require("../../assets/extras/previews/insights/dark_battery.png")
+    ],
+    
+    "light": [
+        require("../../assets/extras/previews/insights/light_speed.png"),
+        require("../../assets/extras/previews/insights/light_speed_elevation.png"),
+        require("../../assets/extras/previews/insights/light_battery.png")
+    ]
+};
+
 export default function ActivityInsights({ activity }: ActivityInsightsProps) {
     const routesClient = useRoutesClient();
     const userData = useUser();
     const theme = useTheme();
+    const router = useRouter();
 
     const [ dataMap, setDataMap ] = useState<"speed" | "altitude">("speed");
     const [ insights, setInsights ] = useState<GetActivitySessionsInsightsResponse["insights"]>(null);
@@ -32,14 +53,53 @@ export default function ActivityInsights({ activity }: ActivityInsightsProps) {
     const [ selectedBatteryPoint, setSelectedBatteryPoint ] = useState<GraphDatasetPoints["points"][0]>(null);
 
     useEffect(() => {
-        if(activity) {
+        if(activity && userData.user?.subscribed)  {
             getActivitySessionsInsights(routesClient, activity.id).then((result) => {
                 if(result.success) {
                     setInsights(result.insights);
                 }
             });
         }
-    }, [ activity ]);
+    }, [ activity, userData.user?.subscribed ]);
+
+    if(!userData.user?.subscribed) {
+        return (
+            <React.Fragment>
+                <View style={{
+                    flex: 1,
+
+                    position: "relative"
+                }}>
+                    {images[theme.name].map((source, index) => (
+                        <Image key={index} source={source} style={{ alignSelf: "center", width: 200 * 1.6, height: 200, opacity: .5 }} resizeMode="cover" blurRadius={8}/>
+                    ))}
+
+                    <View style={{
+                        position: "absolute",
+
+                        left: 0,
+                        top: 0,
+
+                        width: "100%",
+                        height: "100%",
+
+                        justifyContent: "center",
+                        alignItems: "center",
+                        
+                        gap: 10
+                    }}>
+                        <CaptionText>You need to be subscribed to see yours and others activity insights!</CaptionText>
+
+                        <View style={{ width: "100%" }}>
+                            <SubscriptionFeatures/>
+                        </View>
+
+                        <Button primary={true} label="View subscriptions" style={{ width: "100%" }} onPress={() => router.push("/subscriptions/list")}/>
+                    </View>
+                </View>
+            </React.Fragment>
+        )
+    }
 
     return (
         <React.Fragment>
@@ -60,19 +120,7 @@ export default function ActivityInsights({ activity }: ActivityInsightsProps) {
                     <ActivityDataMap activity={activity} sessions={(dataMap === "speed")?(insights?.speed?.polylines):(insights?.altitude?.polylines)} getCoordinateFraction={(index, polyline, polylines) => {
                         const closestCoordinateIndex = getClosestCoordinate(polylines[polyline][index], insights[dataMap].polylines[polyline].points.map((point) => point.coordinate));
 
-                        function getFraction(value: number) {
-                            let maximum = insights[dataMap].stats.maximum;
-                            let relativeValue = value;
-
-                            if(insights[dataMap].stats.minimum < 0) {
-                                maximum += Math.abs(insights[dataMap].stats.minimum);
-                                relativeValue += Math.abs(insights[dataMap].stats.minimum);
-                            }
-
-                            return relativeValue / maximum;
-                        };
-
-                        return getFraction(insights[dataMap].polylines[polyline].points[closestCoordinateIndex][dataMap]);
+                        return getFractionOfRange(insights[dataMap].polylines[polyline].points[closestCoordinateIndex][dataMap], insights[dataMap].stats.minimum, insights[dataMap].stats.maximum);
                     }}>
                         {(insights) && (
                             <ActivityDataMapGradient getUnit={(index) => {

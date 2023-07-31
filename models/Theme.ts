@@ -1,6 +1,8 @@
 import Color from "./Color";
 
 export type Theme = {
+    name: "light" | "dark";
+    
     background: string;
     color: string;
     placeholder: string;
