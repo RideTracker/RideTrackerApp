@@ -73,7 +73,8 @@ export default function Settings() {
 
                         {(Constants.expoConfig.extra.environment !== "production") && (
                             <React.Fragment>
-                                <Button primary={false} label="Avatar editor" onPress={() => router.push("/avatar-editor/")}/>
+                                <Button primary={false} label="Enter avatar editor" onPress={() => router.push("/avatar-editor/")}/>
+                                <Button primary={false} label="Enter avatar editor from registration" onPress={() => router.push("/avatar-editor/?from_registration=true")}/>
 
                                 <Button primary={false} label="Add subscription" onPress={() => {
                                     dispatch(setUserData({ user: { ...userData.user, subscribed: true } }));

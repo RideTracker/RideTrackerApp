@@ -1,6 +1,6 @@
 import { Stack, useRouter } from "expo-router";
-import { useRef, useState, useEffect } from "react";
-import { View, Image, TextInput, ActivityIndicator, Text, Alert, KeyboardAvoidingView, LayoutRectangle } from "react-native";
+import React, { useRef, useState, useEffect } from "react";
+import { View, Image, TextInput, ActivityIndicator, Text, Alert, KeyboardAvoidingView, Keyboard, Dimensions } from "react-native";
 import { useTheme } from "../../utils/themes";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -29,7 +29,7 @@ export default function LoginPage() {
     const [ email, setEmail ] = useState<string>("");
     const [ password, setPassword ] = useState<string>("");
     const [ submitting, setSubmitting ] = useState<boolean>(false);
-    const [ layout, setLayout ] = useState<LayoutRectangle>(null);
+    const [ keyboard, setKeyboard ] = useState<boolean>(false);
 
     useEffect(() => {
         if(submitting) {
@@ -73,6 +73,8 @@ export default function LoginPage() {
         }
     }, [ submitting ]);
 
+    const screen = Dimensions.get("screen");
+
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
             <Stack.Screen options={{
@@ -96,8 +98,8 @@ export default function LoginPage() {
                 backgroundColor: theme.background,
 
                 position: "relative"
-            }} onLayout={(event) => setLayout(event.nativeEvent.layout)}>
-                <Image style={{
+            }}>
+                <View style={{
                     position: "absolute",
                     left: 0,
                     top: 0,
@@ -105,10 +107,21 @@ export default function LoginPage() {
                     height: "100%",
                     width: "100%",
 
-                    opacity: .5,
+                    overflow: "hidden"
+                }}>
+                    <Image style={{
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
 
-                    resizeMode: "cover"
-                }} source={background} fadeDuration={1000} defaultSource={background}/>
+                        height: screen.height * 0.4,
+                        width: "100%",
+
+                        opacity: .5,
+
+                        resizeMode: "cover"
+                    }} source={background} fadeDuration={1000} defaultSource={background}/>
+                </View>
 
                 <LinearGradient colors={[ "transparent", theme.background ]} locations={[ 0.2, 1 ]} style={{ 
                     position: "absolute",
@@ -119,6 +132,10 @@ export default function LoginPage() {
                     height: "100%",
                     width: "100%"
                 }}/>
+
+                <View style={{ marginTop: "auto", marginBottom: -25, padding: 10 }}>
+                    <Image source={logo} style={{ height: 100, width: "100%", resizeMode: "contain" }}/>
+                </View>
             </View>
 
             <View style={{
@@ -128,11 +145,7 @@ export default function LoginPage() {
 
                 padding: 10
             }}>
-                <KeyboardAvoidingView contentContainerStyle={{ opacity: (submitting)?(0.5):(1.0) }} behavior="padding" keyboardVerticalOffset={layout?.height} pointerEvents={(submitting)?("none"):("auto")}>
-                    <View style={{ marginTop: -100 }}>
-                        <Image source={logo} style={{ height: 100, width: "100%", resizeMode: "contain" }}/>
-                    </View>
-
+                <View pointerEvents={(submitting)?("none"):("auto")}>
                     <View style={{ backgroundColor: theme.background, marginVertical: 10, gap: 10 }}>
                         <FormInput placeholder="Email address" icon={(<FontAwesome name="envelope" size={24} color={theme.color}/>)} props={{
                             autoCapitalize: "none",
@@ -141,6 +154,8 @@ export default function LoginPage() {
                             enterKeyHint: "next",
                             inputMode: "email",
                             keyboardType: "email-address",
+                            onFocus: () => setKeyboard(true),
+                            onBlur: () => setKeyboard(false),
                             onSubmitEditing: () => passwordRef.current.focus(),
                             onChangeText: (text) => setEmail(text)
                         }}/>
@@ -151,48 +166,60 @@ export default function LoginPage() {
                             autoCorrect: false,
                             enterKeyHint: "send",
                             secureTextEntry: true,
+                            onFocus: () => setKeyboard(true),
+                            onBlur: () => setKeyboard(false),
                             onSubmitEditing: () => setSubmitting(true),
                             onChangeText: (text) => setPassword(text)
                         }}/>
 
-                        <Button primary={true} label={!submitting && "Sign in"} onPress={() => setSubmitting(true)}>
-                            {(submitting) && (<ActivityIndicator size={24} color={theme.contrast}/>)}
-                        </Button>
+                        {(!keyboard) && (
+                            <Button primary={true} label={!submitting && "Sign in"} onPress={() => setSubmitting(true)}>
+                                {(submitting) && (<ActivityIndicator size={24} color={theme.contrast}/>)}
+                            </Button>
+                        )}
                     </View>
-                </KeyboardAvoidingView>
+                </View>
 
-                <Text style={{
-                    textAlign: "center",
-                    color: theme.color
-                }}>Forgot your credentials? <Link href="/forgotten" style={{ color: theme.brand, fontWeight: "500" }}>Click here to recover</Link></Text>
+                {(!keyboard)?(
+                    <React.Fragment>
+                        <Text style={{
+                            textAlign: "center",
+                            color: theme.color
+                        }}>Forgot your credentials? <Link href="/forgotten" style={{ color: theme.brand, fontWeight: "500" }}>Click here to recover</Link></Text>
 
-                {(Constants.expoConfig.extra.environment !== "production") && (
+                        {(Constants.expoConfig.extra.environment !== "production") && (
+                            <View style={{ marginTop: "auto" }}>
+                                <Button primary={false} label="Assume random user" onPress={async () => {
+                                    const randomUser = await getRandomToken(client);
+
+                                    const randomUserClient = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                                        identity: randomUser.email,
+                                        key: randomUser.token.key,
+                                        type: "Basic"
+                                    });
+
+                                    const authentication = await authenticateUser(randomUserClient);
+
+                                    if(authentication.success) {
+                                        dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
+                                            identity: randomUser.email,
+                                            key: authentication.token.key,
+                                            type: "Basic"
+                                        })));
+
+                                        dispatch(setUserData({
+                                            email: randomUser.email,
+                                            token: authentication.token,
+                                            user: authentication.user
+                                        }));
+                                    }
+                                }}/>
+                            </View>
+                        )}
+                    </React.Fragment>
+                ):(
                     <View style={{ marginTop: "auto" }}>
-                        <Button primary={false} label="Assume random user" onPress={async () => {
-                            const randomUser = await getRandomToken(client);
-
-                            const randomUserClient = createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                                identity: randomUser.email,
-                                key: randomUser.token.key,
-                                type: "Basic"
-                            });
-
-                            const authentication = await authenticateUser(randomUserClient);
-
-                            if(authentication.success) {
-                                dispatch(setClient(createRideTrackerClient(Constants.expoConfig.extra.apiUserAgent, Constants.expoConfig.extra.api, {
-                                    identity: randomUser.email,
-                                    key: authentication.token.key,
-                                    type: "Basic"
-                                })));
-
-                                dispatch(setUserData({
-                                    email: randomUser.email,
-                                    token: authentication.token,
-                                    user: authentication.user
-                                }));
-                            }
-                        }}/>
+                        <Button primary={false} type="stroke" label="Hide keyboard" onPress={() => Keyboard.dismiss()}/>
                     </View>
                 )}
             </View>

@@ -78,7 +78,7 @@ export default function IndexPage() {
                 </View>
 
                 <View style={{ gap: 10 }}>
-                    <Button primary={true} borderRadius={3} label="Create a new account" onPress={() => router.push("/register2")}/>
+                    <Button primary={true} borderRadius={3} label="Create a new account" onPress={() => router.push("/register")}/>
 
                     <Button primary={false} borderRadius={3} type="outline" label="I have an existing account" onPress={() => router.push("/login")}/>
                 </View>

@@ -33,7 +33,7 @@ export default function Button(props: ButtonProps) {
             borderWidth: 2,
             borderColor: theme.color,
 
-            color: theme.background
+            color: theme.color
         },
 
         "danger": {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Image, ScrollView, View } from "react-native";
-import { useRouter, Stack } from "expo-router";
+import { Image, ScrollView, View, ActivityIndicator } from "react-native";
+import { useRouter, Stack, useSearchParams, useNavigation } from "expo-router";
 import { useDispatch } from "react-redux";
 import { useTheme } from "../../../../utils/themes";
 import { CaptionText } from "../../../../components/texts/Caption";
@@ -20,6 +20,7 @@ import { useAvatarClient } from "../../../../modules/useAvatarClient";
 import { GetUserAvatarsResponse, createUserAvatar, getAvatars, getUserAvatars } from "@ridetracker/avatarclient";
 import { createRideTrackerClient, authenticateUser, uploadUserAvatar } from "@ridetracker/ridetrackerclient";
 import { useClient } from "../../../../modules/useClient";
+import Button from "../../../../components/Button";
 
 export default function AvatarEditorPage() {
     const userData = useUser();
@@ -72,6 +73,9 @@ export default function AvatarEditorPage() {
     ];
 
     const router = useRouter();
+    const navigation = useNavigation();
+
+    const { from_registration } = useSearchParams();
 
     const [ dataUrl, setDataUrl ] = useState(null);
     const [ picker, setPicker ] = useState(null);
@@ -137,7 +141,10 @@ export default function AvatarEditorPage() {
                 }),
                 createUserAvatar(avatarClient, combination)
             ]).then(() => {
-                router.back();
+                if(from_registration || !navigation.canGoBack())
+                    router.push("/");
+                else 
+                    router.back();
             });
         }
     }, [ uploading ]);
@@ -151,11 +158,13 @@ export default function AvatarEditorPage() {
             <Stack.Screen options={{
                 title: "Avatar Editor",
 
-                headerRight: () => (
+                headerLeft: (from_registration)?(() => <View/>):(undefined),
+
+                headerRight: (from_registration)?(() => <View/>):(() => (
                     <TouchableOpacity disabled={!dataUrl || uploading} onPress={() => setUploading(true)}>
                         <ParagraphText style={{ fontSize: 21, fontWeight: "400", opacity: (uploading)?(0.5):(1) }}>Save</ParagraphText>
                     </TouchableOpacity>
-                )
+                ))
             }}/>
 
             <View style={{
@@ -388,6 +397,16 @@ export default function AvatarEditorPage() {
                     </ScrollView>
                 </TabsPage>
             </Tabs>
+
+            {(from_registration) && (
+                <View style={{ padding: 10, gap: 10 }}>
+                    <Button disabled={!dataUrl || uploading} primary={true} label={(!uploading) && ("Finish registration")} onPress={() => setUploading(true)}>
+                        {(uploading) && (<ActivityIndicator color={theme.color}/>)}
+                    </Button>
+
+                    <Button primary={false} label="Skip avatar creation" onPress={() => router.push("/feed")}/>
+                </View>
+            )}
         </View>
     );
 }
