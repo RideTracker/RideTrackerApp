@@ -91,7 +91,7 @@ export default function Record() {
     });
 
     if(Platform.OS === "android") {
-        useEffect(() => {
+        useFocusEffect(() => {
             let originalVisibility: NavigationBarVisibility = null;
 
             NavigationBar.getVisibilityAsync().then((visibility) => {
@@ -106,7 +106,7 @@ export default function Record() {
                 if(originalVisibility)
                     NavigationBar.setVisibilityAsync(originalVisibility);
             };
-        }, []);
+        });
     }
 
     useEffect(() => {

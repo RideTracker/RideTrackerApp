@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import { useTheme } from "../../../utils/themes";
+import { Platform } from "react-native";
 
 export default function Layout() {
     const theme = useTheme();
@@ -16,7 +17,12 @@ export default function Layout() {
                 fontSize: 24,
                 fontWeight: "500",
                 color: theme.color
-            }
+            },
+
+            statusBarColor: "transparent",
+            statusBarStyle: theme.contrastStyle,
+
+            navigationBarColor: theme.background
         }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="profile/[userId]" options={{ presentation: "card" }} />
