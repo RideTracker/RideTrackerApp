@@ -26,6 +26,8 @@ export default function FlatPagination({ style, data, render, paginate, onViewab
         if((!reset && !endReachedDuringMomentum && !reachedEnd) || reset) {
             console.log("Requesting pagination");
 
+            setRefreshing(true);
+
             paginate(reset).then((length: boolean) => {
                 setRefreshing(false);
     

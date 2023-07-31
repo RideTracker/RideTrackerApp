@@ -17,6 +17,7 @@ import useInternetConnection from "../../../../modules/useInternetConnection";
 import { CaptionText } from "../../../../components/texts/Caption";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 import Poll from "../../../../components/Poll";
+import FlatPagination from "../../../../components/FlatPagination";
 
 type FeedItem = {
     id: string;
@@ -127,8 +128,8 @@ export default function FeedPage() {
         });
 
         if(reset) {
-            if(!filterText.length && !userData.filters?.feed?.length && scrollViewRef.current)
-                scrollViewRef.current.scrollTo({ x: 0, y: (filterLayout?.height ?? 0) + 10 });
+            //if(!filterText.length && !userData.filters?.feed?.length && scrollViewRef.current)
+            //    scrollViewRef.current.scrollTo({ x: 0, y: (filterLayout?.height ?? 0) + 10 });
 
             setItems(activities.concat(polls).sort((a, b) => b.timestamp - a.timestamp));
         }
@@ -152,9 +153,30 @@ export default function FeedPage() {
             }}/>
 
             <View style={{
-                flex: 1
+                flex: 1,
+                paddingHorizontal: 10
             }}>
-                <Pagination style={{ padding: 10 }} scrollViewRef={scrollViewRef} paginate={handlePagination} items={items}
+                <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
+                    
+                <FlatPagination data={items} paginate={handlePagination} render={((data) => {
+                        const item: FeedItem = data.item;
+                        
+                        switch(item.type) {
+                            case "activity":
+                                return (
+                                    <ActivityCompact key={"activity_" + item.id} id={item.id}/>
+                                );
+                                
+                            case "poll":
+                                if(userData.pollTimeout && Date.now() < userData.pollTimeout)
+                                    return null;
+
+                                return (
+                                    <Poll key={"poll_" + item.id} id={item.id}/>
+                                );
+                        }
+                    })}/>
+                {/*<Pagination style={{ padding: 10 }} scrollViewRef={scrollViewRef} paginate={handlePagination} items={items}
                 // TODO: some activities here are undefined, why?
                     render={((item: FeedItem) => {
                         switch(item.type) {
@@ -179,8 +201,7 @@ export default function FeedPage() {
                         x: 0,
                         y: (!filterText.length && !userData.filters?.feed?.length)?((filterLayout?.height ?? 0) + 10):(0)
                     }}>
-                    <ScrollViewFilter type="feed" onChange={(text) => setFilterText(text)} onLayout={(event) => setFilterLayout(event.nativeEvent.layout)}/>
-                </Pagination>
+                </Pagination>*/}
 
                 {(recordings) && (
                     <TouchableOpacity style={{ padding: 20 }} onPress={() => router.push("/recordings")}>
