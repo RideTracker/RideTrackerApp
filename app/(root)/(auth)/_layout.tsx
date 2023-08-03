@@ -20,7 +20,7 @@ export default function Layout() {
             },
 
             statusBarColor: "transparent",
-            statusBarStyle: theme.contrastStyle,
+            statusBarStyle: (Platform.OS !== "ios")?(theme.contrastStyle):(undefined),
 
             navigationBarColor: theme.background
         }}>

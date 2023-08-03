@@ -18,7 +18,10 @@ export default function ProfileSettings() {
     return (
         <ModalPage>
             <View style={{ padding: 10, gap: 10 }}>
-                <Button primary={false} label="Manage wearable devices" onPress={() => router.push("/profile/devices")}/>
+                <Button primary={false} label="Manage wearable devices" onPress={() => {
+                    router.back();
+                    router.push("/profile/devices");
+                }}/>
 
                 <Button primary={false} type="danger" label="Sign out" onPress={() => {
                     dispatch(setUserData({ email: null, token: null }));
