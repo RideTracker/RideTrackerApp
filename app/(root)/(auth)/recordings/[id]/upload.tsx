@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Alert, Platform } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, Alert, Platform } from "react-native";
 import { useRouter, Stack, useSearchParams, useNavigation } from "expo-router";
 import { useTheme } from "../../../../../utils/themes";
 import FormInput from "../../../../../components/FormInput";
@@ -22,6 +22,7 @@ import { getDistance } from "geolib";
 import { SelectList } from "../../../../../components/SelectList";
 import SelectListOverlay from "../../../../../components/SelectListOverlay";
 import ActivityEdit, { ActivityEditProperties } from "../../../../../components/ActivityEdit";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function UploadRecordingPage() {
     if(Platform.OS === "web")
@@ -108,7 +109,7 @@ export default function UploadRecordingPage() {
             <Stack.Screen options={{ title: "Finish your activity" }} />
 
             <ScrollView>
-                <View style={{
+                <SafeAreaView edges={[ "bottom" ]} style={{
                     gap: 10,
                     padding: 10
                 }}>
@@ -189,7 +190,7 @@ export default function UploadRecordingPage() {
                             ]);
                         }}/>
                     </View>
-                </View>
+                </SafeAreaView>
             </ScrollView>
 
             {(uploading) && (<PageOverlay/>)}

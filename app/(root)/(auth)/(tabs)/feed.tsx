@@ -5,7 +5,7 @@ import { useTheme } from "../../../../utils/themes";
 import * as FileSystem from "expo-file-system";
 import { RECORDINGS_PATH } from "./record";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import { LinkText } from "../../../../components/texts/Link";
 import { ScrollViewFilter } from "../../../../components/ScrollViewFilter";
@@ -31,6 +31,7 @@ export default function FeedPage() {
     const theme = useTheme();
     const router = useRouter();
     const internetConnection = useInternetConnection();
+    const navigator = useNavigation();
 
     const scrollViewRef = useRef<ScrollView>();
 
@@ -43,26 +44,38 @@ export default function FeedPage() {
         polls: 0
     });
 
-    useEffect(() => {
-        if(Platform.OS === "web")
-            return;
-            
-        async function getRecordings() {
-            const info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
+    
+    if(Platform.OS !== "web") {
+        useEffect(() => {
+            async function getRecordings() {
+                const info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
 
-            if(!info.exists)
-                return;
+                if(!info.exists) {
+                    setRecordings(null);
 
-            const recordings = await FileSystem.readDirectoryAsync(RECORDINGS_PATH);
+                    return;
+                }
 
-            if(!recordings.length)
-                return;
+                const recordings = await FileSystem.readDirectoryAsync(RECORDINGS_PATH);
 
-            setRecordings(recordings);
-        }
+                if(!recordings.length) {
+                    setRecordings(null);
+                    
+                    return;
+                }
 
-        getRecordings();
-    }, []);
+                setRecordings(recordings);
+            }
+
+            getRecordings();
+
+            navigator.addListener("focus", getRecordings);
+
+            return () => {
+                navigator.removeListener("focus", getRecordings);
+            };
+        }, []);
+    }
 
     /*useEffect(() => {
         if(!refreshing) {
