@@ -7,7 +7,6 @@ import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import Button from "../../../../../components/Button";
 import Bike from "../../../../../components/Bike";
 import * as FileSystem from "expo-file-system";
-import { RECORDINGS_PATH } from "../../(tabs)/record";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { CaptionText } from "../../../../../components/texts/Caption";
 import { ParagraphText } from "../../../../../components/texts/Paragraph";
@@ -17,12 +16,12 @@ import { createActivity, getBikes, updateActivity } from "@ridetracker/ridetrack
 import { useUser } from "../../../../../modules/user/useUser";
 import PageOverlay from "../../../../../components/PageOverlay";
 import { SmallText } from "../../../../../components/texts/Small";
-import { RecordingSession } from "../../../../../models/RecordingSession";
 import { getDistance } from "geolib";
 import { SelectList } from "../../../../../components/SelectList";
 import SelectListOverlay from "../../../../../components/SelectListOverlay";
 import ActivityEdit, { ActivityEditProperties } from "../../../../../components/ActivityEdit";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { RECORDINGS_PATH } from "../../../../../utils/Recorder";
 
 export default function UploadRecordingPage() {
     if(Platform.OS === "web")

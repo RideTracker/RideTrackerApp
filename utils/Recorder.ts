@@ -1,11 +1,12 @@
 import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
-import { Platform } from "react-native"; 
 import uuid from "react-native-uuid";
 import * as Battery from 'expo-battery';
-import { RecordingSession } from "../models/RecordingSession";
+import * as FileSystem from "expo-file-system";
+import { Recording, RecordingSession, RecordingSessionBatteryState, RecordingSessionCoordinate } from "@ridetracker/ridetrackertypes";
 
-const RECORDER_TASK_NAME = "RECORDER";
+export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
+export const RECORDER_TASK_NAME = "RECORDER";
 
 TaskManager.defineTask(RECORDER_TASK_NAME, ({ data, error }) => {
     if(error)
@@ -27,11 +28,16 @@ export default class Recorder {
     active: boolean = false;
     timer: NodeJS.Timer = null;
 
-    sessions: RecordingSession[] = [];
+    recording: Recording;
 
     onLocation?: (location: Location.LocationObject) => void;
 
     constructor() {
+        this.recording = {
+            id: uuid.v4() as string,
+            version: 2,
+            sessions: []
+        };
     };
 
     async start() {
@@ -48,10 +54,14 @@ export default class Recorder {
 
             this.timer = setInterval(() => Recorder.handleTimer(Recorder.instance), 60 * 1000);
 
-            this.sessions.push({
+            this.recording.sessions.push({
                 id: uuid.v4() as string,
-                locations: [],
-                battery: []
+                coordinates: [],
+                speeds: [],
+                altitudes: [],
+                batteryStates: [],
+                heartRates: [],
+                calories: []
             });
 
             this.active = true;
@@ -77,44 +87,76 @@ export default class Recorder {
         this.active = false;
     };
 
-    getFirstSession() {
-        return this.sessions[0];
+    async saveCurrentSession() {
+        if(!this.recording.sessions.length) {
+            console.warn("No current session to save.");
+
+            return;
+        }
+
+        const currentSession = this.recording.sessions[this.recording.sessions.length - 1];
+
+        let info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
+
+        if(!info.exists)
+            await FileSystem.makeDirectoryAsync(RECORDINGS_PATH);
+
+        const recordingPath = RECORDINGS_PATH + this.recording.id + ".json";
+
+        info = await FileSystem.getInfoAsync(recordingPath);
+
+        if(!info.exists)
+            await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify([]));
+
+        const sessions = JSON.parse(await FileSystem.readAsStringAsync(recordingPath)) as {
+            id: string;
+        }[];
+
+        const existingSessionIndex = sessions.findIndex((x) => x.id === currentSession.id);
+
+        if(existingSessionIndex !== -1)
+            sessions[existingSessionIndex] = currentSession;
+        else
+            sessions.push(currentSession);
+
+        await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify(sessions));
+    }
+
+    getFirstItem<T>(key: keyof RecordingSession): T | null {
+        for(let index = 0; index < this.recording.sessions.length; index++) {
+            const session = this.recording.sessions[index];
+    
+            if(!session[key].length)
+                continue;
+    
+            return session[key][0] as T;
+        }
+    
+        return null;
     };
 
-    getLastSession() {
-        if(!this.sessions.length)
-            return null;
-
-        return this.sessions[this.sessions.length - 1];
-    };
-
-    getLastSessionLastLocation() {
-        const lastSession = this.getLastSession();
-
-        if(!lastSession || !lastSession.locations.length)
-            return null;
-
-        return lastSession.locations[lastSession.locations.length - 1];
-    };
-
-    getLastSessionLastBattery() {
-        const lastSession = this.getLastSession();
-
-        if(!lastSession || !lastSession.battery.length)
-            return null;
-
-        return lastSession.battery[lastSession.battery.length - 1];
+    getLastItem<T>(key: keyof RecordingSession): T | null {
+        for(let index = this.recording.sessions.length - 1; index !== -1; index--) {
+            const session = this.recording.sessions[index];
+            
+            if(!session[key].length)
+                continue;
+    
+            return session[key][session[key].length - 1] as T;
+        }
+    
+        return null;
     };
 
     getElapsedTime() {
         let time = 0;
 
-        this.sessions.forEach((session, index) => {
-            if(this.active && index === this.sessions.length - 1 && session.locations.length) {
-                time += Date.now() - session.locations[0].timestamp;
+        this.recording.sessions.forEach((session, index) => {
+            if(this.active && index === this.recording.sessions.length - 1 && session.coordinates.length) {
+                time += Date.now() - session.coordinates[0].timestamp;
             }
-            else if(session.locations.length >= 2) {
-                time += session.locations[session.locations.length - 1].timestamp - session.locations[0].timestamp;
+            else if(session.coordinates.length >= 2) {
+                time += session.coordinates[session.coordinates.length - 1].timestamp - session.coordinates[0].timestamp;
             }
         });
 
@@ -125,8 +167,44 @@ export default class Recorder {
         locations.forEach((location) => {
             console.log("Received geolocation: " + JSON.stringify(location));
 
-            if(instance.active)
-                instance.sessions[instance.sessions.length - 1].locations.push(location);
+            if(instance.active) {
+                if(!instance.recording.sessions.length) {
+                    console.warn("Recording sessions are empty but instance is active! Repairing automatically, but this is dangerous!");
+
+                    instance.recording.sessions.push({
+                        id: uuid.v4() as string,
+                        coordinates: [],
+                        speeds: [],
+                        altitudes: [],
+                        batteryStates: [],
+                        heartRates: [],
+                        calories: []
+                    });
+                }
+
+                const session = instance.recording.sessions[instance.recording.sessions.length - 1];
+
+                session.coordinates.push({
+                    coordinate: {
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude
+                    },
+                    accuracy: location.coords.accuracy,
+                    timestamp: location.timestamp
+                });
+                
+                session.altitudes.push({
+                    altitude: location.coords.altitude,
+                    accuracy: location.coords.altitudeAccuracy,
+                    timestamp: location.timestamp
+                });
+
+                session.speeds.push({
+                    speed: location.coords.speed,
+                    accuracy: location.coords.accuracy,
+                    timestamp: location.timestamp
+                });
+            }
             
             if(instance.onLocation)
                 instance.onLocation(location);
@@ -145,17 +223,56 @@ export default class Recorder {
                 batteryLevel
             };
 
-            const previousBatteryState = instance.getLastSessionLastBattery();
+            const previousBatteryState = instance.getLastItem<RecordingSessionBatteryState>("batteryStates");
 
-            if(!previousBatteryState ||
-                previousBatteryState.batteryLevel !== newBatteryState.batteryLevel ||
-                previousBatteryState.batteryState !== newBatteryState.batteryState ||
-                previousBatteryState.lowPowerMode !== newBatteryState.lowPowerMode) {
+            if(!instance.recording.sessions.length)
+                return;
+
+            const session = instance.recording.sessions[instance.recording.sessions.length - 1];
+
+            let chargingState: RecordingSessionBatteryState["batteryState"]["batteryState"] = "UNKNOWN";
+
+            switch(newBatteryState.batteryState) {
+                case Battery.BatteryState.UNKNOWN: {
+                    chargingState = "UNKNOWN";
+
+                    break;
+                }
+                
+                case Battery.BatteryState.CHARGING: {
+                    chargingState = "CHARGING";
+
+                    break;
+                }
+                
+                case Battery.BatteryState.UNPLUGGED: {
+                    chargingState = "UNPLUGGED";
+
+                    break;
+                }
+                
+                case Battery.BatteryState.FULL: {
+                    chargingState = "FULL";
+
+                    break;
+                }
+            }
+
+
+            if(!session.batteryStates.length ||
+                previousBatteryState.batteryState.batteryLevel !== newBatteryState.batteryLevel ||
+                previousBatteryState.batteryState.batteryState !== chargingState ||
+                previousBatteryState.batteryState.lowPowerMode !== newBatteryState.lowPowerMode) {
+
                 console.log("Received battery state: " + JSON.stringify(newBatteryState));
     
                 if(instance.active) {
-                    instance.sessions[instance.sessions.length - 1].battery.push({
-                        ...newBatteryState,
+                    session.batteryStates.push({
+                        batteryState: {
+                            batteryLevel: newBatteryState.batteryLevel,
+                            batteryState: chargingState,
+                            lowPowerMode: newBatteryState.lowPowerMode
+                        },
                         timestamp: Date.now()
                     });
                 }

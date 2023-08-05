@@ -3,7 +3,6 @@ import { LayoutRectangle, Platform, ScrollView, TouchableOpacity, View } from "r
 import ActivityCompact from "../../../../components/activity/Compact";
 import { useTheme } from "../../../../utils/themes";
 import * as FileSystem from "expo-file-system";
-import { RECORDINGS_PATH } from "./record";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Stack, useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
@@ -18,6 +17,7 @@ import { CaptionText } from "../../../../components/texts/Caption";
 import OfflinePageOverlay from "../../../../components/OfflinePageOverlay";
 import Poll from "../../../../components/Poll";
 import FlatPagination from "../../../../components/FlatPagination";
+import { RECORDINGS_PATH } from "../../../../utils/Recorder";
 
 type FeedItem = {
     id: string;

@@ -26,8 +26,7 @@ import { NavigationBarBehavior } from "expo-navigation-bar";
 import { BatteryState } from "expo-battery";
 import { CaptionText } from "../../../../../components/texts/Caption";
 import PermissionsPageOverlay from "../../../../../components/PermissionsPageOverlay";
-
-export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
+import { RecordingSessionBatteryState, RecordingSessionCoordinate } from "@ridetracker/ridetrackertypes";
 
 export default function Record() {
     if(Platform.OS === "web")
@@ -51,37 +50,6 @@ export default function Record() {
     const [ keepAwake, setKeepAwake ] = useState<boolean>(false);
     const [ permissions, setPermissions ] = useState<Location.LocationPermissionResponse>(null);
 
-    async function ensureDirectoryExists() {
-        const info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
-
-        if(!info.exists)
-            await FileSystem.makeDirectoryAsync(RECORDINGS_PATH);
-    }
-
-    async function saveSession(session) {
-        await ensureDirectoryExists();
-
-        const recordingPath = RECORDINGS_PATH + id + ".json";
-
-        const info = await FileSystem.getInfoAsync(recordingPath);
-
-        if(!info.exists)
-            await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify([]));
-
-        const sessions = JSON.parse(await FileSystem.readAsStringAsync(recordingPath)) as {
-            id: string;
-        }[];
-
-        const existingSessionIndex = sessions.findIndex((x) => x.id === session.id);
-
-        if(existingSessionIndex !== -1)
-            sessions[existingSessionIndex] = session;
-        else
-            sessions.push(session);
-
-        await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify(sessions));
-    }
-
     useFocusEffect(() => {
         setFocus(true);
 
@@ -91,7 +59,7 @@ export default function Record() {
     });
 
     if(Platform.OS === "android") {
-        useFocusEffect(() => {
+        useEffect(() => {
             let originalVisibility: NavigationBarVisibility = null;
 
             NavigationBar.getVisibilityAsync().then((visibility) => {
@@ -106,7 +74,7 @@ export default function Record() {
                 if(originalVisibility)
                     NavigationBar.setVisibilityAsync(originalVisibility);
             };
-        });
+        }, []);
     }
 
     useEffect(() => {
@@ -161,13 +129,13 @@ export default function Record() {
                     setTime(recorder.getElapsedTime());
 
                     if(mapRef.current) {
-                        const lastSessionLocation = recorder.getLastSessionLastLocation();
+                        const lastCoordinate = recorder.getLastItem<RecordingSessionCoordinate>("coordinates");
 
-                        if(lastSessionLocation) {
+                        if(lastCoordinate) {
                             mapRef.current.animateCamera({
                                 center: {
-                                    latitude: lastSessionLocation.coords.latitude,
-                                    longitude: lastSessionLocation.coords.longitude
+                                    latitude: lastCoordinate.coordinate.latitude,
+                                    longitude: lastCoordinate.coordinate.longitude
                                 }
                             });
                         }
@@ -192,10 +160,7 @@ export default function Record() {
                 setTimer(null);
             }
 
-            const session = recorder.getLastSession();
-
-            if(session)
-                saveSession(session);
+            recorder.saveCurrentSession();
 
             if(keepAwake)
                 KeepAwake.deactivateKeepAwake("RideTrackerAppKeepAwake");
@@ -262,8 +227,8 @@ export default function Record() {
         }
     }, [ keepAwake ]);
 
-    const lastLocation = recorder.getLastSessionLastLocation();
-    const lastBattery = recorder.getLastSessionLastBattery();
+    const lastCoordinate = recorder.getLastItem<RecordingSessionCoordinate>("coordinates");
+    const lastBatteryState = recorder.getLastItem<RecordingSessionBatteryState>("batteryStates");
 
     return (
         <View style={{ flex: 1, justifyContent: "center", backgroundColor: theme.background }}>
@@ -322,34 +287,29 @@ export default function Record() {
                     zoomControlEnabled={false}
                     zoomTapEnabled={!recording}
                 >
-                    {recorder.sessions.map((session, index) => (
+                    {recorder.recording.sessions.map((session, index) => (
                         <React.Fragment key={session.id}>
-                            <Polyline coordinates={session.locations.map((location) => {
-                                return {
-                                    latitude: location.coords.latitude,
-                                    longitude: location.coords.longitude
-                                };
-                            })} strokeWidth={3} fillColor={"white"} strokeColor={"white"}/>
+                            <Polyline coordinates={session.coordinates.map((location) => location.coordinate)} strokeWidth={3} fillColor={"white"} strokeColor={"white"}/>
 
-                            {(session.locations.length > 0) && (
+                            {(session.coordinates.length > 0) && (
                                 (index === 0)?(
-                                    <MapStartMarker coordinate={session.locations[0].coords} style={{
+                                    <MapStartMarker coordinate={session.coordinates[0].coordinate} style={{
                                         zIndex: (index * 10)  
                                     }}/>
                                 ):(
-                                    <MapIntermediateMarker coordinate={session.locations[0].coords} style={{
+                                    <MapIntermediateMarker coordinate={session.coordinates[0].coordinate} style={{
                                         zIndex: (index * 10)  
                                     }}/>
                                 )
                             )}
 
-                            {(session.locations.length > 1) && (
-                                (index !== recorder.sessions.length - 1)?(
-                                    <MapIntermediateMarker coordinate={session.locations[session.locations.length - 1].coords} style={{
+                            {(session.coordinates.length > 1) && (
+                                (index !== recorder.recording.sessions.length - 1)?(
+                                    <MapIntermediateMarker coordinate={session.coordinates[session.coordinates.length - 1].coordinate} style={{
                                         zIndex: (index * 10) + 1  
                                     }}/>
                                 ):((!recorder.active) && (
-                                    <MapFinishMarker coordinate={session.locations[session.locations.length - 1].coords} style={{
+                                    <MapFinishMarker coordinate={session.coordinates[session.coordinates.length - 1].coordinate} style={{
                                         zIndex: (index * 10) + 1
                                     }}/>
                                 ))
@@ -357,9 +317,9 @@ export default function Record() {
                         </React.Fragment>
                     ))}
 
-                    {(lastLocation) && (
-                        <MapLocationMarker coordinate={lastLocation.coords} style={{
-                            zIndex: recorder.sessions.length * 10  
+                    {(lastCoordinate) && (
+                        <MapLocationMarker coordinate={lastCoordinate.coordinate} style={{
+                            zIndex: recorder.recording.sessions.length * 10  
                         }}/>
                     )}
                 </MapView>
@@ -417,7 +377,7 @@ export default function Record() {
     
                     flexDirection: "column"
                 }}>
-                    {(lastBattery) && (lastBattery.batteryLevel <= 20 && lastBattery.batteryState !== BatteryState.CHARGING) && (
+                    {(lastBatteryState) && (lastBatteryState.batteryState.batteryLevel <= 20 && lastBatteryState.batteryState.batteryState !== "CHARGING") && (
                         <View style={{
                             width: "100%",
 
@@ -427,15 +387,15 @@ export default function Record() {
                             alignContent: "center",
                             justifyContent: "center"
                         }}>
-                            <Ionicons name="md-battery-charging-outline" size={40} color={(lastBattery.batteryLevel <= 10)?(theme.red):(theme.orange)} style={{
+                            <Ionicons name="md-battery-charging-outline" size={40} color={(lastBatteryState.batteryState.batteryLevel <= 10)?(theme.red):(theme.orange)} style={{
                                 alignSelf: "center",
                                 width: 40
                             }}/>
                         
                             <View style={{ flex: 1, paddingRight: 40 }}>
-                                <CaptionText style={{ color: "white" }}>{(lastBattery.batteryLevel <= 10)?("Critical"):("Low")} battery level</CaptionText>
+                                <CaptionText style={{ color: "white" }}>{(lastBatteryState.batteryState.batteryLevel <= 10)?("Critical"):("Low")} battery level</CaptionText>
                                 <ParagraphText style={{ color: "white" }}>
-                                    {(lastBattery.lowPowerMode)?("Consider connecting your phone to a powerbank if you have one!"):(`Consider enabling ${(Platform.OS === "android")?("power saver mode"):((Platform.OS === "ios")?("low power mode"):("battery saving mode"))} to save your battery!`)}
+                                    {(lastBatteryState.batteryState.lowPowerMode)?("Consider connecting your phone to a powerbank if you have one!"):(`Consider enabling ${(Platform.OS === "android")?("power saver mode"):((Platform.OS === "ios")?("low power mode"):("battery saving mode"))} to save your battery!`)}
                                 </ParagraphText>
                             </View>
                         </View>
