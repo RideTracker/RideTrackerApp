@@ -31,9 +31,11 @@ export default function UploadRecordingPage() {
         
     const client = useClient();
     const theme = useTheme();
-    const mapRef = useRef();
+    const mapRef = useRef<MapView>();
     const router = useRouter();
     const userData = useUser();
+
+    const { fromRecord } = useSearchParams();
 
     const [ properties, setProperties ] = useState<ActivityEditProperties>({
         visibility: "PUBLIC"
@@ -70,87 +72,107 @@ export default function UploadRecordingPage() {
 
     useEffect(() => {
         if(recording) {
-            switch((recording as Recording).version) {
-                // V2 (latest as of RideTrackerApp-0.9.3)
-                case 2: {
-                    const sessions = (recording as Recording).sessions;
+            try {
+                switch((recording as Recording).version) {
+                    // V2 (latest as of RideTrackerApp-0.9.3)
+                    case 2: {
+                        const sessions = (recording as Recording).sessions;
 
-                    let distance = 0;
-                    let maxSpeed = 0;
-                    const speeds = [];
-                    const polylines: Coordinate[][] = [];
+                        let distance = 0;
+                        let maxSpeed = 0;
+                        const speeds = [];
+                        const newPolylines: Coordinate[][] = [];
 
-                    sessions.forEach((session) => {
-                        polylines.push(session.coordinates.map((coordinates) => coordinates.coordinate));
+                        sessions.forEach((session) => {
+                            newPolylines.push(session.coordinates.map((coordinates) => coordinates.coordinate));
 
-                        for(let index = 1; index < session.coordinates.length; index++)
-                            distance += getDistance(session.coordinates[index - 1].coordinate, session.coordinates[index].coordinate);
+                            for(let index = 1; index < session.coordinates.length; index++)
+                                distance += getDistance(session.coordinates[index - 1].coordinate, session.coordinates[index].coordinate);
 
-                        for(let index = 0; index < session.speeds.length; index++) {
-                            speeds.push(session.speeds[index].speed);
-        
-                            if(session.speeds[index].speed > maxSpeed)
-                                maxSpeed = session.speeds[index].speed;
-                        }
-                    });
+                            for(let index = 0; index < session.speeds.length; index++) {
+                                speeds.push(session.speeds[index].speed);
+            
+                                if(session.speeds[index].speed > maxSpeed)
+                                    maxSpeed = session.speeds[index].speed;
+                            }
+                        });
 
-                    const speedSum = speeds.reduce((a, b) => a + b, 0);
-                    const averageSpeed = (speedSum / speeds.length) || 0;
-        
-                    setStats({
-                        distance,
-                        averageSpeed,
-                        maxSpeed
-                    });
+                        setPolylines(newPolylines);
 
-                    break;
-                }
+                        const speedSum = speeds.reduce((a, b) => a + b, 0);
+                        const averageSpeed = (speedSum / speeds.length) || 0;
+            
+                        setStats({
+                            distance,
+                            averageSpeed,
+                            maxSpeed
+                        });
 
-                // V1 (deprecated in RideTrackerApp-0.9.3)
-                default: {
-                    let distance = 0;
-                    let maxSpeed = 0;
-                    const speeds = [];
-                    const polylines: Coordinate[][] = [];
+                        break;
+                    }
 
-                    const sessions = recording as RecordingV1;
+                    // V1 (deprecated in RideTrackerApp-0.9.3)
+                    default: {
+                        let distance = 0;
+                        let maxSpeed = 0;
+                        const speeds = [];
+                        const newPolylines: Coordinate[][] = [];
 
-                    sessions.forEach((session) => {
-                        polylines.push(session.locations.map((location) => {
-                            return {
-                                latitude: location.coords.latitude,
-                                longitude: location.coords.longitude
-                            };
-                        }));
+                        const sessions = recording as RecordingV1;
 
-                        for(let index = 1; index < session.locations.length; index++) {
-                            distance += getDistance(session.locations[index - 1].coords, session.locations[index].coords);
-                            
-                            speeds.push(session.locations[index].coords.speed);
-        
-                            if(session.locations[index].coords.speed > maxSpeed)
-                                maxSpeed = session.locations[index].coords.speed;
-                        }
-                    });
+                        sessions.forEach((session) => {
+                            newPolylines.push(session.locations.map((location) => {
+                                return {
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude
+                                };
+                            }));
 
-                    const speedSum = speeds.reduce((a, b) => a + b, 0);
-                    const averageSpeed = (speedSum / speeds.length) || 0;
-        
-                    setStats({
-                        distance,
-                        averageSpeed,
-                        maxSpeed
-                    });
+                            for(let index = 1; index < session.locations.length; index++) {
+                                distance += getDistance(session.locations[index - 1].coords, session.locations[index].coords);
+                                
+                                speeds.push(session.locations[index].coords.speed);
+            
+                                if(session.locations[index].coords.speed > maxSpeed)
+                                    maxSpeed = session.locations[index].coords.speed;
+                            }
+                        });
 
-                    break;
+                        setPolylines(newPolylines);
+
+                        const speedSum = speeds.reduce((a, b) => a + b, 0);
+                        const averageSpeed = (speedSum / speeds.length) || 0;
+            
+                        setStats({
+                            distance,
+                            averageSpeed,
+                            maxSpeed
+                        });
+
+                        break;
+                    }
                 }
             }
+            catch(error) {
+                console.error(error);
+            }
+
+            console.log(recording);
         }
     }, [ recording ]);
 
+    useEffect(() => {
+        console.log(polylines);
+
+        if(mapRef.current)
+            mapRef.current.fitToCoordinates(polylines.flatMap((polyline) => polyline));
+    }, [ polylines, mapRef.current ]);
+
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
-            <Stack.Screen options={{ title: "Finish your activity" }} />
+            <Stack.Screen options={{
+                title: "Finish your activity"
+            }} />
 
             <ScrollView>
                 <SafeAreaView edges={[ "bottom" ]} style={{

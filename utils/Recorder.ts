@@ -5,7 +5,7 @@ import * as Battery from 'expo-battery';
 import * as FileSystem from "expo-file-system";
 import { Recording, RecordingSession, RecordingSessionBatteryState, RecordingSessionCoordinate } from "@ridetracker/ridetrackertypes";
 
-export const RECORDINGS_PATH = FileSystem.documentDirectory + "/recordings/";
+export const RECORDINGS_PATH = FileSystem.documentDirectory + "recordings/";
 export const RECORDER_TASK_NAME = "RECORDER";
 
 TaskManager.defineTask(RECORDER_TASK_NAME, ({ data, error }) => {
@@ -88,14 +88,6 @@ export default class Recorder {
     };
 
     async saveCurrentSession() {
-        if(!this.recording.sessions.length) {
-            console.warn("No current session to save.");
-
-            return;
-        }
-
-        const currentSession = this.recording.sessions[this.recording.sessions.length - 1];
-
         let info = await FileSystem.getInfoAsync(RECORDINGS_PATH);
 
         if(!info.exists)
@@ -103,23 +95,9 @@ export default class Recorder {
 
         const recordingPath = RECORDINGS_PATH + this.recording.id + ".json";
 
-        info = await FileSystem.getInfoAsync(recordingPath);
+        await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify(this.recording));
 
-        if(!info.exists)
-            await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify([]));
-
-        const sessions = JSON.parse(await FileSystem.readAsStringAsync(recordingPath)) as {
-            id: string;
-        }[];
-
-        const existingSessionIndex = sessions.findIndex((x) => x.id === currentSession.id);
-
-        if(existingSessionIndex !== -1)
-            sessions[existingSessionIndex] = currentSession;
-        else
-            sessions.push(currentSession);
-
-        await FileSystem.writeAsStringAsync(recordingPath, JSON.stringify(sessions));
+        console.log("Saved current session to " + recordingPath);
     }
 
     getFirstItem<T>(key: keyof RecordingSession): T | null {

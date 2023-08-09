@@ -34,7 +34,7 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
     const [ polylines, setPolylines ] = useState<Coordinate[][]>([]);
 
     useEffect(() => {
-        if(mapRef.current) {
+        try {
             switch((recording.recording as Recording).version) {
                 // V2 (latest as of RideTrackerApp-0.9.3)
                 case 2: {
@@ -47,6 +47,7 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
 
                 // V1 (deprecated in RideTrackerApp-0.9.3)
                 default: {
+                    console.log(recording);
                     const sessions = recording.recording as RecordingV1;
 
                     setPolylines(sessions.map((session) => session.locations.map((location) => {
@@ -59,6 +60,9 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
                     break;
                 }
             }
+        }
+        catch(error) {
+            console.error(error);
         }
     }, []);
 

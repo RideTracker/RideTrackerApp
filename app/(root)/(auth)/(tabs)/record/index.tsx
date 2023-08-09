@@ -37,7 +37,6 @@ export default function Record() {
     const mapRef = useRef<MapView>();
     const userData = useUser();
 
-    const [ id ] = useState(uuid.v4());
     const [ recorder ] = useState(new Recorder());
     const [ recording, setRecording ] = useState(null);
     const [ overlayVisible, setOverlayVisible ] = useState(true);
@@ -160,6 +159,8 @@ export default function Record() {
                 setTimer(null);
             }
 
+            console.log("save");
+
             recorder.saveCurrentSession();
 
             if(keepAwake)
@@ -207,7 +208,7 @@ export default function Record() {
         if(recording === null) 
             return router.back();
 
-        router.push(`/recordings/${id}/upload`);
+        router.push(`/recordings/${recorder.recording.id}/upload?fromRecord=true`);
     }, [ recording ]);
 
     const handleKeepAwakePress = useCallback(() => {
