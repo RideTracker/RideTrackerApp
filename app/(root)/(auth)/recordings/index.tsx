@@ -3,23 +3,23 @@ import { View, Text, ScrollView, TouchableOpacity, Platform, Alert } from "react
 import { useRouter, Stack } from "expo-router";
 import { useTheme } from "../../../../utils/themes";
 import * as FileSystem from "expo-file-system";
-import { RECORDINGS_PATH } from "../(tabs)/record";
 import { timeSince } from "../../../../utils/time";
 import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { useUser } from "../../../../modules/user/useUser";
-import { RecordingSession } from "../../../../models/RecordingSession";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { ParagraphText } from "../../../../components/texts/Paragraph";
 import { LinkText } from "../../../../components/texts/Link";
+import { Recording, RecordingV1 } from "@ridetracker/ridetrackertypes";
+import { Coordinate } from "../../../../models/Coordinate";
+import { RECORDINGS_PATH } from "../../../../utils/Recorder";
 
-type RecordingSessionMetadata = {
+type RecordingSummary = {
     id: string;
-    sessions: RecordingSession[];
-    timestamp: number;
+    recording: Recording | RecordingV1;
 };
 
 type RecordingSummaryProp = {
-    recording: RecordingSessionMetadata;
+    recording: RecordingSummary;
 };
 
 function RecordingSummary({ recording }: RecordingSummaryProp) {
@@ -31,29 +31,58 @@ function RecordingSummary({ recording }: RecordingSummaryProp) {
     const mapRef = useRef<MapView>();
     const userData = useUser();
 
+    const [ polylines, setPolylines ] = useState<Coordinate[][]>([]);
+
     useEffect(() => {
         if(mapRef.current) {
-            mapRef.current.fitToCoordinates(recording.sessions.flatMap((session) => session.locations.map((location) => location.coords)), {
+            switch((recording.recording as Recording).version) {
+                // V2 (latest as of RideTrackerApp-0.9.3)
+                case 2: {
+                    const sessions = (recording.recording as Recording).sessions;
+
+                    setPolylines(sessions.map((session) => session.coordinates.map((coordinates) => coordinates.coordinate)));
+
+                    break;
+                }
+
+                // V1 (deprecated in RideTrackerApp-0.9.3)
+                default: {
+                    const sessions = recording.recording as RecordingV1;
+
+                    setPolylines(sessions.map((session) => session.locations.map((location) => {
+                        return {
+                            latitude: location.coords.latitude,
+                            longitude: location.coords.longitude
+                        };
+                    })));
+
+                    break;
+                }
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if(polylines) {
+            mapRef.current.fitToCoordinates(polylines.flatMap((polyline) => polyline), {
                 animated: false
             });
         }
-    }, [ ]);
+    }, [ polylines ]);
 
     return (
         <TouchableOpacity style={{ height: 80, flexDirection: "row", gap: 10 }} onPress={() => router.push(`/recordings/${recording.id}/upload`)}>
             <View style={{ width: 140, height: "100%", borderRadius: 6, overflow: "hidden" }}>
                 <MapView ref={mapRef} provider={userData.mapProvider} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
-                    mapRef.current.fitToCoordinates(recording.sessions.flatMap((session) => session.locations.map((location) => location.coords)), {
+                    mapRef.current.fitToCoordinates(polylines.flatMap((polyline) => polyline), {
                         animated: false
                     });
                 }}>
-                    {recording.sessions.filter((session) => session).map((session) => (
-                        <Polyline key={session.id} coordinates={session.locations.map((location) => location.coords)} strokeWidth={3} fillColor={theme.brand} strokeColor={theme.brand}/>
+                    {polylines.map((polyline, index) => (
+                        <Polyline key={index} coordinates={polyline} strokeWidth={3} fillColor={theme.brand} strokeColor={theme.brand}/>
                     ))}
                 </MapView>
             </View>
-            
-            <Text style={{ fontSize: 16, color: theme.color }}>{(recording.timestamp)?(timeSince(recording.timestamp)):("Unknown")}</Text>
         </TouchableOpacity>
     );
 }
@@ -62,7 +91,7 @@ export default function RecordingsPage() {
     const theme = useTheme();
     const router = useRouter();
 
-    const [ recordings, setRecordings ] = useState<RecordingSessionMetadata[]>(null);
+    const [ recordings, setRecordings ] = useState<RecordingSummary[]>(null);
     const [ corruptedRecordings, setCorruptedRecordings ] = useState<string[]>([]);
 
     useEffect(() => {
@@ -77,35 +106,20 @@ export default function RecordingsPage() {
 
             const files = await FileSystem.readDirectoryAsync(RECORDINGS_PATH);
 
-            const recordings: RecordingSessionMetadata[] = [];
+            const recordings: RecordingSummary[] = [];
             const corruptedRecordings: string[] = [];
 
             await Promise.all(files.map(async (file) => {
                 const id = file.replace(".json", "");
-                const sessions: RecordingSession[] = JSON.parse(await FileSystem.readAsStringAsync(RECORDINGS_PATH + file));
-
-                if(sessions.filter((session) => session).length === 0) {
-                    corruptedRecordings.push(id);
-                
-                    return;
-                }
-
-                const locations = sessions.filter((session) => session).flatMap((session) => session.locations);
-
-                if(locations.length === 0) {
-                    corruptedRecordings.push(id);
-                
-                    return;
-                }
+                const recording: (Recording | RecordingV1) = JSON.parse(await FileSystem.readAsStringAsync(RECORDINGS_PATH + file));
 
                 recordings.push({
                     id,
-                    sessions,
-                    timestamp: locations[locations.length - 1].timestamp
+                    recording
                 });
             }));
 
-            setRecordings(recordings.sort((a, b) => b.timestamp - a.timestamp));
+            setRecordings(recordings);
             setCorruptedRecordings(corruptedRecordings);
         }
 
