@@ -22,6 +22,8 @@ import SelectListOverlay from "../../../../../components/SelectListOverlay";
 import ActivityEdit, { ActivityEditProperties } from "../../../../../components/ActivityEdit";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RECORDINGS_PATH } from "../../../../../utils/Recorder";
+import { Recording, RecordingSession, RecordingV1 } from "@ridetracker/ridetrackertypes";
+import { Coordinate } from "../../../../../models/Coordinate";
 
 export default function UploadRecordingPage() {
     if(Platform.OS === "web")
@@ -37,11 +39,9 @@ export default function UploadRecordingPage() {
         visibility: "PUBLIC"
     });
 
-    const [ recording, setRecording ] = useState<{
-        id: string,
-        locations: RecordingSession["locations"]
-    }>(null);
-    const [ sessions, setSessions ] = useState<RecordingSession[]>(null);
+    const [ polylines, setPolylines ] = useState<Coordinate[][]>([]);
+    const [ recording, setRecording ] = useState<Recording | RecordingV1>(null);
+    const [ recordings, setRecordings ] = useState<(Recording | RecordingV1)[]>(null);
     const [ uploading, setUploading ] = useState<boolean>(false);
     const [ stats, setStats ] = useState<{
         distance: number;
@@ -59,16 +59,9 @@ export default function UploadRecordingPage() {
             async function getRecording() {
                 const file = RECORDINGS_PATH + id + ".json";
 
-                const sessions = JSON.parse(await FileSystem.readAsStringAsync(file));
+                const recording = JSON.parse(await FileSystem.readAsStringAsync(file));
 
-                console.log(JSON.stringify(sessions));
-
-                setSessions(sessions);
-
-                setRecording({
-                    id: file.substring(0, file.length - ".json".length),
-                    locations: sessions[0].locations
-                });
+                setRecording(recording);
             }
 
             getRecording();
@@ -76,32 +69,84 @@ export default function UploadRecordingPage() {
     }, []);
 
     useEffect(() => {
-        if(sessions) {
-            let distance = 0;
-            let maxSpeed = 0;
-            const speeds = [];
+        if(recording) {
+            switch((recording as Recording).version) {
+                // V2 (latest as of RideTrackerApp-0.9.3)
+                case 2: {
+                    const sessions = (recording as Recording).sessions;
 
-            sessions.forEach((session) => {
-                for(let index = 1; index < session.locations.length; index++) {
-                    distance += getDistance(session.locations[index - 1].coords, session.locations[index].coords);
-                    
-                    speeds.push(session.locations[index].coords.speed);
+                    let distance = 0;
+                    let maxSpeed = 0;
+                    const speeds = [];
+                    const polylines: Coordinate[][] = [];
 
-                    if(session.locations[index].coords.speed > maxSpeed)
-                        maxSpeed = session.locations[index].coords.speed;
+                    sessions.forEach((session) => {
+                        polylines.push(session.coordinates.map((coordinates) => coordinates.coordinate));
+
+                        for(let index = 1; index < session.coordinates.length; index++)
+                            distance += getDistance(session.coordinates[index - 1].coordinate, session.coordinates[index].coordinate);
+
+                        for(let index = 0; index < session.speeds.length; index++) {
+                            speeds.push(session.speeds[index].speed);
+        
+                            if(session.speeds[index].speed > maxSpeed)
+                                maxSpeed = session.speeds[index].speed;
+                        }
+                    });
+
+                    const speedSum = speeds.reduce((a, b) => a + b, 0);
+                    const averageSpeed = (speedSum / speeds.length) || 0;
+        
+                    setStats({
+                        distance,
+                        averageSpeed,
+                        maxSpeed
+                    });
+
+                    break;
                 }
-            });
 
-            const speedSum = speeds.reduce((a, b) => a + b, 0);
-            const averageSpeed = (speedSum / speeds.length) || 0;
+                // V1 (deprecated in RideTrackerApp-0.9.3)
+                default: {
+                    let distance = 0;
+                    let maxSpeed = 0;
+                    const speeds = [];
+                    const polylines: Coordinate[][] = [];
 
-            setStats({
-                distance,
-                averageSpeed,
-                maxSpeed
-            });
+                    const sessions = recording as RecordingV1;
+
+                    sessions.forEach((session) => {
+                        polylines.push(session.locations.map((location) => {
+                            return {
+                                latitude: location.coords.latitude,
+                                longitude: location.coords.longitude
+                            };
+                        }));
+
+                        for(let index = 1; index < session.locations.length; index++) {
+                            distance += getDistance(session.locations[index - 1].coords, session.locations[index].coords);
+                            
+                            speeds.push(session.locations[index].coords.speed);
+        
+                            if(session.locations[index].coords.speed > maxSpeed)
+                                maxSpeed = session.locations[index].coords.speed;
+                        }
+                    });
+
+                    const speedSum = speeds.reduce((a, b) => a + b, 0);
+                    const averageSpeed = (speedSum / speeds.length) || 0;
+        
+                    setStats({
+                        distance,
+                        averageSpeed,
+                        maxSpeed
+                    });
+
+                    break;
+                }
+            }
         }
-    }, [ sessions ]);
+    }, [ recording ]);
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -115,9 +160,9 @@ export default function UploadRecordingPage() {
                     <View style={{ width: "100%", height: 200, borderRadius: 6, overflow: "hidden", backgroundColor: theme.placeholder }}>
                         {(recording) && (
                             <MapView ref={mapRef} provider={userData.mapProvider} maxZoomLevel={14} style={{ width: "100%", height: "100%" }} customMapStyle={theme.mapStyle} onLayout={() => {
-                                (mapRef.current as MapView).fitToCoordinates(recording.locations.map((location) => location.coords));
+                                (mapRef.current as MapView).fitToCoordinates(polylines.flatMap((polyline) => polyline));
                             }}>
-                                <Polyline coordinates={recording.locations.map((location) => location.coords)} strokeWidth={3} strokeColor={theme.brand}/>
+                                <Polyline coordinates={polylines.flatMap((polyline) => polyline)} strokeWidth={3} strokeColor={theme.brand}/>
                             </MapView>
                         )}
                     </View>
@@ -139,7 +184,7 @@ export default function UploadRecordingPage() {
                         <Button primary={true} label="Publish activity" onPress={() => {
                             setUploading(true);
                             
-                            createActivity(client, recording.id, sessions, properties.visibility).then((result) => {
+                            createActivity(client, recording, properties.visibility).then((result) => {
                                 if(result.success) {
                                     updateActivity(client, result.activity.id, properties.visibility, (properties.title?.length)?(properties.title):(null), (properties.description?.length)?(properties.description):(null), properties.bike?.id ?? null).then((result) => {
                                         router.push("/feed");
@@ -152,7 +197,7 @@ export default function UploadRecordingPage() {
                                         {
                                             text: "Yes",
                                             onPress: async () => {
-                                                const file = RECORDINGS_PATH + recording.id + ".json";
+                                                const file = RECORDINGS_PATH + id + ".json";
         
                                                 const info = await FileSystem.getInfoAsync(file);
         
