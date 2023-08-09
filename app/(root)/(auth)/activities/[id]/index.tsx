@@ -55,37 +55,41 @@ export default function ActivityPage() {
             }}/>
 
             {(!deleted)?(
-                <ScrollView>
-                    <SafeAreaView style={{ padding: 10, gap: 20 }} edges={[ "bottom" ]}>
-                        <View>
-                            <View style={{ height: 200 }}>
-                                <ActivityMap activity={activity} type={ComponentType.Default}>
-                                    <ActivityMapDetails activity={activity}/>
-                                </ActivityMap>
+                <SafeAreaView edges={[ "bottom" ]}>
+                    <ScrollView>
+                        <View style={{ gap: 20 }}>
+                            <View style={{ padding: 10, gap: 20 }}>
+                                <View>
+                                    <View style={{ height: 200 }}>
+                                        <ActivityMap activity={activity} type={ComponentType.Default}>
+                                            <ActivityMapDetails activity={activity}/>
+                                        </ActivityMap>
+                                    </View>
+
+                                    <ActivityAuthor activity={activity}/>
+
+                                    <ActivityStats activity={activity}/>
+                                </View>
+
+                                <ActivityRoute activity={activity}/>
+
+                                {(activity)?(
+                                    (activity.bike) && (
+                                        <TouchableOpacity onPress={() => router.push(`/bike/${activity.bike}`)}>
+                                            <Bike id={activity.bike.id}/>
+                                        </TouchableOpacity>
+                                    )
+                                ):(
+                                    <Bike/>
+                                )}
+
+                                <ActivityCommentsSummary id={id as string}/>
                             </View>
 
-                            <ActivityAuthor activity={activity}/>
-
-                            <ActivityStats activity={activity}/>
+                            <ActivityInsights activity={activity}/>
                         </View>
-
-                        <ActivityRoute activity={activity}/>
-
-                        {(activity)?(
-                            (activity.bike) && (
-                                <TouchableOpacity onPress={() => router.push(`/bike/${activity.bike}`)}>
-                                    <Bike id={activity.bike.id}/>
-                                </TouchableOpacity>
-                            )
-                        ):(
-                            <Bike/>
-                        )}
-
-                        <ActivityCommentsSummary id={id as string}/>
-
-                        <ActivityInsights activity={activity}/>
-                    </SafeAreaView>
-                </ScrollView>
+                    </ScrollView>
+                </SafeAreaView>
             ):(
                 <View style={{
                     flex: 1,

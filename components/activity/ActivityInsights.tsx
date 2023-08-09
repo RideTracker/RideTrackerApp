@@ -20,6 +20,7 @@ import { BatteryState } from "expo-battery";
 import Button from "../Button";
 import SubscriptionFeatures from "../SubscriptionFeatures";
 import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 export type ActivityInsightsProps = {
     activity: {
@@ -74,7 +75,7 @@ export default function ActivityInsights({ activity }: ActivityInsightsProps) {
                         <Image key={index} source={source} style={{ alignSelf: "center", width: 200 * 1.6, height: 200, opacity: .5 }} resizeMode="cover" blurRadius={8}/>
                     ))}
 
-                    <View style={{
+                    <LinearGradient style={{
                         position: "absolute",
 
                         left: 0,
@@ -86,8 +87,9 @@ export default function ActivityInsights({ activity }: ActivityInsightsProps) {
                         justifyContent: "center",
                         alignItems: "center",
                         
-                        gap: 10
-                    }}>
+                        gap: 10,
+                        paddingHorizontal: 10
+                    }} locations={[ 0.25, 0.75, 1 ]} colors={[ "transparent", theme.background, "transparent" ]}>
                         <CaptionText>You need to be subscribed to see yours and others activity insights!</CaptionText>
 
                         <View style={{ width: "100%" }}>
@@ -95,7 +97,7 @@ export default function ActivityInsights({ activity }: ActivityInsightsProps) {
                         </View>
 
                         <Button primary={true} label="View subscriptions" style={{ width: "100%" }} onPress={() => router.push("/subscriptions/list")}/>
-                    </View>
+                    </LinearGradient>
                 </View>
             </React.Fragment>
         )
@@ -103,7 +105,7 @@ export default function ActivityInsights({ activity }: ActivityInsightsProps) {
 
     return (
         <React.Fragment>
-            <View>
+            <View style={{ paddingHorizontal: 10 }}>
                 <View style={{ height: 200 }}>
                     <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity disabled={dataMap === "speed"} onPress={() => setDataMap("speed")}>
