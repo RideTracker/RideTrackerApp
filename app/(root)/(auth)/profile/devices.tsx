@@ -82,7 +82,7 @@ export default function ProfileDevices() {
                                 }
                             });
                         }}>
-                            {(submitting && !code) && (<ActivityIndicator color={theme.brand}/>)}
+                            {(submitting && !code) && (<ActivityIndicator color={theme.color}/>)}
                         </Button>
 
                         <ParagraphText>The provided code refreshes every 30 seconds while visible and expires when dismissed.</ParagraphText>
@@ -113,6 +113,7 @@ export default function ProfileDevices() {
                                     </View>
         
                                     <View style={{
+                                        flexGrow: 1,
                                         justifyContent: "space-evenly"
                                     }}>
                                         <CaptionText>{device.name}</CaptionText>

@@ -55,8 +55,8 @@ export default function ActivityPage() {
             }}/>
 
             {(!deleted)?(
-                <SafeAreaView edges={[ "bottom" ]}>
-                    <ScrollView>
+                <ScrollView>
+                    <SafeAreaView edges={[ "bottom" ]}>
                         <View style={{ gap: 20 }}>
                             <View style={{ padding: 10, gap: 20 }}>
                                 <View>
@@ -88,8 +88,8 @@ export default function ActivityPage() {
 
                             <ActivityInsights activity={activity}/>
                         </View>
-                    </ScrollView>
-                </SafeAreaView>
+                    </SafeAreaView>
+                </ScrollView>
             ):(
                 <View style={{
                     flex: 1,
